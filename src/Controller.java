@@ -1,7 +1,6 @@
 import java.awt.event.*;
 
 public class Controller extends MouseAdapter {
-    public static final long serialVersionUID = 42;
     Model model;
     View view;
     double x;
