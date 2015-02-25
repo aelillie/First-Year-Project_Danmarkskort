@@ -19,10 +19,12 @@ public class View extends JFrame implements Observer {
     public static final long serialVersionUID = 0;
     Model model;
     Canvas canvas;
-    AffineTransform transform = new AffineTransform();
-    boolean antialias = true;
-    Point dragEndScreen;
-    Point dragStartScreen;
+    private AffineTransform transform = new AffineTransform();
+    private boolean antialias = true;
+    private Point dragEndScreen;
+    private Point dragStartScreen;
+    private double zoomlvl;
+
 
     public View(Model m) {
         model = m;
@@ -40,6 +42,7 @@ public class View extends JFrame implements Observer {
         setSize(800, 800);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
+        zoomlvl = 1 / (model.bbox.getWidth() * 10);
     }
 
     @Override
@@ -67,6 +70,7 @@ public class View extends JFrame implements Observer {
                 transform.scale(1 / 1.2, 1 / 1.2);
                 Point2D p2 = transformPoint(p);
                 transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY());
+                zoomlvl -= 0.2;
                 repaint();
 
             } else {
@@ -74,7 +78,9 @@ public class View extends JFrame implements Observer {
                 transform.scale(1.2, 1.2);
                 Point2D p2 = transformPoint(p);
                 transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY());
+                zoomlvl += 0.2;
                 repaint();
+
             }
         } catch (NoninvertibleTransformException ex) {
             ex.printStackTrace();
@@ -135,19 +141,22 @@ public class View extends JFrame implements Observer {
             for (Drawable drawable: model.drawables) {
                 drawable.draw(g);
             }
+            if(zoomlvl > 3.6) {
+                try {
 
-            try {
-                BufferedImage img = ImageIO.read(new File("parkingIcon.jpg"));
-                for (Shape p : model.getIcons()) {
-                    double centerX = p.getBounds2D().getCenterX();
-                    double centerY = p.getBounds2D().getCenterY();
+                    BufferedImage img = ImageIO.read(new File("parkingIcon.jpg"));
+                    for (Shape p : model.getIcons()) {
+                        double centerX = p.getBounds2D().getCenterX();
+                        double centerY = p.getBounds2D().getCenterY();
 
-                    AffineTransform it = AffineTransform.getTranslateInstance(centerX, centerY);
-                    it.scale((1 / transform.getScaleX()), (1 / transform.getScaleY()));
-                    g.drawImage(img, it, null);
+                        AffineTransform it = AffineTransform.getTranslateInstance(centerX, centerY);
+                        it.scale((1 / transform.getScaleX()), (1 / transform.getScaleY()));
+                        g.drawImage(img, it, null);
+
+                    }
+                } catch (IOException e) {
+                    e.printStackTrace();
                 }
-            } catch (IOException e){
-                e.printStackTrace();
             }
 
 
