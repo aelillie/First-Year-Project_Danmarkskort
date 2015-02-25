@@ -1,11 +1,15 @@
-import java.awt.*;
 import javax.swing.*;
-import java.util.*;
-import java.awt.geom.*;
+import java.awt.*;
+import java.awt.event.MouseEvent;
+import java.awt.event.MouseWheelEvent;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
+import java.util.Random;
 
-import static java.lang.Math.*;
+import static java.lang.Math.max;
 
 public class View extends JFrame implements Observer {
     public static final long serialVersionUID = 0;
@@ -13,6 +17,8 @@ public class View extends JFrame implements Observer {
     Canvas canvas;
     AffineTransform transform = new AffineTransform();
     boolean antialias = true;
+    Point dragEndScreen;
+    Point dragStartScreen;
 
     public View(Model m) {
         model = m;
@@ -40,6 +46,57 @@ public class View extends JFrame implements Observer {
     public void zoom(double factor) {
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
         pan(getWidth() * (1-factor) / 2, getHeight() * (1-factor) / 2);
+    }
+    private Point2D.Float transformPoint(Point p1) throws NoninvertibleTransformException {
+        AffineTransform inverse = transform.createInverse();
+        Point2D.Float p2 = new Point2D.Float();
+        inverse.transform(p1, p2);
+        return p2;
+    }
+
+    public void wheelZoom(MouseWheelEvent e){
+        try {
+            int wheelRotation = e.getWheelRotation();
+            Point p = e.getPoint();
+            if (wheelRotation > 0) {
+                Point2D p1 = transformPoint(p);
+                transform.scale(1 / 1.2, 1 / 1.2);
+                Point2D p2 = transformPoint(p);
+                transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY());
+                repaint();
+
+            } else {
+                Point2D p1 = transformPoint(p);
+                transform.scale(1.2, 1.2);
+                Point2D p2 = transformPoint(p);
+                transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY());
+                repaint();
+            }
+        } catch (NoninvertibleTransformException ex) {
+            ex.printStackTrace();
+        }
+
+    }
+    public void mousePressed(MouseEvent e){
+        dragStartScreen = e.getPoint();
+        dragEndScreen = null;
+    }
+
+    public void mouseDragged(MouseEvent e){
+        try {
+            dragEndScreen = e.getPoint();
+            Point2D.Float dragStart = transformPoint(dragStartScreen);
+            Point2D.Float dragEnd = transformPoint(dragEndScreen);
+            double dx = dragEnd.getX() - dragStart.getX();
+            double dy = dragEnd.getY() - dragStart.getY();
+            transform.translate(dx, dy);
+            dragStartScreen = dragEndScreen;
+            dragEndScreen = null;
+            repaint();
+        } catch (NoninvertibleTransformException ex) {
+            ex.printStackTrace();
+        }
+
     }
 
     public void pan(double dx, double dy) {

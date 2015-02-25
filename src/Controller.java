@@ -16,34 +16,21 @@ public class Controller extends MouseAdapter {
         view.addKeyListener(new keyHandler());
     }
 
-    @Override
     public void mouseDragged(MouseEvent e) {
-
-        double dx = e.getX()-x;
-        double dy = e.getY()-y;
-        view.pan(dx, dy);
-        x = e.getX();
-        y = e.getY();
+        view.mouseDragged(e);
     }
+    public void mouseMoved(MouseEvent e) { ;; }
+    public void mouseClicked(MouseEvent e) { ;; }
+    public void mouseEntered(MouseEvent e) { ;; }
+    public void mouseExited(MouseEvent e) { ;; }
 
-    @Override
     public void mousePressed(MouseEvent e) {
-        x = e.getX();
-        y = e.getY();
-
+        view.mousePressed(e);
     }
-
-    @Override
-    public void mouseReleased(MouseEvent e){
-        view.repaint();
+    public void mouseWheelMoved(MouseWheelEvent e){
+        view.wheelZoom(e);
     }
-
-    @Override
-    public void mouseWheelMoved(MouseWheelEvent e) {
-        if(e.getWheelRotation() < 0){view.zoom(1.1);}
-        else {view.zoom(0.9);}
-
-    }
+    public void mouseReleased(MouseEvent e) { ;;  }
 
     private class keyHandler extends KeyAdapter{
 
