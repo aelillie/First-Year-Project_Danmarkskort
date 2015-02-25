@@ -11,6 +11,11 @@ import org.xml.sax.helpers.*;
 public class Model extends Observable implements Iterable<Shape> {
 
     private List<Shape> lines = new ArrayList<>();
+    private List<Shape> icons = new ArrayList<>();
+
+    public List<Shape> getIcons() {
+        return icons;
+    }
 
     List<Drawable> drawables = new ArrayList<>();
 
@@ -32,6 +37,7 @@ public class Model extends Observable implements Iterable<Shape> {
         Map<Long, String> role_map = new HashMap<>();
         List<Point2D> coords = new ArrayList<>(); //gemmer koordinater fra en reference
         Path2D way; //<way>
+        private boolean isArea;
 
         public void startElement(String uri, String localName, String qName, Attributes atts) {
             switch (qName) { //if qName.equals(case)
@@ -53,6 +59,7 @@ public class Model extends Observable implements Iterable<Shape> {
                 case "way":
                     kv_map.clear();
                     coords.clear();
+                    isArea = false;
                     break;
                 case "bounds":
                     double minlat = Double.parseDouble(atts.getValue("minlat"));
@@ -65,6 +72,7 @@ public class Model extends Observable implements Iterable<Shape> {
                     String k = atts.getValue("k");
                     String v = atts.getValue("v");
                     kv_map.put(k, v);
+                    if(k.equals("area") && v.equals("yes")) isArea = true;
                     break;
                 case "member":
                     long ref = Long.parseLong(atts.getValue("ref"));
@@ -85,8 +93,8 @@ public class Model extends Observable implements Iterable<Shape> {
                 }
                 if (kv_map.containsKey("natural")) {
                     String val = kv_map.get("natural");
-                    if (val.equals("coastline")) drawables.add(new Line(way, Drawable.coastline, 4));
-                    if (val.equals("wood")) drawables.add(new Area(way, Drawable.wood));
+                    if (val.equals("coastline")) drawables.add(new Line(way, Drawable.seawater, 4));
+                    if (val.equals("wood")) drawables.add(new Area(way, Drawable.scrub));
                     if (val.equals("scrub")) drawables.add(new Area(way, Drawable.scrub));
                     if (val.equals("heath")) drawables.add(new Area(way, Drawable.heath));
                     if (val.equals("grassland")) drawables.add(new Area(way, Drawable.grassland));
@@ -109,13 +117,13 @@ public class Model extends Observable implements Iterable<Shape> {
                     String val = kv_map.get("leisure");
                     if (val.equals("garden")) drawables.add(new Area(way, Drawable.garden));
                     if (val.equals("park")) drawables.add(new Area(way, Drawable.park));
-                    if (val.equals("common")) drawables.add(new Area(way, Drawable.darkgreen));
+                    if (val.equals("common")) drawables.add(new Area(way, Drawable.scrub));
                 }
                 else if (kv_map.containsKey("landuse")) {
                     String val = kv_map.get("landuse");
                     if (val.equals("cemetery")) drawables.add(new Area(way, Drawable.garden));
                     if (val.equals("construction")) drawables.add(new Area(way, Drawable.park));
-                    if (val.equals("grass")) drawables.add(new Area(way, Drawable.darkgreen));
+                    if (val.equals("grass")) drawables.add(new Area(way, Drawable.park));
                     if (val.equals("greenfield")) drawables.add(new Area(way, Drawable.darkgreen));
                     if (val.equals("industrial")) drawables.add(new Area(way, Drawable.darkgreen));
                     if (val.equals("orchard")) drawables.add(new Area(way, Drawable.darkgreen));
@@ -153,10 +161,19 @@ public class Model extends Observable implements Iterable<Shape> {
                     drawables.add(new Area(way, Drawable.building));
                 }
                 else if (kv_map.containsKey("amenity")) {
-                    drawables.add(new Area(way, Drawable.building));
+                    //drawables.add(new Area(way, Drawable.building));
+                    String val = kv_map.get("amenity");
+                    if(val.equals("parking")){
+                        icons.add(way);
+                        drawables.add(new Area(way,Drawable.sand));
+                    }
                 }
                 else if (kv_map.containsKey("barrier")) {
-                    drawables.add(new Line(way, Color.BLACK, 1));
+                    String val = kv_map.get("barrier");
+                    if(val.equals("hedge")) {
+                        if (isArea) drawables.add(new Area(way, Drawable.scrub));
+                        else drawables.add(new Line(way,Drawable.scrub,2));
+                    }
                 }
                 else if (kv_map.containsKey("boundary")) {
                     drawables.add(new Line(way, Color.WHITE, 1));
@@ -191,7 +208,9 @@ public class Model extends Observable implements Iterable<Shape> {
                     if (val.equals("path")) drawables.add(new Line(way, Drawable.path, 1));
                 }
                 else if (kv_map.containsKey("railway")) {
-                    drawables.add(new Line(way, Color.DARK_GRAY, 1));
+                    Line line = new Line(way, Color.DARK_GRAY, 11);
+                    line.setDashed();
+                    drawables.add(line);
                 }
                 else if (kv_map.containsKey("bridge")) {
                     drawables.add(new Line(way, Color.GRAY, 2));

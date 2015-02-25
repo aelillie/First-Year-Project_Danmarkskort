@@ -2,6 +2,7 @@ import java.awt.*;
 
 public class Line extends Drawable {
     int stroke_id;
+    private boolean dashed = false;
 
     public Line(Shape shape, Color color, int stroke_id) {
         super(shape, color);
@@ -15,8 +16,14 @@ public class Line extends Drawable {
     }
 
     public void drawBoundary(Graphics2D g) {
-        g.setStroke(strokes[stroke_id+1]);
-        g.setColor(Color.BLACK);
-        g.draw(shape);
+        if(!dashed) {
+            g.setStroke(strokes[stroke_id + 1]);
+            g.setColor(Color.BLACK);
+            g.draw(shape);
+        }
+    }
+
+    public void setDashed(){
+        dashed = true;
     }
 }

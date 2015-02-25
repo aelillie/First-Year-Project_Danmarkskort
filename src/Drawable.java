@@ -4,7 +4,7 @@ public abstract class Drawable {
     Shape shape;
     Color color;
 
-    static Stroke min_value = new BasicStroke(Float.MIN_VALUE);
+    static Stroke s00 = new BasicStroke(Float.MIN_VALUE);
     static Stroke s01 = new BasicStroke(0.00001f);
     static Stroke s02 = new BasicStroke(0.00002f);
     static Stroke s03 = new BasicStroke(0.00003f);
@@ -15,6 +15,7 @@ public abstract class Drawable {
     static Stroke s08 = new BasicStroke(0.00008f);
     static Stroke s09 = new BasicStroke(0.00009f);
     static Stroke s10 = new BasicStroke(0.00010f);
+    static Stroke s11 = new BasicStroke(0.00001f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{0.0001f}, 0.00001f); //dashed
 
     //Colors
     static Color seawater = new Color(70, 130, 180);
@@ -51,7 +52,7 @@ public abstract class Drawable {
     static Color park = new Color(144,238,144);
     static Color garden = new Color(152,251,152);
 
-    Stroke[] strokes = new Stroke[]{s01, s02, s03, s04, s05, s06, s07, s08, s09, s10};
+    Stroke[] strokes = new Stroke[]{s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11};
 
     public Drawable(Shape shape, Color color) {
         this.shape = shape;
@@ -60,5 +61,6 @@ public abstract class Drawable {
     abstract void draw(Graphics2D g);
 
     abstract void drawBoundary(Graphics2D g);
+
 }
 

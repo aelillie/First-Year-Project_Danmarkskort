@@ -1,3 +1,4 @@
+import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -5,6 +6,9 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
@@ -130,6 +134,20 @@ public class View extends JFrame implements Observer {
             }
             for (Drawable drawable: model.drawables) {
                 drawable.draw(g);
+            }
+
+            try {
+                BufferedImage img = ImageIO.read(new File("parkingIcon.jpg"));
+                for (Shape p : model.getIcons()) {
+                    double centerX = p.getBounds2D().getCenterX();
+                    double centerY = p.getBounds2D().getCenterY();
+
+                    AffineTransform it = AffineTransform.getTranslateInstance(centerX, centerY);
+                    it.scale((1 / transform.getScaleX()), (1 / transform.getScaleY()));
+                    g.drawImage(img, it, null);
+                }
+            } catch (IOException e){
+                e.printStackTrace();
             }
 
 
