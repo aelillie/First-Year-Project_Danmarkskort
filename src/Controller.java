@@ -14,7 +14,7 @@ public class Controller extends MouseAdapter {
         view.addMouseWheelListener(this);
         view.addKeyListener(new keyHandler());
     }
-
+    // sets up events for mouse and calls the methods in view.
     public void mouseDragged(MouseEvent e) {
         view.mouseDragged(e);
     }
@@ -22,7 +22,6 @@ public class Controller extends MouseAdapter {
     public void mouseClicked(MouseEvent e) { ;; }
     public void mouseEntered(MouseEvent e) { ;; }
     public void mouseExited(MouseEvent e) { ;; }
-
     public void mousePressed(MouseEvent e) {
         view.mousePressed(e);
     }

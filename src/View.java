@@ -21,9 +21,8 @@ public class View extends JFrame implements Observer {
     Canvas canvas;
     private AffineTransform transform = new AffineTransform();
     private boolean antialias = true;
-    private Point dragEndScreen;
-    private Point dragStartScreen;
-    private double zoomlvl;
+    private Point dragEndScreen, dragStartScreen;
+    private double zoomLevel;
 
 
     public View(Model m) {
@@ -42,7 +41,7 @@ public class View extends JFrame implements Observer {
         setSize(800, 800);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
-        zoomlvl = 1 / (model.bbox.getWidth() * 10);
+        zoomLevel = 1 / (model.bbox.getWidth() * 10); //TODO more precise way to do this??
     }
 
     @Override
@@ -57,28 +56,35 @@ public class View extends JFrame implements Observer {
     private Point2D.Float transformPoint(Point p1) throws NoninvertibleTransformException {
         AffineTransform inverse = transform.createInverse();
         Point2D.Float p2 = new Point2D.Float();
-        inverse.transform(p1, p2);
+        inverse.transform(p1, p2); // create a destination p2 from the Point p1
         return p2;
     }
 
+    /**
+     * Zooms in on the canvas with the mouseWheel. Also translates (pans) towards
+     * mouse point when zooming by using its Point2d.
+     * @param e MouseWheelEvent
+     */
     public void wheelZoom(MouseWheelEvent e){
         try {
             int wheelRotation = e.getWheelRotation();
             Point p = e.getPoint();
             if (wheelRotation > 0) {
+                //point2d before zoom
                 Point2D p1 = transformPoint(p);
                 transform.scale(1 / 1.2, 1 / 1.2);
+                //point after zoom
                 Point2D p2 = transformPoint(p);
-                transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY());
-                zoomlvl -= 0.2;
+                transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY()); //Pan towards mouse
+                zoomLevel -= 0.2; //Decrease zoomLevel
                 repaint();
 
             } else {
                 Point2D p1 = transformPoint(p);
                 transform.scale(1.2, 1.2);
                 Point2D p2 = transformPoint(p);
-                transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY());
-                zoomlvl += 0.2;
+                transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY()); //Pan towards mouse
+                zoomLevel += 0.2; //increase zoomLevel
                 repaint();
 
             }
@@ -87,16 +93,29 @@ public class View extends JFrame implements Observer {
         }
 
     }
+
+    /**
+     * Sets the point of where the mouse was dragged from
+     *
+     * @param e MouseEvent
+     */
     public void mousePressed(MouseEvent e){
         dragStartScreen = e.getPoint();
         dragEndScreen = null;
     }
 
+    /**
+     * Moves the screen to where the mouse was dragged, using the transforms translate method with the
+     * the difference dragged by the mouse.
+     * @param e MouseEvent
+     */
     public void mouseDragged(MouseEvent e){
         try {
             dragEndScreen = e.getPoint();
+            //Create a point2d.float with the
             Point2D.Float dragStart = transformPoint(dragStartScreen);
             Point2D.Float dragEnd = transformPoint(dragEndScreen);
+            //calculate how far the screen is dragged from its start position.
             double dx = dragEnd.getX() - dragStart.getX();
             double dy = dragEnd.getY() - dragStart.getY();
             transform.translate(dx, dy);
@@ -141,7 +160,7 @@ public class View extends JFrame implements Observer {
             for (Drawable drawable: model.drawables) {
                 drawable.draw(g);
             }
-            if(zoomlvl > 3.6) {
+            if(zoomLevel > 3.6) {
                 try {
 
                     BufferedImage img = ImageIO.read(new File("parkingIcon.jpg"));
