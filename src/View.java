@@ -138,13 +138,13 @@ public class View extends JFrame implements Observer {
         repaint();
     }
 
-    class Canvas extends JComponent {
+    class Canvas extends JPanel {
         public static final long serialVersionUID = 4;
         Random rnd = new Random();
         Stroke min_value = new BasicStroke(Float.MIN_VALUE);
 
         @Override
-        public void paint(Graphics _g) {
+        public void paintComponent(Graphics _g) {
             Graphics2D g = (Graphics2D) _g;
             g.setTransform(transform);
             if (antialias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
@@ -160,23 +160,13 @@ public class View extends JFrame implements Observer {
             for (Drawable drawable: model.drawables) {
                 drawable.draw(g);
             }
-            if(zoomLevel > 3.6) {
-                try {
+            //if(zoomLevel > 3.6) {
 
-                    BufferedImage img = ImageIO.read(new File("parkingIcon.jpg"));
-                    for (Shape p : model.getIcons()) {
-                        double centerX = p.getBounds2D().getCenterX();
-                        double centerY = p.getBounds2D().getCenterY();
-
-                        AffineTransform it = AffineTransform.getTranslateInstance(centerX, centerY);
-                        it.scale((1 / transform.getScaleX()), (1 / transform.getScaleY()));
-                        g.drawImage(img, it, null);
-
-                    }
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
+            for (Icon icon : model.getIcons()) {
+                icon.draw(g,transform);
             }
+
+           // }
 
 
 

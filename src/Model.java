@@ -11,9 +11,9 @@ import org.xml.sax.helpers.*;
 public class Model extends Observable implements Iterable<Shape> {
 
     private List<Shape> lines = new ArrayList<>();
-    private List<Shape> icons = new ArrayList<>();
+    private List<Icon> icons = new ArrayList<>();
 
-    public List<Shape> getIcons() {
+    public List<Icon> getIcons() {
         return icons;
     }
 
@@ -37,15 +37,20 @@ public class Model extends Observable implements Iterable<Shape> {
         Map<Long, String> role_map = new HashMap<>();
         List<Point2D> coords = new ArrayList<>(); //gemmer koordinater fra en reference
         Path2D way; //<way>
+        Point2D currentCoord;
         private boolean isArea;
+        private boolean isBusstop;
 
         public void startElement(String uri, String localName, String qName, Attributes atts) {
             switch (qName) { //if qName.equals(case)
                 case "node": {
+                    isBusstop = false;
+
                     double lat = Double.parseDouble(atts.getValue("lat"));
                     double lon = Double.parseDouble(atts.getValue("lon"));
                     long id = Long.parseLong(atts.getValue("id"));
                     Point2D coord = new Point2D.Double(lon, lat);
+                    currentCoord = new Point2D.Double(lon,lat);
                     map.put(id, coord);
                     break;
                 }
@@ -73,6 +78,7 @@ public class Model extends Observable implements Iterable<Shape> {
                     String v = atts.getValue("v");
                     kv_map.put(k, v);
                     if(k.equals("area") && v.equals("yes")) isArea = true;
+                    if(k.equals("highway") && v.equals("bus_stop")) isBusstop = true;
                     break;
                 case "member":
                     long ref = Long.parseLong(atts.getValue("ref"));
@@ -164,7 +170,7 @@ public class Model extends Observable implements Iterable<Shape> {
                     //drawables.add(new Area(way, Drawable.building));
                     String val = kv_map.get("amenity");
                     if(val.equals("parking")){
-                        icons.add(way);
+                        icons.add(new Icon(way,".\\src\\parkingIcon.jpg"));
                         drawables.add(new Area(way,Drawable.sand));
                     }
                 }
@@ -181,31 +187,33 @@ public class Model extends Observable implements Iterable<Shape> {
                 else if (kv_map.containsKey("highway")) {
                     String val = kv_map.get("highway");
                     if (val.equals("motorway")) drawables.add(new Line(way, Drawable.motorway, 7));
-                    if (val.equals("motorway_link")) drawables.add(new Line(way, Drawable.motorway, 7));
-                    if (val.equals("trunk")) drawables.add(new Line(way, Drawable.trunk, 7));
-                    if (val.equals("trunk_link")) drawables.add(new Line(way, Drawable.trunk, 7));
-                    if (val.equals("primary")) drawables.add(new Line(way, Drawable.primary, 6));
-                    if (val.equals("primary_link")) drawables.add(new Line(way, Drawable.primary, 6));
-                    if (val.equals("secondary")) drawables.add(new Line(way, Drawable.secondary, 6));
-                    if (val.equals("secondary_link")) drawables.add(new Line(way, Drawable.secondary, 6));
-                    if (val.equals("tertiary")) drawables.add(new Line(way, Drawable.tertiary, 5));
-                    if (val.equals("tertiary_link")) drawables.add(new Line(way, Drawable.tertiary, 5));
-                    if (val.equals("unclassified")) drawables.add(new Line(way, Color.WHITE, 5));
-                    if (val.equals("residential")) drawables.add(new Line(way, Color.WHITE, 4));
-                    if (val.equals("service")) drawables.add(new Line(way, Color.WHITE, 2));
+                    else if (val.equals("motorway_link")) drawables.add(new Line(way, Drawable.motorway, 7));
+                    else if (val.equals("trunk")) drawables.add(new Line(way, Drawable.trunk, 7));
+                    else if (val.equals("trunk_link")) drawables.add(new Line(way, Drawable.trunk, 7));
+                    else if (val.equals("primary")) drawables.add(new Line(way, Drawable.primary, 6));
+                    else if (val.equals("primary_link")) drawables.add(new Line(way, Drawable.primary, 6));
+                    else if (val.equals("secondary")) drawables.add(new Line(way, Drawable.secondary, 6));
+                    else if (val.equals("secondary_link")) drawables.add(new Line(way, Drawable.secondary, 6));
+                    else if (val.equals("tertiary")) drawables.add(new Line(way, Drawable.tertiary, 5));
+                    else if (val.equals("tertiary_link")) drawables.add(new Line(way, Drawable.tertiary, 5));
+                    else if (val.equals("unclassified")) drawables.add(new Line(way, Color.WHITE, 5));
+                    else if (val.equals("residential")) drawables.add(new Line(way, Color.WHITE, 4));
+                    else if (val.equals("service")) drawables.add(new Line(way, Color.WHITE, 2));
 
-                    if (val.equals("living_street")) drawables.add(new Line(way, Drawable.living_street, 2));
-                    if (val.equals("pedestrian")) drawables.add(new Line(way, Drawable.pedestrain, 2));
-                    if (val.equals("track")) drawables.add(new Line(way, Drawable.track, 1));
-                    if (val.equals("bus_guideway")) drawables.add(new Line(way, Drawable.bus_guideway, 1));
-                    if (val.equals("raceway")) drawables.add(new Line(way, Drawable.raceway, 2));
-                    if (val.equals("road")) drawables.add(new Line(way, Drawable.road, 3));
+                    else if (val.equals("living_street")) drawables.add(new Line(way, Drawable.living_street, 2));
+                    else if (val.equals("pedestrian")) drawables.add(new Line(way, Drawable.pedestrain, 2));
+                    else if (val.equals("track")) drawables.add(new Line(way, Drawable.track, 1));
+                    else if (val.equals("bus_guideway")) drawables.add(new Line(way, Drawable.bus_guideway, 1));
+                    else if (val.equals("raceway")) drawables.add(new Line(way, Drawable.raceway, 2));
+                    else if (val.equals("road")) drawables.add(new Line(way, Drawable.road, 3));
 
-                    if (val.equals("footway")) drawables.add(new Line(way, Drawable.footway, 1));
-                    if (val.equals("cycleway")) drawables.add(new Line(way, Drawable.cycleway, 1));
-                    if (val.equals("bridleway")) drawables.add(new Line(way, Drawable.bridleway, 1));
-                    if (val.equals("steps")) drawables.add(new Line(way, Drawable.steps, 1));
-                    if (val.equals("path")) drawables.add(new Line(way, Drawable.path, 1));
+                    else if (val.equals("footway")) drawables.add(new Line(way, Drawable.footway, 1));
+                    else if (val.equals("cycleway")) drawables.add(new Line(way, Drawable.cycleway, 1));
+                    else if (val.equals("bridleway")) drawables.add(new Line(way, Drawable.bridleway, 1));
+                    else if (val.equals("steps")) drawables.add(new Line(way, Drawable.steps, 1));
+                    else if (val.equals("path")) drawables.add(new Line(way, Drawable.path, 1));
+
+
                 }
                 else if (kv_map.containsKey("railway")) {
                     Line line = new Line(way, Color.DARK_GRAY, 11);
@@ -221,9 +229,13 @@ public class Model extends Observable implements Iterable<Shape> {
                 else {
                     lines.add(way);
                 }
-            }
-            if (qName.equals("relation")) {
+            } else if (qName.equals("relation")) {
 
+            } else if (qName.equals("node")) {
+                if (kv_map.containsKey("highway")) {
+                    String val = kv_map.get("highway");
+                  if (val.equals("bus_stop")&&isBusstop) icons.add(new Icon(currentCoord, ".\\src\\busIcon.png"));
+                }
             }
         }
     }
