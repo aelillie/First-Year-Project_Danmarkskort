@@ -4,8 +4,8 @@ public class Line extends Drawable {
     int stroke_id;
     private boolean dashed = false;
 
-    public Line(Shape shape, Color color, int stroke_id) {
-        super(shape, color);
+    public Line(Shape shape, Color color, int stroke_id, double drawLevel) {
+        super(shape, color, drawLevel);
         this.stroke_id = stroke_id;
     }
 

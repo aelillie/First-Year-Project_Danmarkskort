@@ -1,12 +1,20 @@
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
+
 import java.awt.*;
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.zip.*;
-import java.io.*;
-import java.awt.geom.*;
-import java.awt.geom.Point2D;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
+import java.util.zip.ZipInputStream;
 
 public class Model extends Observable implements Iterable<Shape> {
 
@@ -106,132 +114,132 @@ public class Model extends Observable implements Iterable<Shape> {
                 }
                 if (kv_map.containsKey("natural")) {
                     String val = kv_map.get("natural");
-                    if (val.equals("coastline")) drawables.add(new Line(way, Drawable.seawater, 4));
-                    if (val.equals("wood")) drawables.add(new Area(way, Drawable.scrub));
-                    if (val.equals("scrub")) drawables.add(new Area(way, Drawable.scrub));
-                    if (val.equals("heath")) drawables.add(new Area(way, Drawable.heath));
-                    if (val.equals("grassland")) drawables.add(new Area(way, Drawable.grassland));
-                    if (val.equals("sand")) drawables.add(new Area(way, Drawable.sand));
-                    if (val.equals("scree")) drawables.add(new Area(way, Drawable.scree));
-                    if (val.equals("fell")) drawables.add(new Area(way, Drawable.fell));
-                    if (val.equals("water")) drawables.add(new Area(way, Drawable.water));
-                    if (val.equals("wetland")) drawables.add(new Area(way, Drawable.wetland));
+                    if (val.equals("coastline")) drawables.add(new Line(way, Drawable.seawater, 4, -2.0));
+                    if (val.equals("wood")) drawables.add(new Area(way, Drawable.scrub, -2.0));
+                    if (val.equals("scrub")) drawables.add(new Area(way, Drawable.scrub, -1.5));
+                    if (val.equals("heath")) drawables.add(new Area(way, Drawable.heath, -2.0));
+                    if (val.equals("grassland")) drawables.add(new Area(way, Drawable.grassland, -2.0));
+                    if (val.equals("sand")) drawables.add(new Area(way, Drawable.sand, -2.0));
+                    if (val.equals("scree")) drawables.add(new Area(way, Drawable.scree, -2.0));
+                    if (val.equals("fell")) drawables.add(new Area(way, Drawable.fell, -2.0));
+                    if (val.equals("water")) drawables.add(new Area(way, Drawable.water, -2.0));
+                    if (val.equals("wetland")) drawables.add(new Area(way, Drawable.wetland, -2.0));
                 }
                 else if (kv_map.containsKey("waterway")) {
                     String val = kv_map.get("waterway");
-                    if (val.equals("riverbank")) drawables.add(new Area(way, Drawable.seawater));
-                    if (val.equals("stream")) drawables.add(new Line(way, Drawable.seawater, 1));
-                    if (val.equals("canal")) drawables.add(new Line(way, Drawable.seawater, 2));
-                    if (val.equals("river")) drawables.add(new Line(way, Drawable.seawater, 2));
-                    if (val.equals("dam")) drawables.add(new Line(way, Drawable.seawater, 2));
+                    if (val.equals("riverbank")) drawables.add(new Area(way, Drawable.seawater, -1.0));
+                    if (val.equals("stream")) drawables.add(new Line(way, Drawable.seawater, 1, -1.0));
+                    if (val.equals("canal")) drawables.add(new Line(way, Drawable.seawater, 2, -1.0));
+                    if (val.equals("river")) drawables.add(new Line(way, Drawable.seawater, 2, -1.0));
+                    if (val.equals("dam")) drawables.add(new Line(way, Drawable.seawater, 2, -1.0));
 
                 }
                 else if (kv_map.containsKey("leisure")) {
                     String val = kv_map.get("leisure");
-                    if (val.equals("garden")) drawables.add(new Area(way, Drawable.garden));
-                    if (val.equals("park")) drawables.add(new Area(way, Drawable.park));
-                    if (val.equals("common")) drawables.add(new Area(way, Drawable.scrub));
+                    if (val.equals("garden")) drawables.add(new Area(way, Drawable.garden, -0.0));
+                    if (val.equals("park")) drawables.add(new Area(way, Drawable.park,-0.05));
+                    if (val.equals("common")) drawables.add(new Area(way, Drawable.scrub, -0.05));
                 }
                 else if (kv_map.containsKey("landuse")) {
                     String val = kv_map.get("landuse");
-                    if (val.equals("cemetery")) drawables.add(new Area(way, Drawable.garden));
-                    if (val.equals("construction")) drawables.add(new Area(way, Drawable.park));
-                    if (val.equals("grass")) drawables.add(new Area(way, Drawable.park));
-                    if (val.equals("greenfield")) drawables.add(new Area(way, Drawable.darkgreen));
-                    if (val.equals("industrial")) drawables.add(new Area(way, Drawable.darkgreen));
-                    if (val.equals("orchard")) drawables.add(new Area(way, Drawable.darkgreen));
+                    if (val.equals("cemetery")) drawables.add(new Area(way, Drawable.garden, -0.1));
+                    if (val.equals("construction")) drawables.add(new Area(way, Drawable.park, -0.1));
+                    if (val.equals("grass")) drawables.add(new Area(way, Drawable.park, -0.1));
+                    if (val.equals("greenfield")) drawables.add(new Area(way, Drawable.darkgreen, -0.1));
+                    if (val.equals("industrial")) drawables.add(new Area(way, Drawable.darkgreen, -0.1));
+                    if (val.equals("orchard")) drawables.add(new Area(way, Drawable.darkgreen, -0.1));
 
                 }
                 else if (kv_map.containsKey("geological")) {
-                    drawables.add(new Area(way, Drawable.building));
+                    drawables.add(new Area(way, Drawable.building, -1.0));
                 }
 
                 else if (kv_map.containsKey("building")) {
-                    drawables.add(new Area(way, Drawable.building));
+                    drawables.add(new Area(way, Drawable.building, -1.0));
                 }
                 else if (kv_map.containsKey("shop")) {
-                    drawables.add(new Area(way, Drawable.building));
+                    drawables.add(new Area(way, Drawable.building, -1.0));
                 }
                 else if (kv_map.containsKey("tourism")) {
-                    drawables.add(new Area(way, Drawable.building));
+                    drawables.add(new Area(way, Drawable.building, -1.0));
                 }
                 else if (kv_map.containsKey("man_made")) {
-                    drawables.add(new Area(way, Drawable.building));
+                    drawables.add(new Area(way, Drawable.building, -1.0));
                 }
                 else if (kv_map.containsKey("military")) {
-                    drawables.add(new Area(way, Drawable.building));
+                    drawables.add(new Area(way, Drawable.building, -1.0));
                 }
                 else if (kv_map.containsKey("historic")) {
-                    drawables.add(new Area(way, Drawable.building));
+                    drawables.add(new Area(way, Drawable.building, -1.0));
                 }
                 else if (kv_map.containsKey("craft")) {
-                    drawables.add(new Area(way, Drawable.building));
+                    drawables.add(new Area(way, Drawable.building, -1.0));
                 }
                 else if (kv_map.containsKey("emergency")) {
-                    drawables.add(new Area(way, Drawable.building));
+                    drawables.add(new Area(way, Drawable.building, -1.0));
                 }
                 else if (kv_map.containsKey("aeroway")) {
-                    drawables.add(new Area(way, Drawable.building));
+                    drawables.add(new Area(way, Drawable.building, -1.0));
                 }
                 else if (kv_map.containsKey("amenity")) {
                     //drawables.add(new Area(way, Drawable.building));
                     String val = kv_map.get("amenity");
                     if(val.equals("parking")){
                         icons.add(new Icon(way,"parkingIcon.jpg"));
-                        drawables.add(new Area(way,Drawable.sand));
+                        drawables.add(new Area(way,Drawable.sand, -1.0));
                     }
                 }
                 else if (kv_map.containsKey("barrier")) {
                     String val = kv_map.get("barrier");
                     if(val.equals("hedge")) {
-                        if (isArea) drawables.add(new Area(way, Drawable.scrub));
-                        else drawables.add(new Line(way,Drawable.scrub,2));
+                        if (isArea) drawables.add(new Area(way, Drawable.scrub, -0.1));
+                        else drawables.add(new Line(way,Drawable.scrub,2, -0.1));
                     }
                 }
                 else if (kv_map.containsKey("boundary")) {
-                    drawables.add(new Line(way, Color.WHITE, 1));
+                    drawables.add(new Line(way, Color.WHITE, 1, -1.0));
                 }
                 else if (kv_map.containsKey("highway")) {
                     String val = kv_map.get("highway");
-                    if (val.equals("motorway")) drawables.add(new Line(way, Drawable.motorway, 7));
-                    else if (val.equals("motorway_link")) drawables.add(new Line(way, Drawable.motorway, 7));
-                    else if (val.equals("trunk")) drawables.add(new Line(way, Drawable.trunk, 7));
-                    else if (val.equals("trunk_link")) drawables.add(new Line(way, Drawable.trunk, 7));
-                    else if (val.equals("primary")) drawables.add(new Line(way, Drawable.primary, 6));
-                    else if (val.equals("primary_link")) drawables.add(new Line(way, Drawable.primary, 6));
-                    else if (val.equals("secondary")) drawables.add(new Line(way, Drawable.secondary, 6));
-                    else if (val.equals("secondary_link")) drawables.add(new Line(way, Drawable.secondary, 6));
-                    else if (val.equals("tertiary")) drawables.add(new Line(way, Drawable.tertiary, 5));
-                    else if (val.equals("tertiary_link")) drawables.add(new Line(way, Drawable.tertiary, 5));
-                    else if (val.equals("unclassified")) drawables.add(new Line(way, Color.WHITE, 5));
-                    else if (val.equals("residential")) drawables.add(new Line(way, Color.WHITE, 4));
-                    else if (val.equals("service")) drawables.add(new Line(way, Color.WHITE, 2));
+                    if (val.equals("motorway")) drawables.add(new Line(way, Drawable.motorway, 7, -1.0));
+                    else if (val.equals("motorway_link")) drawables.add(new Line(way, Drawable.motorway, 7, -1.0));
+                    else if (val.equals("trunk")) drawables.add(new Line(way, Drawable.trunk, 7, -1.0));
+                    else if (val.equals("trunk_link")) drawables.add(new Line(way, Drawable.trunk, 7, -1.0));
+                    else if (val.equals("primary")) drawables.add(new Line(way, Drawable.primary, 6, -1.0));
+                    else if (val.equals("primary_link")) drawables.add(new Line(way, Drawable.primary, 6, -1.0));
+                    else if (val.equals("secondary")) drawables.add(new Line(way, Drawable.secondary, 6, -1.0));
+                    else if (val.equals("secondary_link")) drawables.add(new Line(way, Drawable.secondary, 6, -0.5));
+                    else if (val.equals("tertiary")) drawables.add(new Line(way, Drawable.tertiary, 5, -0.4));
+                    else if (val.equals("tertiary_link")) drawables.add(new Line(way, Drawable.tertiary, 5, -0.1));
+                    else if (val.equals("unclassified")) drawables.add(new Line(way, Color.WHITE, 5, -0.1));
+                    else if (val.equals("residential")) drawables.add(new Line(way, Color.WHITE, 4, -0.1));
+                    else if (val.equals("service")) drawables.add(new Line(way, Color.WHITE, 2, -0.1));
 
-                    else if (val.equals("living_street")) drawables.add(new Line(way, Drawable.living_street, 2));
-                    else if (val.equals("pedestrian")) drawables.add(new Line(way, Drawable.pedestrain, 2));
-                    else if (val.equals("track")) drawables.add(new Line(way, Drawable.track, 1));
-                    else if (val.equals("bus_guideway")) drawables.add(new Line(way, Drawable.bus_guideway, 1));
-                    else if (val.equals("raceway")) drawables.add(new Line(way, Drawable.raceway, 2));
-                    else if (val.equals("road")) drawables.add(new Line(way, Drawable.road, 3));
+                    else if (val.equals("living_street")) drawables.add(new Line(way, Drawable.living_street, 2, -1.0));
+                    else if (val.equals("pedestrian")) drawables.add(new Line(way, Drawable.pedestrain, 2, -0.1));
+                    else if (val.equals("track")) drawables.add(new Line(way, Drawable.track, 1, 0.0));
+                    else if (val.equals("bus_guideway")) drawables.add(new Line(way, Drawable.bus_guideway, 1, -0.4));
+                    else if (val.equals("raceway")) drawables.add(new Line(way, Drawable.raceway, 2, -0.4));
+                    else if (val.equals("road")) drawables.add(new Line(way, Drawable.road, 3, -0.4));
 
-                    else if (val.equals("footway")) drawables.add(new Line(way, Drawable.footway, 1));
-                    else if (val.equals("cycleway")) drawables.add(new Line(way, Drawable.cycleway, 1));
-                    else if (val.equals("bridleway")) drawables.add(new Line(way, Drawable.bridleway, 1));
-                    else if (val.equals("steps")) drawables.add(new Line(way, Drawable.steps, 1));
-                    else if (val.equals("path")) drawables.add(new Line(way, Drawable.path, 1));
+                    else if (val.equals("footway")) drawables.add(new Line(way, Drawable.footway, 1, -0.1));
+                    else if (val.equals("cycleway")) drawables.add(new Line(way, Drawable.cycleway, 1, -0.1));
+                    else if (val.equals("bridleway")) drawables.add(new Line(way, Drawable.bridleway, 1, -1.0));
+                    else if (val.equals("steps")) drawables.add(new Line(way, Drawable.steps, 1, -1.0));
+                    else if (val.equals("path")) drawables.add(new Line(way, Drawable.path, 1, -0.1));
 
 
                 }
                 else if (kv_map.containsKey("railway")) {
-                    Line line = new Line(way, Color.DARK_GRAY, 11);
+                    Line line = new Line(way, Color.DARK_GRAY, 11, -1.9);
                     line.setDashed();
                     drawables.add(line);
                 }
                 else if (kv_map.containsKey("bridge")) {
-                    drawables.add(new Line(way, Color.GRAY, 2));
+                    drawables.add(new Line(way, Color.GRAY, 2, -2.0));
                 }
                 else if (kv_map.containsKey("route")) {
-                    drawables.add(new Line(way, Color.WHITE, 1));
+                    drawables.add(new Line(way, Color.WHITE, 1, -2.0));
                 }
                 else {
                     lines.add(way);

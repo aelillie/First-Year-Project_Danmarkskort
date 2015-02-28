@@ -1,4 +1,3 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -6,9 +5,6 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
 import java.util.Random;
@@ -22,7 +18,7 @@ public class View extends JFrame implements Observer {
     private AffineTransform transform = new AffineTransform();
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
-    private double zoomLevel;
+    protected double zoomLevel;
 
 
     public View(Model m) {
@@ -41,7 +37,7 @@ public class View extends JFrame implements Observer {
         setSize(800, 800);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
-        zoomLevel = 1 / (model.bbox.getWidth() * 10); //TODO more precise way to do this??
+        zoomLevel = (model.bbox.getWidth()* -1.0); //TODO more precise way to do this??
     }
 
     @Override
@@ -76,7 +72,7 @@ public class View extends JFrame implements Observer {
                 //point after zoom
                 Point2D p2 = transformPoint(p);
                 transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY()); //Pan towards mouse
-                zoomLevel -= 0.2; //Decrease zoomLevel
+                zoomLevel -= 0.0765; //Decrease zoomLevel
                 repaint();
 
             } else {
@@ -84,7 +80,7 @@ public class View extends JFrame implements Observer {
                 transform.scale(1.2, 1.2);
                 Point2D p2 = transformPoint(p);
                 transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY()); //Pan towards mouse
-                zoomLevel += 0.2; //increase zoomLevel
+                zoomLevel += 0.0765; //increase zoomLevel
                 repaint();
 
             }
@@ -158,15 +154,16 @@ public class View extends JFrame implements Observer {
                 drawable.drawBoundary(g);
             }
             for (Drawable drawable: model.drawables) {
-                drawable.draw(g);
+                if(drawable.drawLevel < zoomLevel)
+                    drawable.draw(g);
             }
-            //if(zoomLevel > 3.6) {
+            if(zoomLevel > 0.0) {
 
-            for (Icon icon : model.getIcons()) {
+                for (Icon icon : model.getIcons()) {
                 icon.draw(g,transform);
-            }
+                }
 
-           // }
+            }
 
 
 

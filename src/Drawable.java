@@ -3,6 +3,7 @@ import java.awt.*;
 public abstract class Drawable {
     Shape shape;
     Color color;
+    Double drawLevel;
 
     static Stroke s00 = new BasicStroke(Float.MIN_VALUE);
     static Stroke s01 = new BasicStroke(0.00001f);
@@ -54,9 +55,10 @@ public abstract class Drawable {
 
     Stroke[] strokes = new Stroke[]{s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11};
 
-    public Drawable(Shape shape, Color color) {
+    public Drawable(Shape shape, Color color, double drawLevel) {
         this.shape = shape;
         this.color = color;
+        this.drawLevel = drawLevel;
     }
     abstract void draw(Graphics2D g);
 
