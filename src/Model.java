@@ -40,11 +40,14 @@ public class Model extends Observable implements Iterable<Shape> {
         Point2D currentCoord;
         private boolean isArea;
         private boolean isBusstop;
+        private boolean isSubway;
 
         public void startElement(String uri, String localName, String qName, Attributes atts) {
             switch (qName) { //if qName.equals(case)
                 case "node": {
+                    kv_map.clear();
                     isBusstop = false;
+                    isSubway = false;
 
                     double lat = Double.parseDouble(atts.getValue("lat"));
                     double lon = Double.parseDouble(atts.getValue("lon"));
@@ -79,6 +82,7 @@ public class Model extends Observable implements Iterable<Shape> {
                     kv_map.put(k, v);
                     if(k.equals("area") && v.equals("yes")) isArea = true;
                     if(k.equals("highway") && v.equals("bus_stop")) isBusstop = true;
+                    if(k.equals("subway")&& v.equals("yes")) isSubway = true;
                     break;
                 case "member":
                     long ref = Long.parseLong(atts.getValue("ref"));
@@ -234,7 +238,12 @@ public class Model extends Observable implements Iterable<Shape> {
             } else if (qName.equals("node")) {
                 if (kv_map.containsKey("highway")) {
                     String val = kv_map.get("highway");
-                  if (val.equals("bus_stop")&&isBusstop) icons.add(new Icon(currentCoord, ".\\src\\busIcon.png"));
+                    if (val.equals("bus_stop") && isBusstop) icons.add(new Icon(currentCoord, ".\\src\\busIcon.png"));
+                } else if (kv_map.containsKey("railway")){
+                    String val = kv_map.get("railway");
+                    if(val.equals("station")) {
+                        if(isSubway) icons.add(new Icon(currentCoord, ".\\src\\metroIcon.png"));
+                    }
                 }
             }
         }

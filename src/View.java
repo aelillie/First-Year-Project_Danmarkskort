@@ -138,13 +138,13 @@ public class View extends JFrame implements Observer {
         repaint();
     }
 
-    class Canvas extends JPanel {
+    class Canvas extends JComponent {
         public static final long serialVersionUID = 4;
         Random rnd = new Random();
         Stroke min_value = new BasicStroke(Float.MIN_VALUE);
 
         @Override
-        public void paintComponent(Graphics _g) {
+        public void paint(Graphics _g) {
             Graphics2D g = (Graphics2D) _g;
             g.setTransform(transform);
             if (antialias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
