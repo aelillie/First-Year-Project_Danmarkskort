@@ -40,14 +40,16 @@ public class Model extends Observable implements Iterable<Shape> {
         Point2D currentCoord;
         private boolean isArea;
         private boolean isBusstop;
-        private boolean isSubway;
+        private boolean isMetro;
+        private boolean isSTog; //S-tog
 
         public void startElement(String uri, String localName, String qName, Attributes atts) {
             switch (qName) { //if qName.equals(case)
                 case "node": {
                     kv_map.clear();
                     isBusstop = false;
-                    isSubway = false;
+                    isMetro = false;
+                    isSTog = false;
 
                     double lat = Double.parseDouble(atts.getValue("lat"));
                     double lon = Double.parseDouble(atts.getValue("lon"));
@@ -82,7 +84,8 @@ public class Model extends Observable implements Iterable<Shape> {
                     kv_map.put(k, v);
                     if(k.equals("area") && v.equals("yes")) isArea = true;
                     if(k.equals("highway") && v.equals("bus_stop")) isBusstop = true;
-                    if(k.equals("subway")&& v.equals("yes")) isSubway = true;
+                    if(k.equals("subway")&& v.equals("yes")) isMetro = true;
+                    if(k.equals("network") && v.equals("S-Tog")) isSTog = true;
                     break;
                 case "member":
                     long ref = Long.parseLong(atts.getValue("ref"));
@@ -174,7 +177,7 @@ public class Model extends Observable implements Iterable<Shape> {
                     //drawables.add(new Area(way, Drawable.building));
                     String val = kv_map.get("amenity");
                     if(val.equals("parking")){
-                        icons.add(new Icon(way,".\\parkingIcon.jpg"));
+                        icons.add(new Icon(way,"parkingIcon.jpg"));
                         drawables.add(new Area(way,Drawable.sand));
                     }
                 }
@@ -238,11 +241,12 @@ public class Model extends Observable implements Iterable<Shape> {
             } else if (qName.equals("node")) {
                 if (kv_map.containsKey("highway")) {
                     String val = kv_map.get("highway");
-                    if (val.equals("bus_stop") && isBusstop) icons.add(new Icon(currentCoord, ".\\busIcon.png"));
+                    if (val.equals("bus_stop") && isBusstop) icons.add(new Icon(currentCoord, "busIcon.png"));
                 } else if (kv_map.containsKey("railway")){
                     String val = kv_map.get("railway");
                     if(val.equals("station")) {
-                        if(isSubway) icons.add(new Icon(currentCoord, ".\\metroIcon.png"));
+                        if(isMetro) icons.add(new Icon(currentCoord, "metroIcon.png"));
+                        else if (isSTog) icons.add(new Icon(currentCoord, "stogIcon.png"));
                     }
                 }
             }
