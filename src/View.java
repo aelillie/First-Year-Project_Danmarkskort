@@ -78,6 +78,7 @@ public class View extends JFrame implements Observer {
 
         searchArea = new JTextField();
         searchArea.setText(promptText);
+        //Create a FocusListener for the textField
         searchArea.addFocusListener(new FocusListener() {
             @Override
             public void focusGained(FocusEvent e) {
