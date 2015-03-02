@@ -18,10 +18,28 @@ public class View extends JFrame implements Observer {
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
     protected double zoomLevel;
+    private JButton button;
 
 
     public View(Model m) {
+        super("This is our map");
         model = m;
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        double width = screenSize.getWidth();
+        double height = screenSize.getHeight();
+        setSize((int)width,(int)height);
+        setPreferredSize(new Dimension(800,800));
+        setScale();
+        makeGUI();
+
+
+        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        pack();
+
+
+    }
+
+    private void setScale(){
         // bbox.width * xscale * .56 = 512
         // bbox.height * yscale = 512
         double xscale = 800 / .56 / model.bbox.getWidth();
@@ -29,16 +47,23 @@ public class View extends JFrame implements Observer {
         double scale = max(xscale, yscale);
         transform.scale(.56*scale,-scale);
         transform.translate(-model.bbox.getMinX(), -model.bbox.getMaxY());
-        m.addObserver(this);
-        canvas = new Canvas();
-        setLayout(new BorderLayout());
-        getContentPane().add(canvas, BorderLayout.CENTER);
-        setSize(800, 800);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        setVisible(true);
-        zoomLevel = (model.bbox.getWidth()* -1.0); //TODO more precise way to do this??
+        model.addObserver(this);
     }
 
+    private void makeGUI(){
+
+        JLayeredPane layer = getLayeredPane();
+        canvas = new Canvas();
+        canvas.setBounds(0,0,getWidth(),getHeight());
+        button = new JButton("hey");
+        button.setBounds(20,20,200,50);
+        layer.add(canvas, new Integer(1));
+        layer.add(button, new Integer(2));
+
+
+
+
+    }
     @Override
     public void update(Observable obs, Object obj) {
         canvas.repaint();
