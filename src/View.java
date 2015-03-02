@@ -1,5 +1,5 @@
 import javax.swing.*;
-import javax.swing.border.LineBorder;
+import javax.swing.border.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -72,16 +72,27 @@ public class View extends JFrame implements Observer {
         //Create the canvas and Components for GUI.
         canvas = new Canvas();
         canvas.setBounds(0,0,getWidth(),getHeight());
+
         searchArea = new JTextField();
         Font font = new Font("Arial",Font.PLAIN,16);
         searchArea.setFont(font);
-        searchArea.setBorder(new LineBorder(Color.BLACK, 3));
-        searchArea.setBounds(20,20,180,25);
+        searchArea.setBorder(new CompoundBorder(
+                BorderFactory.createMatteBorder(4, 7, 4, 7, new Color(29,114,239)),
+                BorderFactory.createRaisedBevelBorder()));
+        searchArea.setBounds(20,20,300,37);
+
+        JButton searchButton = new JButton();
+        searchButton.setBorder(new CompoundBorder(
+                BorderFactory.createMatteBorder(4, 0, 4, 7, new Color(29,114,239)),
+                BorderFactory.createRaisedBevelBorder()));
+        searchButton.setIcon(new ImageIcon(".\\data\\searchIcon.png"));
+        searchButton.setBackground(new Color(36,45,50));
+        searchButton.setFocusable(false);
+        searchButton.setBounds(320,20,43,37);
+
         layer.add(canvas, new Integer(1));
         layer.add(searchArea, new Integer(2));
-
-
-
+        layer.add(searchButton, new Integer(2));
 
     }
     @Override
@@ -224,6 +235,9 @@ public class View extends JFrame implements Observer {
                 for (Icon icon : model.getIcons()) {
                     icon.draw(g, transform);
                 }
+            }
+
+
 
 
                 // }
@@ -258,7 +272,8 @@ public class View extends JFrame implements Observer {
 			try {
 				System.out.println("Center: " + transform.inverseTransform(center, null));
 			} catch (NoninvertibleTransformException e) {} */
-            }
+
+
         }
     }
 
