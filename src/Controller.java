@@ -41,10 +41,10 @@ public class Controller extends MouseAdapter {
             //Set up the keyboard handler for different keys.
             switch (e.getKeyChar()) {
                 case '+':
-                    view.zoom(1.1);
+                    view.zoom(1.2);
                     break;
                 case '-':
-                    view.zoom(0.9);
+                    view.zoom(1/1.2);
                     break;
                 case 'a':
                     view.toggleAA();

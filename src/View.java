@@ -20,18 +20,17 @@ public class View extends JFrame implements Observer {
     protected double zoomLevel;
     private JButton button;
 
-
+    /**
+     * Creates the window of our application.
+     *
+     * @param m Reference to Model class
+     */
     public View(Model m) {
         super("This is our map");
         model = m;
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
-        setSize((int)width,(int)height);
-        setPreferredSize(new Dimension(800,800));
+
         setScale();
         makeGUI();
-
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
@@ -39,6 +38,10 @@ public class View extends JFrame implements Observer {
 
     }
 
+    /**
+     * Sets the scale for the afflineTransform object using to bounds from the osm file
+     * Also sets up the frame size from screenSize
+     */
     private void setScale(){
         // bbox.width * xscale * .56 = 512
         // bbox.height * yscale = 512
@@ -48,15 +51,30 @@ public class View extends JFrame implements Observer {
         transform.scale(.56*scale,-scale);
         transform.translate(-model.bbox.getMinX(), -model.bbox.getMaxY());
         model.addObserver(this);
+
+        //Set up the JFrame using the monitors resolution.
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        double width = screenSize.getWidth();
+        double height = screenSize.getHeight();
+        setSize((int) width, (int) height);
+        setPreferredSize(new Dimension(800, 800));
     }
 
+    /**
+     * Makes use of different layers to put JComponent on top
+     * of the canvas.
+     */
     private void makeGUI(){
-
+        //retrieve the LayeredPane stored in the frame.
         JLayeredPane layer = getLayeredPane();
+        //Create the canvas and Components for GUI.
         canvas = new Canvas();
         canvas.setBounds(0,0,getWidth(),getHeight());
         button = new JButton("hey");
+        button.setFocusable(false);
         button.setBounds(20,20,200,50);
+
+        //Add them to their layers.
         layer.add(canvas, new Integer(1));
         layer.add(button, new Integer(2));
 
