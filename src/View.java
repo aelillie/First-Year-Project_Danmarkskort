@@ -1,6 +1,8 @@
 import javax.swing.*;
 import javax.swing.border.*;
 import java.awt.*;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
@@ -19,8 +21,8 @@ public class View extends JFrame implements Observer {
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
     protected double zoomLevel;
-    private JButton button;
     private JTextField searchArea;
+    private String promptText = "Enter Address";
 
     /**
      * Creates the window of our application.
@@ -37,7 +39,7 @@ public class View extends JFrame implements Observer {
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
 
-
+        canvas.requestFocusInWindow();
     }
 
     /**
@@ -71,9 +73,27 @@ public class View extends JFrame implements Observer {
         JLayeredPane layer = getLayeredPane();
         //Create the canvas and Components for GUI.
         canvas = new Canvas();
+
         canvas.setBounds(0,0,getWidth(),getHeight());
 
         searchArea = new JTextField();
+        searchArea.setText(promptText);
+        searchArea.addFocusListener(new FocusListener() {
+            @Override
+            public void focusGained(FocusEvent e) {
+                if (searchArea.getText().equals(promptText)) {
+                    searchArea.setText("");
+                }
+            }
+
+            @Override
+            public void focusLost(FocusEvent e) {
+                if (searchArea.getText().isEmpty()) {
+                    searchArea.setText(promptText);
+                }
+            }
+
+        });
         Font font = new Font("Arial",Font.PLAIN,16);
         searchArea.setFont(font);
         searchArea.setBorder(new CompoundBorder(
@@ -103,7 +123,7 @@ public class View extends JFrame implements Observer {
     /**
      * The function of this method is to scale the view of the canvas by a factor given.
      * then pans the view to remove the moving towards 0,0 coord.
-     * @param factor double the factor zooming
+     * @param factor Double, the factor scaling
      */
     public void zoom(double factor) {
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
@@ -235,9 +255,6 @@ public class View extends JFrame implements Observer {
                 for (Icon icon : model.getIcons()) {
                     icon.draw(g, transform);
                 }
-            }
-
-
 
 
                 // }
@@ -272,8 +289,7 @@ public class View extends JFrame implements Observer {
 			try {
 				System.out.println("Center: " + transform.inverseTransform(center, null));
 			} catch (NoninvertibleTransformException e) {} */
-
-
+            }
         }
     }
 

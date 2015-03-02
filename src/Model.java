@@ -256,7 +256,9 @@ public class Model extends Observable implements Iterable<Shape> {
                     }
                 }
                 else if (kv_map.containsKey("boundary")) {
-                    drawables.add(new Line(way, Color.WHITE, 1, -1.0));
+                    Line line = new Line(way, Color.WHITE, 14, 2.0);
+                    line.setDashed();
+                    drawables.add(line);
                 }
                 else if (kv_map.containsKey("highway")) {
                     String val = kv_map.get("highway");
@@ -295,7 +297,11 @@ public class Model extends Observable implements Iterable<Shape> {
                         drawables.add(line);
                     }
                     else if (val.equals("bridleway")) drawables.add(new Line(way, Drawable.bridleway, 1, -1.0));
-                    else if (val.equals("steps")) drawables.add(new Line(way, Drawable.steps, 1, -1.0));
+                    else if (val.equals("steps")) {
+                        Line line = new Line(way, Drawable.steps, 14, -0.1);
+                        line.setDashed();
+                        drawables.add(line);
+                    }
                     else if (val.equals("path")) drawables.add(new Line(way, Drawable.path, 1, -0.1));
 
 
