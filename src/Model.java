@@ -4,7 +4,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
-
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -18,8 +17,8 @@ import java.util.zip.ZipInputStream;
 
 public class Model extends Observable implements Iterable<Shape> {
 
-    private List<Shape> lines = new ArrayList<>();
-    private List<Icon> icons = new ArrayList<>();
+    private List<Shape> lines = new ArrayList<>(); //contains all shapes to be drawn that are not in drawables
+    private List<Icon> icons = new ArrayList<>(); //contains all the icons to be drawn
     private List<List<Point2D>> coastlinesInCoords = new ArrayList<>();
     private Map<String,List<Shape>> streetnameMap = new HashMap<>();
 
@@ -27,35 +26,76 @@ public class Model extends Observable implements Iterable<Shape> {
         return icons;
     }
 
-    List<Drawable> drawables = new ArrayList<>();
+    List<Drawable> drawables = new ArrayList<>(); //Shapes to be drawn differently
 
     Rectangle2D bbox;
 
 
+    /**
+     * Constructor, which either parses .osm or .zip files
+     * @param filename either .osm or .zip (containing .osm) format
+     */
     public Model(String filename) {
         long time = System.nanoTime();
-        if (filename.endsWith(".txt")) parseTXT(filename);
-        else if (filename.endsWith(".osm")) parseOSM(filename);
+        if (filename.endsWith(".osm")) parseOSM(filename);
         else if (filename.endsWith(".zip")) parseZIP(filename);
         else System.err.println("File not recognized");
         System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
+    /**
+     * Parses .osm files and sets a content handler
+     * @param filename .osm format
+     */
+    void parseOSM(String filename) {
+        try {
+            XMLReader reader = XMLReaderFactory.createXMLReader();
+            reader.setContentHandler(new OSMHandler());
+            reader.parse(filename);
+        } catch (SAXException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
 
+    /**
+     * Parses .zip files and sets a content handler
+     * @param filename .zip format, containing .osm
+     */
+    void parseZIP(String filename) {
+        try (ZipInputStream zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
+            zip.getNextEntry();
+            XMLReader reader = XMLReaderFactory.createXMLReader();
+            reader.setContentHandler(new OSMHandler());
+            reader.parse(new InputSource(zip));
+        } catch (SAXException | IOException e) {
+            throw new RuntimeException(e);
+        }
+    }
+
+
+
+    /**
+     * Contenthandler, which handles the .osm file written in XML.
+     * Saving data from the file, which is being parsed, through keys and tags read.
+     * Ultimately adding shapes to be drawn to lists in this class.
+     */
     class OSMHandler extends DefaultHandler {
-        Map<Long, Point2D> map = new HashMap<>(); //holder koordinater og et id
-        Map<String, String> kv_map = new HashMap<>(); //holder keys og values i et "tag"
-        Map<Long, String> role_map = new HashMap<>();
-        List<Point2D> coords = new ArrayList<>(); //gemmer koordinater fra en reference
-        Path2D way; //<way>
-        Point2D currentCoord;
-        private boolean isArea;
-        private boolean isBusstop;
-        private boolean isMetro;
-        private boolean isSTog; //S-tog
-        private boolean hasName;
+        Map<Long, Point2D> map = new HashMap<>(); //Relation between a nodes' id and coordinates
+        Map<String, String> kv_map = new HashMap<>(); //relation between the keys and values in the XML file
+        Map<Long, String> role_map = new HashMap<>(); //
+        List<Point2D> coords = new ArrayList<>(); //referenced coordinates
+        Path2D way; //<way> tag. A way is the path from one coordinate to another
+        Point2D currentCoord; //current coordinate read
+        private boolean isArea, isBusstop, isMetro, isSTog, hasName; //controls how shapes should be added
         private String streetName;
 
+        /**
+         * Reads start elements and handles what to be done from the data associated with the element.
+         * @param uri The namespace URI
+         * @param localName the local name (without prefix)
+         * @param qName the qualified name (with prefix)
+         * @param atts the attributes attached to the element
+         */
         public void startElement(String uri, String localName, String qName, Attributes atts) {
             switch (qName) { //if qName.equals(case)
                 case "node": {
@@ -113,6 +153,12 @@ public class Model extends Observable implements Iterable<Shape> {
             }
         }
 
+        /**
+         * Reads end elements and handles what to be done from the data associated with the element.
+         * @param uri the namespace URI
+         * @param localName the local name (without prefix)
+         * @param qName the qualified CML name (with prefix)
+         */
         public void endElement(String uri, String localName, String qName) {
             if (qName.equals("way")) {
                 way = new Path2D.Double();
@@ -301,43 +347,6 @@ public class Model extends Observable implements Iterable<Shape> {
 
     public Map<String,List<Shape>> getStreetMap(){
         return streetnameMap;
-    }
-
-    void parseZIP(String filename) {
-        try (ZipInputStream zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
-            zip.getNextEntry();
-            XMLReader reader = XMLReaderFactory.createXMLReader();
-            reader.setContentHandler(new OSMHandler());
-            reader.parse(new InputSource(zip));
-        } catch (SAXException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    void parseOSM(String filename) {
-        try {
-            XMLReader reader = XMLReaderFactory.createXMLReader();
-            reader.setContentHandler(new OSMHandler());
-            reader.parse(filename);
-        } catch (SAXException | IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
-    void parseTXT(String filename) {
-        /* TODO: Doesn't work. NullPointerException
-        try (BufferedReader input = new BufferedReader(new FileReader(filename))) {
-            for (String line = input.readLine() ; line != null ; line = input.readLine()) {
-                String[] words = line.split(" ");
-                lines.add(new Line2D.Double(
-                        Double.parseDouble(words[0]),
-                        Double.parseDouble(words[1]),
-                        Double.parseDouble(words[2]),
-                        Double.parseDouble(words[3])));
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        } */
     }
 
     public void save(String filename) {
