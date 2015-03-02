@@ -1,4 +1,5 @@
 import javax.swing.*;
+import javax.swing.border.LineBorder;
 import java.awt.*;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
@@ -19,6 +20,7 @@ public class View extends JFrame implements Observer {
     private Point dragEndScreen, dragStartScreen;
     protected double zoomLevel;
     private JButton button;
+    private JTextField searchArea;
 
     /**
      * Creates the window of our application.
@@ -70,13 +72,13 @@ public class View extends JFrame implements Observer {
         //Create the canvas and Components for GUI.
         canvas = new Canvas();
         canvas.setBounds(0,0,getWidth(),getHeight());
-        button = new JButton("hey");
-        button.setFocusable(false);
-        button.setBounds(20,20,200,50);
-
-        //Add them to their layers.
+        searchArea = new JTextField();
+        Font font = new Font("Arial",Font.PLAIN,16);
+        searchArea.setFont(font);
+        searchArea.setBorder(new LineBorder(Color.BLACK, 3));
+        searchArea.setBounds(20,20,180,25);
         layer.add(canvas, new Integer(1));
-        layer.add(button, new Integer(2));
+        layer.add(searchArea, new Integer(2));
 
 
 
