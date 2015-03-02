@@ -1,17 +1,14 @@
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
+import java.awt.List;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseWheelEvent;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
+import java.awt.geom.*;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.Observable;
-import java.util.Observer;
-import java.util.Random;
+import java.util.*;
 
 import static java.lang.Math.max;
 
@@ -166,8 +163,32 @@ public class View extends JFrame implements Observer {
                 icon.draw(g,transform);
             }
 
+
+
            // }
 
+            //AMALIE
+            /*Iterator it = model.getStreetMap().entrySet().iterator();
+            while (it.hasNext()) {
+                int count1 = 0;
+                Map.Entry pair = (Map.Entry) it.next();
+                java.util.List<Shape> list = (java.util.List<Shape>) pair.getValue();
+                String streetName = (String) pair.getKey();
+                //g.setStroke(txSt);
+                TextDraw txtDr = new TextDraw();
+                System.out.println(streetName);
+                Path2D.Double street1 = new Path2D.Double();
+                g.setColor(Color.BLACK);
+                for (Shape street : list) {
+                    //if(count == 0){
+                    //	street1 =  (Path2D.Double) street;
+                    //	count++;
+                    //} else {
+                    //	street1.append(street,true);
+                    //}
+                    txtDr.draw(g,new GeneralPath(street),streetName,70.);
+                }
+            }*/
 
 
             /*
