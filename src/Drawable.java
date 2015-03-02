@@ -3,7 +3,9 @@ import java.awt.*;
 public abstract class Drawable {
     Shape shape;
     Color color;
+    Double drawLevel;
 
+    //Different predefined strokes.
     static Stroke s00 = new BasicStroke(Float.MIN_VALUE);
     static Stroke s01 = new BasicStroke(0.00001f);
     static Stroke s02 = new BasicStroke(0.00002f);
@@ -15,9 +17,10 @@ public abstract class Drawable {
     static Stroke s08 = new BasicStroke(0.00008f);
     static Stroke s09 = new BasicStroke(0.00009f);
     static Stroke s10 = new BasicStroke(0.00010f);
-    static Stroke s11 = new BasicStroke(0.00001f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{0.0001f}, 0.00001f); //dashed
-
-    //Colors
+    static Stroke s11 = new BasicStroke(0.00001f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{0.0001f}, 0.00001f); //Metro
+    static Stroke s12 = new BasicStroke(0.00002f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,30.0f, new float[]{0.00005f},0.00000f); //Footway
+    static Stroke s13 = new BasicStroke(0.00002f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 20.0f, new float[]{0.0001f}, 0.000001f); //Cycleway
+    //Predefined colors to use.
     static Color seawater = new Color(70, 130, 180);
     static Color lightgreen = new Color(34,139,34);
     static Color darkgreen = new Color(0, 100, 0);
@@ -52,12 +55,22 @@ public abstract class Drawable {
     static Color park = new Color(144,238,144);
     static Color garden = new Color(152,251,152);
 
-    Stroke[] strokes = new Stroke[]{s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11};
 
-    public Drawable(Shape shape, Color color) {
+    Stroke[] strokes = new Stroke[]{s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11,s12, s13};
+
+    /**
+     * Sets up everything needed.
+     * @param shape Shape to be drawn
+     * @param color Color of shape
+     * @param drawLevel When to draw
+     */
+    public Drawable(Shape shape, Color color, double drawLevel) {
         this.shape = shape;
         this.color = color;
+        this.drawLevel = drawLevel;
     }
+
+    //Abstract methods.
     abstract void draw(Graphics2D g);
 
     abstract void drawBoundary(Graphics2D g);

@@ -1,4 +1,3 @@
-import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.MouseEvent;
@@ -6,12 +5,8 @@ import java.awt.event.MouseWheelEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
 import java.util.Observable;
 import java.util.Observer;
-import java.util.Random;
 
 import static java.lang.Math.max;
 
@@ -22,7 +17,7 @@ public class View extends JFrame implements Observer {
     private AffineTransform transform = new AffineTransform();
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
-    private double zoomLevel;
+    protected double zoomLevel;
 
 
     public View(Model m) {
@@ -41,7 +36,7 @@ public class View extends JFrame implements Observer {
         setSize(800, 800);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
         setVisible(true);
-        zoomLevel = 1 / (model.bbox.getWidth() * 10); //TODO more precise way to do this??
+        zoomLevel = (model.bbox.getWidth()* -1.0); //TODO more precise way to do this??
     }
 
     @Override
@@ -49,14 +44,27 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
+    /**
+     * The function of this method is to scale the view of the canvas by a factor given.
+     * then pans the view to remove the moving towards 0,0 coord.
+     * @param factor double the factor zooming
+     */
     public void zoom(double factor) {
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
         pan(getWidth() * (1-factor) / 2, getHeight() * (1-factor) / 2);
     }
+
+    /**
+     * Creates the inverse transformation of a point given.
+     * It simply transforms a device space coordinate back
+     * to user space coordinates.
+     * @param p1 Point2D mouse position
+     * @return Point2D The point after inverse of the scale.
+     * @throws NoninvertibleTransformException
+     */
     private Point2D.Float transformPoint(Point p1) throws NoninvertibleTransformException {
-        AffineTransform inverse = transform.createInverse();
         Point2D.Float p2 = new Point2D.Float();
-        inverse.transform(p1, p2); // create a destination p2 from the Point p1
+        transform.inverseTransform(p1, p2); // create a destination p2 from the Point p1
         return p2;
     }
 
@@ -76,7 +84,7 @@ public class View extends JFrame implements Observer {
                 //point after zoom
                 Point2D p2 = transformPoint(p);
                 transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY()); //Pan towards mouse
-                zoomLevel -= 0.2; //Decrease zoomLevel
+                zoomLevel -= 0.0765; //Decrease zoomLevel
                 repaint();
 
             } else {
@@ -84,7 +92,7 @@ public class View extends JFrame implements Observer {
                 transform.scale(1.2, 1.2);
                 Point2D p2 = transformPoint(p);
                 transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY()); //Pan towards mouse
-                zoomLevel += 0.2; //increase zoomLevel
+                zoomLevel += 0.0765; //increase zoomLevel
                 repaint();
 
             }
@@ -133,6 +141,9 @@ public class View extends JFrame implements Observer {
         repaint();
     }
 
+    /**
+     * Making that canvas look crisp and then back to shit.
+     */
     public void toggleAA() {
         antialias = !antialias;
         repaint();
@@ -140,34 +151,60 @@ public class View extends JFrame implements Observer {
 
     class Canvas extends JComponent {
         public static final long serialVersionUID = 4;
-        Random rnd = new Random();
         Stroke min_value = new BasicStroke(Float.MIN_VALUE);
 
         @Override
         public void paint(Graphics _g) {
             Graphics2D g = (Graphics2D) _g;
+            //Set the Transform for Graphic2D element before drawing.
             g.setTransform(transform);
             if (antialias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            g.setStroke(min_value);
+            g.setStroke(min_value); //Just for good measure.
             g.setColor(Color.BLACK);
-            for(Shape line : model) {
+            //Drawing everything not categorized as a area or line object.
+            for (Shape line : model) {
                 g.draw(line);
             }
-            for (Drawable drawable: model.drawables) {
-                drawable.drawBoundary(g);
+            //Draw EVERYTHING
+            for (Drawable drawable : model.drawables) {
+                if (zoomLevel > -0.4)
+                    drawable.drawBoundary(g);           //TODO Does this even have to be called from here?
             }
-            for (Drawable drawable: model.drawables) {
-                drawable.draw(g);
+            for (Drawable drawable : model.drawables) {
+                if (drawable.drawLevel < zoomLevel)
+                    drawable.draw(g);
             }
-            //if(zoomLevel > 3.6) {
+            if (zoomLevel > 0.0) {
+                for (Icon icon : model.getIcons()) {
+                    icon.draw(g, transform);
+                }
 
-            for (Icon icon : model.getIcons()) {
-                icon.draw(g,transform);
-            }
 
-           // }
+                // }
 
+                //AMALIE
+            /*Iterator it = model.getStreetMap().entrySet().iterator();
+            while (it.hasNext()) {
+                int count1 = 0;
+                Map.Entry pair = (Map.Entry) it.next();
+                java.util.List<Shape> list = (java.util.List<Shape>) pair.getValue();
+                String streetName = (String) pair.getKey();
+                //g.setStroke(txSt);
+                TextDraw txtDr = new TextDraw();
+                System.out.println(streetName);
+                Path2D.Double street1 = new Path2D.Double();
+                g.setColor(Color.BLACK);
+                for (Shape street : list) {
+                    //if(count == 0){
+                    //	street1 =  (Path2D.Double) street;
+                    //	count++;
+                    //} else {
+                    //	street1.append(street,true);
+                    //}
+                    txtDr.draw(g,new GeneralPath(street),streetName,70.);
+                }
+            }*/
 
 
             /*
@@ -176,6 +213,8 @@ public class View extends JFrame implements Observer {
 			try {
 				System.out.println("Center: " + transform.inverseTransform(center, null));
 			} catch (NoninvertibleTransformException e) {} */
+            }
         }
     }
+
 }

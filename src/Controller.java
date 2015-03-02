@@ -9,31 +9,36 @@ public class Controller extends MouseAdapter {
     public Controller(Model m, View v) {
         model = m;
         view = v;
-        view.addMouseListener(this);
-        view.addMouseMotionListener(this);
-        view.addMouseWheelListener(this);
+        //Set up Handlers for mouse and keyboard and let controller set these for view.
+        MouseHandler mH = new MouseHandler();
+        view.addMouseListener(mH);
+        view.addMouseMotionListener(mH);
+        view.addMouseWheelListener(mH);
         view.addKeyListener(new keyHandler());
     }
     // sets up events for mouse and calls the methods in view.
-    public void mouseDragged(MouseEvent e) {
-        view.mouseDragged(e);
-    }
-    public void mouseMoved(MouseEvent e) { ;; }
-    public void mouseClicked(MouseEvent e) { ;; }
-    public void mouseEntered(MouseEvent e) { ;; }
-    public void mouseExited(MouseEvent e) { ;; }
-    public void mousePressed(MouseEvent e) {
-        view.mousePressed(e);
-    }
-    public void mouseWheelMoved(MouseWheelEvent e){
-        view.wheelZoom(e);
-    }
-    public void mouseReleased(MouseEvent e) { ;;  }
+    private class MouseHandler extends MouseAdapter {
 
+        public void mouseDragged(MouseEvent e) {
+            view.mouseDragged(e);
+        }
+        public void mouseMoved(MouseEvent e) {}
+        public void mouseClicked(MouseEvent e) {}
+        public void mouseEntered(MouseEvent e) {}
+        public void mouseExited(MouseEvent e) {}
+        public void mousePressed(MouseEvent e) {
+            view.mousePressed(e);
+        }
+        public void mouseWheelMoved(MouseWheelEvent e) {
+            view.wheelZoom(e);
+        }
+        public void mouseReleased(MouseEvent e) {}
+    }
     private class keyHandler extends KeyAdapter{
 
         @Override
         public void keyPressed(KeyEvent e) {
+            //Set up the keyboard handler for different keys.
             switch (e.getKeyChar()) {
                 case '+':
                     view.zoom(1.1);
