@@ -1,12 +1,20 @@
+import org.xml.sax.Attributes;
+import org.xml.sax.InputSource;
+import org.xml.sax.SAXException;
+import org.xml.sax.XMLReader;
+import org.xml.sax.helpers.DefaultHandler;
+import org.xml.sax.helpers.XMLReaderFactory;
+
 import java.awt.*;
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.zip.*;
-import java.io.*;
-import java.awt.geom.*;
-import java.awt.geom.Point2D;
-import org.xml.sax.*;
-import org.xml.sax.helpers.*;
+import java.util.zip.ZipInputStream;
 
 public class Model extends Observable implements Iterable<Shape> {
 
@@ -117,7 +125,7 @@ public class Model extends Observable implements Iterable<Shape> {
                 if (kv_map.containsKey("natural")) {
                     String val = kv_map.get("natural");
                     if (val.equals("coastline")){
-                        drawables.add(new Line(way, Drawable.seawater, 4));
+                        drawables.add(new Line(way, Drawable.seawater, 4, -1.0));
                         //processCoastpoints(coords);
                     }
                     if (val.equals("wood")) drawables.add(new Area(way, Drawable.scrub, -2.0));
@@ -141,18 +149,18 @@ public class Model extends Observable implements Iterable<Shape> {
                 }
                 else if (kv_map.containsKey("leisure")) {
                     String val = kv_map.get("leisure");
-                    if (val.equals("garden")) drawables.add(new Area(way, Drawable.garden, -0.0));
-                    if (val.equals("park")) drawables.add(new Area(way, Drawable.park,-0.05));
-                    if (val.equals("common")) drawables.add(new Area(way, Drawable.scrub, -0.05));
+                    if (val.equals("garden")) drawables.add(new Area(way, Drawable.garden, -1.2));
+                    if (val.equals("park")) drawables.add(new Area(way, Drawable.park,-1.2));
+                    if (val.equals("common")) drawables.add(new Area(way, Drawable.scrub, -1.2));
                 }
                 else if (kv_map.containsKey("landuse")) {
                     String val = kv_map.get("landuse");
-                    if (val.equals("cemetery")) drawables.add(new Area(way, Drawable.garden, -0.1));
-                    if (val.equals("construction")) drawables.add(new Area(way, Drawable.park, -0.1));
-                    if (val.equals("grass")) drawables.add(new Area(way, Drawable.park, -0.1));
-                    if (val.equals("greenfield")) drawables.add(new Area(way, Drawable.darkgreen, -0.1));
-                    if (val.equals("industrial")) drawables.add(new Area(way, Drawable.darkgreen, -0.1));
-                    if (val.equals("orchard")) drawables.add(new Area(way, Drawable.darkgreen, -0.1));
+                    if (val.equals("cemetery")) drawables.add(new Area(way, Drawable.garden, -0.4));
+                    if (val.equals("construction")) drawables.add(new Area(way, Drawable.park, -0.4));
+                    if (val.equals("grass")) drawables.add(new Area(way, Drawable.park, -0.4));
+                    if (val.equals("greenfield")) drawables.add(new Area(way, Drawable.darkgreen, -0.4));
+                    if (val.equals("industrial")) drawables.add(new Area(way, Drawable.darkgreen, -0.4));
+                    if (val.equals("orchard")) drawables.add(new Area(way, Drawable.darkgreen, -0.4));
 
                 }
                 else if (kv_map.containsKey("geological")) {
@@ -160,7 +168,7 @@ public class Model extends Observable implements Iterable<Shape> {
                 }
 
                 else if (kv_map.containsKey("building")) {
-                    drawables.add(new Area(way, Drawable.building, -1.0));
+                    drawables.add(new Area(way, Drawable.building, -0.5));
                 }
                 else if (kv_map.containsKey("shop")) {
                     drawables.add(new Area(way, Drawable.building, -1.0));
@@ -197,8 +205,8 @@ public class Model extends Observable implements Iterable<Shape> {
                 else if (kv_map.containsKey("barrier")) {
                     String val = kv_map.get("barrier");
                     if(val.equals("hedge")) {
-                        if (isArea) drawables.add(new Area(way, Drawable.scrub, -0.1));
-                        else drawables.add(new Line(way,Drawable.scrub,2, -0.1));
+                        if (isArea) drawables.add(new Area(way, Drawable.scrub, -0.3));
+                        else drawables.add(new Line(way,Drawable.scrub,2, -0.3));
                     }
                 }
                 else if (kv_map.containsKey("boundary")) {
@@ -216,12 +224,12 @@ public class Model extends Observable implements Iterable<Shape> {
                     else if (val.equals("primary")) drawables.add(new Line(way, Drawable.primary, 6, -1.0));
                     else if (val.equals("primary_link")) drawables.add(new Line(way, Drawable.primary, 6, -1.0));
                     else if (val.equals("secondary")) drawables.add(new Line(way, Drawable.secondary, 6, -1.0));
-                    else if (val.equals("secondary_link")) drawables.add(new Line(way, Drawable.secondary, 6, -0.5));
-                    else if (val.equals("tertiary")) drawables.add(new Line(way, Drawable.tertiary, 5, -0.4));
-                    else if (val.equals("tertiary_link")) drawables.add(new Line(way, Drawable.tertiary, 5, -0.1));
-                    else if (val.equals("unclassified")) drawables.add(new Line(way, Color.WHITE, 5, -0.1));
-                    else if (val.equals("residential")) drawables.add(new Line(way, Color.WHITE, 4, -0.1));
-                    else if (val.equals("service")) drawables.add(new Line(way, Color.WHITE, 2, -0.1));
+                    else if (val.equals("secondary_link")) drawables.add(new Line(way, Drawable.secondary, 6, -0.8));
+                    else if (val.equals("tertiary")) drawables.add(new Line(way, Drawable.tertiary, 5, -0.8));
+                    else if (val.equals("tertiary_link")) drawables.add(new Line(way, Drawable.tertiary, 5, -0.8));
+                    else if (val.equals("unclassified")) drawables.add(new Line(way, Color.WHITE, 5, -0.8));
+                    else if (val.equals("residential")) drawables.add(new Line(way, Color.DARK_GRAY, 4, -1.0));
+                    else if (val.equals("service")) drawables.add(new Line(way, Color.WHITE, 2, -0.8));
 
                     else if (val.equals("living_street")) drawables.add(new Line(way, Drawable.living_street, 2, -1.0));
                     else if (val.equals("pedestrian")) drawables.add(new Line(way, Drawable.pedestrain, 2, -0.1));
@@ -230,8 +238,16 @@ public class Model extends Observable implements Iterable<Shape> {
                     else if (val.equals("raceway")) drawables.add(new Line(way, Drawable.raceway, 2, -0.4));
                     else if (val.equals("road")) drawables.add(new Line(way, Drawable.road, 3, -0.4));
 
-                    else if (val.equals("footway")) drawables.add(new Line(way, Drawable.footway, 1, -0.1));
-                    else if (val.equals("cycleway")) drawables.add(new Line(way, Drawable.cycleway, 1, -0.1));
+                    else if (val.equals("footway")) {
+                        Line line = new Line(way, Drawable.footway, 12, -0.1);
+                        line.setDashed();
+                        drawables.add(line);
+                    }
+                    else if (val.equals("cycleway")) {
+                        Line line = new Line(way, Drawable.cycleway, 13, -0.18);
+                        line.setDashed();
+                        drawables.add(line);
+                    }
                     else if (val.equals("bridleway")) drawables.add(new Line(way, Drawable.bridleway, 1, -1.0));
                     else if (val.equals("steps")) drawables.add(new Line(way, Drawable.steps, 1, -1.0));
                     else if (val.equals("path")) drawables.add(new Line(way, Drawable.path, 1, -0.1));

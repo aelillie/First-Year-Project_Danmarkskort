@@ -9,6 +9,7 @@ public class Controller extends MouseAdapter {
     public Controller(Model m, View v) {
         model = m;
         view = v;
+        //Set up Handlers for mouse and keyboard and let controller set these for view.
         MouseHandler mH = new MouseHandler();
         view.addMouseListener(mH);
         view.addMouseMotionListener(mH);
@@ -37,6 +38,7 @@ public class Controller extends MouseAdapter {
 
         @Override
         public void keyPressed(KeyEvent e) {
+            //Set up the keyboard handler for different keys.
             switch (e.getKeyChar()) {
                 case '+':
                     view.zoom(1.1);
