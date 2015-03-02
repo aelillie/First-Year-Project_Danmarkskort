@@ -198,7 +198,7 @@ public class Model extends Observable implements Iterable<Shape> {
                     //drawables.add(new Area(way, Drawable.building));
                     String val = kv_map.get("amenity");
                     if(val.equals("parking")){
-                        icons.add(new Icon(way,"parkingIcon.jpg"));
+                        icons.add(new Icon(way,"data//parkingIcon.jpg"));
                         drawables.add(new Area(way,Drawable.sand, -1.0));
                     }
                 }
@@ -273,12 +273,12 @@ public class Model extends Observable implements Iterable<Shape> {
             } else if (qName.equals("node")) {
                 if (kv_map.containsKey("highway")) {
                     String val = kv_map.get("highway");
-                    if (val.equals("bus_stop") && isBusstop) icons.add(new Icon(currentCoord, "busIcon.png"));
+                    if (val.equals("bus_stop") && isBusstop) icons.add(new Icon(currentCoord, "data//busIcon.png"));
                 } else if (kv_map.containsKey("railway")){
                     String val = kv_map.get("railway");
                     if(val.equals("station")) {
-                        if(isMetro) icons.add(new Icon(currentCoord, "metroIcon.png"));
-                        else if (isSTog) icons.add(new Icon(currentCoord, "stogIcon.png"));
+                        if(isMetro) icons.add(new Icon(currentCoord, "data//metroIcon.png"));
+                        else if (isSTog) icons.add(new Icon(currentCoord, "data//stogIcon.png"));
                     }
                 }
             }
