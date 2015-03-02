@@ -1,25 +1,19 @@
-import org.xml.sax.Attributes;
-import org.xml.sax.InputSource;
-import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
-import org.xml.sax.helpers.XMLReaderFactory;
-
 import java.awt.*;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
 import java.util.*;
 import java.util.List;
-import java.util.zip.ZipInputStream;
+import java.util.zip.*;
+import java.io.*;
+import java.awt.geom.*;
+import java.awt.geom.Point2D;
+import org.xml.sax.*;
+import org.xml.sax.helpers.*;
 
 public class Model extends Observable implements Iterable<Shape> {
 
     private List<Shape> lines = new ArrayList<>();
     private List<Icon> icons = new ArrayList<>();
+    private List<List<Point2D>> coastlinesInCoords = new ArrayList<>();
+    private Map<String,List<Shape>> streetnameMap = new HashMap<>();
 
     public List<Icon> getIcons() {
         return icons;
@@ -39,6 +33,7 @@ public class Model extends Observable implements Iterable<Shape> {
         System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
+
     class OSMHandler extends DefaultHandler {
         Map<Long, Point2D> map = new HashMap<>(); //holder koordinater og et id
         Map<String, String> kv_map = new HashMap<>(); //holder keys og values i et "tag"
@@ -50,6 +45,8 @@ public class Model extends Observable implements Iterable<Shape> {
         private boolean isBusstop;
         private boolean isMetro;
         private boolean isSTog; //S-tog
+        private boolean hasName;
+        private String streetName;
 
         public void startElement(String uri, String localName, String qName, Attributes atts) {
             switch (qName) { //if qName.equals(case)
@@ -78,6 +75,7 @@ public class Model extends Observable implements Iterable<Shape> {
                     kv_map.clear();
                     coords.clear();
                     isArea = false;
+                    hasName = false;
                     break;
                 case "bounds":
                     double minlat = Double.parseDouble(atts.getValue("minlat"));
@@ -94,6 +92,10 @@ public class Model extends Observable implements Iterable<Shape> {
                     if(k.equals("highway") && v.equals("bus_stop")) isBusstop = true;
                     if(k.equals("subway")&& v.equals("yes")) isMetro = true;
                     if(k.equals("network") && v.equals("S-Tog")) isSTog = true;
+                    if(k.equals("name")){
+                        hasName = true;
+                        streetName = v;
+                    }
                     break;
                 case "member":
                     long ref = Long.parseLong(atts.getValue("ref"));
@@ -114,7 +116,10 @@ public class Model extends Observable implements Iterable<Shape> {
                 }
                 if (kv_map.containsKey("natural")) {
                     String val = kv_map.get("natural");
-                    if (val.equals("coastline")) drawables.add(new Line(way, Drawable.seawater, 4, -2.0));
+                    if (val.equals("coastline")){
+                        drawables.add(new Line(way, Drawable.seawater, 4));
+                        //processCoastpoints(coords);
+                    }
                     if (val.equals("wood")) drawables.add(new Area(way, Drawable.scrub, -2.0));
                     if (val.equals("scrub")) drawables.add(new Area(way, Drawable.scrub, -1.5));
                     if (val.equals("heath")) drawables.add(new Area(way, Drawable.heath, -2.0));
@@ -201,6 +206,9 @@ public class Model extends Observable implements Iterable<Shape> {
                 }
                 else if (kv_map.containsKey("highway")) {
                     String val = kv_map.get("highway");
+                    
+                    if(hasName) addStreetName();
+                    
                     if (val.equals("motorway")) drawables.add(new Line(way, Drawable.motorway, 7, -1.0));
                     else if (val.equals("motorway_link")) drawables.add(new Line(way, Drawable.motorway, 7, -1.0));
                     else if (val.equals("trunk")) drawables.add(new Line(way, Drawable.trunk, 7, -1.0));
@@ -259,6 +267,24 @@ public class Model extends Observable implements Iterable<Shape> {
                 }
             }
         }
+
+        private void addStreetName(){
+            if(hasName) {
+                List<Shape> value = streetnameMap.get(streetName);
+                if (value == null) {
+                    List<Shape> list = new ArrayList<>();
+                    list.add(way);
+                    streetnameMap.put(streetName, list);
+                } else {
+                    List<Shape> list = streetnameMap.get(streetName);
+                    list.add(way);
+                }
+            }
+        }
+    }
+
+    public Map<String,List<Shape>> getStreetMap(){
+        return streetnameMap;
     }
 
     void parseZIP(String filename) {
