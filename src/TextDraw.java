@@ -5,9 +5,6 @@ import java.awt.geom.GeneralPath;
 import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 
-
-//Created by http://www.jhlabs.com/java/java2d/strokes/
-
 class TextDraw {
     GeneralPath path;
     String text;
@@ -21,31 +18,42 @@ class TextDraw {
         this.offset = offset;
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                 RenderingHints.VALUE_ANTIALIAS_ON);
-        Font font = g2.getFont().deriveFont(0.0001f);
+        Font font = g2.getFont().deriveFont(0.00015f);
         g2.setFont(font);
         FontRenderContext frc = g2.getFontRenderContext();
         tokenWidths = getTokenWidths(font, frc);
         // collect path points
         collectLayoutPoints(getPathPoints());
-        // layout text beginning at offset along curve
-        String[] tokens = text.split("(?<=[\\w\\s])");
         for(int j = 0; j < points.length-1; j++) {
-            double theta = getAngle(j);
+           // double theta = getAngle(j);
             AffineTransform at = AffineTransform.getTranslateInstance(points[j].x, points[j].y);
-            at.rotate(theta);
-            g2.setFont(font.deriveFont(at));
-            g2.drawString(tokens[j], 0, 0);
+            AffineTransform tmp = new AffineTransform();
+            tmp.setToScale(1,-1);
+            tmp.preConcatenate(at);
+           // at.rotate(theta);
+            g2.setFont(font.deriveFont(tmp));
+            g2.drawString(text, 0, 0);
         }
     }
 
+    /*private Point2D.Double[] stringBetween()
+    {
+        PathIterator pit = path.getPathIterator(null,0.01);
+
+        while(!pit.isDone())
+        {
+
+        }
+    }*/
+
     private double getAngle(int index) {
-        double dy =points[index+1].y -points[index].y;
-        double dx =points[index+1].x -points[index].x;
+        double dy = points[index+1].y -points[index].y;
+        double dx = points[index+1].x -points[index].x;
         return Math.atan2(dy, dx);
     }
 
     private Point2D.Double[] getPathPoints() {
-        double flatness = 0.01;
+        double flatness = 0.02;
         PathIterator pit = path.getPathIterator(null, flatness);
         int count = 0;
         while(!pit.isDone()) {
@@ -54,7 +62,7 @@ class TextDraw {
         }
         Point2D.Double[] points = new Point2D.Double[count];
         pit = path.getPathIterator(null, flatness);
-        double[] coords = new double[6];
+        double[] coords = new double[10];
         count = 0;
         while(!pit.isDone()) {
             int type = pit.currentSegment(coords);

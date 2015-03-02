@@ -105,8 +105,8 @@ public class View extends JFrame implements Observer {
         searchButton.setBorder(new CompoundBorder(
                 BorderFactory.createMatteBorder(4, 0, 4, 7, new Color(29,114,239)),
                 BorderFactory.createRaisedBevelBorder()));
-        searchButton.setIcon(new ImageIcon(".\\data\\searchIcon.png"));
-        searchButton.setBackground(new Color(36,45,50));
+        searchButton.setBackground(new Color(36, 45, 50));
+        searchButton.setIcon(new ImageIcon("data\\searchIcon.png"));
         searchButton.setFocusable(false);
         searchButton.setBounds(320,20,43,37);
 
