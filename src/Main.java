@@ -3,5 +3,6 @@ public class Main {
         Model m = new Model("data//small.osm");
         View v = new View(m);
         Controller c = new Controller(m,v);
+        v.setVisible(true);
     }
 }
