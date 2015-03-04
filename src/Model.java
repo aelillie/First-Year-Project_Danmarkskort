@@ -16,8 +16,8 @@ import java.util.List;
 import java.util.zip.ZipInputStream;
 
 public class Model extends Observable implements Iterable<Shape> {
-
-    private List<Shape> lines = new ArrayList<>(); //contains all shapes to be drawn that are not in drawables
+    private List<Shape> lines = new ArrayList<>();
+    private Map<Long, Path2D> relations = new HashMap<>(); //contains all shapes to be used as relations.
     private List<Icon> icons = new ArrayList<>(); //contains all the icons to be drawn
     private List<List<Point2D>> coastlinesInCoords = new ArrayList<>();
     private Map<String,List<Shape>> streetnameMap = new HashMap<>();
@@ -83,8 +83,10 @@ public class Model extends Observable implements Iterable<Shape> {
         Map<Long, Point2D> map = new HashMap<>(); //Relation between a nodes' id and coordinates
         Map<String, String> kv_map = new HashMap<>(); //relation between the keys and values in the XML file
         Map<Long, String> role_map = new HashMap<>(); //
+        List<Long> refs = new ArrayList<>();
         List<Point2D> coords = new ArrayList<>(); //referenced coordinates
         Path2D way; //<way> tag. A way is the path from one coordinate to another
+        Long id;
         Point2D currentCoord; //current coordinate read
         private boolean isArea, isBusstop, isMetro, isSTog, hasName; //controls how shapes should be added
         private String streetName;
@@ -98,6 +100,12 @@ public class Model extends Observable implements Iterable<Shape> {
          */
         public void startElement(String uri, String localName, String qName, Attributes atts) {
             switch (qName) { //if qName.equals(case)
+                case "relation":{
+                    kv_map.clear();
+                    role_map.clear();
+                    refs.clear();
+                    break;
+                }
                 case "node": {
                     kv_map.clear();
                     isBusstop = false;
@@ -124,6 +132,7 @@ public class Model extends Observable implements Iterable<Shape> {
                     coords.clear();
                     isArea = false;
                     hasName = false;
+                    id = Long.parseLong(atts.getValue("id"));
                     break;
                 case "bounds":
                     double minlat = Double.parseDouble(atts.getValue("minlat"));
@@ -149,6 +158,7 @@ public class Model extends Observable implements Iterable<Shape> {
                     long ref = Long.parseLong(atts.getValue("ref"));
                     String role = atts.getValue("role");
                     role_map.put(ref, role);
+                    refs.add(Long.parseLong(atts.getValue("ref")));
                     break;
             }
         }
@@ -168,6 +178,7 @@ public class Model extends Observable implements Iterable<Shape> {
                     coord = coords.get(i);
                     way.lineTo(coord.getX(), coord.getY());
                 }
+                relations.put(id, way);
                 if (kv_map.containsKey("natural")) {
                     String val = kv_map.get("natural");
                     if (val.equals("coastline")){
@@ -318,9 +329,32 @@ public class Model extends Observable implements Iterable<Shape> {
                     drawables.add(new Line(way, Color.WHITE, 1, -2.0));
                 }
                 else {
-                    lines.add(way);
                 }
             } else if (qName.equals("relation")) {
+                if(kv_map.containsKey("type")){
+                    String val = kv_map.get("type");
+                    if(val.equals("multipolygon")) {
+                        Long ref = refs.get(0);
+                        if (relations.containsKey(ref)) {
+                            Path2D path = relations.get(ref);
+                            for (int i = 1; i < refs.size(); i++) {
+                                ref = refs.get(i);
+                                if (relations.containsKey(ref)) {
+                                    Path2D element = relations.get(refs.get(i));
+                                    path.append(element, false);
+                                } else
+                                    System.out.print(ref + " ");
+                            }
+                            path.setWindingRule(Path2D.WIND_EVEN_ODD);
+                            if (kv_map.containsKey("building"))
+                                drawables.add(new Area(path, Drawable.building, -0.8));
+                            /*else if (kv_map.containsKey("natural"))
+                                drawables.add(new Area(path, Drawable.water, -1.5));*/
+                        }
+
+
+                    }
+                }
 
             } else if (qName.equals("node")) {
                 if (kv_map.containsKey("highway")) {
