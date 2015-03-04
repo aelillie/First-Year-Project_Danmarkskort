@@ -1,16 +1,10 @@
 import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
+import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.util.ArrayList;
-import java.awt.geom.*;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -51,6 +45,15 @@ public class View extends JFrame implements Observer {
         pack();
 
         canvas.requestFocusInWindow();
+        //This sets up a listener for when the frame is re-sized.
+        this.getRootPane().addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                //Re position the buttons.
+                zoomOutButton.setBounds(getWidth()-115, getHeight()-getHeight()/3*2,39,37);
+                fullscreenButton.setBounds(getWidth()-70, getHeight()-getHeight()/3*2,39,37);
+                zoomInButton.setBounds(getWidth()-160,getHeight()- getHeight()/3*2,39,37);
+            }
+        });
     }
 
     /**
@@ -70,10 +73,11 @@ public class View extends JFrame implements Observer {
         transform.translate(-model.bbox.getMinX(), -model.bbox.getMaxY());
         model.addObserver(this);
 
+
         //Set up the JFrame using the monitors resolution.
 
-        setSize((int) width, (int) height);
-        setPreferredSize(new Dimension((int)width,(int) height));
+        setSize(screenSize);
+        setPreferredSize(screenSize);
         setExtendedState(Frame.MAXIMIZED_BOTH);
     }
 
@@ -130,7 +134,7 @@ public class View extends JFrame implements Observer {
         zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
         zoomInButton.setFocusable(false);
         zoomInButton.setActionCommand("zoomIn");
-        zoomInButton.setBounds(getWidth()-160, getHeight()-getHeight()/3*2,39,37);
+        zoomInButton.setBounds(getWidth()-160,getHeight()-getHeight()/3*2,39,37);
 
         zoomOutButton = new JButton();
         zoomOutButton.setBackground(new Color(255,255,255));
@@ -166,6 +170,7 @@ public class View extends JFrame implements Observer {
     @Override
     public void update(Observable obs, Object obj) {
         canvas.repaint();
+
     }
 
     /**
@@ -174,6 +179,9 @@ public class View extends JFrame implements Observer {
      * @param factor Double, the factor scaling
      */
     public void zoom(double factor) {
+        if(factor > 1)
+            zoomLevel += 0.0765;
+        else zoomLevel -= 0.0765;
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
         pan(getWidth() * (1-factor) / 2, getHeight() * (1-factor) / 2);
     }
@@ -302,7 +310,7 @@ public class View extends JFrame implements Observer {
             //Draw EVERYTHING
             for (Drawable drawable : model.drawables) {
                 if (zoomLevel > -0.4)
-                    drawable.drawBoundary(g);           //TODO Does this even have to be called from here?
+                    drawable.drawBoundary(g);
             }
             /*
             for (Drawable drawable : model.drawables) {
