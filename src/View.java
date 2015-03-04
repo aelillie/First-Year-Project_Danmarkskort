@@ -248,10 +248,29 @@ public class View extends JFrame implements Observer {
                 if (zoomLevel > -0.4)
                     drawable.drawBoundary(g);           //TODO Does this even have to be called from here?
             }
+            /*
             for (Drawable drawable : model.drawables) {
                 if (drawable.drawLevel < zoomLevel)
                     drawable.draw(g);
+            }*/
+
+            for (Drawable drawable : model.firstLayer) {
+                if (drawable.drawLevel < zoomLevel)
+                    drawable.draw(g);
             }
+            for (Drawable drawable : model.secondLayer) {
+                if (drawable.drawLevel < zoomLevel)
+                    drawable.draw(g);
+            }
+            for (Drawable drawable : model.thirdLayer) {
+                if (drawable.drawLevel < zoomLevel)
+                    drawable.draw(g);
+            }
+            for (Drawable drawable : model.lastLayer) {
+                if (drawable.drawLevel < zoomLevel)
+                    drawable.draw(g);
+            }
+
             if (zoomLevel > 0.0) {
                 for (Icon icon : model.getIcons()) {
                     icon.draw(g, transform);
