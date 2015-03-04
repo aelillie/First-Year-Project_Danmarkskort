@@ -4,26 +4,30 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
+
+import javax.swing.*;
 import java.awt.*;
+import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
-public class Model extends Observable implements Iterable<Shape> {
-    private List<Shape> lines = new ArrayList<>();
-    private Map<Long, Path2D> relations = new HashMap<>(); //contains all shapes to be used as relations.
-    private List<MapIcon> mapIcons = new ArrayList<>(); //contains all the icons to be drawn
+public class Model extends Observable implements Iterable<Shape>, Serializable {
+
+    private List<Shape> lines = new ArrayList<>(); //contains all shapes to be drawn that are not in drawables
+    private List<Icon> icons = new ArrayList<>(); //contains all the icons to be drawn
     private List<List<Point2D>> coastlinesInCoords = new ArrayList<>();
     private Map<String,List<Shape>> streetnameMap = new HashMap<>();
+    protected List<String> cityNames = new ArrayList<>();
+    protected List<String> postCodes = new ArrayList<>();
+    protected Map<String, String> streetCityMap = new HashMap<>();
 
-    public List<MapIcon> getMapIcons() {
-        return mapIcons;
+    public List<Icon> getIcons() {
+        return icons;
     }
 
     List<Drawable> drawables = new ArrayList<>(); //Shapes to be drawn differently
@@ -83,13 +87,14 @@ public class Model extends Observable implements Iterable<Shape> {
         Map<Long, Point2D> map = new HashMap<>(); //Relation between a nodes' id and coordinates
         Map<String, String> kv_map = new HashMap<>(); //relation between the keys and values in the XML file
         Map<Long, String> role_map = new HashMap<>(); //
-        List<Long> refs = new ArrayList<>();
         List<Point2D> coords = new ArrayList<>(); //referenced coordinates
         Path2D way; //<way> tag. A way is the path from one coordinate to another
-        Long id;
         Point2D currentCoord; //current coordinate read
         private boolean isArea, isBusstop, isMetro, isSTog, hasName; //controls how shapes should be added
         private String streetName;
+        private String cityName;
+        private String postCode;
+
 
         /**
          * Reads start elements and handles what to be done from the data associated with the element.
@@ -100,17 +105,12 @@ public class Model extends Observable implements Iterable<Shape> {
          */
         public void startElement(String uri, String localName, String qName, Attributes atts) {
             switch (qName) { //if qName.equals(case)
-                case "relation":{
-                    kv_map.clear();
-                    role_map.clear();
-                    refs.clear();
-                    break;
-                }
                 case "node": {
                     kv_map.clear();
                     isBusstop = false;
                     isMetro = false;
                     isSTog = false;
+
 
                     double lat = Double.parseDouble(atts.getValue("lat"));
                     double lon = Double.parseDouble(atts.getValue("lon"));
@@ -132,7 +132,6 @@ public class Model extends Observable implements Iterable<Shape> {
                     coords.clear();
                     isArea = false;
                     hasName = false;
-                    id = Long.parseLong(atts.getValue("id"));
                     break;
                 case "bounds":
                     double minlat = Double.parseDouble(atts.getValue("minlat"));
@@ -149,16 +148,21 @@ public class Model extends Observable implements Iterable<Shape> {
                     if(k.equals("highway") && v.equals("bus_stop")) isBusstop = true;
                     if(k.equals("subway")&& v.equals("yes")) isMetro = true;
                     if(k.equals("network") && v.equals("S-Tog")) isSTog = true;
-                    if(k.equals("name")){
+                    if(k.equals("addr:name")){
                         hasName = true;
                         streetName = v;
+                    }
+                    if(k.equals("addr:city")){
+                        cityName = v;
+                    }
+                    if(k.equals("addr:postcode")){
+                        postCode = v;
                     }
                     break;
                 case "member":
                     long ref = Long.parseLong(atts.getValue("ref"));
                     String role = atts.getValue("role");
                     role_map.put(ref, role);
-                    refs.add(Long.parseLong(atts.getValue("ref")));
                     break;
             }
         }
@@ -178,7 +182,6 @@ public class Model extends Observable implements Iterable<Shape> {
                     coord = coords.get(i);
                     way.lineTo(coord.getX(), coord.getY());
                 }
-                relations.put(id, way);
                 if (kv_map.containsKey("natural")) {
                     String val = kv_map.get("natural");
                     if (val.equals("coastline")){
@@ -255,7 +258,7 @@ public class Model extends Observable implements Iterable<Shape> {
                     //drawables.add(new Area(way, Drawable.building));
                     String val = kv_map.get("amenity");
                     if(val.equals("parking")){
-                        mapIcons.add(new MapIcon(way,"data//parkingIcon.jpg"));
+                        icons.add(new Icon(way,"data//parkingIcon.jpg"));
                         drawables.add(new Area(way,Drawable.sand, -1.0));
                     }
                 }
@@ -329,60 +332,41 @@ public class Model extends Observable implements Iterable<Shape> {
                     drawables.add(new Line(way, Color.WHITE, 1, -2.0));
                 }
                 else {
+                    lines.add(way);
                 }
             } else if (qName.equals("relation")) {
-                if(kv_map.containsKey("type")){
-                    String val = kv_map.get("type");
-                    if(val.equals("multipolygon")) {
-                        Long ref = refs.get(0);
-                        if (relations.containsKey(ref)) {
-                            Path2D path = relations.get(ref);
-                            for (int i = 1; i < refs.size(); i++) {
-                                ref = refs.get(i);
-                                if (relations.containsKey(ref)) {
-                                    Path2D element = relations.get(refs.get(i));
-                                    path.append(element, false);
-                                } else
-                                    System.out.print(ref + " ");
-                            }
-                            path.setWindingRule(Path2D.WIND_EVEN_ODD);
-                            if (kv_map.containsKey("building"))
-                                drawables.add(new Area(path, Drawable.building, -0.8));
-                            /*else if (kv_map.containsKey("natural"))
-                                drawables.add(new Area(path, Drawable.water, -1.5));*/
-                        }
-
-
-                    }
-                }
 
             } else if (qName.equals("node")) {
                 if (kv_map.containsKey("highway")) {
                     String val = kv_map.get("highway");
-                    if (val.equals("bus_stop") && isBusstop) mapIcons.add(new MapIcon(currentCoord, "data//busIcon.png"));
+                    if (val.equals("bus_stop") && isBusstop) icons.add(new Icon(currentCoord, "data//busIcon.png"));
                 } else if (kv_map.containsKey("railway")){
                     String val = kv_map.get("railway");
                     if(val.equals("station")) {
-                        if(isMetro) mapIcons.add(new MapIcon(currentCoord, "data//metroIcon.png"));
-                        else if (isSTog) mapIcons.add(new MapIcon(currentCoord, "data//stogIcon.png"));
+                        if(isMetro) icons.add(new Icon(currentCoord, "data//metroIcon.png"));
+                        else if (isSTog) icons.add(new Icon(currentCoord, "data//stogIcon.png"));
                     }
-                }
+                }else if(kv_map.containsKey("addr:city")) addCityName();
+                else if(kv_map.containsKey("addr:postcode")) addPostcode();
             }
         }
 
         private void addStreetName(){
-            if(hasName) {
-                List<Shape> value = streetnameMap.get(streetName);
-                if (value == null) {
-                    List<Shape> list = new ArrayList<>();
-                    list.add(way);
-                    streetnameMap.put(streetName, list);
-                } else {
-                    List<Shape> list = streetnameMap.get(streetName);
-                    list.add(way);
-                }
+            List<Shape> value = streetnameMap.get(streetName);
+            if (value == null) {
+                List<Shape> list = new ArrayList<>();
+                list.add(way);
+                streetnameMap.put(streetName, list);
+            } else {
+                List<Shape> list = streetnameMap.get(streetName);
+                list.add(way);
             }
         }
+
+        private void addCityName(){if(!cityNames.contains(cityName)){ cityNames.add(cityName);}}
+
+        private void addPostcode(){if(!postCodes.contains(postCode)){postCodes.add(postCode);}}
+
     }
 
     public Map<String,List<Shape>> getStreetMap(){
@@ -390,7 +374,7 @@ public class Model extends Observable implements Iterable<Shape> {
     }
 
     public void save(String filename) {
-/*		long time = System.nanoTime();
+/*	long time = System.nanoTime();
 		try (DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))) {
 		//try (DataOutputStream out = new DataOutputStream(new FileOutputStream(filename))) {
 			out.writeInt(lines.size());

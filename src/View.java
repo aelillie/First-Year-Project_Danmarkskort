@@ -9,6 +9,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.awt.geom.*;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -115,7 +117,11 @@ public class View extends JFrame implements Observer {
 
         searchButton = new JButton();
         searchButton.setBorder(new CompoundBorder(
+<<<<<<< Updated upstream
                 BorderFactory.createMatteBorder(4, 0, 4, 7, new Color(75, 138,247)),
+=======
+                BorderFactory.createMatteBorder(4, 0, 4, 7, new Color(29, 114, 239)),
+>>>>>>> Stashed changes
                 BorderFactory.createRaisedBevelBorder()));
         searchButton.setBackground(new Color(36, 45, 50));
         searchButton.setIcon(new ImageIcon("data//searchIcon.png"));
@@ -306,6 +312,7 @@ public class View extends JFrame implements Observer {
                 if (drawable.drawLevel < zoomLevel)
                     drawable.draw(g);
             }
+
             if (zoomLevel > 0.0) {
                 for (MapIcon mapIcon : model.getMapIcons()) {
                     mapIcon.draw(g, transform);
@@ -313,9 +320,8 @@ public class View extends JFrame implements Observer {
 
 
                 // }
-
-                //AMALIE
-            /*Iterator it = model.getStreetMap().entrySet().iterator();
+/*
+                //AMALIE Iterator it = model.getStreetMap().entrySet().iterator();
             while (it.hasNext()) {
                 int count1 = 0;
                 Map.Entry pair = (Map.Entry) it.next();
@@ -335,8 +341,8 @@ public class View extends JFrame implements Observer {
                     //}
                     txtDr.draw(g,new GeneralPath(street),streetName,70.);
                 }
-            }*/
-
+            }
+*/
 
             /*
 			//Prints out the current center coordinates
