@@ -48,6 +48,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
      */
     public Model(String filename) {
         long time = System.nanoTime();
+        Address.addPatterns();
         if (filename.endsWith(".osm")) parseOSM(filename);
         else if (filename.endsWith(".zip")) parseZIP(filename);
         else System.err.println("File not recognized");

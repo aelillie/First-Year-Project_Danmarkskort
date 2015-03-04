@@ -127,6 +127,7 @@ public class View extends JFrame implements Observer {
         searchButton.setIcon(new ImageIcon("data//searchIcon.png"));
         searchButton.setFocusable(false);
         searchButton.setBounds(320,20,43,37);
+        searchButton.setActionCommand("search");
 
         zoomInButton = new JButton();
         zoomInButton.setBackground(new Color(255,255,255));
@@ -165,6 +166,7 @@ public class View extends JFrame implements Observer {
         layer.add(fullscreenButton, new Integer(2));
 
     }
+
 
 
     @Override
