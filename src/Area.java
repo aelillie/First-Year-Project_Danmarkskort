@@ -6,10 +6,10 @@ public class Area extends Drawable {
      * Sets up the area with a color and the shape of the area.
      * @param shape Shape of area
      * @param color Color of Area
-     * @param zoom  Zoom used when drawn.
+     * @param drawLevel  Zoom used when drawn.
      */
-    public Area(Shape shape, Color color,double zoom) {
-        super(shape, color, zoom);
+    public Area(Shape shape, Color color,double drawLevel) {
+        super(shape, color, drawLevel);
     }
 
     /**

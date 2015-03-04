@@ -176,7 +176,6 @@ public class View extends JFrame implements Observer {
         } catch (NoninvertibleTransformException ex) {
             ex.printStackTrace();
         }
-
     }
 
     /**
@@ -190,7 +189,7 @@ public class View extends JFrame implements Observer {
     }
 
     /**
-     * Moves the screen to where the mouse was dragged, using the transforms translate method with the
+     * Moves the screen to where the mouse was dragged, using the transforms translate method with
      * the difference dragged by the mouse.
      * @param e MouseEvent
      */
@@ -239,23 +238,25 @@ public class View extends JFrame implements Observer {
 
             g.setStroke(min_value); //Just for good measure.
             g.setColor(Color.BLACK);
+
             //Drawing everything not categorized as a area or line object.
             for (Shape line : model) {
                 g.draw(line);
             }
             //Draw EVERYTHING
-            for (Drawable drawable : model.drawables) {
+              for (Drawable drawable : model.drawables) {
                 if (zoomLevel > -0.4)
                     drawable.drawBoundary(g);           //TODO Does this even have to be called from here?
-            }
+             }
             for (Drawable drawable : model.drawables) {
-                if (drawable.drawLevel < zoomLevel)
+                if(drawable.drawLevel < zoomLevel)
                     drawable.draw(g);
             }
             if (zoomLevel > 0.0) {
                 for (Icon icon : model.getIcons()) {
                     icon.draw(g, transform);
                 }
+
 
 
                 // }
