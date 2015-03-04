@@ -10,8 +10,8 @@ public class Line extends Drawable {
      * @param color Color of Line
      * @param drawLevel When to draw.
      */
-    public Line(Shape shape, Color color, int stroke_id, double drawLevel) {
-        super(shape, color, drawLevel);
+    public Line(Shape shape, Color color, int stroke_id, double drawLevel, int layerVal) {
+        super(shape, color, drawLevel, layerVal);
         this.stroke_id = stroke_id;
     }
 

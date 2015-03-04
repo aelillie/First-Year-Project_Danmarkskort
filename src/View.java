@@ -1,10 +1,7 @@
 import javax.swing.*;
-import javax.swing.border.*;
+import javax.swing.border.CompoundBorder;
 import java.awt.*;
-import java.awt.event.FocusEvent;
-import java.awt.event.FocusListener;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseWheelEvent;
+import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
@@ -21,7 +18,14 @@ public class View extends JFrame implements Observer {
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
     protected double zoomLevel;
-    private JTextField searchArea;
+    protected JTextField searchArea;
+    protected JButton searchButton;
+    protected JButton zoomInButton;
+    protected JButton zoomOutButton;
+    protected JButton fullscreenButton;
+    private boolean isFullscreen = false;
+    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+
     private String promptText = "Enter Address";
 
     /**
@@ -33,6 +37,7 @@ public class View extends JFrame implements Observer {
         super("This is our map");
         model = m;
 
+
         setScale();
         makeGUI();
 
@@ -40,6 +45,15 @@ public class View extends JFrame implements Observer {
         pack();
 
         canvas.requestFocusInWindow();
+        //This sets up a listener for when the frame is re-sized.
+        this.getRootPane().addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                //Re position the buttons.
+                zoomOutButton.setBounds(getWidth()-115, getHeight()-getHeight()/3*2,39,37);
+                fullscreenButton.setBounds(getWidth()-70, getHeight()-getHeight()/3*2,39,37);
+                zoomInButton.setBounds(getWidth()-160,getHeight()- getHeight()/3*2,39,37);
+            }
+        });
     }
 
     /**
@@ -49,19 +63,22 @@ public class View extends JFrame implements Observer {
     private void setScale(){
         // bbox.width * xscale * .56 = 512
         // bbox.height * yscale = 512
-        double xscale = 800 / .56 / model.bbox.getWidth();
-        double yscale = 800 / model.bbox.getHeight();
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        double width = screenSize.getWidth();
+        double height = screenSize.getHeight();
+        double xscale = width / .56 / model.bbox.getWidth();
+        double yscale = height / model.bbox.getHeight();
         double scale = max(xscale, yscale);
         transform.scale(.56*scale,-scale);
         transform.translate(-model.bbox.getMinX(), -model.bbox.getMaxY());
         model.addObserver(this);
 
+
         //Set up the JFrame using the monitors resolution.
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
-        setSize((int) width, (int) height);
-        setPreferredSize(new Dimension(800, 800));
+
+        setSize(screenSize);
+        setPreferredSize(screenSize);
+        setExtendedState(Frame.MAXIMIZED_BOTH);
     }
 
     /**
@@ -98,27 +115,64 @@ public class View extends JFrame implements Observer {
         Font font = new Font("Arial",Font.PLAIN,16);
         searchArea.setFont(font);
         searchArea.setBorder(new CompoundBorder(
-                BorderFactory.createMatteBorder(4, 7, 4, 7, new Color(29,114,239)),
+                BorderFactory.createMatteBorder(4, 7, 4, 7, new Color(75, 138, 247)),
                 BorderFactory.createRaisedBevelBorder()));
         searchArea.setBounds(20,20,300,37);
 
-        JButton searchButton = new JButton();
+        searchButton = new JButton();
         searchButton.setBorder(new CompoundBorder(
-                BorderFactory.createMatteBorder(4, 0, 4, 7, new Color(29,114,239)),
+                BorderFactory.createMatteBorder(4, 0, 4, 7, new Color(75, 138,247)),
                 BorderFactory.createRaisedBevelBorder()));
         searchButton.setBackground(new Color(36, 45, 50));
-        searchButton.setIcon(new ImageIcon("data\\searchIcon.png"));
+        searchButton.setIcon(new ImageIcon("data//searchIcon.png"));
         searchButton.setFocusable(false);
         searchButton.setBounds(320,20,43,37);
+        searchButton.setActionCommand("search");
+
+        zoomInButton = new JButton();
+        zoomInButton.setBackground(new Color(255,255,255));
+        zoomInButton.setIcon(new ImageIcon("data//plusIcon.png"));
+        zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
+        zoomInButton.setFocusable(false);
+        zoomInButton.setActionCommand("zoomIn");
+        zoomInButton.setBounds(getWidth()-160,getHeight()-getHeight()/3*2,39,37);
+
+        zoomOutButton = new JButton();
+        zoomOutButton.setBackground(new Color(255,255,255));
+        zoomOutButton.setIcon(new ImageIcon("data//minusIcon.png"));
+        zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        zoomOutButton.setFocusable(false);
+        zoomOutButton.setActionCommand("zoomOut");
+        zoomOutButton.setBounds(getWidth()-115, getHeight()-getHeight()/3*2,39,37);
+
+        fullscreenButton = new JButton();
+        fullscreenButton.setBackground(new Color(255,255,255));
+        fullscreenButton.setIcon(new ImageIcon("data//fullscreenIcon.png"));
+        fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        fullscreenButton.setFocusable(false);
+        fullscreenButton.setActionCommand("fullscreen");
+        fullscreenButton.setBounds(getWidth()-70, getHeight()-getHeight()/3*2,39,37);
+
+
+        JComboBox<Icon> mapMenu = new JComboBox<>();
+        mapMenu.setEditable(false);
+        mapMenu.setActionCommand("maptype");
 
         layer.add(canvas, new Integer(1));
         layer.add(searchArea, new Integer(2));
         layer.add(searchButton, new Integer(2));
+        layer.add(zoomInButton, new Integer(2));
+        layer.add(zoomOutButton, new Integer(2));
+        layer.add(fullscreenButton, new Integer(2));
 
     }
+
+
+
     @Override
     public void update(Observable obs, Object obj) {
         canvas.repaint();
+
     }
 
     /**
@@ -127,6 +181,9 @@ public class View extends JFrame implements Observer {
      * @param factor Double, the factor scaling
      */
     public void zoom(double factor) {
+        if(factor > 1)
+            zoomLevel += 0.0765;
+        else zoomLevel -= 0.0765;
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
         pan(getWidth() * (1-factor) / 2, getHeight() * (1-factor) / 2);
     }
@@ -176,6 +233,7 @@ public class View extends JFrame implements Observer {
         } catch (NoninvertibleTransformException ex) {
             ex.printStackTrace();
         }
+
     }
 
     /**
@@ -189,7 +247,7 @@ public class View extends JFrame implements Observer {
     }
 
     /**
-     * Moves the screen to where the mouse was dragged, using the transforms translate method with
+     * Moves the screen to where the mouse was dragged, using the transforms translate method with the
      * the difference dragged by the mouse.
      * @param e MouseEvent
      */
@@ -225,6 +283,15 @@ public class View extends JFrame implements Observer {
         repaint();
     }
 
+    public void toggleFullscreen(){
+        if(!isFullscreen) {
+            gd.setFullScreenWindow(this);
+        } else {
+            gd.setFullScreenWindow(null);
+        }
+        isFullscreen = !isFullscreen;
+    }
+
     class Canvas extends JComponent {
         public static final long serialVersionUID = 4;
         Stroke min_value = new BasicStroke(Float.MIN_VALUE);
@@ -238,31 +305,48 @@ public class View extends JFrame implements Observer {
 
             g.setStroke(min_value); //Just for good measure.
             g.setColor(Color.BLACK);
-
             //Drawing everything not categorized as a area or line object.
             for (Shape line : model) {
                 g.draw(line);
             }
             //Draw EVERYTHING
-              for (Drawable drawable : model.drawables) {
-                if (zoomLevel > -0.4)
-                    drawable.drawBoundary(g);           //TODO Does this even have to be called from here?
-             }
             for (Drawable drawable : model.drawables) {
-                if(drawable.drawLevel < zoomLevel)
+                if (zoomLevel > -0.4)
+                    drawable.drawBoundary(g);
+            }
+            /*
+            for (Drawable drawable : model.drawables) {
+                if (drawable.drawLevel < zoomLevel)
+                    drawable.draw(g);
+            }*/
+
+            for (Drawable drawable : model.firstLayer) {
+                if (drawable.drawLevel < zoomLevel)
                     drawable.draw(g);
             }
+
+            for (Drawable drawable : model.secondLayer) {
+                if (drawable.drawLevel < zoomLevel)
+                    drawable.draw(g);
+            }
+            for (Drawable drawable : model.thirdLayer) {
+                if (drawable.drawLevel < zoomLevel)
+                    drawable.draw(g);
+            }
+            for (Drawable drawable : model.lastLayer) {
+                if (drawable.drawLevel < zoomLevel)
+                    drawable.draw(g);
+            }
+
             if (zoomLevel > 0.0) {
-                for (Icon icon : model.getIcons()) {
-                    icon.draw(g, transform);
+                for (MapIcon mapIcon : model.getMapIcons()) {
+                    mapIcon.draw(g, transform);
                 }
 
 
-
                 // }
-
-                //AMALIE
-            /*Iterator it = model.getStreetMap().entrySet().iterator();
+/*
+                //AMALIE Iterator it = model.getStreetMap().entrySet().iterator();
             while (it.hasNext()) {
                 int count1 = 0;
                 Map.Entry pair = (Map.Entry) it.next();
@@ -282,8 +366,8 @@ public class View extends JFrame implements Observer {
                     //}
                     txtDr.draw(g,new GeneralPath(street),streetName,70.);
                 }
-            }*/
-
+            }
+*/
 
             /*
 			//Prints out the current center coordinates

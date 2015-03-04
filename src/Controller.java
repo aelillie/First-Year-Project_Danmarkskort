@@ -1,6 +1,7 @@
+import javax.swing.*;
 import java.awt.event.*;
 
-public class Controller extends MouseAdapter {
+public class Controller extends MouseAdapter implements ActionListener {
     Model model;
     View view;
     double x;
@@ -14,8 +15,27 @@ public class Controller extends MouseAdapter {
         view.addMouseListener(mH);
         view.addMouseMotionListener(mH);
         view.addMouseWheelListener(mH);
-        view.addKeyListener(new keyHandler());
+        view.searchArea.addActionListener(this);
+        view.searchButton.addActionListener(this);
+        view.zoomInButton.addActionListener(this);
+        view.zoomOutButton.addActionListener(this);
+        view.fullscreenButton.addActionListener(this);
     }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        String command = e.getActionCommand();
+        if (command == "zoomIn") view.zoom(1.2);
+        else if (command == "zoomOut") view.zoom(1/1.2);
+        else if (command == "fullscreen") view.toggleFullscreen();
+        else if (command == "search"){
+            String input = view.searchArea.getText().trim();
+            Address address = Address.parse(input);
+            //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
+        }
+        else if (command == "maptype");
+    }
+
     // sets up events for mouse and calls the methods in view.
     private class MouseHandler extends MouseAdapter {
 

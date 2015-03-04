@@ -4,6 +4,7 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
+
 import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -11,22 +12,32 @@ import java.awt.geom.Rectangle2D;
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.Serializable;
 import java.util.*;
 import java.util.List;
 import java.util.zip.ZipInputStream;
 
-public class Model extends Observable implements Iterable<Shape> {
-
+public class Model extends Observable implements Iterable<Shape>, Serializable {
+    private Map<Long, Path2D> relations = new HashMap<>(); //contains all shapes to be used as relations.
     private List<Shape> lines = new ArrayList<>(); //contains all shapes to be drawn that are not in drawables
-    private List<Icon> icons = new ArrayList<>(); //contains all the icons to be drawn
+    private List<MapIcon> mapIcons = new ArrayList<>(); //contains all the icons to be drawn
     private List<List<Point2D>> coastlinesInCoords = new ArrayList<>();
     private Map<String,List<Shape>> streetnameMap = new HashMap<>();
+    protected List<String> cityNames = new ArrayList<>();
+    protected List<String> postCodes = new ArrayList<>();
+    protected Map<String, String> streetCityMap = new HashMap<>();
+    private String cityName;
+    private String postCode;
 
-    public List<Icon> getIcons() {
-        return icons;
+    public List<MapIcon> getMapIcons() {
+        return mapIcons;
     }
 
     List<Drawable> drawables = new ArrayList<>(); //Shapes to be drawn differently
+    List<Drawable> firstLayer = new ArrayList<>();
+    List<Drawable> secondLayer = new ArrayList<>();
+    List<Drawable> thirdLayer = new ArrayList<>();
+    List<Drawable> lastLayer = new ArrayList<>();
 
     Rectangle2D bbox;
 
@@ -37,9 +48,11 @@ public class Model extends Observable implements Iterable<Shape> {
      */
     public Model(String filename) {
         long time = System.nanoTime();
+        Address.addPatterns();
         if (filename.endsWith(".osm")) parseOSM(filename);
         else if (filename.endsWith(".zip")) parseZIP(filename);
         else System.err.println("File not recognized");
+        sortLayers();
         System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
@@ -82,12 +95,17 @@ public class Model extends Observable implements Iterable<Shape> {
     class OSMHandler extends DefaultHandler {
         Map<Long, Point2D> map = new HashMap<>(); //Relation between a nodes' id and coordinates
         Map<String, String> kv_map = new HashMap<>(); //relation between the keys and values in the XML file
+        Map<String, String> layer_map = new HashMap<>();
         Map<Long, String> role_map = new HashMap<>(); //
+        List<Long> refs = new ArrayList<>();
         List<Point2D> coords = new ArrayList<>(); //referenced coordinates
         Path2D way; //<way> tag. A way is the path from one coordinate to another
+        Long id;
         Point2D currentCoord; //current coordinate read
         private boolean isArea, isBusstop, isMetro, isSTog, hasName; //controls how shapes should be added
         private String streetName;
+
+
 
         /**
          * Reads start elements and handles what to be done from the data associated with the element.
@@ -98,12 +116,18 @@ public class Model extends Observable implements Iterable<Shape> {
          */
         public void startElement(String uri, String localName, String qName, Attributes atts) {
             switch (qName) { //if qName.equals(case)
+                case "relation":{
+                    kv_map.clear();
+                    role_map.clear();
+                    refs.clear();
+                    break;
+                }
                 case "node": {
                     kv_map.clear();
                     isBusstop = false;
                     isMetro = false;
                     isSTog = false;
-
+                    
                     double lat = Double.parseDouble(atts.getValue("lat"));
                     double lon = Double.parseDouble(atts.getValue("lon"));
                     long id = Long.parseLong(atts.getValue("id"));
@@ -124,6 +148,7 @@ public class Model extends Observable implements Iterable<Shape> {
                     coords.clear();
                     isArea = false;
                     hasName = false;
+                    id = Long.parseLong(atts.getValue("id"));
                     break;
                 case "bounds":
                     double minlat = Double.parseDouble(atts.getValue("minlat"));
@@ -140,17 +165,34 @@ public class Model extends Observable implements Iterable<Shape> {
                     if(k.equals("highway") && v.equals("bus_stop")) isBusstop = true;
                     if(k.equals("subway")&& v.equals("yes")) isMetro = true;
                     if(k.equals("network") && v.equals("S-Tog")) isSTog = true;
-                    if(k.equals("name")){
+                    if(k.equals("addr:name")){
                         hasName = true;
                         streetName = v;
+                    }
+                    if(k.equals("addr:city")){
+                        cityName = v;
+                    }
+                    if(k.equals("addr:postcode")){
+                        postCode = v;
                     }
                     break;
                 case "member":
                     long ref = Long.parseLong(atts.getValue("ref"));
                     String role = atts.getValue("role");
                     role_map.put(ref, role);
+                    refs.add(Long.parseLong(atts.getValue("ref")));
                     break;
             }
+        }
+
+        private int getLayer() {
+            int layer;
+            try {
+                layer = Integer.parseInt(kv_map.get("layer"));
+            } catch (NumberFormatException e) {
+                layer = 0;
+            }
+            return layer;
         }
 
         /**
@@ -168,95 +210,102 @@ public class Model extends Observable implements Iterable<Shape> {
                     coord = coords.get(i);
                     way.lineTo(coord.getX(), coord.getY());
                 }
+                relations.put(id, way);
                 if (kv_map.containsKey("natural")) {
                     String val = kv_map.get("natural");
                     if (val.equals("coastline")){
-                        drawables.add(new Line(way, Drawable.seawater, 4, -1.0));
+                        drawables.add(new Line(way, Drawable.lightblue, 4, -1.0, getLayer()));
                         //processCoastpoints(coords);
                     }
-                    if (val.equals("wood")) drawables.add(new Area(way, Drawable.scrub, -2.0));
-                    if (val.equals("scrub")) drawables.add(new Area(way, Drawable.scrub, -1.5));
-                    if (val.equals("heath")) drawables.add(new Area(way, Drawable.heath, -2.0));
-                    if (val.equals("grassland")) drawables.add(new Area(way, Drawable.grassland, -2.0));
-                    if (val.equals("sand")) drawables.add(new Area(way, Drawable.sand, -2.0));
-                    if (val.equals("scree")) drawables.add(new Area(way, Drawable.scree, -2.0));
-                    if (val.equals("fell")) drawables.add(new Area(way, Drawable.fell, -2.0));
-                    if (val.equals("water")) drawables.add(new Area(way, Drawable.water, -2.0));
-                    if (val.equals("wetland")) drawables.add(new Area(way, Drawable.wetland, -2.0));
+                    if (val.equals("wood")) drawables.add(new Area(way, Drawable.neongreen, -2.0, getLayer()));
+                    if (val.equals("scrub")) drawables.add(new Area(way, Drawable.neongreen, -1.5, getLayer()));
+                    if (val.equals("heath")) drawables.add(new Area(way, Drawable.skincolor, -2.0, getLayer()));
+                    if (val.equals("grassland")) drawables.add(new Area(way, Drawable.bluegreen, -2.0, getLayer()));
+                    if (val.equals("sand")) drawables.add(new Area(way, Drawable.sand, -2.0, getLayer()));
+                    if (val.equals("scree")) drawables.add(new Area(way, Drawable.pink, -2.0, getLayer()));
+                    if (val.equals("fell")) drawables.add(new Area(way, Drawable.orange, -2.0, getLayer()));
+                    if (val.equals("water")) drawables.add(new Area(way, Drawable.whiteblue, -2.0, getLayer()));
+                    if (val.equals("wetland")) drawables.add(new Area(way, Drawable.greenblue, -2.0, getLayer()));
                 }
+
                 else if (kv_map.containsKey("waterway")) {
                     String val = kv_map.get("waterway");
-                    if (val.equals("riverbank")) drawables.add(new Area(way, Drawable.seawater, -1.0));
-                    if (val.equals("stream")) drawables.add(new Line(way, Drawable.seawater, 1, -1.0));
-                    if (val.equals("canal")) drawables.add(new Line(way, Drawable.seawater, 2, -1.0));
-                    if (val.equals("river")) drawables.add(new Line(way, Drawable.seawater, 2, -1.0));
-                    if (val.equals("dam")) drawables.add(new Line(way, Drawable.seawater, 2, -1.0));
+                    if (val.equals("riverbank")) drawables.add(new Area(way, Drawable.lightblue, -1.0, getLayer()));
+                    if (val.equals("stream")) drawables.add(new Line(way, Drawable.lightblue, 1, -1.0, getLayer()));
+                    if (val.equals("canal")) drawables.add(new Line(way, Drawable.lightblue, 2, -1.0, getLayer()));
+                    if (val.equals("river")) drawables.add(new Line(way, Drawable.lightblue, 2, -1.0, getLayer()));
+                    if (val.equals("dam")) drawables.add(new Line(way, Drawable.lightblue, 2, -1.0, getLayer()));
 
                 }
                 else if (kv_map.containsKey("leisure")) {
                     String val = kv_map.get("leisure");
-                    if (val.equals("garden")) drawables.add(new Area(way, Drawable.garden, -1.2));
-                    if (val.equals("park")) drawables.add(new Area(way, Drawable.park,-1.2));
-                    if (val.equals("common")) drawables.add(new Area(way, Drawable.scrub, -1.2));
+                    if (val.equals("garden")) drawables.add(new Area(way, Drawable.whitegreen, -1.2, getLayer()));
+                    if (val.equals("park")) drawables.add(new Area(way, Drawable.whitegreen,-1.2, getLayer()));
+                    if (val.equals("common")) drawables.add(new Area(way, Drawable.neongreen, -1.2, getLayer()));
                 }
                 else if (kv_map.containsKey("landuse")) {
                     String val = kv_map.get("landuse");
-                    if (val.equals("cemetery")) drawables.add(new Area(way, Drawable.garden, -0.4));
-                    if (val.equals("construction")) drawables.add(new Area(way, Drawable.park, -0.4));
-                    if (val.equals("grass")) drawables.add(new Area(way, Drawable.park, -0.4));
-                    if (val.equals("greenfield")) drawables.add(new Area(way, Drawable.darkgreen, -0.4));
-                    if (val.equals("industrial")) drawables.add(new Area(way, Drawable.darkgreen, -0.4));
-                    if (val.equals("orchard")) drawables.add(new Area(way, Drawable.darkgreen, -0.4));
-
+                    if (val.equals("cemetery")) drawables.add(new Area(way, Drawable.whitegreen, -0.4, getLayer()));
+                    if(val.equals("construction")) {
+                        if (isArea) drawables.add(new Area(way, Drawable.lightgreen, -0.3, -1));
+                        else drawables.add(new Line(way,Drawable.lightgreen,2, -0.3, getLayer()));
+                    }
+                    if (val.equals("grass")) drawables.add(new Area(way, Drawable.whitegreen, -0.4, getLayer()));
+                    if (val.equals("greenfield")) drawables.add(new Area(way, Drawable.darkgreen, -0.4, getLayer()));
+                    if (val.equals("industrial")) drawables.add(new Area(way, Drawable.darkgreen, -0.4, getLayer()));
+                    if (val.equals("orchard")) drawables.add(new Area(way, Drawable.darkgreen, -0.4, getLayer()));
                 }
                 else if (kv_map.containsKey("geological")) {
-                    drawables.add(new Area(way, Drawable.building, -1.0));
+                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
                 }
-
                 else if (kv_map.containsKey("building")) {
-                    drawables.add(new Area(way, Drawable.building, -0.5));
+                    drawables.add(new Area(way, Drawable.lightgrey, -0.5, getLayer()));
                 }
                 else if (kv_map.containsKey("shop")) {
-                    drawables.add(new Area(way, Drawable.building, -1.0));
+                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
                 }
                 else if (kv_map.containsKey("tourism")) {
-                    drawables.add(new Area(way, Drawable.building, -1.0));
+                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
                 }
                 else if (kv_map.containsKey("man_made")) {
-                    drawables.add(new Area(way, Drawable.building, -1.0));
+                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
                 }
                 else if (kv_map.containsKey("military")) {
-                    drawables.add(new Area(way, Drawable.building, -1.0));
+                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
                 }
                 else if (kv_map.containsKey("historic")) {
-                    drawables.add(new Area(way, Drawable.building, -1.0));
+                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
                 }
                 else if (kv_map.containsKey("craft")) {
-                    drawables.add(new Area(way, Drawable.building, -1.0));
+                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
                 }
                 else if (kv_map.containsKey("emergency")) {
-                    drawables.add(new Area(way, Drawable.building, -1.0));
+                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
                 }
                 else if (kv_map.containsKey("aeroway")) {
-                    drawables.add(new Area(way, Drawable.building, -1.0));
+                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
                 }
                 else if (kv_map.containsKey("amenity")) {
-                    //drawables.add(new Area(way, Drawable.building));
+                    //drawables.add(new Area(way, Drawable.lightgrey));
                     String val = kv_map.get("amenity");
                     if(val.equals("parking")){
-                        icons.add(new Icon(way,"data//parkingIcon.jpg"));
-                        drawables.add(new Area(way,Drawable.sand, -1.0));
+                        mapIcons.add(new MapIcon(way,"data//parkingIcon.jpg"));
+                        drawables.add(new Area(way,Drawable.sand, -1.0, getLayer()));
                     }
                 }
                 else if (kv_map.containsKey("barrier")) {
                     String val = kv_map.get("barrier");
                     if(val.equals("hedge")) {
-                        if (isArea) drawables.add(new Area(way, Drawable.scrub, -0.3));
-                        else drawables.add(new Line(way,Drawable.scrub,2, -0.3));
+                        if (isArea) drawables.add(new Area(way, Drawable.neongreen, -0.3, getLayer()));
+                        else drawables.add(new Line(way,Drawable.neongreen,2, -0.3, getLayer()));
+                    }
+                    if(val.equals("fence")) {
+                        if (isArea) drawables.add(new Area(way, Drawable.neongreen, -0.3, getLayer()));
+                        else drawables.add(new Line(way,Drawable.neongreen,2, -0.3, getLayer()));
                     }
                 }
                 else if (kv_map.containsKey("boundary")) {
-                    Line line = new Line(way, Color.WHITE, 14, 2.0);
+                    Line line = new Line(way, Color.WHITE, 14, 2.0, getLayer());
                     line.setDashed();
                     drawables.add(line);
                 }
@@ -265,89 +314,125 @@ public class Model extends Observable implements Iterable<Shape> {
                     
                     if(hasName) addStreetName();
                     
-                    if (val.equals("motorway")) drawables.add(new Line(way, Drawable.motorway, 7, -1.0));
-                    else if (val.equals("motorway_link")) drawables.add(new Line(way, Drawable.motorway, 7, -1.0));
-                    else if (val.equals("trunk")) drawables.add(new Line(way, Drawable.trunk, 7, -1.0));
-                    else if (val.equals("trunk_link")) drawables.add(new Line(way, Drawable.trunk, 7, -1.0));
-                    else if (val.equals("primary")) drawables.add(new Line(way, Drawable.primary, 6, -1.0));
-                    else if (val.equals("primary_link")) drawables.add(new Line(way, Drawable.primary, 6, -1.0));
-                    else if (val.equals("secondary")) drawables.add(new Line(way, Drawable.secondary, 6, -1.0));
-                    else if (val.equals("secondary_link")) drawables.add(new Line(way, Drawable.secondary, 6, -0.8));
-                    else if (val.equals("tertiary")) drawables.add(new Line(way, Drawable.tertiary, 5, -0.8));
-                    else if (val.equals("tertiary_link")) drawables.add(new Line(way, Drawable.tertiary, 5, -0.8));
-                    else if (val.equals("unclassified")) drawables.add(new Line(way, Color.WHITE, 5, -0.8));
-                    else if (val.equals("residential")) drawables.add(new Line(way, Color.DARK_GRAY, 4, -1.0));
-                    else if (val.equals("service")) drawables.add(new Line(way, Color.WHITE, 2, -0.8));
+                    if (val.equals("motorway")) drawables.add(new Line(way, Drawable.lightblue, 7, -1.0, getLayer()));
+                    else if (val.equals("motorway_link")) drawables.add(new Line(way, Drawable.lightblue, 7, -1.0, getLayer()));
+                    else if (val.equals("trunk")) drawables.add(new Line(way, Drawable.neongreen, 7, -1.0, getLayer()));
+                    else if (val.equals("trunk_link")) drawables.add(new Line(way, Drawable.neongreen, 7, -1.0, getLayer()));
+                    else if (val.equals("primary")) drawables.add(new Line(way, Drawable.babyred, 6, -1.0, getLayer()));
+                    else if (val.equals("primary_link")) drawables.add(new Line(way, Drawable.babyred, 6, -1.0, getLayer()));
+                    else if (val.equals("secondary")) drawables.add(new Line(way, Drawable.lightred, 6, -1.0, getLayer()));
+                    else if (val.equals("secondary_link")) drawables.add(new Line(way, Drawable.lightred, 6, -0.8, getLayer()));
+                    else if (val.equals("tertiary")) drawables.add(new Line(way, Drawable.lightyellow, 5, -0.8, getLayer()));
+                    else if (val.equals("tertiary_link")) drawables.add(new Line(way, Drawable.lightyellow, 5, -0.8, getLayer()));
+                    else if (val.equals("unclassified")) drawables.add(new Line(way, Color.WHITE, 5, -0.8, -1));
+                    else if (val.equals("residential")) drawables.add(new Line(way, Color.DARK_GRAY, 4, -1.0, -1));
+                    else if (val.equals("service")) drawables.add(new Line(way, Color.WHITE, 2, -0.8, -1));
 
-                    else if (val.equals("living_street")) drawables.add(new Line(way, Drawable.living_street, 2, -1.0));
-                    else if (val.equals("pedestrian")) drawables.add(new Line(way, Drawable.pedestrain, 2, -0.1));
-                    else if (val.equals("track")) drawables.add(new Line(way, Drawable.track, 1, 0.0));
-                    else if (val.equals("bus_guideway")) drawables.add(new Line(way, Drawable.bus_guideway, 1, -0.4));
-                    else if (val.equals("raceway")) drawables.add(new Line(way, Drawable.raceway, 2, -0.4));
-                    else if (val.equals("road")) drawables.add(new Line(way, Drawable.road, 3, -0.4));
+                    else if (val.equals("living_street")) drawables.add(new Line(way, Drawable.grey, 2, -1.0, -2));
+                    else if (val.equals("pedestrian")) drawables.add(new Line(way, Drawable.white, 2, -0.1, -2));
+                    else if (val.equals("track")) drawables.add(new Line(way, Drawable.bloodred, 1, 0.0, getLayer()));
+                    else if (val.equals("bus_guideway")) drawables.add(new Line(way, Drawable.darkblue, 1, -0.4, -2));
+                    else if (val.equals("raceway")) drawables.add(new Line(way, Drawable.white, 2, -0.4, -2));
+                    else if (val.equals("road")) drawables.add(new Line(way, Drawable.grey, 3, -0.4, -2));
 
                     else if (val.equals("footway")) {
-                        Line line = new Line(way, Drawable.footway, 12, -0.1);
+                        Line line = new Line(way, Drawable.red, 12, -0.1, -2);
                         line.setDashed();
                         drawables.add(line);
                     }
                     else if (val.equals("cycleway")) {
-                        Line line = new Line(way, Drawable.cycleway, 13, -0.18);
+                        Line line = new Line(way, Drawable.lightblue, 13, -0.18, -2);
                         line.setDashed();
                         drawables.add(line);
                     }
-                    else if (val.equals("bridleway")) drawables.add(new Line(way, Drawable.bridleway, 1, -1.0));
+                    else if (val.equals("bridleway")) drawables.add(new Line(way, Drawable.lightgreen, 1, -1.0, -2));
                     else if (val.equals("steps")) {
-                        Line line = new Line(way, Drawable.steps, 14, -0.1);
+                        Line line = new Line(way, Drawable.red, 14, -0.1, -2);
                         line.setDashed();
                         drawables.add(line);
                     }
-                    else if (val.equals("path")) drawables.add(new Line(way, Drawable.path, 1, -0.1));
+                    else if (val.equals("path")) drawables.add(new Line(way, Drawable.red, 1, -0.1, -2));
 
 
                 }
                 else if (kv_map.containsKey("railway")) {
-                    Line line = new Line(way, Color.DARK_GRAY, 11, -1.9);
+                    Line line = new Line(way, Color.DARK_GRAY, 11, -1.9, getLayer());
                     line.setDashed();
                     drawables.add(line);
                 }
                 else if (kv_map.containsKey("bridge")) {
-                    drawables.add(new Line(way, Color.GRAY, 2, -2.0));
+                    drawables.add(new Line(way, Color.GRAY, 2, -2.0, getLayer()));
                 }
                 else if (kv_map.containsKey("route")) {
-                    drawables.add(new Line(way, Color.WHITE, 1, -2.0));
+                    drawables.add(new Line(way, Color.WHITE, 1, -2.0, getLayer()));
                 }
                 else {
-                    lines.add(way);
                 }
             } else if (qName.equals("relation")) {
+                if(kv_map.containsKey("type")){
+                    String val = kv_map.get("type");
+                    if(val.equals("multipolygon")) {
+                        Long ref = refs.get(0);
+                        if (relations.containsKey(ref)) {
+                            Path2D path = relations.get(ref);
+                            for (int i = 1; i < refs.size(); i++) {
+                                ref = refs.get(i);
+                                if (relations.containsKey(ref)) {
+                                    Path2D element = relations.get(refs.get(i));
+                                    path.append(element, false);
+                                } else
+                                    System.out.println(ref + " ");
+                            }
+                            path.setWindingRule(Path2D.WIND_EVEN_ODD);
+                            if (kv_map.containsKey("building"))
+                                drawables.add(new Area(path, Drawable.lightgrey, -0.8, getLayer()));
+                            /*else if (kv_map.containsKey("natural"))
+                                drawables.add(new Area(path, Drawable.water, -1.5));*/
+                            //TODO How do draw harbor.
+                        }
+
+                    //TODO look at busroute and so forth
+                    }
+                }
 
             } else if (qName.equals("node")) {
                 if (kv_map.containsKey("highway")) {
                     String val = kv_map.get("highway");
-                    if (val.equals("bus_stop") && isBusstop) icons.add(new Icon(currentCoord, "data//busIcon.png"));
+                    if (val.equals("bus_stop") && isBusstop) mapIcons.add(new MapIcon(currentCoord, "data//busIcon.png"));
                 } else if (kv_map.containsKey("railway")){
                     String val = kv_map.get("railway");
                     if(val.equals("station")) {
-                        if(isMetro) icons.add(new Icon(currentCoord, "data//metroIcon.png"));
-                        else if (isSTog) icons.add(new Icon(currentCoord, "data//stogIcon.png"));
+                        if(isMetro) mapIcons.add(new MapIcon(currentCoord, "data//metroIcon.png"));
+                        else if (isSTog) mapIcons.add(new MapIcon(currentCoord, "data//stogIcon.png"));
                     }
-                }
+                }else if(kv_map.containsKey("addr:city")) addCityName();
+                else if(kv_map.containsKey("addr:postcode")) addPostcode();
             }
+
         }
+        private void addCityName(){if(!cityNames.contains(cityName)){ cityNames.add(cityName);}}
+
+        private void addPostcode(){if(!postCodes.contains(postCode)){postCodes.add(postCode);}}
 
         private void addStreetName(){
-            if(hasName) {
-                List<Shape> value = streetnameMap.get(streetName);
-                if (value == null) {
-                    List<Shape> list = new ArrayList<>();
-                    list.add(way);
-                    streetnameMap.put(streetName, list);
-                } else {
-                    List<Shape> list = streetnameMap.get(streetName);
-                    list.add(way);
-                }
+            List<Shape> value = streetnameMap.get(streetName);
+            if (value == null) {
+                List<Shape> list = new ArrayList<>();
+                list.add(way);
+                streetnameMap.put(streetName, list);
+            } else {
+                List<Shape> list = streetnameMap.get(streetName);
+                list.add(way);
             }
+        }
+    }
+    private void sortLayers() {
+        for (Drawable drawable : drawables) {
+            if (drawable.layerVal == -2) firstLayer.add(drawable);
+            if (drawable.layerVal == -1) secondLayer.add(drawable);
+            if (drawable.layerVal == 0) thirdLayer.add(drawable);
+            if (drawable.layerVal == 1) lastLayer.add(drawable);
+            //else thirdLayer.add(drawable);
         }
     }
 
