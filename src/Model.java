@@ -4,7 +4,6 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
-
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.Line2D;
@@ -19,15 +18,15 @@ import java.util.zip.ZipInputStream;
 public class Model extends Observable implements Iterable<Shape>, Serializable {
 
     private List<Shape> lines = new ArrayList<>(); //contains all shapes to be drawn that are not in drawables
-    private List<Icon> icons = new ArrayList<>(); //contains all the icons to be drawn
+    private List<MapIcon> mapIcons = new ArrayList<>(); //contains all the icons to be drawn
     private List<List<Point2D>> coastlinesInCoords = new ArrayList<>();
     private Map<String,List<Shape>> streetnameMap = new HashMap<>();
     protected List<String> cityNames = new ArrayList<>();
     protected List<String> postCodes = new ArrayList<>();
     protected Map<String, String> streetCityMap = new HashMap<>();
 
-    public List<Icon> getIcons() {
-        return icons;
+    public List<MapIcon> getMapIcons() {
+        return mapIcons;
     }
 
     List<Drawable> drawables = new ArrayList<>(); //Shapes to be drawn differently
@@ -258,7 +257,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
                     //drawables.add(new Area(way, Drawable.building));
                     String val = kv_map.get("amenity");
                     if(val.equals("parking")){
-                        icons.add(new Icon(way,"data//parkingIcon.jpg"));
+                        mapIcons.add(new MapIcon(way,"data//parkingIcon.jpg"));
                         drawables.add(new Area(way,Drawable.sand, -1.0));
                     }
                 }
@@ -339,12 +338,12 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
             } else if (qName.equals("node")) {
                 if (kv_map.containsKey("highway")) {
                     String val = kv_map.get("highway");
-                    if (val.equals("bus_stop") && isBusstop) icons.add(new Icon(currentCoord, "data//busIcon.png"));
+                    if (val.equals("bus_stop") && isBusstop) mapIcons.add(new MapIcon(currentCoord, "data//busIcon.png"));
                 } else if (kv_map.containsKey("railway")){
                     String val = kv_map.get("railway");
                     if(val.equals("station")) {
-                        if(isMetro) icons.add(new Icon(currentCoord, "data//metroIcon.png"));
-                        else if (isSTog) icons.add(new Icon(currentCoord, "data//stogIcon.png"));
+                        if(isMetro) mapIcons.add(new MapIcon(currentCoord, "data//metroIcon.png"));
+                        else if (isSTog) mapIcons.add(new MapIcon(currentCoord, "data//stogIcon.png"));
                     }
                 }else if(kv_map.containsKey("addr:city")) addCityName();
                 else if(kv_map.containsKey("addr:postcode")) addPostcode();

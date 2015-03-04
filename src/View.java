@@ -117,11 +117,7 @@ public class View extends JFrame implements Observer {
 
         searchButton = new JButton();
         searchButton.setBorder(new CompoundBorder(
-<<<<<<< Updated upstream
                 BorderFactory.createMatteBorder(4, 0, 4, 7, new Color(75, 138,247)),
-=======
-                BorderFactory.createMatteBorder(4, 0, 4, 7, new Color(29, 114, 239)),
->>>>>>> Stashed changes
                 BorderFactory.createRaisedBevelBorder()));
         searchButton.setBackground(new Color(36, 45, 50));
         searchButton.setIcon(new ImageIcon("data//searchIcon.png"));
