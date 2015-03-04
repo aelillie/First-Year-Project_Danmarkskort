@@ -31,7 +31,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         else if (command == "search"){
             String input = view.searchArea.getText().trim();
             Address address = Address.parse(input);
-            //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
+            System.out.println(address.street()+ " " + address.house() + " " + address.floor() + " " + address.side()+ " " + address.city() + " " + address.postcode());
         }
         else if (command == "maptype");
     }

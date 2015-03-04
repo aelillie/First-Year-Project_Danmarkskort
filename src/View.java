@@ -25,7 +25,6 @@ public class View extends JFrame implements Observer {
     protected JButton fullscreenButton;
     private boolean isFullscreen = false;
     GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-
     private String promptText = "Enter Address";
 
     /**
@@ -48,7 +47,7 @@ public class View extends JFrame implements Observer {
         //This sets up a listener for when the frame is re-sized.
         this.getRootPane().addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
-                //Re position the buttons.
+                //Reposition the buttons.
                 zoomOutButton.setBounds(getWidth()-115, getHeight()-getHeight()/3*2,39,37);
                 fullscreenButton.setBounds(getWidth()-70, getHeight()-getHeight()/3*2,39,37);
                 zoomInButton.setBounds(getWidth()-160,getHeight()- getHeight()/3*2,39,37);
@@ -185,7 +184,7 @@ public class View extends JFrame implements Observer {
             zoomLevel += 0.0765;
         else zoomLevel -= 0.0765;
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
-        pan(getWidth() * (1-factor) / 2, getHeight() * (1-factor) / 2);
+        pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
     }
 
     /**
@@ -334,8 +333,10 @@ public class View extends JFrame implements Observer {
                     drawable.draw(g);
             }
             for (Drawable drawable : model.lastLayer) {
-                if (drawable.drawLevel < zoomLevel)
+                if (drawable.drawLevel < zoomLevel) {
                     drawable.draw(g);
+                }
+
             }
 
             if (zoomLevel > 0.0) {
