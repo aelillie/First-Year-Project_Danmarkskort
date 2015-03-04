@@ -6,7 +6,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class Icon {
+public class MapIcon {
     BufferedImage img;
     Shape shape;
     Point2D coord;
@@ -17,7 +17,7 @@ public class Icon {
      * @param shape The Shape we want pinpointed by an Icon.
      * @param imgPath The path of the image file.
      */
-    public Icon(Shape shape, String imgPath){
+    public MapIcon(Shape shape, String imgPath){
         try {
             img = ImageIO.read(new File(imgPath));
             this.shape = shape;
@@ -32,7 +32,7 @@ public class Icon {
      * @param coord The coordinate of the point of orientation we want to pinpoint using an Icon.
      * @param imgPath The path of the image file.
      */
-    public Icon(Point2D coord, String imgPath){
+    public MapIcon(Point2D coord, String imgPath){
         try {
             img = ImageIO.read(new File(imgPath));
             this.coord = coord;

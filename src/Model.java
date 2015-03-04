@@ -18,12 +18,12 @@ import java.util.zip.ZipInputStream;
 public class Model extends Observable implements Iterable<Shape> {
     private List<Shape> lines = new ArrayList<>();
     private Map<Long, Path2D> relations = new HashMap<>(); //contains all shapes to be used as relations.
-    private List<Icon> icons = new ArrayList<>(); //contains all the icons to be drawn
+    private List<MapIcon> mapIcons = new ArrayList<>(); //contains all the icons to be drawn
     private List<List<Point2D>> coastlinesInCoords = new ArrayList<>();
     private Map<String,List<Shape>> streetnameMap = new HashMap<>();
 
-    public List<Icon> getIcons() {
-        return icons;
+    public List<MapIcon> getMapIcons() {
+        return mapIcons;
     }
 
     List<Drawable> drawables = new ArrayList<>(); //Shapes to be drawn differently
@@ -255,7 +255,7 @@ public class Model extends Observable implements Iterable<Shape> {
                     //drawables.add(new Area(way, Drawable.building));
                     String val = kv_map.get("amenity");
                     if(val.equals("parking")){
-                        icons.add(new Icon(way,"data//parkingIcon.jpg"));
+                        mapIcons.add(new MapIcon(way,"data//parkingIcon.jpg"));
                         drawables.add(new Area(way,Drawable.sand, -1.0));
                     }
                 }
@@ -359,12 +359,12 @@ public class Model extends Observable implements Iterable<Shape> {
             } else if (qName.equals("node")) {
                 if (kv_map.containsKey("highway")) {
                     String val = kv_map.get("highway");
-                    if (val.equals("bus_stop") && isBusstop) icons.add(new Icon(currentCoord, "data//busIcon.png"));
+                    if (val.equals("bus_stop") && isBusstop) mapIcons.add(new MapIcon(currentCoord, "data//busIcon.png"));
                 } else if (kv_map.containsKey("railway")){
                     String val = kv_map.get("railway");
                     if(val.equals("station")) {
-                        if(isMetro) icons.add(new Icon(currentCoord, "data//metroIcon.png"));
-                        else if (isSTog) icons.add(new Icon(currentCoord, "data//stogIcon.png"));
+                        if(isMetro) mapIcons.add(new MapIcon(currentCoord, "data//metroIcon.png"));
+                        else if (isSTog) mapIcons.add(new MapIcon(currentCoord, "data//stogIcon.png"));
                     }
                 }
             }
