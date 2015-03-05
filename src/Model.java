@@ -410,10 +410,20 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
             }
 
         }
+
+        /**
+         * Adds all unique cities parsed from the xml file to an arrayList
+         */
         private void addCityName(){if(!cityNames.contains(cityName)){ cityNames.add(cityName);}}
 
+        /**
+         * Adds all unique postCodes parsed from the xml file to an arrayList
+         */
         private void addPostcode(){if(!postCodes.contains(postCode)){postCodes.add(postCode);}}
 
+        /**
+         * Adds all unique addresses parsed from the xml file to an arrayList
+         */
         private void addStreetName(){
             List<Shape> value = streetnameMap.get(streetName);
             if (value == null) {
@@ -426,6 +436,10 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
             }
         }
     }
+
+    /**
+     * Puts the objects to be drawn in the corresponding layer list for more precise drawing.
+     */
     private void sortLayers() {
         for (Drawable drawable : drawables) {
             if (drawable.layerVal == -2) firstLayer.add(drawable);

@@ -37,7 +37,8 @@ public class View extends JFrame implements Observer {
         super("This is our map");
         model = m;
 
-
+        /*Two helper functions to set up the AfflineTransform object and
+        make the buttons and layout for the frame*/
         setScale();
         makeGUI();
 
@@ -54,6 +55,8 @@ public class View extends JFrame implements Observer {
                 zoomInButton.setBounds(getWidth()-160,getHeight()- getHeight()/3*2,39,37);
             }
         });
+        model.addObserver(this);
+        zoomLevel = model.bbox.getWidth() * -1;
     }
 
     /**
@@ -63,19 +66,20 @@ public class View extends JFrame implements Observer {
     private void setScale(){
         // bbox.width * xscale * .56 = 512
         // bbox.height * yscale = 512
+
+        //Get the monitors size.
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double width = screenSize.getWidth();
         double height = screenSize.getHeight();
+
+        //Set up the scale amount for our Afflinetransform
         double xscale = width / .56 / model.bbox.getWidth();
         double yscale = height / model.bbox.getHeight();
         double scale = max(xscale, yscale);
         transform.scale(.56*scale,-scale);
         transform.translate(-model.bbox.getMinX(), -model.bbox.getMaxY());
-        model.addObserver(this);
-
 
         //Set up the JFrame using the monitors resolution.
-
         setSize(screenSize);
         setPreferredSize(screenSize);
         setExtendedState(Frame.MAXIMIZED_BOTH);
@@ -83,7 +87,7 @@ public class View extends JFrame implements Observer {
 
     /**
      * Makes use of different layers to put JComponent on top
-     * of the canvas.
+     * of the canvas. Creates the GUI for the
      */
     private void makeGUI(){
         //retrieve the LayeredPane stored in the frame.
@@ -98,6 +102,9 @@ public class View extends JFrame implements Observer {
         //Create a FocusListener for the textField
         searchArea.addFocusListener(new FocusListener() {
             @Override
+            /**
+             * If selected remove prompt text
+             */
             public void focusGained(FocusEvent e) {
                 if (searchArea.getText().equals(promptText)) {
                     searchArea.setText("");
@@ -105,6 +112,9 @@ public class View extends JFrame implements Observer {
             }
 
             @Override
+            /**
+             * if unselected and search field is empty sets up promptText.
+             */
             public void focusLost(FocusEvent e) {
                 if (searchArea.getText().isEmpty()) {
                     searchArea.setText(promptText);
@@ -113,6 +123,8 @@ public class View extends JFrame implements Observer {
 
         });
         Font font = new Font("Arial",Font.PLAIN,16);
+
+        //Create The buttons and configure their visual design.
         searchArea.setFont(font);
         searchArea.setBorder(new CompoundBorder(
                 BorderFactory.createMatteBorder(4, 7, 4, 7, new Color(75, 138, 247)),
@@ -158,6 +170,7 @@ public class View extends JFrame implements Observer {
         mapMenu.setEditable(false);
         mapMenu.setActionCommand("maptype");
 
+        //Add all the components to their the Frame on the right layer.
         layer.add(canvas, new Integer(1));
         layer.add(searchArea, new Integer(2));
         layer.add(searchButton, new Integer(2));
@@ -181,9 +194,10 @@ public class View extends JFrame implements Observer {
      * @param factor Double, the factor scaling
      */
     public void zoom(double factor) {
-        if(factor > 1)
-            zoomLevel += 0.0765;
+        //Check whether we zooming in or out for adjusting the zoomLvl field
+        if(factor > 1) zoomLevel += 0.0765;
         else zoomLevel -= 0.0765;
+        //Scale the graphic and pan accordingly
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
         pan(getWidth() * (1-factor) / 2, getHeight() * (1-factor) / 2);
     }
@@ -261,6 +275,8 @@ public class View extends JFrame implements Observer {
             double dx = dragEnd.getX() - dragStart.getX();
             double dy = dragEnd.getY() - dragStart.getY();
             transform.translate(dx, dy);
+
+            //remember to reposition points to avoid unstable dragging.
             dragStartScreen = dragEndScreen;
             dragEndScreen = null;
             repaint();
@@ -270,6 +286,11 @@ public class View extends JFrame implements Observer {
 
     }
 
+    /**
+     * Moves the canvas by a fixed amount using the Translate method.
+     * @param dx
+     * @param dy
+     */
     public void pan(double dx, double dy) {
         transform.preConcatenate(AffineTransform.getTranslateInstance(dx,dy));
         repaint();
@@ -283,6 +304,9 @@ public class View extends JFrame implements Observer {
         repaint();
     }
 
+    /**
+     * Makes the view Frame fullscreen with help of a graphic device.
+     */
     public void toggleFullscreen(){
         if(!isFullscreen) {
             gd.setFullScreenWindow(this);
@@ -292,6 +316,10 @@ public class View extends JFrame implements Observer {
         isFullscreen = !isFullscreen;
     }
 
+    /**
+     * The canvas object is where our map of paths and images (points) will be drawn on
+     *
+     */
     class Canvas extends JComponent {
         public static final long serialVersionUID = 4;
         Stroke min_value = new BasicStroke(Float.MIN_VALUE);
@@ -320,6 +348,9 @@ public class View extends JFrame implements Observer {
                     drawable.draw(g);
             }*/
 
+            /*The use of layers list makes it so the paths will be drawn in right order
+            So f.eks. paths don't overlap motor ways and so forth.
+             */
             for (Drawable drawable : model.firstLayer) {
                 if (drawable.drawLevel < zoomLevel)
                     drawable.draw(g);
@@ -338,6 +369,7 @@ public class View extends JFrame implements Observer {
                     drawable.draw(g);
             }
 
+            //Draws the icons.
             if (zoomLevel > 0.0) {
                 for (MapIcon mapIcon : model.getMapIcons()) {
                     mapIcon.draw(g, transform);
