@@ -342,29 +342,9 @@ public class View extends JFrame implements Observer {
                 if (zoomLevel > -0.4)
                     drawable.drawBoundary(g);
             }
-            /*
+
+
             for (Drawable drawable : model.drawables) {
-                if (drawable.drawLevel < zoomLevel)
-                    drawable.draw(g);
-            }*/
-
-            /*The use of layers list makes it so the paths will be drawn in right order
-            So f.eks. paths don't overlap motor ways and so forth.
-             */
-            for (Drawable drawable : model.firstLayer) {
-                if (drawable.drawLevel < zoomLevel)
-                    drawable.draw(g);
-            }
-
-            for (Drawable drawable : model.secondLayer) {
-                if (drawable.drawLevel < zoomLevel)
-                    drawable.draw(g);
-            }
-            for (Drawable drawable : model.thirdLayer) {
-                if (drawable.drawLevel < zoomLevel)
-                    drawable.draw(g);
-            }
-            for (Drawable drawable : model.lastLayer) {
                 if (drawable.drawLevel < zoomLevel)
                     drawable.draw(g);
             }

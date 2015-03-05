@@ -68,5 +68,8 @@ public abstract class Drawable {
 
     abstract void drawBoundary(Graphics2D g);
 
+    public int getLayerVal() {
+        return layerVal;
+    }
 }
 

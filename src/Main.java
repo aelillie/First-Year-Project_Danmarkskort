@@ -1,11 +1,11 @@
-import java.util.Set;
+import java.io.*;
 
 public class Main {
     public static void main(String[] args) {
         Model m = new Model("data//small.osm");
         /*
         try {
-            FileOutputStream fileOut = new FileOutputStream("newmodel.bin");
+            FileOutputStream fileOut = new FileOutputStream("");
             ObjectOutputStream out = new ObjectOutputStream(fileOut);
             out.writeObject(m);
             out.close();
@@ -15,7 +15,7 @@ public class Main {
             e.printStackTrace();
         }
         try {
-            FileInputStream fileIn = new FileInputStream("newmodel.bin");
+            FileInputStream fileIn = new FileInputStream("");
             ObjectInputStream in = new ObjectInputStream(fileIn);
             m = (Model) in.readObject();
             in.close();
