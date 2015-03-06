@@ -473,6 +473,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
 
                 //For every object write the its
                 for(Drawable d : drawables) {
+                    //Write all information needed from the object order matters.
                     out.writeObject(d);
                     out.writeObject(d.shape);
                     out.writeObject(d.color);
@@ -496,12 +497,16 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
     public void load(String filename) {
         long time = System.nanoTime();
         try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
+            //get the bounds of the map
             Rectangle2D rec = (Rectangle2D) in.readObject();
             bbox = new Rectangle2D.Double();
             bbox.setRect(rec);
+
+            //First int is the number of shapes
             int i = in.readInt();
             drawables.clear();
             while(i-- > 0){
+                //get information needed in correct order and add to drawables-array.
                 Drawable d = (Drawable) in.readObject();
                 d.shape = (Shape) in.readObject();
                 d.color = (Color) in.readObject();
