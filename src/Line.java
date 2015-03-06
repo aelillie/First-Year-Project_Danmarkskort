@@ -49,10 +49,5 @@ public class Line extends Drawable implements Serializable {
         dashed = true;
     }
 
-    public boolean isDashed(){
-        return dashed;
-    }
-
-
 
 }
