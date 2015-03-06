@@ -12,9 +12,6 @@ public class Area extends Drawable implements Serializable {
     public Area(Shape shape, Color color,double zoom, int layerVal) {
         super(shape, color, zoom, layerVal);
     }
-    public Area(){
-        super(null,null,0,0);
-    }
 
     /**
      * Fills the shape with Predefined color.

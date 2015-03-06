@@ -1,6 +1,6 @@
 public class Main {
     public static void main(String[] args) {
-        Model m = new Model("savegame.bin");
+        Model m = new Model("data/small.osm");
         /*
         try {
             FileOutputStream fileOut = new FileOutputStream("");

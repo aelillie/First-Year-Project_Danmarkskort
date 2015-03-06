@@ -15,9 +15,6 @@ public class Line extends Drawable implements Serializable {
         super(shape, color, drawLevel, layerVal);
         this.stroke_id = stroke_id;
     }
-    public Line(){
-        super(null,null,0.0,0);
-    }
 
     /**
      * Draws the Shape with predefined colors and stroke.
