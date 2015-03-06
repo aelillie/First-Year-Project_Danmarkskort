@@ -43,4 +43,12 @@ public class Line extends Drawable {
     public void setDashed(){
         dashed = true;
     }
+
+    public boolean isDashed(){
+        return dashed;
+    }
+
+    public String toString(){
+        return "line";
+    }
 }

@@ -31,4 +31,8 @@ public class Area extends Drawable {
         g.setColor(Color.BLACK);
         g.draw(shape);
     }
+
+    public String toString(){
+        return "area";
+    }
 }

@@ -80,7 +80,7 @@ public class Controller extends MouseAdapter implements ActionListener {
                     view.toggleAA();
                     break;
                 case 's':
-                    model.save("savegame.bin");
+                    model.save("savegame.bin", view.getTransform());
                     break;
                 case 'l':
                     model.load("savegame.bin");

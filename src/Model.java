@@ -6,13 +6,8 @@ import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
 import java.awt.*;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.Serializable;
+import java.awt.geom.*;
+import java.io.*;
 import java.util.*;
 import java.util.List;
 import java.util.zip.ZipInputStream;
@@ -144,7 +139,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
                     isBusstop = false;
                     isMetro = false;
                     isSTog = false;
-                    
+
                     double lat = Double.parseDouble(atts.getValue("lat"));
                     double lon = Double.parseDouble(atts.getValue("lon"));
                     long id = Long.parseLong(atts.getValue("id"));
@@ -408,15 +403,18 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
 
                             //TODO look at busroute and so forth
                         }
+                        break;
                     }
+                
 
-                    break;
+
                 case "node":
                     if (kv_map.containsKey("highway")) {
                         String val = kv_map.get("highway");
                         if (val.equals("bus_stop") && isBusstop)
                             mapIcons.add(new MapIcon(currentCoord, "data//busIcon.png"));
-                    } else if (kv_map.containsKey("railway")) {
+                    }
+                    else if (kv_map.containsKey("railway")) {
                         String val = kv_map.get("railway");
                         if (val.equals("station")) {
                             if (isMetro) mapIcons.add(new MapIcon(currentCoord, "data//metroIcon.png"));
@@ -425,7 +423,9 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
                     } else if (kv_map.containsKey("addr:city")) addCityName();
                     else if (kv_map.containsKey("addr:postcode")) addPostcode();
                     break;
-            }
+
+                }
+
 
         }
 
@@ -459,7 +459,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
         return streetnameMap;
     }
 
-    public void save(String filename) {
+    public void save(String filename, AffineTransform transform) {
 /*		long time = System.nanoTime();
 		try (DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))) {
 		//try (DataOutputStream out = new DataOutputStream(new FileOutputStream(filename))) {
@@ -475,12 +475,34 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
 		}
 		System.out.printf("Model save time: %d ms\n",
 				(System.nanoTime() - time) / 1000000);*/
+        long time = System.nanoTime();
+            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
+                out.writeInt(drawables.size());
+                for(Drawable d : drawables) {
+                    String type = d.toString();
+                    out.writeUTF(type);
+                    Shape shape = d.shape;
+                    out.writeObject(shape);
+                    out.writeDouble(d.drawLevel);
+                    out.writeInt(d.layerVal);
+                    out.writeObject(d.color);
+                    if(type.equals("line")){
+                        Line line = (Line) d;
+                        out.writeInt(line.stroke_id);
+                        out.writeBoolean(line.isDashed());
+                    }
+                }
+            } catch (IOException e) {
+                throw new RuntimeException(e);
+            }
+        System.out.printf("Model save time: %d ms\n", (System.nanoTime()-time) / 1000000);
+
     }
 
     public void load(String filename) {
 		/*
 		long time = System.nanoTime();
-		try (DataInputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
+		try (InputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
 			int n = in.readInt();
 			lines.clear();
 			while (n-- > 0) {
@@ -497,6 +519,40 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
 				(System.nanoTime() - time) / 1000000);
 		setChanged();
 		notifyObservers();*/
+
+        long time = System.nanoTime();
+        try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
+            int i = in.readInt();
+            drawables.clear();
+            while(i-- > 0){
+                String type = in.readUTF();
+                Object o = in.readObject();
+                Shape shape = (Shape) o;
+                double drawLvl = in.readDouble();
+                int layer = in.readInt();
+                Object o2 = in.readObject();
+                Color color = (Color) o2;
+                if(type.equals("line")){
+                    int stroke = in.readInt();
+                    Boolean dashed = in.readBoolean();
+                    Line line = new Line(shape,color,stroke, drawLvl, layer);
+                    if(dashed)line.setDashed();
+                    drawables.add(line);
+
+                }
+                else drawables.add(new Area(shape,color,drawLvl,layer));
+            }
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }catch (ClassNotFoundException e){
+            e.printStackTrace();
+        }
+        System.out.printf("Model load time: %d ms\n",
+                (System.nanoTime() - time) / 1000000);
+        sortLayers();
+        setChanged();
+        notifyObservers();
     }
 
     public Iterator<Shape> iterator() {

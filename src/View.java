@@ -19,12 +19,9 @@ public class View extends JFrame implements Observer {
     private Point dragEndScreen, dragStartScreen;
     protected double zoomLevel;
     protected JTextField searchArea;
-    protected JButton searchButton;
-    protected JButton zoomInButton;
-    protected JButton zoomOutButton;
-    protected JButton fullscreenButton;
+    protected JButton searchButton, zoomInButton, zoomOutButton, fullscreenButton;
     private boolean isFullscreen = false;
-    GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
+    private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
     private String promptText = "Enter Address";
 
@@ -49,7 +46,7 @@ public class View extends JFrame implements Observer {
         //This sets up a listener for when the frame is re-sized.
         this.getRootPane().addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
-                //Re position the buttons.
+                //Re-position the buttons.
                 zoomOutButton.setBounds(getWidth()-115, getHeight()-getHeight()/3*2,39,37);
                 fullscreenButton.setBounds(getWidth()-70, getHeight()-getHeight()/3*2,39,37);
                 zoomInButton.setBounds(getWidth()-160,getHeight()- getHeight()/3*2,39,37);
@@ -122,6 +119,22 @@ public class View extends JFrame implements Observer {
             }
 
         });
+
+
+        //Make the components for the frame.
+        makeComponents();
+
+        layer.add(canvas, new Integer(1));
+        layer.add(searchArea, new Integer(2));
+        layer.add(searchButton, new Integer(2));
+        layer.add(zoomInButton, new Integer(2));
+        layer.add(zoomOutButton, new Integer(2));
+        layer.add(fullscreenButton, new Integer(2));
+
+
+    }
+
+    private void makeComponents(){
         Font font = new Font("Arial",Font.PLAIN,16);
 
         //Create The buttons and configure their visual design.
@@ -165,22 +178,11 @@ public class View extends JFrame implements Observer {
         fullscreenButton.setActionCommand("fullscreen");
         fullscreenButton.setBounds(getWidth()-70, getHeight()-getHeight()/3*2,39,37);
 
-
         JComboBox<Icon> mapMenu = new JComboBox<>();
         mapMenu.setEditable(false);
         mapMenu.setActionCommand("maptype");
 
-        //Add all the components to their the Frame on the right layer.
-        layer.add(canvas, new Integer(1));
-        layer.add(searchArea, new Integer(2));
-        layer.add(searchButton, new Integer(2));
-        layer.add(zoomInButton, new Integer(2));
-        layer.add(zoomOutButton, new Integer(2));
-        layer.add(fullscreenButton, new Integer(2));
-
     }
-
-
 
     @Override
     public void update(Observable obs, Object obj) {
@@ -314,6 +316,10 @@ public class View extends JFrame implements Observer {
             gd.setFullScreenWindow(null);
         }
         isFullscreen = !isFullscreen;
+    }
+
+    public AffineTransform getTransform(){
+        return transform;
     }
 
     /**
