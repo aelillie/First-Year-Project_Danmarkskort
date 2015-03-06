@@ -1,8 +1,6 @@
-import java.io.*;
-
 public class Main {
     public static void main(String[] args) {
-        Model m = new Model("data//small.osm");
+        Model m = new Model("savegame.bin");
         /*
         try {
             FileOutputStream fileOut = new FileOutputStream("");

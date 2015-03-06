@@ -41,6 +41,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
         Address.addPatterns();
         if (filename.endsWith(".osm")) parseOSM(filename);
         else if (filename.endsWith(".zip")) parseZIP(filename);
+        else if (filename.endsWith(".bin")) load(filename);
         else System.err.println("File not recognized");
         sortLayers();
         System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
@@ -405,7 +406,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
                         }
                         break;
                     }
-                
+
 
 
                 case "node":
@@ -459,24 +460,10 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
         return streetnameMap;
     }
 
-    public void save(String filename, AffineTransform transform) {
-/*		long time = System.nanoTime();
-		try (DataOutputStream out = new DataOutputStream(new BufferedOutputStream(new FileOutputStream(filename)))) {
-		//try (DataOutputStream out = new DataOutputStream(new FileOutputStream(filename))) {
-			out.writeInt(lines.size());
-			for (Line2D line : lines) {
-				out.writeDouble(line.getX1());
-				out.writeDouble(line.getY1());
-				out.writeDouble(line.getX2());
-				out.writeDouble(line.getY2());
-			}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		System.out.printf("Model save time: %d ms\n",
-				(System.nanoTime() - time) / 1000000);*/
+    public void save(String filename) {
         long time = System.nanoTime();
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
+                out.writeObject(bbox.getBounds2D());
                 out.writeInt(drawables.size());
                 for(Drawable d : drawables) {
                     String type = d.toString();
@@ -492,6 +479,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
                         out.writeBoolean(line.isDashed());
                     }
                 }
+
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
@@ -500,28 +488,11 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
     }
 
     public void load(String filename) {
-		/*
-		long time = System.nanoTime();
-		try (InputStream in = new DataInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
-			int n = in.readInt();
-			lines.clear();
-			while (n-- > 0) {
-				double x1 = in.readDouble();
-				double y1 = in.readDouble();
-				double x2 = in.readDouble();
-				double y2 = in.readDouble();
-				lines.add(new Line2D.Double(x1, y1, x2, y2));
-			}
-		} catch (IOException e) {
-			throw new RuntimeException(e);
-		}
-		System.out.printf("Model load time: %d ms\n",
-				(System.nanoTime() - time) / 1000000);
-		setChanged();
-		notifyObservers();*/
-
         long time = System.nanoTime();
         try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
+            Rectangle2D rec = (Rectangle2D) in.readObject();
+            bbox = new Rectangle2D.Double();
+            bbox.setRect(rec);
             int i = in.readInt();
             drawables.clear();
             while(i-- > 0){
@@ -542,7 +513,6 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
                 }
                 else drawables.add(new Area(shape,color,drawLvl,layer));
             }
-
         } catch (IOException e) {
             throw new RuntimeException(e);
         }catch (ClassNotFoundException e){

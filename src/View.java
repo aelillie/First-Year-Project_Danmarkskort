@@ -318,10 +318,6 @@ public class View extends JFrame implements Observer {
         isFullscreen = !isFullscreen;
     }
 
-    public AffineTransform getTransform(){
-        return transform;
-    }
-
     /**
      * The canvas object is where our map of paths and images (points) will be drawn on
      *
