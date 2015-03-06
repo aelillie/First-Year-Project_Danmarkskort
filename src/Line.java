@@ -1,6 +1,7 @@
 import java.awt.*;
+import java.io.Serializable;
 
-public class Line extends Drawable {
+public class Line extends Drawable implements Serializable {
     int stroke_id;
     private boolean dashed = false;
 
@@ -13,6 +14,9 @@ public class Line extends Drawable {
     public Line(Shape shape, Color color, int stroke_id, double drawLevel, int layerVal) {
         super(shape, color, drawLevel, layerVal);
         this.stroke_id = stroke_id;
+    }
+    public Line(){
+        super(null,null,0.0,0);
     }
 
     /**
@@ -37,6 +41,7 @@ public class Line extends Drawable {
         }
     }
 
+
     /**
      * Toggle if the line should be dashed.
      */
@@ -48,7 +53,6 @@ public class Line extends Drawable {
         return dashed;
     }
 
-    public String toString(){
-        return "line";
-    }
+
+
 }

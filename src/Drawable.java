@@ -1,6 +1,6 @@
 import java.awt.*;
 
-public abstract class Drawable {
+public abstract class Drawable{
     Shape shape;
     Color color;
     Double drawLevel;
@@ -62,6 +62,7 @@ public abstract class Drawable {
         this.drawLevel = drawLevel;
         this.layerVal = layerVal;
     }
+    public Drawable(){}
 
     //Abstract methods.
     abstract void draw(Graphics2D g);
@@ -71,5 +72,7 @@ public abstract class Drawable {
     public int getLayerVal() {
         return layerVal;
     }
+
+
 }
 

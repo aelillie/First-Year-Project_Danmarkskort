@@ -1,6 +1,7 @@
 import java.awt.*;
+import java.io.Serializable;
 
-public class Area extends Drawable {
+public class Area extends Drawable implements Serializable {
 
     /**
      * Sets up the area with a color and the shape of the area.
@@ -10,6 +11,9 @@ public class Area extends Drawable {
      */
     public Area(Shape shape, Color color,double zoom, int layerVal) {
         super(shape, color, zoom, layerVal);
+    }
+    public Area(){
+        super(null,null,0,0);
     }
 
     /**
@@ -32,7 +36,4 @@ public class Area extends Drawable {
         g.draw(shape);
     }
 
-    public String toString(){
-        return "area";
-    }
 }

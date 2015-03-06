@@ -460,24 +460,26 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
         return streetnameMap;
     }
 
+    /**
+     * Writes all the objects of Drawable to a binary file for faster loading. The order of the sequence is important!
+     * @param filename File saved to
+     */
     public void save(String filename) {
         long time = System.nanoTime();
             try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
+                //write the boundaries and the number of shapes.
                 out.writeObject(bbox.getBounds2D());
                 out.writeInt(drawables.size());
+
+                //For every object write the its
                 for(Drawable d : drawables) {
-                    String type = d.toString();
-                    out.writeUTF(type);
-                    Shape shape = d.shape;
-                    out.writeObject(shape);
+                    out.writeObject(d);
+                    out.writeObject(d.shape);
+                    out.writeObject(d.color);
                     out.writeDouble(d.drawLevel);
                     out.writeInt(d.layerVal);
-                    out.writeObject(d.color);
-                    if(type.equals("line")){
-                        Line line = (Line) d;
-                        out.writeInt(line.stroke_id);
-                        out.writeBoolean(line.isDashed());
-                    }
+                    //TODO save all icons position and type
+                    //TODO save everything!
                 }
 
             } catch (IOException e) {
@@ -487,6 +489,10 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
 
     }
 
+    /**
+     * loads the shapes from a binary file. The order of the sequence is important!
+     * @param filename file load from
+     */
     public void load(String filename) {
         long time = System.nanoTime();
         try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
@@ -496,22 +502,12 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
             int i = in.readInt();
             drawables.clear();
             while(i-- > 0){
-                String type = in.readUTF();
-                Object o = in.readObject();
-                Shape shape = (Shape) o;
-                double drawLvl = in.readDouble();
-                int layer = in.readInt();
-                Object o2 = in.readObject();
-                Color color = (Color) o2;
-                if(type.equals("line")){
-                    int stroke = in.readInt();
-                    Boolean dashed = in.readBoolean();
-                    Line line = new Line(shape,color,stroke, drawLvl, layer);
-                    if(dashed)line.setDashed();
-                    drawables.add(line);
-
-                }
-                else drawables.add(new Area(shape,color,drawLvl,layer));
+                Drawable d = (Drawable) in.readObject();
+                d.shape = (Shape) in.readObject();
+                d.color = (Color) in.readObject();
+                d.drawLevel = in.readDouble();
+                d.layerVal = in.readInt();
+                drawables.add(d);
             }
         } catch (IOException e) {
             throw new RuntimeException(e);
