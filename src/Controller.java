@@ -1,4 +1,3 @@
-import javax.swing.*;
 import java.awt.event.*;
 
 public class Controller extends MouseAdapter implements ActionListener {
@@ -11,10 +10,14 @@ public class Controller extends MouseAdapter implements ActionListener {
         model = m;
         view = v;
         //Set up Handlers for mouse and keyboard and let controller set these for view.
+        keyHandler kH = new keyHandler();
+        view.canvas.addKeyListener(kH);
         MouseHandler mH = new MouseHandler();
         view.addMouseListener(mH);
         view.addMouseMotionListener(mH);
         view.addMouseWheelListener(mH);
+
+        // The controller handles what should happen if a button is pressed.
         view.searchArea.addActionListener(this);
         view.searchButton.addActionListener(this);
         view.zoomInButton.addActionListener(this);
@@ -23,6 +26,9 @@ public class Controller extends MouseAdapter implements ActionListener {
     }
 
     @Override
+    /**
+     * Sets up what should happen when a button is pressed.
+     */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command == "zoomIn") view.zoom(1.2);
@@ -31,7 +37,8 @@ public class Controller extends MouseAdapter implements ActionListener {
         else if (command == "search"){
             String input = view.searchArea.getText().trim();
             Address address = Address.parse(input);
-            System.out.println(address.street()+ " " + address.house() + " " + address.floor() + " " + address.side()+ " " + address.city() + " " + address.postcode());
+            //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
+            view.canvas.requestFocusInWindow();
         }
         else if (command == "maptype");
     }
@@ -57,6 +64,9 @@ public class Controller extends MouseAdapter implements ActionListener {
     private class keyHandler extends KeyAdapter{
 
         @Override
+        /**
+         * Listens for keyboard events
+         */
         public void keyPressed(KeyEvent e) {
             //Set up the keyboard handler for different keys.
             switch (e.getKeyChar()) {

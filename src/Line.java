@@ -1,6 +1,7 @@
 import java.awt.*;
+import java.io.Serializable;
 
-public class Line extends Drawable {
+public class Line extends Drawable implements Serializable {
     int stroke_id;
     private boolean dashed = false;
 
@@ -37,10 +38,13 @@ public class Line extends Drawable {
         }
     }
 
+
     /**
      * Toggle if the line should be dashed.
      */
     public void setDashed(){
         dashed = true;
     }
+
+
 }
