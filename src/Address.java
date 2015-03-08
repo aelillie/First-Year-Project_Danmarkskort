@@ -1,7 +1,7 @@
 import java.util.*;
 import java.util.regex.*;
 
-public class Address {
+public class Address implements Comparable<Address> {
     private String street, house, floor, side, postcode, city;
     static private List<Pattern> patternList = new ArrayList<>();
 
@@ -15,6 +15,31 @@ public class Address {
         postcode = _postcode;
         city = _city;
     }
+
+
+    /**
+     * Specifies the string representation of an address object.
+     * @return the string representation of an address object.
+     */
+    @Override
+    public String toString(){
+        String s = street.trim() + " " + house.trim() + " " + floor.trim() + " " + side.trim()+" " + postcode.trim() + " " + city.trim();
+        s = s.replaceAll(" +", " ");
+        return s;
+    }
+
+
+    /**
+     * Compare this address object with the specified address object for order.
+     * @param addr The address to be compared to.
+     * @return A value which is negative if this object is less than the other, zero if they are equal or positive if this object is larger than the other.
+     */
+    @Override
+    public int compareTo(Address addr) {
+        return this.toString().compareTo(addr.toString()); //TODO: modify according to whether things like city is null
+
+    }
+
 
     public static class Builder {
         private String street = "", house = "", floor = "",

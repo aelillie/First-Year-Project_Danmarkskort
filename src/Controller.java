@@ -35,10 +35,11 @@ public class Controller extends MouseAdapter implements ActionListener {
         else if (command == "zoomOut") view.zoom(1/1.2);
         else if (command == "fullscreen") view.toggleFullscreen();
         else if (command == "search"){
-            String input = view.searchArea.getText().trim();
+            String input = view.searchArea.getText().trim().toLowerCase();
             Address address = Address.parse(input);
             //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
             view.canvas.requestFocusInWindow();
+            model.searchForAddresses(address);
         }
         else if (command == "maptype");
     }
