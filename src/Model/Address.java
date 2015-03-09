@@ -1,3 +1,5 @@
+package Model;
+
 import java.util.*;
 import java.util.regex.*;
 
@@ -134,9 +136,9 @@ public class Address implements Comparable<Address> {
 
     /**
      * This function tries to match an input String with different patterns. If a pattern matches it will create
-     * an Address object with the information given.
-     * @param s String, Address
-     * @return Address object.
+     * an Model.Address object with the information given.
+     * @param s String, Model.Address
+     * @return Model.Address object.
      */
     public static Address parse(String s) {
         Builder b = new Builder();

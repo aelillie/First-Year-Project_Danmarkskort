@@ -1,3 +1,8 @@
+package Controller;
+
+import Model.*;
+import View.View;
+
 import java.awt.event.*;
 
 public class Controller extends MouseAdapter implements ActionListener {
@@ -11,18 +16,18 @@ public class Controller extends MouseAdapter implements ActionListener {
         view = v;
         //Set up Handlers for mouse and keyboard and let controller set these for view.
         keyHandler kH = new keyHandler();
-        view.canvas.addKeyListener(kH);
+        view.getCanvas().addKeyListener(kH);
         MouseHandler mH = new MouseHandler();
         view.addMouseListener(mH);
         view.addMouseMotionListener(mH);
         view.addMouseWheelListener(mH);
 
         // The controller handles what should happen if a button is pressed.
-        view.searchArea.addActionListener(this);
-        view.searchButton.addActionListener(this);
-        view.zoomInButton.addActionListener(this);
-        view.zoomOutButton.addActionListener(this);
-        view.fullscreenButton.addActionListener(this);
+        view.getSearchArea().addActionListener(this);
+        view.getSearchButton().addActionListener(this);
+        view.getZoomInButton().addActionListener(this);
+        view.getZoomOutButton().addActionListener(this);
+        view.getFullscreenButton().addActionListener(this);
     }
 
     @Override
@@ -35,10 +40,10 @@ public class Controller extends MouseAdapter implements ActionListener {
         else if (command == "zoomOut") view.zoom(1/1.2);
         else if (command == "fullscreen") view.toggleFullscreen();
         else if (command == "search"){
-            String input = view.searchArea.getText().trim().toLowerCase();
+            String input = view.getSearchArea().getText().trim().toLowerCase();
             Address address = Address.parse(input);
             //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
-            view.canvas.requestFocusInWindow();
+            view.getCanvas().requestFocusInWindow();
             model.searchForAddresses(address);
         }
         else if (command == "maptype");
@@ -87,16 +92,16 @@ public class Controller extends MouseAdapter implements ActionListener {
                     model.load("savegame.bin");
                     break;
             }
-            if (e.getKeyCode() == e.VK_UP) {
+            if (e.getKeyCode() == KeyEvent.VK_UP) {
                 view.pan(0, 10);
             }
-            if (e.getKeyCode() == e.VK_DOWN) {
+            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
                 view.pan(0, -10);
             }
-            if (e.getKeyCode() == e.VK_LEFT) {
+            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
                 view.pan(10, 0);
             }
-            if (e.getKeyCode() == e.VK_RIGHT) {
+            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                 view.pan(-10, 0);
             }
 

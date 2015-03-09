@@ -1,3 +1,7 @@
+package View;
+
+import Model.*;
+
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
@@ -12,14 +16,14 @@ import static java.lang.Math.max;
 
 public class View extends JFrame implements Observer {
     public static final long serialVersionUID = 0;
-    Model model;
-    Canvas canvas;
+    private Model model;
+    private Canvas canvas;
     private AffineTransform transform = new AffineTransform();
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
-    protected double zoomLevel;
-    protected JTextField searchArea;
-    protected JButton searchButton, zoomInButton, zoomOutButton, fullscreenButton;
+    private double zoomLevel;
+    private JTextField searchArea;
+    private JButton searchButton, zoomInButton, zoomOutButton, fullscreenButton;
     private boolean isFullscreen = false;
     private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
@@ -28,7 +32,7 @@ public class View extends JFrame implements Observer {
     /**
      * Creates the window of our application.
      *
-     * @param m Reference to Model class
+     * @param m Reference to Model.Model class
      */
     public View(Model m) {
         super("This is our map");
@@ -53,7 +57,7 @@ public class View extends JFrame implements Observer {
             }
         });
         model.addObserver(this);
-        zoomLevel = model.bbox.getWidth() * -1;
+        zoomLevel = model.getBbox().getWidth() * -1;
     }
 
     /**
@@ -70,11 +74,11 @@ public class View extends JFrame implements Observer {
         double height = screenSize.getHeight();
 
         //Set up the scale amount for our Afflinetransform
-        double xscale = width / .56 / model.bbox.getWidth();
-        double yscale = height / model.bbox.getHeight();
+        double xscale = width / .56 / model.getBbox().getWidth();
+        double yscale = height / model.getBbox().getHeight();
         double scale = max(xscale, yscale);
-        transform.scale(.56*scale,-scale);
-        transform.translate(-model.bbox.getMinX(), -model.bbox.getMaxY());
+        transform.scale(.56 * scale, -scale);
+        transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
 
         //Set up the JFrame using the monitors resolution.
         setSize(screenSize);
@@ -139,49 +143,61 @@ public class View extends JFrame implements Observer {
 
         //Create The buttons and configure their visual design.
         searchArea.setFont(font);
-        searchArea.setBorder(new CompoundBorder(
-                BorderFactory.createMatteBorder(4, 7, 4, 7, new Color(75, 138, 247)),
-                BorderFactory.createRaisedBevelBorder()));
+        searchArea.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 7, 4, 7, Drawable.lightblue), BorderFactory.createRaisedBevelBorder()));
         searchArea.setBounds(20,20,300,37);
 
+        makeSearchButton();
+        makeZoomInButton();
+        makeZoomOutButton();
+        makeFullscreenButton();
+
+        JComboBox<Icon> mapMenu = new JComboBox<>();
+        mapMenu.setEditable(false);
+        mapMenu.setActionCommand("maptype");
+
+    }
+
+    private void makeFullscreenButton() {
+        fullscreenButton = new JButton();
+        fullscreenButton.setBackground(Color.WHITE);
+        fullscreenButton.setIcon(new ImageIcon("data//fullscreenIcon.png"));
+        fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        fullscreenButton.setFocusable(false);
+        fullscreenButton.setActionCommand("fullscreen");
+        fullscreenButton.setBounds(getWidth()-70, getHeight()-getHeight()/3*2,39,37);
+    }
+
+
+    private void makeZoomOutButton() {
+        zoomOutButton = new JButton();
+        zoomOutButton.setBackground(Color.WHITE);
+        zoomOutButton.setIcon(new ImageIcon("data//minusIcon.png"));
+        zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        zoomOutButton.setFocusable(false);
+        zoomOutButton.setActionCommand("zoomOut");
+        zoomOutButton.setBounds(getWidth()-115, getHeight()-getHeight()/3*2,39,37);
+    }
+
+    private void makeZoomInButton() {
+        zoomInButton = new JButton();
+        zoomInButton.setBackground(Color.WHITE);
+        zoomInButton.setIcon(new ImageIcon("data//plusIcon.png"));
+        zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
+        zoomInButton.setFocusable(false);
+        zoomInButton.setActionCommand("zoomIn");
+        zoomInButton.setBounds(getWidth()-160,getHeight()-getHeight()/3*2,39,37);
+    }
+
+    private void makeSearchButton() {
         searchButton = new JButton();
         searchButton.setBorder(new CompoundBorder(
-                BorderFactory.createMatteBorder(4, 0, 4, 7, new Color(75, 138,247)),
+                BorderFactory.createMatteBorder(4, 0, 4, 7, Drawable.lightblue),
                 BorderFactory.createRaisedBevelBorder()));
         searchButton.setBackground(new Color(36, 45, 50));
         searchButton.setIcon(new ImageIcon("data//searchIcon.png"));
         searchButton.setFocusable(false);
         searchButton.setBounds(320,20,43,37);
         searchButton.setActionCommand("search");
-
-        zoomInButton = new JButton();
-        zoomInButton.setBackground(new Color(255,255,255));
-        zoomInButton.setIcon(new ImageIcon("data//plusIcon.png"));
-        zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
-        zoomInButton.setFocusable(false);
-        zoomInButton.setActionCommand("zoomIn");
-        zoomInButton.setBounds(getWidth()-160,getHeight()-getHeight()/3*2,39,37);
-
-        zoomOutButton = new JButton();
-        zoomOutButton.setBackground(new Color(255,255,255));
-        zoomOutButton.setIcon(new ImageIcon("data//minusIcon.png"));
-        zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        zoomOutButton.setFocusable(false);
-        zoomOutButton.setActionCommand("zoomOut");
-        zoomOutButton.setBounds(getWidth()-115, getHeight()-getHeight()/3*2,39,37);
-
-        fullscreenButton = new JButton();
-        fullscreenButton.setBackground(new Color(255,255,255));
-        fullscreenButton.setIcon(new ImageIcon("data//fullscreenIcon.png"));
-        fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        fullscreenButton.setFocusable(false);
-        fullscreenButton.setActionCommand("fullscreen");
-        fullscreenButton.setBounds(getWidth()-70, getHeight()-getHeight()/3*2,39,37);
-
-        JComboBox<Icon> mapMenu = new JComboBox<>();
-        mapMenu.setEditable(false);
-        mapMenu.setActionCommand("maptype");
-
     }
 
     @Override
@@ -340,14 +356,14 @@ public class View extends JFrame implements Observer {
                 g.draw(line);
             }
             //Draw EVERYTHING
-            for (Drawable drawable : model.drawables) {
+            for (Drawable drawable : model.getDrawables()) {
                 if (zoomLevel > -0.4)
                     drawable.drawBoundary(g);
             }
 
 
-            for (Drawable drawable : model.drawables) {
-                if (drawable.drawLevel < zoomLevel)
+            for (Drawable drawable : model.getDrawables()) {
+                if (drawable.getDrawLevel() < zoomLevel)
                     drawable.draw(g);
             }
 
@@ -393,4 +409,63 @@ public class View extends JFrame implements Observer {
         }
     }
 
+    public Model getModel() {
+        return model;
+    }
+
+    public Component getCanvas() {
+        return canvas;
+    }
+
+    public AffineTransform getTransform() {
+        return transform;
+    }
+
+    public boolean isAntialias() {
+        return antialias;
+    }
+
+    public Point getDragEndScreen() {
+        return dragEndScreen;
+    }
+
+    public Point getDragStartScreen() {
+        return dragStartScreen;
+    }
+
+    public double getZoomLevel() {
+        return zoomLevel;
+    }
+
+    public JTextField getSearchArea() {
+        return searchArea;
+    }
+
+    public JButton getSearchButton() {
+        return searchButton;
+    }
+
+    public JButton getZoomInButton() {
+        return zoomInButton;
+    }
+
+    public JButton getZoomOutButton() {
+        return zoomOutButton;
+    }
+
+    public JButton getFullscreenButton() {
+        return fullscreenButton;
+    }
+
+    public boolean isFullscreen() {
+        return isFullscreen;
+    }
+
+    public GraphicsDevice getGd() {
+        return gd;
+    }
+
+    public String getPromptText() {
+        return promptText;
+    }
 }

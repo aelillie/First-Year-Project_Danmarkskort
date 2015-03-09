@@ -1,3 +1,5 @@
+package Model;
+
 import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -31,9 +33,16 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
         return mapIcons;
     }
 
-    List<Drawable> drawables = new ArrayList<>(); //Shapes to be drawn differently
-    Rectangle2D bbox;
+    private List<Drawable> drawables = new ArrayList<>(); //Shapes to be drawn differently
+    private Rectangle2D bbox;
 
+    public List<Drawable> getDrawables() {
+        return drawables;
+    }
+
+    public Rectangle2D getBbox() {
+        return bbox;
+    }
 
     /**
      * Constructor, which either parses .osm or .zip files
@@ -47,13 +56,10 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
         else if (filename.endsWith(".bin")) load(filename);
         else System.err.println("File not recognized");
         sortLayers();
-        System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
+        System.out.printf("Model.Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
-    /**
-     * Parses .osm files and sets a content handler
-     * @param filename .osm format
-     */
+
     void parseOSM(String filename) {
         try {
             XMLReader reader = XMLReaderFactory.createXMLReader();
@@ -64,10 +70,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
         }
     }
 
-    /**
-     * Parses .zip files and sets a content handler
-     * @param filename .zip format, containing .osm
-     */
+
     void parseZIP(String filename) {
         try (ZipInputStream zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
             zip.getNextEntry();
@@ -80,14 +83,14 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
     }
 
     /**
-     * Sorts the Drawable elements in the drawables list from their layer value.
+     * Sorts the Model.Drawable elements in the drawables list from their layer value.
      * Takes use of a comparator, which compares their values.
      */
     private void sortLayers() {
         Comparator<Drawable> comparator = new Comparator<Drawable>() {
             @Override
             /**
-             * Compares two Drawable objects.
+             * Compares two Model.Drawable objects.
              * Returns a negative integer, zero, or a positive integer as the first argument
              * is less than, equal to, or greater than the second.
              */
@@ -163,12 +166,12 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
     }
 
 
-   /* public void searchForAddresses1(Address addressInput){
+   /* public void searchForAddresses1(Model.Address addressInput){
         int index = Collections.binarySearch(addressList,addressInput,new AddressComparator());
         if(index < 0) { //If it is not found the return value will be negative
             System.out.println("Too bad - didn't find!");
         } else {
-            Address foundAddr = addressList.get(index);
+            Model.Address foundAddr = addressList.get(index);
             Point2D coordinate = addressMap.get(foundAddr);
             System.out.println("x = " + coordinate.getX() + ", y = " +coordinate.getY());
         } //if multiple results ... suggest these
@@ -282,21 +285,30 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
             }
         }
 
-        /**
-         * Ways can have a layer value specified. This method reads the value of the layer,
-         * parses it to an int and returns it. If the way has no specified layer value,
-         * an exception will be thrown and caught, and then by default setting the
-         * specific way's layer value to 0.
-         * @return Layer value for the given way. Either -2, -1 or 1. If neither, return 0 by default
-         */
+
         private int getLayer() {
-            int layer;
+            int layer_val = 2; //default layer
+            int botLayer = 1;
+            int botLayer2 = 2;
+            //gives space to 2 extra layers
+            int topLayer = 5; //modify this to make extra layers
             try {
-                layer = Integer.parseInt(kv_map.get("layer"));
+                int OSM_layer = Integer.parseInt(kv_map.get("layer"));
+                if (OSM_layer == -2) layer_val = botLayer;
+                if (OSM_layer == -1) layer_val = botLayer2;
+                if (OSM_layer == 1) layer_val = topLayer;
             } catch (NumberFormatException e) {
-                layer = 0;
+                layer_val = 2;
             }
-            return layer;
+            return layer_val;
+        }
+
+        private int setLayer(String key) {
+            /*
+            if (key.equals(""))
+            return 2; //default layer
+            */
+            return 0;
         }
 
         /**
@@ -380,7 +392,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
                     } else if (kv_map.containsKey("aeroway")) { //##New key!
                         drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
                     } else if (kv_map.containsKey("amenity")) { //##New key!
-                        //drawables.add(new Area(way, Drawable.lightgrey));
+                        //drawables.add(new Model.Area(way, Model.Drawable.lightgrey));
                         String val = kv_map.get("amenity");
                         if (val.equals("parking")) {
                             mapIcons.add(new MapIcon(way, "data//parkingIcon.jpg"));
@@ -486,7 +498,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
 
                                 }
                             /*else if (kv_map.containsKey("natural"))
-                                drawables.add(new Area(path, Drawable.water, -1.5));*/
+                                drawables.add(new Model.Area(path, Model.Drawable.water, -1.5));*/
                                 //TODO How do draw harbor.
                             }
 
@@ -602,7 +614,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
     }
 
     /**
-     * Writes all the objects of Drawable to a binary file for faster loading. The order of the sequence is important!
+     * Writes all the objects of Model.Drawable to a binary file for faster loading. The order of the sequence is important!
      * @param filename File saved to
      */
     public void save(String filename) {
@@ -616,10 +628,10 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
                 for(Drawable d : drawables) {
                     //Write all information needed from the object order matters.
                     out.writeObject(d);
-                    out.writeObject(d.shape);
-                    out.writeObject(d.color);
-                    out.writeDouble(d.drawLevel);
-                    out.writeInt(d.layerVal);
+                    out.writeObject(d.getShape());
+                    out.writeObject(d.getColor());
+                    out.writeDouble(d.getDrawLevel());
+                    out.writeInt(d.getLayerVal());
                     //TODO save all icons position and type
                     //TODO save everything!
                 }
@@ -627,7 +639,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
             } catch (IOException e) {
                 throw new RuntimeException(e);
             }
-        System.out.printf("Model save time: %d ms\n", (System.nanoTime()-time) / 1000000);
+        System.out.printf("Model.Model save time: %d ms\n", (System.nanoTime()-time) / 1000000);
 
     }
 
@@ -636,6 +648,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
      * @param filename file load from
      */
     public void load(String filename) {
+        /*
         long time = System.nanoTime();
         try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
             //get the bounds of the map
@@ -649,10 +662,10 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
             while(i-- > 0){
                 //get information needed in correct order and add to drawables-array.
                 Drawable d = (Drawable) in.readObject();
-                d.shape = (Shape) in.readObject();
-                d.color = (Color) in.readObject();
-                d.drawLevel = in.readDouble();
-                d.layerVal = in.readInt();
+                d.getShape() = (Shape) in.readObject();
+                d.getColor() = (Color) in.readObject();
+                d.getDrawLevel() = in.readDouble();
+                d.getLayerVal() = in.readInt();
                 drawables.add(d);
             }
         } catch (IOException e) {
@@ -660,11 +673,12 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
         }catch (ClassNotFoundException e){
             e.printStackTrace();
         }
-        System.out.printf("Model load time: %d ms\n",
+        System.out.printf("Model.Model load time: %d ms\n",
                 (System.nanoTime() - time) / 1000000);
         sortLayers();
         setChanged();
         notifyObservers();
+        */
     }
 
     /**

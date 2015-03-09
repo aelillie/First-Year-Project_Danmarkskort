@@ -1,3 +1,7 @@
+package Model;
+
+import Model.Drawable;
+
 import java.awt.*;
 import java.io.Serializable;
 
@@ -6,7 +10,7 @@ public class Area extends Drawable implements Serializable {
     /**
      * Sets up the area with a color and the shape of the area.
      * @param shape Shape of area
-     * @param color Color of Area
+     * @param color Color of Model.Area
      * @param zoom  Zoom used when drawn.
      */
     public Area(Shape shape, Color color,double zoom, int layerVal) {
@@ -18,8 +22,8 @@ public class Area extends Drawable implements Serializable {
      * @param g Graphic 2D with correct transform
      */
     public void draw(Graphics2D g) {
-        g.setColor(color);
-        g.fill(shape);
+        g.setColor(getColor());
+        g.fill(getShape());
 
     }
 
@@ -30,7 +34,7 @@ public class Area extends Drawable implements Serializable {
     public void drawBoundary(Graphics2D g) {
         g.setStroke(strokes[1]);
         g.setColor(Color.BLACK);
-        g.draw(shape);
+        g.draw(getShape());
     }
 
 }
