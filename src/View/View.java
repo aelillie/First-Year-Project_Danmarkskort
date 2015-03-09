@@ -23,7 +23,7 @@ public class View extends JFrame implements Observer {
     private Point dragEndScreen, dragStartScreen;
     private double zoomLevel;
     private JTextField searchArea;
-    private JButton searchButton, zoomInButton, zoomOutButton, fullscreenButton;
+    private JButton searchButton, zoomInButton = new JButton(), zoomOutButton = new JButton(), fullscreenButton = new JButton();
     private boolean isFullscreen = false;
     private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
@@ -42,20 +42,12 @@ public class View extends JFrame implements Observer {
         make the buttons and layout for the frame*/
         setScale();
         makeGUI();
-
+        setResizeController();
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
 
         canvas.requestFocusInWindow();
-        //This sets up a listener for when the frame is re-sized.
-        this.getRootPane().addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                //Re-position the buttons.
-                zoomOutButton.setBounds(getWidth()-115, getHeight()-getHeight()/3*2,39,37);
-                fullscreenButton.setBounds(getWidth()-70, getHeight()-getHeight()/3*2,39,37);
-                zoomInButton.setBounds(getWidth()-160,getHeight()- getHeight()/3*2,39,37);
-            }
-        });
+
         model.addObserver(this);
         zoomLevel = model.getBbox().getWidth() * -1;
     }
@@ -64,7 +56,7 @@ public class View extends JFrame implements Observer {
      * Sets the scale for the afflineTransform object using to bounds from the osm file
      * Also sets up the frame size from screenSize
      */
-    private void setScale(){
+    private void setScale() {
         // bbox.width * xscale * .56 = 512
         // bbox.height * yscale = 512
 
@@ -86,17 +78,29 @@ public class View extends JFrame implements Observer {
         setExtendedState(Frame.MAXIMIZED_BOTH);
     }
 
+    private void setResizeController() {
+        //This sets up a listener for when the frame is re-sized.
+        this.getRootPane().addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                //Re-position the buttons.
+                zoomOutButton.setBounds(getWidth() - 115, getHeight() - getHeight() / 3 * 2, 39, 37);
+                fullscreenButton.setBounds(getWidth() - 70, getHeight() - getHeight() / 3 * 2, 39, 37);
+                zoomInButton.setBounds(getWidth() - 160, getHeight() - getHeight() / 3 * 2, 39, 37);
+            }
+        });
+    }
+
     /**
      * Makes use of different layers to put JComponent on top
      * of the canvas. Creates the GUI for the
      */
-    private void makeGUI(){
+    private void makeGUI() {
         //retrieve the LayeredPane stored in the frame.
         JLayeredPane layer = getLayeredPane();
         //Create the canvas and Components for GUI.
         canvas = new Canvas();
 
-        canvas.setBounds(0,0,getWidth(),getHeight());
+        canvas.setBounds(0, 0, getWidth(), getHeight());
 
         searchArea = new JTextField();
         searchArea.setText(promptText);
@@ -138,54 +142,32 @@ public class View extends JFrame implements Observer {
 
     }
 
-    private void makeComponents(){
-        Font font = new Font("Arial",Font.PLAIN,16);
+    private void makeComponents() {
+        Font font = new Font("Arial", Font.PLAIN, 16);
 
         //Create The buttons and configure their visual design.
         searchArea.setFont(font);
         searchArea.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 7, 4, 7, Drawable.lightblue), BorderFactory.createRaisedBevelBorder()));
-        searchArea.setBounds(20,20,300,37);
+        searchArea.setBounds(20, 20, 300, 37);
 
         makeSearchButton();
-        makeZoomInButton();
-        makeZoomOutButton();
-        makeFullscreenButton();
+        makeLeftPanelButton(fullscreenButton, 75, new ImageIcon("data//fullscreenIcon.png"));
+        makeLeftPanelButton(zoomInButton, 160, new ImageIcon("data//plusIcon.png"));
+        makeLeftPanelButton(zoomOutButton, 115, new ImageIcon("data//minusIcon.png"));
 
-        JComboBox<Icon> mapMenu = new JComboBox<>();
-        mapMenu.setEditable(false);
-        mapMenu.setActionCommand("maptype");
-
-    }
-
-    private void makeFullscreenButton() {
-        fullscreenButton = new JButton();
-        fullscreenButton.setBackground(Color.WHITE);
-        fullscreenButton.setIcon(new ImageIcon("data//fullscreenIcon.png"));
-        fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        fullscreenButton.setFocusable(false);
         fullscreenButton.setActionCommand("fullscreen");
-        fullscreenButton.setBounds(getWidth()-70, getHeight()-getHeight()/3*2,39,37);
-    }
-
-
-    private void makeZoomOutButton() {
-        zoomOutButton = new JButton();
-        zoomOutButton.setBackground(Color.WHITE);
-        zoomOutButton.setIcon(new ImageIcon("data//minusIcon.png"));
-        zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        zoomOutButton.setFocusable(false);
-        zoomOutButton.setActionCommand("zoomOut");
-        zoomOutButton.setBounds(getWidth()-115, getHeight()-getHeight()/3*2,39,37);
-    }
-
-    private void makeZoomInButton() {
-        zoomInButton = new JButton();
-        zoomInButton.setBackground(Color.WHITE);
-        zoomInButton.setIcon(new ImageIcon("data//plusIcon.png"));
-        zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
-        zoomInButton.setFocusable(false);
         zoomInButton.setActionCommand("zoomIn");
-        zoomInButton.setBounds(getWidth()-160,getHeight()-getHeight()/3*2,39,37);
+        zoomOutButton.setActionCommand("zoomOut");
+
+    }
+
+    private void makeLeftPanelButton(JButton button, int place, ImageIcon image) {
+
+        button.setBackground(Color.WHITE);
+        button.setIcon(image);
+        button.setBorder(BorderFactory.createRaisedBevelBorder());
+        button.setFocusable(false);
+        button.setBounds(getWidth() - place, getHeight() - getHeight() / 3 * 2, 39, 37);
     }
 
     private void makeSearchButton() {
@@ -196,7 +178,7 @@ public class View extends JFrame implements Observer {
         searchButton.setBackground(new Color(36, 45, 50));
         searchButton.setIcon(new ImageIcon("data//searchIcon.png"));
         searchButton.setFocusable(false);
-        searchButton.setBounds(320,20,43,37);
+        searchButton.setBounds(320, 20, 43, 37);
         searchButton.setActionCommand("search");
     }
 
@@ -209,21 +191,23 @@ public class View extends JFrame implements Observer {
     /**
      * The function of this method is to scale the view of the canvas by a factor given.
      * then pans the view to remove the moving towards 0,0 coord.
+     *
      * @param factor Double, the factor scaling
      */
     public void zoom(double factor) {
         //Check whether we zooming in or out for adjusting the zoomLvl field
-        if(factor > 1) zoomLevel += 0.0765;
+        if (factor > 1) zoomLevel += 0.0765;
         else zoomLevel -= 0.0765;
         //Scale the graphic and pan accordingly
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
-        pan(getWidth() * (1-factor) / 2, getHeight() * (1-factor) / 2);
+        pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
     }
 
     /**
      * Creates the inverse transformation of a point given.
      * It simply transforms a device space coordinate back
      * to user space coordinates.
+     *
      * @param p1 Point2D mouse position
      * @return Point2D The point after inverse of the scale.
      * @throws NoninvertibleTransformException
@@ -237,9 +221,10 @@ public class View extends JFrame implements Observer {
     /**
      * Zooms in on the canvas with the mouseWheel. Also translates (pans) towards
      * mouse point when zooming by using its Point2d.
+     *
      * @param e MouseWheelEvent
      */
-    public void wheelZoom(MouseWheelEvent e){
+    public void wheelZoom(MouseWheelEvent e) {
         try {
             int wheelRotation = e.getWheelRotation();
             Point p = e.getPoint();
@@ -273,7 +258,7 @@ public class View extends JFrame implements Observer {
      *
      * @param e MouseEvent
      */
-    public void mousePressed(MouseEvent e){
+    public void mousePressed(MouseEvent e) {
         dragStartScreen = e.getPoint();
         dragEndScreen = null;
     }
@@ -281,9 +266,10 @@ public class View extends JFrame implements Observer {
     /**
      * Moves the screen to where the mouse was dragged, using the transforms translate method with the
      * the difference dragged by the mouse.
+     *
      * @param e MouseEvent
      */
-    public void mouseDragged(MouseEvent e){
+    public void mouseDragged(MouseEvent e) {
         try {
             dragEndScreen = e.getPoint();
             //Create a point2d.float with the
@@ -306,11 +292,12 @@ public class View extends JFrame implements Observer {
 
     /**
      * Moves the canvas by a fixed amount using the Translate method.
+     *
      * @param dx
      * @param dy
      */
     public void pan(double dx, double dy) {
-        transform.preConcatenate(AffineTransform.getTranslateInstance(dx,dy));
+        transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
         repaint();
     }
 
@@ -325,8 +312,8 @@ public class View extends JFrame implements Observer {
     /**
      * Makes the view Frame fullscreen with help of a graphic device.
      */
-    public void toggleFullscreen(){
-        if(!isFullscreen) {
+    public void toggleFullscreen() {
+        if (!isFullscreen) {
             gd.setFullScreenWindow(this);
         } else {
             gd.setFullScreenWindow(null);
@@ -336,7 +323,6 @@ public class View extends JFrame implements Observer {
 
     /**
      * The canvas object is where our map of paths and images (points) will be drawn on
-     *
      */
     class Canvas extends JComponent {
         public static final long serialVersionUID = 4;
@@ -409,9 +395,6 @@ public class View extends JFrame implements Observer {
         }
     }
 
-    public Model getModel() {
-        return model;
-    }
 
     public Component getCanvas() {
         return canvas;
@@ -420,10 +403,7 @@ public class View extends JFrame implements Observer {
     public AffineTransform getTransform() {
         return transform;
     }
-
-    public boolean isAntialias() {
-        return antialias;
-    }
+        
 
     public Point getDragEndScreen() {
         return dragEndScreen;
@@ -460,12 +440,5 @@ public class View extends JFrame implements Observer {
     public boolean isFullscreen() {
         return isFullscreen;
     }
-
-    public GraphicsDevice getGd() {
-        return gd;
-    }
-
-    public String getPromptText() {
-        return promptText;
-    }
 }
+
