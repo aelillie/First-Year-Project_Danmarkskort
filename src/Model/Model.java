@@ -151,7 +151,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
 
     public void searchForAddresses(Address addressInput){
         int[] range = multipleEntriesSearch(addressInput); //search for one or multiple entries
-        if(range == null) { //If it is not found the return value will be negative
+        if(range == null) { //If it is not found, the return value will be negative
             System.out.println("Too bad - didn't find!");
         } else {
             System.out.println("Found something");
