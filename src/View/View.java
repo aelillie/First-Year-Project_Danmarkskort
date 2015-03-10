@@ -81,9 +81,9 @@ public class View extends JFrame implements Observer {
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
 
         //Set up the JFrame using the monitors resolution.
-        setSize(screenSize);
-        setPreferredSize(screenSize);
-        setExtendedState(Frame.MAXIMIZED_BOTH);
+        setSize(800, 600); //screenSize
+        setPreferredSize(new Dimension(800, 600)); //screenSize
+        setExtendedState(Frame.NORMAL); //Frame.MAXIMIZED_BOTH
     }
 
     /**
