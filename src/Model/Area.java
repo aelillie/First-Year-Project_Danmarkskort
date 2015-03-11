@@ -1,7 +1,5 @@
 package Model;
 
-import Model.Drawable;
-
 import java.awt.*;
 import java.io.Serializable;
 
@@ -32,7 +30,7 @@ public class Area extends Drawable implements Serializable {
      * @param g Graphic 2D with correct transform
      */
     public void drawBoundary(Graphics2D g) {
-        g.setStroke(strokes[1]);
+        g.setStroke(basicStrokes[1]);
         g.setColor(Color.BLACK);
         g.draw(getShape());
     }

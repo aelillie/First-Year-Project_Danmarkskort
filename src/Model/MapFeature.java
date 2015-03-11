@@ -11,6 +11,8 @@ public abstract class MapFeature implements Colorblind, Standard {
     protected int stroke_id;
     protected boolean dashed = false;
     protected String value;
+    protected boolean isArea;
+    protected boolean isLine;
 
     public MapFeature(Shape way, int layer_value, String value) {
         this.way = way;
@@ -22,44 +24,30 @@ public abstract class MapFeature implements Colorblind, Standard {
 
     public abstract void setValueIcon();
 
-    public void drawAreaBoundary(Graphics2D g) {
-        g.setStroke(Drawable.strokes[1]);
-        g.setColor(Color.BLACK);
-        g.draw(way);
-    }
-
-    public void drawArea(Graphics2D g){
-        g.setColor(color);
-        g.fill(way);
-    }
-
-    public void drawLineBoundary(Graphics2D g) {
-        if(!dashed) {
-            g.setStroke(Drawable.strokes[stroke_id + 1]);
+    public void drawBoundary(Graphics2D g) {
+        if(isLine) {
+            if(!dashed) {
+                g.setStroke(Drawable.basicStrokes[stroke_id + 1]);
+                g.setColor(Color.BLACK);
+                g.draw(way);
+            }
+        } else {
+            g.setStroke(Drawable.basicStrokes[1]);
             g.setColor(Color.BLACK);
             g.draw(way);
         }
+
     }
 
-    public void drawLine(Graphics2D g){
-        if(!dashed) g.setStroke(Drawable.strokes[stroke_id]);
-        g.setColor(color);
-        g.fill(way);
-    }
-
-    public void setZoom_level(double zoom_level) {
-        this.zoom_level = zoom_level;
-    }
-
-    public void setHasIcon(boolean hasIcon) {
-        this.hasIcon = hasIcon;
-    }
-
-    public void setColor(Color color) {
-        this.color = color;
-    }
-
-    public void isDashed(){
-        dashed = true;
-    }
+    public void drawStandard(Graphics2D g){
+        if(isLine) {
+            if(dashed) g.setStroke(Drawable.dashedStrokes[stroke_id]);
+             else g.setStroke(Drawable.streetStrokes[stroke_id]);
+            g.setColor(color);
+            g.fill(way);
+        }  else {
+            g.setStroke(Drawable.basicStrokes[stroke_id]);
+            g.setColor(color);
+            g.fill(way);
+        }
 }
