@@ -1,0 +1,74 @@
+Group G v0.2
+
+============
+
+
+Features added since v0.1:
+
+* Has a beta-version GUI
+
+* Added Metro and Bus icons
+* Beta-version save/load to/from binary file
+* Beta-version implementation of searching for addresses (also when there are multiple entries of the same name) and finding the corresponding coordinates.
+* Can zoom according to the mouse position
+* Takes layers of the OSM elements into account
+
+* Able to draw multi-polygon buildings
+
+
+"Features" discovered/added since v0.1:
+* Icons does not resize when zooming
+* Ways are not saved amongst addresses yet - only nodes.
+
+* Some ways still have paint-merging problems
+
+Time usage in man hours:
+2,5 hours: 	Presenting GUI mock-ups and agreeing on the design
+15 hours: 	Working on the address parser patterns
+20 hours: 	Working with relations, improving the zoom functionality and the visualisation of elements from the OSM file.
+17 hours: 	Working with the layers of the OSM elements - making sure they overlap properly.
+13 hours: 	Working with displaying names along streets, roads etc. 
+15 hours: 	Setting up GUI elements such as the searchfield and the buttons and adding functionality such as fullscreen.
+8 hours: 	Working on the implementation of searching for addresses.
+8 hours: 	Trying to figure out how to draw coastlines - exhausting many methods.
+4 hours: 	Looking into loading/saving binary files.
+
+Cumulative cost so far: (1h = DKK 625)
+
+Lectures:                9.375,-
+
+Meetings:                6.250,-
+Code review:            15.625,-
+"Homework"		15.625,-
+GUI			10.937,-
+Address search		 5.000,-
+OSM layers		10.625,-
+
+Road names 		 8.125,-
+Binary save/load	 2.500,-
+
+Coastlines 		 5.000,-
+Relations/visualisation 12.500,-
+
+
+
+Wish list for v0.3:
+
+* Save and load a "complete" binary format
+
+* Complete way to draw layers
+
+* Complete version of zoomlevels
+* Complete version of searching for addresses and find the corresponding coordinates
+
+* Display road names
+
+
+Feedback request:
+* Is it a smart data structure we're heading at with a hashpmap holding the key/values, an abstract class etc?
+* Is the model class to big? Should there be a distribution of some of the code to another class?
+* Is the program supposed to be able to save all data (Model, Drawable etc.) to a binary file? Should we use serialization/deserialization?
+* If we want to take the possibility of spelling errors into consideration, when searching for an address,
+  would it be a smart idea to use the Levenshtein-Algorithm to check the input against the list of addresses?
+  This algorithm has a running time of O(n*m) where n and m are the lengths of the two strings that you compare.
+  We find it hard to judge whether this would be too slow for the street/place names of entire Denmark - perhaps you have an idea of this?
