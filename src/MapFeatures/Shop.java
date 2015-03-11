@@ -1,5 +1,6 @@
 package MapFeatures;
 
+import Model.Drawable;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -10,11 +11,13 @@ import java.awt.*;
 public class Shop extends MapFeature {
     public Shop(Shape way, int layer_value, String value) {
         super(way, layer_value, value);
+        setValueAttributes();
+        isArea = true;
     }
 
     @Override
     public void setValueAttributes() {
-
+        setValueSpecs(Drawable.lightgrey, -1.0);
     }
 
     @Override

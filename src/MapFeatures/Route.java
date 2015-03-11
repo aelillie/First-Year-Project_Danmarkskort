@@ -1,5 +1,6 @@
 package MapFeatures;
 
+import Model.Drawable;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -11,11 +12,12 @@ public class Route extends MapFeature{
 
     public Route(Shape way, int layer_value, String value) {
         super(way, layer_value, value);
+        setValueAttributes();
     }
 
     @Override
     public void setValueAttributes() {
-
+        setValueSpecs(Drawable.white, -2.0);
     }
 
     @Override

@@ -1,5 +1,6 @@
 package MapFeatures;
 
+import Model.Drawable;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -19,7 +20,8 @@ public class Barrier extends MapFeature{
 
     @Override
     public void setValueAttributes() {
-
+        if(value.equals("hence")) setValueSpecs(Drawable.neongreen, -0.3);
+        if(value.equals("fence")) setValueSpecs(Drawable.neongreen, -0.3);
     }
 
     @Override

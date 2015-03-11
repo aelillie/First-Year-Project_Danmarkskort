@@ -1,5 +1,6 @@
 package MapFeatures;
 
+import Model.Drawable;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -10,10 +11,12 @@ import java.awt.*;
 public class Amenity extends MapFeature {
     public Amenity(Shape way, int layer_value, String value) {
         super(way, layer_value, value);
+        isArea = true;
     }
 
     @Override
     public void setValueAttributes() {
+        setValueSpecs(Drawable.sand, -1.0);
 
     }
 

@@ -4,14 +4,15 @@ import Model.Drawable;
 import Model.MapFeature;
 
 import java.awt.*;
-import java.util.Map;
 
 public class Natural extends MapFeature {
 
     public Natural(Shape way, int layer_value, String value) {
         super(way, layer_value, value);
+        isArea = true;
         setValueAttributes();
         setValueIcon();
+
     }
 
     @Override

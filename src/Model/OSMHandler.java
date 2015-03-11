@@ -1,9 +1,7 @@
 package Model;
 
 
-import MapFeatures.Barrier;
-import MapFeatures.Highway;
-import MapFeatures.Natural;
+import MapFeatures.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -37,9 +35,25 @@ public class OSMHandler extends DefaultHandler {
     protected List<String> cityNames = new ArrayList<>();
     protected List<String> postCodes = new ArrayList<>();
     protected Map<String, String> streetCityMap = new HashMap<>();
+    private List<MapIcon> mapIcons = new ArrayList<>(); //contains all the icons to be drawn
+
+    public Rectangle2D getBbox() {
+        return bbox;
+    }
 
     private Rectangle2D bbox;
     private List<MapFeature> mapFeatures = new ArrayList<>();
+
+    private List<Shape> lines = new ArrayList<>(); //contains all shapes to be drawn that are not in drawables
+
+    private Map<String,List<Shape>> streetnameMap = new HashMap<>();
+    private Map<Address,Point2D> addressMap = new HashMap<>(); //Contains relevant places parsed as address objects (e.g. a place Roskilde or an address Lauravej 38 2900 Hellerup etc.) linked to their coordinate.
+    private ArrayList<Address> addressList = new ArrayList<>(); //Contains all addresses to be sorted according to the compareTo method.
+
+    public List<MapIcon> getMapIcons() {
+        return mapIcons;
+    }
+
 
 
     /**
@@ -168,101 +182,69 @@ public class OSMHandler extends DefaultHandler {
                 if (kv_map.containsKey("natural")) { //##New key!
                     mapFeatures.add(new Natural(way, getLayer(), kv_map.get("natural")));
 
-                    String val = kv_map.get("natural");
-                    if (val.equals("coastline")) {
-                        drawables.add(new Line(way, Drawable.lightblue, 4, -1.0, getLayer()));
-                        //processCoastpoints(coords);
-                    }
-                    if (val.equals("wood")) drawables.add(new Area(way, Drawable.neongreen, -2.0, getLayer()));
-                    if (val.equals("scrub")) drawables.add(new Area(way, Drawable.neongreen, -1.5, getLayer()));
-                    if (val.equals("heath")) drawables.add(new Area(way, Drawable.skincolor, -2.0, getLayer()));
-                    if (val.equals("grassland")) drawables.add(new Area(way, Drawable.bluegreen, -2.0, getLayer()));
-                    if (val.equals("sand")) drawables.add(new Area(way, Drawable.sand, -2.0, getLayer()));
-                    if (val.equals("scree")) drawables.add(new Area(way, Drawable.pink, -2.0, getLayer()));
-                    if (val.equals("fell")) drawables.add(new Area(way, Drawable.orange, -2.0, getLayer()));
-                    if (val.equals("water")) drawables.add(new Area(way, Drawable.whiteblue, -2.0, getLayer()));
-                    if (val.equals("wetland")) drawables.add(new Area(way, Drawable.greenblue, -2.0, getLayer()));
                 } else if (kv_map.containsKey("waterway")) { //##New key!
-                    String val = kv_map.get("waterway");
-                    if (val.equals("riverbank")) drawables.add(new Area(way, Drawable.lightblue, -1.0, getLayer()));
-                    if (val.equals("stream")) drawables.add(new Line(way, Drawable.lightblue, 1, -1.0, getLayer()));
-                    if (val.equals("canal")) drawables.add(new Line(way, Drawable.lightblue, 2, -1.0, getLayer()));
-                    if (val.equals("river")) drawables.add(new Line(way, Drawable.lightblue, 2, -1.0, getLayer()));
-                    if (val.equals("dam")) drawables.add(new Line(way, Drawable.lightblue, 2, -1.0, getLayer()));
+                    mapFeatures.add(new Waterway(way, getLayer(), kv_map.get("waterway")));
 
                 } else if (kv_map.containsKey("leisure")) { //##New key!
-                    String val = kv_map.get("leisure");
-                    if (val.equals("garden")) drawables.add(new Area(way, Drawable.whitegreen, -1.2, getLayer()));
-                    if (val.equals("park")) drawables.add(new Area(way, Drawable.whitegreen, -1.2, getLayer()));
-                    if (val.equals("common")) drawables.add(new Area(way, Drawable.neongreen, -1.2, getLayer()));
+                    mapFeatures.add(new Leisure(way, getLayer(), kv_map.get("leisure")));
+
                 } else if (kv_map.containsKey("landuse")) { //##New key!
-                    String val = kv_map.get("landuse");
-                    if (val.equals("cemetery")) drawables.add(new Area(way, Drawable.whitegreen, -0.4, getLayer()));
-                    if (val.equals("construction")) {
-                        if (isArea) drawables.add(new Area(way, Drawable.lightgreen, -0.3, -1));
-                        else drawables.add(new Line(way, Drawable.lightgreen, 2, -0.3, getLayer()));
-                    }
-                    if (val.equals("grass")) drawables.add(new Area(way, Drawable.whitegreen, -0.4, getLayer()));
-                    if (val.equals("greenfield"))
-                        drawables.add(new Area(way, Drawable.darkgreen, -0.4, getLayer()));
-                    if (val.equals("industrial"))
-                        drawables.add(new Area(way, Drawable.darkgreen, -0.4, getLayer()));
-                    if (val.equals("orchard")) drawables.add(new Area(way, Drawable.darkgreen, -0.4, getLayer()));
+                    mapFeatures.add(new Landuse(way, getLayer(), kv_map.get("landuse"), isArea));
+
                 } else if (kv_map.containsKey("geological")) { //##New key!
-                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
+                    mapFeatures.add(new Geological(way, getLayer(), kv_map.get("geological")));
+
                 } else if (kv_map.containsKey("building")) { //##New key!
-                    drawables.add(new Area(way, Drawable.lightgrey, -0.5, getLayer()));
+                    mapFeatures.add(new Building(way, getLayer(), kv_map.get("building")));
+
                 } else if (kv_map.containsKey("shop")) { //##New key!
-                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
+                    mapFeatures.add(new Shop(way, getLayer(), kv_map.get("shop")));
+
                 } else if (kv_map.containsKey("tourism")) { //##New key!
-                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
+                    mapFeatures.add(new Tourism(way, getLayer(), kv_map.get("tourism")));
+
                 } else if (kv_map.containsKey("man_made")) { //##New key!
-                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
+                    mapFeatures.add(new ManMade(way, getLayer(), kv_map.get("man_made")));
                 } else if (kv_map.containsKey("military")) { //##New key!
-                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
+
+
                 } else if (kv_map.containsKey("historic")) { //##New key!
-                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
+                    mapFeatures.add(new Historic(way, getLayer(), kv_map.get("historic")));
+
                 } else if (kv_map.containsKey("craft")) { //##New key!
-                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
+                    mapFeatures.add(new Craft(way, getLayer(), kv_map.get("craft")));
+
                 } else if (kv_map.containsKey("emergency")) { //##New key!
-                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
+                    mapFeatures.add(new Emergency(way, getLayer(), kv_map.get("emergency")));
+
                 } else if (kv_map.containsKey("aeroway")) { //##New key!
-                    drawables.add(new Area(way, Drawable.lightgrey, -1.0, getLayer()));
+                    mapFeatures.add(new Aeroway(way, getLayer(), kv_map.get("aeroway")));
+
                 } else if (kv_map.containsKey("amenity")) { //##New key!
-                    //drawables.add(new Model.Area(way, Model.Drawable.lightgrey));
-                    String val = kv_map.get("amenity");
-                    if (val.equals("parking")) {
+
+                    mapFeatures.add(new Amenity(way, getLayer(), kv_map.get("amenity")));
+                    if (kv_map.get("amenity").equals("parking")) {
                         mapIcons.add(new MapIcon(way, "data//parkingIcon.jpg"));
-                        drawables.add(new Area(way, Drawable.sand, -1.0, getLayer()));
+
+                    } else if (kv_map.containsKey("barrier")) { //##New key!
+                        mapFeatures.add(new Barrier(way, getLayer(), kv_map.get("barrier"), isArea));
+
+                    } else if (kv_map.containsKey("boundary")) { //##New key!
+                        mapFeatures.add(new Boundary(way, getLayer(), kv_map.get("boundary")));
+                    } else if (kv_map.containsKey("highway")) { //##New key!
+                        mapFeatures.add(new Highway(way, getLayer(), kv_map.get("highway")));
+                    } else if (kv_map.containsKey("railway")) { //##New key!
+                        mapFeatures.add(new Railway(way, getLayer(), kv_map.get("railway")));
+
+                    } else if (kv_map.containsKey("bridge")) { //##New key!
+                        mapFeatures.add(new Bridge(way, getLayer(), kv_map.get("bridge")));
+
+                    } else if (kv_map.containsKey("route")) { //##New key!
+                        mapFeatures.add(new Route(way, getLayer(), kv_map.get("route")));
                     }
-                } else if (kv_map.containsKey("barrier")) { //##New key!
-                    mapFeatures.add(new Barrier(way, getLayer(), kv_map.get("barrier"), isArea))
-                    String val = kv_map.get("barrier");
-                    if (val.equals("hedge")) {
-                        if (isArea) drawables.add(new Area(way, Drawable.neongreen, -0.3, getLayer()));
-                        else drawables.add(new Line(way, Drawable.neongreen, 2, -0.3, getLayer()));
-                    }
-                    if (val.equals("fence")) {
-                        if (isArea) drawables.add(new Area(way, Drawable.neongreen, -0.3, getLayer()));
-                        else drawables.add(new Line(way, Drawable.neongreen, 2, -0.3, getLayer()));
-                    }
-                } else if (kv_map.containsKey("boundary")) { //##New key!
-                    Line line = new Line(way, Color.WHITE, 14, 2.0, getLayer());
-                    line.setDashed();
-                    drawables.add(line);
-                } else if (kv_map.containsKey("highway")) { //##New key!
-                    mapFeatures.add(new Highway(way, getLayer(), kv_map.get("highway")))
-                } else if (kv_map.containsKey("railway")) { //##New key!
-                    Line line = new Line(way, Color.DARK_GRAY, 11, -1.9, getLayer());
-                    line.setDashed();
-                    drawables.add(line);
-                } else if (kv_map.containsKey("bridge")) { //##New key!
-                    drawables.add(new Line(way, Color.GRAY, 2, -2.0, getLayer()));
-                } else if (kv_map.containsKey("route")) { //##New key!
-                    drawables.add(new Line(way, Color.WHITE, 1, -2.0, getLayer()));
-                } else {
                 }
                 break;
+
             case "relation":
                 if (kv_map.containsKey("type")) {
                     String val = kv_map.get("type");
@@ -280,7 +262,8 @@ public class OSMHandler extends DefaultHandler {
                             }
                             path.setWindingRule(Path2D.WIND_EVEN_ODD);
                             if (kv_map.containsKey("building"))
-                                drawables.add(new Area(path, Drawable.lightgrey, -0.8, getLayer()));
+                                mapFeatures.add(new Multipolygon(way, getLayer(), "building"));
+
                             if(kv_map.containsKey("place")){
                                 //TODO islets
 
@@ -356,12 +339,30 @@ public class OSMHandler extends DefaultHandler {
                 break;
 
             case "osm": //The end of the osm file
+                sortLayers();
                 Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
                 break;
 
         }
 
 
+    }
+
+    private void sortLayers() {
+        Comparator<MapFeature> comparator = new Comparator<MapFeature>() {
+            @Override
+            /**
+             * Compares two Model.Drawable objects.
+             * Returns a negative integer, zero, or a positive integer as the first argument
+             * is less than, equal to, or greater than the second.
+             */
+            public int compare(MapFeature o1, MapFeature o2) {
+                if (o1.getLayerVal() < o2.getLayerVal()) return -1;
+                else if (o1.getLayerVal() > o2.getLayerVal()) return 1;
+                return 0;
+            }
+        };
+        Collections.sort(mapFeatures, comparator); //iterative mergesort. ~n*lg(n) comparisons
     }
 
 
@@ -395,4 +396,79 @@ public class OSMHandler extends DefaultHandler {
             list.add(way);
         }
     }
+    public class AddressComparator implements Comparator<Address> {
+        @Override
+        public int compare(Address addr1, Address addr2) {
+            return addr1.compareTo(addr2);
+        }
+    }
+
+    public Map<String,List<Shape>> getStreetMap(){
+        return streetnameMap;
+    }
+
+
+    /**
+     * Recursive binary search method taking lower- and higher bounds as input. Takes O(log N) time.
+     * @param list The list to be searched.
+     * @param addr The address we are searching for.
+     * @param low The lower bound of the part of the array we want to search.
+     * @param high The higher bound of the part of the array we want to search.
+     * @return The index at which we found the element.
+     */
+    private int binSearch(ArrayList<Address> list, Address addr, int low, int high){
+        if(low > high) return -1;
+        int mid = (low+high)/2;
+        if (list.get(mid).compareTo(addr) < 0) return binSearch(list, addr, mid + 1, high); //if addr is larger than mid
+        else if (list.get(mid).compareTo(addr) > 0) return binSearch(list, addr, low, mid - 1); //if addr is smaller than mid
+        else return mid;
+    }
+
+    /**
+     * Since there can be several addresses with the same name (e.g. Lærkevej in Copenhagen and Lærkevej in Roskilde),
+     * this method searches the lower part and higher part of the array bounded by the first element which is found in the list to determine
+     * the bounds of the similiar results in the array.
+     * @param addressInput
+     * @return
+     */
+    public int[] multipleEntriesSearch(Address addressInput){
+        int index = binSearch(addressList,addressInput,0,addressList.size()-1); //Returns the index of the first found element.
+        if(index < 0) return null; //Not found
+
+        int lowerBound = index; //Search to the left of the found element
+        int i = lowerBound;
+        do {
+            lowerBound = i;
+            i = binSearch(addressList, addressInput, 0, lowerBound-1);
+        } while (i != -1); //As long as we find a similiar element, keep searching to determine when we don't anymore.
+
+        int upperBound = index; //Search to the right of the found element
+        i = upperBound;
+        do {
+            upperBound = i;
+            i = binSearch(addressList, addressInput, upperBound+1, addressList.size() - 1);
+        }
+        while (i != -1); //As long as we find a similiar element, keep searching to determine when we don't anymore.
+
+        int[] range = {lowerBound, upperBound}; //The bounds of the similiar elements in the list.
+        return range;
+    }
+
+    public void searchForAddresses(Address addressInput){
+        int[] range = multipleEntriesSearch(addressInput); //search for one or multiple entries
+        if(range == null) { //If it is not found, the return value will be negative
+            System.out.println("Too bad - didn't find!");
+        } else {
+            System.out.println("Found something");
+            int lowerBound = range[0], upperBound = range[1];
+            System.out.printf("low: "+lowerBound + ", high: "+upperBound);
+            for(int i = lowerBound; i <= upperBound; i++){
+                Address foundAddr = addressList.get(i);
+                Point2D coordinate = addressMap.get(foundAddr);
+                //System.out.println("x = " + coordinate.getX() + ", y = " +coordinate.getY());
+            }
+        }
+    }
+
+
 }

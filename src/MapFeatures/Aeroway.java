@@ -1,5 +1,6 @@
 package MapFeatures;
 
+import Model.Drawable;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -11,11 +12,13 @@ public class Aeroway extends MapFeature {
 
     public Aeroway(Shape way, int layer_value, String value) {
         super(way, layer_value, value);
+        isArea = true;
+        setValueAttributes();
     }
 
     @Override
     public void setValueAttributes() {
-
+        setValueSpecs(Drawable.lightgrey, -1.0);
     }
 
     @Override

@@ -11,13 +11,13 @@ public abstract class MapFeature implements Colorblind, Standard {
     protected int stroke_id;
     protected boolean dashed = false;
     protected String value;
-    protected boolean isArea;
-    protected boolean isLine;
+    protected boolean isArea = false;
 
     public MapFeature(Shape way, int layer_value, String value) {
         this.way = way;
         this.layer_value = layer_value;
         this.value = value;
+
     }
 
     public void setValueSpecs(Color color, double zoom_level) {
@@ -31,10 +31,12 @@ public abstract class MapFeature implements Colorblind, Standard {
     }
 
     public abstract void setValueAttributes();
+
+
     public abstract void setValueIcon();
 
     public void drawBoundary(Graphics2D g) {
-        if(isLine) {
+        if(!isArea) {
             if(!dashed) {
                 g.setStroke(Drawable.basicStrokes[stroke_id + 1]);
                 g.setColor(Color.BLACK);
@@ -48,19 +50,20 @@ public abstract class MapFeature implements Colorblind, Standard {
 
     }
 
-    public void drawStandard(Graphics2D g){
-        if(isLine) {
-            if(dashed) g.setStroke(Drawable.dashedStrokes[stroke_id]);
-             else g.setStroke(Drawable.streetStrokes[stroke_id]);
+    public void drawStandard(Graphics2D g) {
+        if (!isArea) {
+            if (dashed) g.setStroke(Drawable.dashedStrokes[stroke_id]);
+            else g.setStroke(Drawable.streetStrokes[stroke_id]);
             g.setColor(color);
             g.fill(way);
-        }  else {
+        } else {
             g.setStroke(Drawable.basicStrokes[stroke_id]);
             g.setColor(color);
             g.fill(way);
         }
-
     }
+
+
 
     public int getLayerVal() {
         return layer_value;

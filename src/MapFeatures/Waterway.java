@@ -1,6 +1,5 @@
 package MapFeatures;
 
-import Model.Drawable;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -9,41 +8,19 @@ public class Waterway extends MapFeature {
 
     public Waterway(Shape way, int layer_value, String value) {
         super(way, layer_value, value);
+        setValueAttributes();
     }
 
     @Override
     public void setValueAttributes() {
-        if (value.equals("riverbank")) setUpbank();
-        if (value.equals("stream")) setUpStream();
-        if (value.equals("canal")) setUpCanal();
-        if (value.equals("river")) setUpRiver();
-        if (value.equals("dam")) setUpDam();
+        if (value.equals("riverbank")) setValueSpecs(Color.blue, -1.0);
+        else if (value.equals("stream")) setValueSpecs(Color.blue, -1.0);
+        else if (value.equals("canal")) setValueSpecs(Color.blue, -1.0);
+        else if (value.equals("river")) setValueSpecs(Color.blue, -1.0);
+        else if (value.equals("dam")) setValueSpecs(Color.blue, -1.0);
     }
 
-    private void setUpbank(){
-        setColor(Drawable.lightblue);
-        setZoom_level(-1.0);
-    }
 
-    private void setUpStream(){
-        setColor(Drawable.greenblue);
-        setZoom_level(-1.0);
-    }
-
-    private void setUpCanal(){
-        setColor(Color.BLUE);
-        setZoom_level(-1.0);
-    }
-
-    private void setUpRiver(){
-        setColor(Color.blue);
-        setZoom_level(-1.0);
-    }
-
-    private void setUpDam(){
-        setColor(Color.blue);
-        setZoom_level(-1.0);
-    }
 
     @Override
     public void setValueIcon() {

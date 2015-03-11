@@ -1,5 +1,6 @@
 package MapFeatures;
 
+import Model.Drawable;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -11,10 +12,12 @@ public class Tourism extends MapFeature{
 
     public Tourism(Shape way, int layer_value, String value) {
         super(way, layer_value, value);
+        setValueAttributes();
     }
 
     @Override
     public void setValueAttributes() {
+        setValueSpecs(Drawable.lightgrey, -1.0);
 
     }
 
