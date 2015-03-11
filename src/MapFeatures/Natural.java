@@ -1,31 +1,32 @@
-package Model;
+package MapFeatures;
+
+import Model.Drawable;
+import Model.MapFeature;
 
 import java.awt.*;
 import java.util.Map;
 
 public class Natural extends MapFeature {
 
-    public Natural(Shape way, int layer_value, Map<String, String> keyValueMap) {
-        super(way, layer_value, keyValueMap);
+    public Natural(Shape way, int layer_value, String value) {
+        super(way, layer_value, value);
         setValueAttributes();
         setValueIcon();
     }
 
     @Override
     public void setValueAttributes() {
-        for (String value : values) {
-            if (value.equals("wood")) setUpWood();
-            if (value.equals("scrub")) setUpScrub();
-            if (value.equals("heath")) setUpHeath();
-            if (value.equals("grassland")) setUpGrassLand();
-            if (value.equals("sand")) setUpSand();
-            if (value.equals("scree")) setUpScree();
-            if (value.equals("fell")) setUpFell();
-            if (value.equals("water")) setUpWater();
-            if (value.equals("wetland")) setUpWetland();
-            if (value.equals("beach")) setUpBeach();
-            if (value.equals("coastline")) setUpCoastline();
-        }
+        if (value.equals("wood")) setUpWood();
+        if (value.equals("scrub")) setUpScrub();
+        if (value.equals("heath")) setUpHeath();
+        if (value.equals("grassland")) setUpGrassLand();
+        if (value.equals("sand")) setUpSand();
+        if (value.equals("scree")) setUpScree();
+        if (value.equals("fell")) setUpFell();
+        if (value.equals("water")) setUpWater();
+        if (value.equals("wetland")) setUpWetland();
+        if (value.equals("beach")) setUpBeach();
+        if (value.equals("coastline")) setUpCoastline();
     }
 
     private void setUpWood() {

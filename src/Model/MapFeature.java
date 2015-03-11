@@ -5,26 +5,20 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Anders on 10-03-2015.
- */
 public abstract class MapFeature implements Colorblind, Standard {
-    private Shape way;
-    private int layer_value;
-    private Color color;
-    private double zoom_level;
-    private boolean hasIcon;
-    private int stroke_id;
-    private boolean dashed = false;
+    protected Shape way;
+    protected int layer_value;
+    protected Color color;
+    protected double zoom_level;
+    protected boolean hasIcon;
+    protected int stroke_id;
+    protected boolean dashed = false;
+    protected String value;
 
-    protected List<String> values = new ArrayList<>();
-
-    public MapFeature(Shape way, int layer_value, Map<String, String> keyValueMap) {
+    public MapFeature(Shape way, int layer_value, String value) {
         this.way = way;
         this.layer_value = layer_value;
-        values = (List<String>) keyValueMap.values();
-        setValueAttributes();
-        setValueIcon();
+        this.value = value;
     }
 
     public abstract void setValueAttributes();
