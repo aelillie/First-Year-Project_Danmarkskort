@@ -3,10 +3,10 @@ package Model;
 import java.awt.*;
 
 public abstract class Drawable{
-    private Shape shape;
-    private Color color;
-    private Double drawLevel;
-    private int layerVal;
+    protected Shape shape;
+    protected Color color;
+    protected Double drawLevel;
+    protected int layerVal;
 
     //Different predefined strokes.
     static Stroke s00 = new BasicStroke(Float.MIN_VALUE);

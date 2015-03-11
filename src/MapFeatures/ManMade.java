@@ -5,11 +5,11 @@ import Model.MapFeature;
 import java.awt.*;
 
 /**
- * Created by Anders on 11-03-2015.
+ * Created by Kevin on 11-03-2015.
  */
-public class Railway extends MapFeature {
+public class ManMade extends MapFeature{
 
-    public Railway(Shape way, int layer_value, String value) {
+    public ManMade(Shape way, int layer_value, String value) {
         super(way, layer_value, value);
     }
 

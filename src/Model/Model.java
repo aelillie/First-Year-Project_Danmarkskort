@@ -209,7 +209,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
      * @param filename file load from
      */
     public void load(String filename) {
-        /*
+
         long time = System.nanoTime();
         try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
             //get the bounds of the map
@@ -223,10 +223,10 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
             while(i-- > 0){
                 //get information needed in correct order and add to drawables-array.
                 Drawable d = (Drawable) in.readObject();
-                d.getShape() = (Shape) in.readObject();
-                d.getColor() = (Color) in.readObject();
-                d.getDrawLevel() = in.readDouble();
-                d.getLayerVal() = in.readInt();
+                d.shape = (Shape) in.readObject();
+                d.color = (Color) in.readObject();
+                d.drawLevel = in.readDouble();
+                d.layerVal = in.readInt();
                 drawables.add(d);
             }
         } catch (IOException e) {
@@ -239,7 +239,7 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
         sortLayers();
         setChanged();
         notifyObservers();
-        */
+
     }
 
     /**
