@@ -348,7 +348,6 @@ public class View extends JFrame implements Observer {
 
         @Override
         public void paint(Graphics _g) {
-            System.out.println(zoomLevel);
             Graphics2D g = (Graphics2D) _g;
             //Set the Transform for Graphic2D element before drawing.
             g.setTransform(transform);
