@@ -23,6 +23,7 @@ public class Landuse extends MapFeature {
         else if(value.equals("greenfield")) setValueSpecs(Drawable.darkgreen, -.8);
         else if(value.equals("industrial")) setValueSpecs(Drawable.darkgreen, -.8);
         else if(value.equals("orchard")) setValueSpecs(Drawable.darkgreen, -.8);
+        else if(value.equals("reservoir")) setValueSpecs(Drawable.darkblue, -.8);
     }
 
     @Override

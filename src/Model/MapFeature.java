@@ -1,8 +1,9 @@
 package Model;
 
 import java.awt.*;
+import java.io.Serializable;
 
-public abstract class MapFeature implements Colorblind, Standard {
+public abstract class MapFeature implements Colorblind, Standard, Serializable {
     protected Shape way;
     protected int layer_value;
     protected Color color;
@@ -25,11 +26,15 @@ public abstract class MapFeature implements Colorblind, Standard {
         this.zoom_level = zoom_level;
     }
 
-    public void setValueDashedSpecs(Color color, double zoom_level) {
-        setValueSpecs(color, zoom_level);
+    public void setValueDashedSpecs(Color color, double zoom_level, int stroke_id) {
+        setLineSpecs(color, zoom_level, stroke_id);
         dashed = true;
     }
 
+    public void setLineSpecs(Color color, double zoom_level, int stroke_id) {
+        setValueSpecs(color, zoom_level);
+        this.stroke_id = stroke_id;
+    }
     public abstract void setValueAttributes();
 
 
@@ -38,7 +43,7 @@ public abstract class MapFeature implements Colorblind, Standard {
     public void drawBoundary(Graphics2D g) {
         if(!isArea) {
             if(!dashed) {
-                g.setStroke(Drawable.basicStrokes[stroke_id + 1]);
+                g.setStroke(Drawable.streetStrokes[stroke_id + 1]);
                 g.setColor(Color.BLACK);
                 g.draw(way);
             }
@@ -51,19 +56,23 @@ public abstract class MapFeature implements Colorblind, Standard {
     }
 
     public void drawStandard(Graphics2D g) {
-        if (!isArea) {
-            if (dashed) g.setStroke(Drawable.dashedStrokes[stroke_id]);
-            else g.setStroke(Drawable.streetStrokes[stroke_id]);
+        if(color == null) return;
+        if (isArea) {
+
             g.setColor(color);
             g.fill(way);
         } else {
-            g.setStroke(Drawable.basicStrokes[stroke_id]);
+            if (dashed) g.setStroke(Drawable.dashedStrokes[stroke_id]);
+            else g.setStroke(Drawable.streetStrokes[stroke_id]);
             g.setColor(color);
-            g.fill(way);
+            g.draw(way);
         }
     }
 
 
+    public double getZoom_level(){
+        return zoom_level;
+    }
 
     public int getLayerVal() {
         return layer_value;

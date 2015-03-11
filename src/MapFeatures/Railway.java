@@ -17,7 +17,7 @@ public class Railway extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(Color.DARK_GRAY, -1.9);
+        setValueDashedSpecs(Color.DARK_GRAY, -1.9, 0);
     }
 
     @Override

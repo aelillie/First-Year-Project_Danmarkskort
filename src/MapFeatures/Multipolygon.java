@@ -15,11 +15,12 @@ public class Multipolygon extends MapFeature {
         //TODO this is still not done at all!
         super(way, layer_value, value);
         setValueAttributes();
+        isArea = true;
     }
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(Drawable.grey, -0.8);
+        if(value.equals("building")) setValueSpecs(Drawable.grey, -0.8);
     }
 
     @Override

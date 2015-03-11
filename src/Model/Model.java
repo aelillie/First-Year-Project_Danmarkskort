@@ -1,42 +1,47 @@
 package Model;
 
-import org.xml.sax.Attributes;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.DefaultHandler;
 import org.xml.sax.helpers.XMLReaderFactory;
 
-import java.awt.*;
-import java.awt.geom.*;
-import java.io.*;
-import java.util.*;
+import java.awt.geom.Rectangle2D;
+import java.io.BufferedInputStream;
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.io.Serializable;
 import java.util.List;
+import java.util.Observable;
 import java.util.zip.ZipInputStream;
 
-public class Model extends Observable implements Iterable<Shape>, Serializable {
+public class Model extends Observable implements Serializable {
+
+    private OSMHandler OSMReader = new OSMHandler();
+    private static Model model = new Model();
+    private BinaryHandler BinaryHandler = new BinaryHandler();
 
 
-    /**
-     * Constructor, which either parses .osm or .zip files
-     * @param filename either .osm or .zip (containing .osm) format
-     */
-    public Model(String filename) {
+
+    private Model(){}
+
+    public static Model getModel(){
+        return model;
+    }
+    public void loadFile(String filename) {
         long time = System.nanoTime();
         Address.addPatterns();
         if (filename.endsWith(".osm")) parseOSM(filename);
         else if (filename.endsWith(".zip")) parseZIP(filename);
-        else if (filename.endsWith(".bin")) load(filename);
+        else if (filename.endsWith(".bin")) loadBinary(filename);
         else System.err.println("File not recognized");
 
         System.out.printf("Model.Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
-
-    void parseOSM(String filename) {
+    private void parseOSM(String filename) {
         try {
             XMLReader reader = XMLReaderFactory.createXMLReader();
-            reader.setContentHandler(new OSMHandler());
+            reader.setContentHandler(OSMReader);
             reader.parse(filename);
 
         } catch (SAXException | IOException e) {
@@ -45,16 +50,42 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
     }
 
 
-    void parseZIP(String filename) {
+    private void parseZIP(String filename) {
         try (ZipInputStream zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
             zip.getNextEntry();
             XMLReader reader = XMLReaderFactory.createXMLReader();
-            reader.setContentHandler(new OSMHandler());
+            reader.setContentHandler(OSMReader);
             reader.parse(new InputSource(zip));
         } catch (SAXException | IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+    private void loadBinary(String filename) {
+
+        try {
+
+            BinaryHandler.load(filename);
+
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }catch (ClassNotFoundException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void saveBin(String filename) {
+
+        try {
+            BinaryHandler.save(filename);
+            System.out.println("Done");
+        } catch (IOException e) {
+            e.printStackTrace();
+
+        }
+    }
+
+
 
     /**
      * Sorts the Model.Drawable elements in the drawables list from their layer value.
@@ -78,80 +109,25 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
 
 
 
-    /**
-     * Writes all the objects of Model.Drawable to a binary file for faster loading. The order of the sequence is important!
-     * @param filename File saved to
-     */
-    public void save(String filename) { /*
-        long time = System.nanoTime();
-            try (ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename))) {
-                //write the boundaries and the number of shapes.
-                out.writeObject(bbox.getBounds2D());
-                out.writeInt(drawables.size());
 
-                //For every object write the its
-                for(Drawable d : drawables) {
-                    //Write all information needed from the object order matters.
-                    out.writeObject(d);
-                    out.writeObject(d.getShape());
-                    out.writeObject(d.getColor());
-                    out.writeDouble(d.getDrawLevel());
-                    out.writeInt(d.getLayerVal());
-                    //TODO save all icons position and type
-                    //TODO save everything!
-                }
-
-            } catch (IOException e) {
-                throw new RuntimeException(e);
-            }
-        System.out.printf("Model.Model save time: %d ms\n", (System.nanoTime()-time) / 1000000);
-        */
+    public Rectangle2D getBbox(){
+        return OSMReader.bbox;
     }
 
-    /**
-     * loads the shapes from a binary file. The order of the sequence is important!
-     * @param filename file load from
-     */
-    public void load(String filename) {
-
-        long time = System.nanoTime();
-        try (ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
-            //get the bounds of the map
-            Rectangle2D rec = (Rectangle2D) in.readObject();
-            bbox = new Rectangle2D.Double();
-            bbox.setRect(rec);
-
-            //First int is the number of shapes
-            int i = in.readInt();
-            drawables.clear();
-            while(i-- > 0){
-                //get information needed in correct order and add to drawables-array.
-                MapFeature d = (MapFeature) in.readObject();
-                d.way = (Shape) in.readObject();
-                d.color = (Color) in.readObject();
-                d.zoom_level = in.readDouble();
-                d.layer_value = in.readInt();
-
-            }
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }catch (ClassNotFoundException e){
-            e.printStackTrace();
-        }
-        System.out.printf("Model.Model load time: %d ms\n",
-                (System.nanoTime() - time) / 1000000);
-        sortLayers();
-        setChanged();
-        notifyObservers();
-
+    public List<MapFeature> getMapFeatures(){
+        return OSMReader.getMapFeatures();
     }
 
-    /**
-     * Custom comparator that defines how to compare two addresses. Used when sorting a collection of addresses.
-     */
-
-
-    public Iterator<Shape> iterator() {
-        return lines.iterator();
+    public List<MapIcon>  getMapIcons(){
+        return OSMReader.getMapIcons();
     }
+
+    public void setBBox(Rectangle2D bBox){
+        OSMReader.bbox.setRect(bBox);
+    }
+
+    public OSMHandler getOSMReader(){
+        return OSMReader;
+    }
+
 }

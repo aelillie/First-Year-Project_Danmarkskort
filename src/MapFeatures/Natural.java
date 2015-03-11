@@ -27,7 +27,10 @@ public class Natural extends MapFeature {
         if (value.equals("water")) setValueSpecs(Drawable.whiteblue, -2.0);
         if (value.equals("wetland")) setValueSpecs(Drawable.greenblue, -2.0);
         if (value.equals("beach")) setValueSpecs(Drawable.sand, -2.0);
-        if (value.equals("coastline")) setValueSpecs(Drawable.lightblue, -1.0);
+        if (value.equals("coastline")) {
+            setValueSpecs(Drawable.lightblue, -1.0);
+            isArea = false;
+        }
     }
 
 

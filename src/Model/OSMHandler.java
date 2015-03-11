@@ -37,11 +37,12 @@ public class OSMHandler extends DefaultHandler {
     protected Map<String, String> streetCityMap = new HashMap<>();
     private List<MapIcon> mapIcons = new ArrayList<>(); //contains all the icons to be drawn
 
-    public Rectangle2D getBbox() {
-        return bbox;
+    protected Rectangle2D bbox = new Rectangle2D.Double();
+
+    public List<MapFeature> getMapFeatures() {
+        return mapFeatures;
     }
 
-    private Rectangle2D bbox;
     private List<MapFeature> mapFeatures = new ArrayList<>();
 
     private List<Shape> lines = new ArrayList<>(); //contains all shapes to be drawn that are not in drawables
@@ -103,7 +104,7 @@ public class OSMHandler extends DefaultHandler {
                 double minlon = Double.parseDouble(atts.getValue("minlon"));
                 double maxlat = Double.parseDouble(atts.getValue("maxlat"));
                 double maxlon = Double.parseDouble(atts.getValue("maxlon"));
-                bbox = new Rectangle2D.Double(minlon, minlat, maxlon - minlon, maxlat - minlat);
+                bbox.setRect( new Rectangle2D.Double(minlon, minlat, maxlon - minlon, maxlat - minlat));
                 break;
             case "tag":
                 String k = atts.getValue("k");
@@ -143,22 +144,7 @@ public class OSMHandler extends DefaultHandler {
     }
 
 
-    private int getLayer() {
-        int layer_val = 2; //default layer
-        int botLayer = 1;
-        int botLayer2 = 2;
-        //gives space to 2 extra layers
-        int topLayer = 5; //modify this to make extra layers
-        try {
-            int OSM_layer = Integer.parseInt(kv_map.get("layer"));
-            if (OSM_layer == -2) layer_val = botLayer;
-            if (OSM_layer == -1) layer_val = botLayer2;
-            if (OSM_layer == 1) layer_val = topLayer;
-        } catch (NumberFormatException e) {
-            layer_val = 2;
-        }
-        return layer_val;
-    }
+
 
     /**
      * Reads end elements and handles what to be done from the data associated with the element.
@@ -183,7 +169,7 @@ public class OSMHandler extends DefaultHandler {
                     mapFeatures.add(new Natural(way, getLayer(), kv_map.get("natural")));
 
                 } else if (kv_map.containsKey("waterway")) { //##New key!
-                    mapFeatures.add(new Waterway(way, getLayer(), kv_map.get("waterway")));
+                    mapFeatures.add(new Waterway(way, getLayer(), kv_map.get("waterway"), isArea));
 
                 } else if (kv_map.containsKey("leisure")) { //##New key!
                     mapFeatures.add(new Leisure(way, getLayer(), kv_map.get("leisure")));
@@ -221,28 +207,28 @@ public class OSMHandler extends DefaultHandler {
                     mapFeatures.add(new Aeroway(way, getLayer(), kv_map.get("aeroway")));
 
                 } else if (kv_map.containsKey("amenity")) { //##New key!
-
                     mapFeatures.add(new Amenity(way, getLayer(), kv_map.get("amenity")));
                     if (kv_map.get("amenity").equals("parking")) {
                         mapIcons.add(new MapIcon(way, "data//parkingIcon.jpg"));
-
-                    } else if (kv_map.containsKey("barrier")) { //##New key!
-                        mapFeatures.add(new Barrier(way, getLayer(), kv_map.get("barrier"), isArea));
-
-                    } else if (kv_map.containsKey("boundary")) { //##New key!
-                        mapFeatures.add(new Boundary(way, getLayer(), kv_map.get("boundary")));
-                    } else if (kv_map.containsKey("highway")) { //##New key!
-                        mapFeatures.add(new Highway(way, getLayer(), kv_map.get("highway")));
-                    } else if (kv_map.containsKey("railway")) { //##New key!
-                        mapFeatures.add(new Railway(way, getLayer(), kv_map.get("railway")));
-
-                    } else if (kv_map.containsKey("bridge")) { //##New key!
-                        mapFeatures.add(new Bridge(way, getLayer(), kv_map.get("bridge")));
-
-                    } else if (kv_map.containsKey("route")) { //##New key!
-                        mapFeatures.add(new Route(way, getLayer(), kv_map.get("route")));
                     }
+
+                } else if (kv_map.containsKey("barrier")) { //##New key!
+                    mapFeatures.add(new Barrier(way, getLayer(), kv_map.get("barrier"), isArea));
+
+                } else if (kv_map.containsKey("boundary")) { //##New key!
+                    mapFeatures.add(new Boundary(way, getLayer(), kv_map.get("boundary")));
+                } else if (kv_map.containsKey("highway")) { //##New key!
+                    mapFeatures.add(new Highway(way, getLayer(), kv_map.get("highway")));
+                } else if (kv_map.containsKey("railway")) { //##New key!
+                    mapFeatures.add(new Railway(way, getLayer(), kv_map.get("railway")));
+
+                } else if (kv_map.containsKey("bridge")) { //##New key!
+                    mapFeatures.add(new Bridge(way, getLayer(), kv_map.get("bridge")));
+
+                } else if (kv_map.containsKey("route")) { //##New key!
+                    mapFeatures.add(new Route(way, getLayer(), kv_map.get("route")));
                 }
+
                 break;
 
             case "relation":
@@ -262,7 +248,7 @@ public class OSMHandler extends DefaultHandler {
                             }
                             path.setWindingRule(Path2D.WIND_EVEN_ODD);
                             if (kv_map.containsKey("building"))
-                                mapFeatures.add(new Multipolygon(way, getLayer(), "building"));
+                                mapFeatures.add(new Multipolygon(path, getLayer(), "building"));
 
                             if(kv_map.containsKey("place")){
                                 //TODO islets
@@ -293,7 +279,7 @@ public class OSMHandler extends DefaultHandler {
                         else if (isSTog) mapIcons.add(new MapIcon(currentCoord, "data//stogIcon.png"));
                     }
                 } else if(kv_map.containsKey("name")) {
-                    String name = kv_map.get("name");
+                   /* String name = kv_map.get("name");
                     if(kv_map.containsKey("place")){
                         String place = kv_map.get("place");
                         name = name.toLowerCase();
@@ -326,7 +312,7 @@ public class OSMHandler extends DefaultHandler {
                         //System.out.println(addr.toString());
                         addressMap.put(addr, currentCoord);
                         addressList.add(addr);
-                    }
+                    }*/
                 }
 
 
@@ -348,7 +334,7 @@ public class OSMHandler extends DefaultHandler {
 
     }
 
-    private void sortLayers() {
+    protected void sortLayers() {
         Comparator<MapFeature> comparator = new Comparator<MapFeature>() {
             @Override
             /**
@@ -369,6 +355,23 @@ public class OSMHandler extends DefaultHandler {
 
     private void addAddress(){
 
+    }
+
+    private int getLayer() {
+        int layer_val = 2; //default layer
+        int botLayer = 1;
+        int botLayer2 = 2;
+        //gives space to 2 extra layers
+        int topLayer = 5; //modify this to make extra layers
+        try {
+            int OSM_layer = Integer.parseInt(kv_map.get("layer"));
+            if (OSM_layer == -2) layer_val = botLayer;
+            if (OSM_layer == -1) layer_val = botLayer2;
+            if (OSM_layer == 1) layer_val = topLayer;
+        } catch (NumberFormatException e) {
+            layer_val = 2;
+        }
+        return layer_val;
     }
 
 
@@ -396,6 +399,11 @@ public class OSMHandler extends DefaultHandler {
             list.add(way);
         }
     }
+
+
+    /**
+     * Custom comparator that defines how to compare two addresses. Used when sorting a collection of addresses.
+     */
     public class AddressComparator implements Comparator<Address> {
         @Override
         public int compare(Address addr1, Address addr2) {
