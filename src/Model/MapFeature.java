@@ -1,9 +1,6 @@
 package Model;
 
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
 
 public abstract class MapFeature implements Colorblind, Standard {
     protected Shape way;
@@ -45,7 +42,7 @@ public abstract class MapFeature implements Colorblind, Standard {
     }
 
     public void drawLine(Graphics2D g){
-        g.setStroke(Drawable.strokes[stroke_id]);
+        if(!dashed) g.setStroke(Drawable.strokes[stroke_id]);
         g.setColor(color);
         g.fill(way);
     }
@@ -60,5 +57,9 @@ public abstract class MapFeature implements Colorblind, Standard {
 
     public void setColor(Color color) {
         this.color = color;
+    }
+
+    public void isDashed(){
+        dashed = true;
     }
 }

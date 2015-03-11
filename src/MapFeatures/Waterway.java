@@ -1,12 +1,10 @@
 package MapFeatures;
 
+import Model.Drawable;
 import Model.MapFeature;
 
 import java.awt.*;
 
-/**
- * Created by Anders on 11-03-2015.
- */
 public class Waterway extends MapFeature {
 
     public Waterway(Shape way, int layer_value, String value) {
@@ -15,7 +13,36 @@ public class Waterway extends MapFeature {
 
     @Override
     public void setValueAttributes() {
+        if (value.equals("riverbank")) setUpbank();
+        if (value.equals("stream")) setUpStream();
+        if (value.equals("canal")) setUpCanal();
+        if (value.equals("river")) setUpRiver();
+        if (value.equals("dam")) setUpDam();
+    }
 
+    private void setUpbank(){
+        setColor(Drawable.lightblue);
+        setZoom_level(-1.0);
+    }
+
+    private void setUpStream(){
+        setColor(Drawable.greenblue);
+        setZoom_level(-1.0);
+    }
+
+    private void setUpCanal(){
+        setColor(Color.BLUE);
+        setZoom_level(-1.0);
+    }
+
+    private void setUpRiver(){
+        setColor(Color.blue);
+        setZoom_level(-1.0);
+    }
+
+    private void setUpDam(){
+        setColor(Color.blue);
+        setZoom_level(-1.0);
     }
 
     @Override

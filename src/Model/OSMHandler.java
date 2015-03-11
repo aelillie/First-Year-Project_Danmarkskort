@@ -93,7 +93,7 @@ public class OSMHandler extends DefaultHandler {
                 String k = atts.getValue("k");
                 String v = atts.getValue("v");
                 kv_map.put(k, v);
-                if(k.equals("area") && v.equals("yes")) isArea = true;
+                    if(k.equals("area") && v.equals("yes")) isArea = true;
                 if(k.equals("highway") && v.equals("bus_stop")) isBusstop = true;
                 if(k.equals("subway")&& v.equals("yes")) isMetro = true;
                 if(k.equals("network") && v.equals("S-Tog")) isSTog = true;
