@@ -1,7 +1,5 @@
 package Model;
 
-import Model.Drawable;
-
 import java.awt.*;
 import java.io.Serializable;
 
@@ -25,7 +23,7 @@ public class Line extends Drawable implements Serializable {
      * @param g Graphic 2D with correct transform
      */
     public void draw(Graphics2D g) {
-        g.setStroke(strokes[stroke_id]);
+        g.setStroke(basicStrokes[stroke_id]);
         g.setColor(getColor());
         g.draw(getShape());
     }
@@ -36,7 +34,7 @@ public class Line extends Drawable implements Serializable {
      */
     public void drawBoundary(Graphics2D g) {
         if(!dashed) {
-            g.setStroke(strokes[stroke_id + 1]);
+            g.setStroke(basicStrokes[stroke_id + 1]);
             g.setColor(Color.BLACK);
             g.draw(getShape());
         }

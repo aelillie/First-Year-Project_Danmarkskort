@@ -30,13 +30,14 @@ public class Natural extends MapFeature {
     }
 
     private void setUpWood() {
-        setColor(Drawable.darkgreen);
-        setZoom_level(2.0);
+
+        color = Drawable.darkgreen;
+        zoom_level = 2.0;
     }
 
     private void setUpCoastline() {
-        setColor(Drawable.darkblue);
-        setZoom_level(2.0);
+        color = Drawable.darkblue;
+        zoom_level = 2.0;
     }
 
     private void setUpWetland() {

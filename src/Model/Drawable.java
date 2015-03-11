@@ -3,12 +3,8 @@ package Model;
 import java.awt.*;
 
 public abstract class Drawable{
-    private Shape shape;
-    private Color color;
-    private Double drawLevel;
-    private int layerVal;
 
-    //Different predefined strokes.
+    //Different predefined basicStrokes.
     static Stroke s00 = new BasicStroke(Float.MIN_VALUE);
     static Stroke s01 = new BasicStroke(0.00001f);
     static Stroke s02 = new BasicStroke(0.00002f);
@@ -20,10 +16,23 @@ public abstract class Drawable{
     static Stroke s08 = new BasicStroke(0.00008f);
     static Stroke s09 = new BasicStroke(0.00009f);
     static Stroke s10 = new BasicStroke(0.00010f);
-    static Stroke s11 = new BasicStroke(0.00001f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{0.0001f}, 0.00001f); //Metro
-    static Stroke s12 = new BasicStroke(0.00002f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,30.0f, new float[]{0.00005f},0.00000f); //Footway
-    static Stroke s13 = new BasicStroke(0.00002f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 20.0f, new float[]{0.0001f}, 0.000001f); //Cycleway
-    static Stroke s14 = new BasicStroke(0.00002f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 20.0f, new float[]{0.00001f}, 0.000001f); //Cycleway
+    static Stroke s11 = new BasicStroke(0.00011f);
+    static Stroke s12 = new BasicStroke(0.00012f);
+    static Stroke s13 = new BasicStroke(0.00013f);
+    static Stroke s14 = new BasicStroke(0.00014f);
+    static Stroke s15 = new BasicStroke(0.00015f);
+
+    static Stroke r00 = new BasicStroke(Float.MIN_VALUE, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    static Stroke r01 = new BasicStroke(0.00001f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    static Stroke r02 = new BasicStroke(0.00002f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    static Stroke r03 = new BasicStroke(0.00003f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    static Stroke r04 = new BasicStroke(0.00004f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    static Stroke r05 = new BasicStroke(0.00005f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+
+    static Stroke d1 = new BasicStroke(0.00001f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{0.0001f}, 0.00001f); //Metro
+    static Stroke d2 = new BasicStroke(0.00002f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,30.0f, new float[]{0.00005f},0.00000f); //Footway
+    static Stroke d3 = new BasicStroke(0.00002f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 20.0f, new float[]{0.0001f}, 0.000001f); //Cycleway
+    static Stroke d4 = new BasicStroke(0.00002f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 20.0f, new float[]{0.00001f}, 0.000001f); //Cycleway
 
     //Predefined colors to use.
     public static Color lightblue = new Color(70, 130, 180);
@@ -49,42 +58,9 @@ public abstract class Drawable{
     public static Color whitegreen = new Color(144,238,144);
 
 
-    public static Stroke[] strokes = new Stroke[]{s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11,s12, s13, s14};
+    public static Stroke[] basicStrokes = new Stroke[]{s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11,s12, s13, s14};
+    public static Stroke[] dashedStrokes = new Stroke[] {d1, d2, d3, d4};
+    public static Stroke[] streetStrokes = new Stroke[] {r00, r01, r02, r03, r04, r05};
 
-    /**
-     * Sets up everything needed.
-     * @param shape Shape to be drawn
-     * @param color Color of shape
-     * @param drawLevel When to draw
-     * @param layerVal Layer it should be drawn in
-     */
-    public Drawable(Shape shape, Color color, double drawLevel, int layerVal) {
-        this.shape = shape;
-        this.color = color;
-        this.drawLevel = drawLevel;
-        this.layerVal = layerVal;
-    }
-    public Drawable(){}
-
-    //Abstract methods.
-    public abstract void draw(Graphics2D g);
-
-    public abstract void drawBoundary(Graphics2D g);
-
-    public int getLayerVal() {
-        return layerVal;
-    }
-
-    public Double getDrawLevel() {
-        return drawLevel;
-    }
-
-    public Shape getShape() {
-        return shape;
-    }
-
-    public Color getColor() {
-        return color;
-    }
 }
 
