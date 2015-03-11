@@ -78,20 +78,20 @@ public class Model extends Observable implements Iterable<Shape>, Serializable {
      * Takes use of a comparator, which compares their values.
      */
     private void sortLayers() {
-        Comparator<Drawable> comparator = new Comparator<Drawable>() {
+        Comparator<MapFeature> comparator = new Comparator<MapFeature>() {
             @Override
             /**
              * Compares two Model.Drawable objects.
              * Returns a negative integer, zero, or a positive integer as the first argument
              * is less than, equal to, or greater than the second.
              */
-            public int compare(Drawable o1, Drawable o2) {
+            public int compare(MapFeature o1, MapFeature o2) {
                 if (o1.getLayerVal() < o2.getLayerVal()) return -1;
                 else if (o1.getLayerVal() > o2.getLayerVal()) return 1;
                 return 0;
             }
         };
-        Collections.sort(drawables, comparator); //iterative mergesort. ~n*lg(n) comparisons
+        Collections.sort(mapFeatures, comparator); //iterative mergesort. ~n*lg(n) comparisons
     }
 
     /**
