@@ -16,63 +16,17 @@ public class Natural extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if (value.equals("wood")) setUpWood();
-        if (value.equals("scrub")) setUpScrub();
-        if (value.equals("heath")) setUpHeath();
-        if (value.equals("grassland")) setUpGrassLand();
-        if (value.equals("sand")) setUpSand();
-        if (value.equals("scree")) setUpScree();
-        if (value.equals("fell")) setUpFell();
-        if (value.equals("water")) setUpWater();
-        if (value.equals("wetland")) setUpWetland();
-        if (value.equals("beach")) setUpBeach();
-        if (value.equals("coastline")) setUpCoastline();
-    }
-
-    private void setUpWood() {
-
-        color = Drawable.darkgreen;
-        zoom_level = 2.0;
-    }
-
-    private void setUpCoastline() {
-        color = Drawable.darkblue;
-        zoom_level = 2.0;
-    }
-
-    private void setUpWetland() {
-
-    }
-
-    private void setUpWater() {
-
-    }
-
-    private void setUpScree() {
-    }
-
-    private void setUpFell() {
-
-    }
-
-    private void setUpSand() {
-
-    }
-
-    private void setUpGrassLand() {
-
-    }
-
-    private void setUpBeach() {
-
-    }
-
-    private void setUpHeath() {
-
-    }
-
-    private void setUpScrub() {
-
+        if (value.equals("wood")) setValueSpecs(Drawable.lightgreen, -2.0);
+        if (value.equals("scrub")) setValueSpecs(Drawable.lightgreen, -1.5);
+        if (value.equals("heath")) setValueSpecs(Drawable.skincolor, -2.0);
+        if (value.equals("grassland")) setValueSpecs(Drawable.bluegreen, -2.0);
+        if (value.equals("sand")) setValueSpecs(Drawable.sand, -2.0);
+        if (value.equals("scree")) setValueSpecs(Drawable.pink, -2.0);
+        if (value.equals("fell")) setValueSpecs(Drawable.orange, -2.0);
+        if (value.equals("water")) setValueSpecs(Drawable.whiteblue, -2.0);
+        if (value.equals("wetland")) setValueSpecs(Drawable.greenblue, -2.0);
+        if (value.equals("beach")) setValueSpecs(Drawable.sand, -2.0);
+        if (value.equals("coastline")) setValueSpecs(Drawable.lightblue, -1.0);
     }
 
 

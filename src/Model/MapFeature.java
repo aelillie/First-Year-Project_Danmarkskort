@@ -20,8 +20,17 @@ public abstract class MapFeature implements Colorblind, Standard {
         this.value = value;
     }
 
-    public abstract void setValueAttributes();
+    public void setValueSpecs(Color color, double zoom_level) {
+        this.color = color;
+        this.zoom_level = zoom_level;
+    }
 
+    public void setValueDashedSpecs(Color color, double zoom_level) {
+        setValueSpecs(color, zoom_level);
+        dashed = true;
+    }
+
+    public abstract void setValueAttributes();
     public abstract void setValueIcon();
 
     public void drawBoundary(Graphics2D g) {
@@ -50,4 +59,10 @@ public abstract class MapFeature implements Colorblind, Standard {
             g.setColor(color);
             g.fill(way);
         }
+
+    }
+
+    public int getLayerVal() {
+        return layer_value;
+    }
 }
