@@ -17,7 +17,7 @@ public class Bridge extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(Drawable.grey, -2.0);
+        setLineSpecs(Drawable.grey, -2.0, 0);
     }
 
     @Override

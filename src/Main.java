@@ -5,7 +5,8 @@ import View.View;
 
 public class Main {
     public static void main(String[] args) {
-        Model m = new Model("data/indreby2.osm");
+        Model m = Model.getModel();
+        m.loadFile("data/newSmall.osm");
 
        /* try {
             FileOutputStream fileOut = new FileOutputStream("");

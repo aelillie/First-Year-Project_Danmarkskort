@@ -17,7 +17,7 @@ public class Historic extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(Drawable.lightgrey, -1.0);
+        if(value.equals("archaeological_site")) setValueSpecs(Drawable.lightgreen, -1.0);
     }
 
     @Override

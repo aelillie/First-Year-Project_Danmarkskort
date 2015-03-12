@@ -12,8 +12,9 @@ public class Leisure extends MapFeature {
 
     public Leisure(Shape way, int layer_value, String value) {
         super(way, layer_value, value);
-        setValueAttributes();
         isArea = true;
+        setValueAttributes();
+
     }
 
     @Override

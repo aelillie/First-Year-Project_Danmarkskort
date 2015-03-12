@@ -44,7 +44,7 @@ public class Controller extends MouseAdapter implements ActionListener {
             Address address = Address.parse(input);
             //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
             view.getCanvas().requestFocusInWindow();
-            model.searchForAddresses(address);
+           // model.searchForAddresses(address);
         }
         else if (command == "maptype");
     }
@@ -86,10 +86,10 @@ public class Controller extends MouseAdapter implements ActionListener {
                     view.toggleAA();
                     break;
                 case 's':
-                    model.save("savegame.bin");
+                    model.saveBin("savegame.bin");
                     break;
                 case 'l':
-                    model.load("savegame.bin");
+                    model.loadFile("savegame.bin");
                     break;
             }
             if (e.getKeyCode() == KeyEvent.VK_UP) {

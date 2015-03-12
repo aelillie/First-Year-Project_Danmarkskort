@@ -14,8 +14,7 @@ public class Line extends Drawable implements Serializable {
      * @param drawLevel When to draw.
      */
     public Line(Shape shape, Color color, int stroke_id, double drawLevel, int layerVal) {
-        super(shape, color, drawLevel, layerVal);
-        this.stroke_id = stroke_id;
+
     }
 
     /**
@@ -23,9 +22,7 @@ public class Line extends Drawable implements Serializable {
      * @param g Graphic 2D with correct transform
      */
     public void draw(Graphics2D g) {
-        g.setStroke(basicStrokes[stroke_id]);
-        g.setColor(getColor());
-        g.draw(getShape());
+
     }
 
     /**
@@ -33,11 +30,7 @@ public class Line extends Drawable implements Serializable {
      * @param g Graphic 2D with correct transform
      */
     public void drawBoundary(Graphics2D g) {
-        if(!dashed) {
-            g.setStroke(basicStrokes[stroke_id + 1]);
-            g.setColor(Color.BLACK);
-            g.draw(getShape());
-        }
+
     }
 
 

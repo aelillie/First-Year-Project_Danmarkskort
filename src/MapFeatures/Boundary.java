@@ -16,7 +16,7 @@ public class Boundary extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueDashedSpecs(Color.white, 2.0);
+        setValueDashedSpecs(Color.white, 2.0, 0);
     }
 
     @Override

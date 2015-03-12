@@ -12,11 +12,13 @@ public class Amenity extends MapFeature {
     public Amenity(Shape way, int layer_value, String value) {
         super(way, layer_value, value);
         isArea = true;
+        setValueAttributes();
     }
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(Drawable.sand, -1.0);
+        if(value.equals("parking")) setValueSpecs(Drawable.sand, -1.0);
+        if(value.equals("university"))setValueSpecs(Drawable.lightgrey, -1.0);
 
     }
 

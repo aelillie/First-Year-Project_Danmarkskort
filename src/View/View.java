@@ -81,7 +81,7 @@ public class View extends JFrame implements Observer {
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
 
         //Set up the JFrame using the monitors resolution.
-        setSize(800, 600); //screenSize
+        setSize(screenSize); //screenSize
         setPreferredSize(new Dimension(800, 600)); //screenSize
         setExtendedState(Frame.NORMAL); //Frame.MAXIMIZED_BOTH
     }
@@ -158,37 +158,41 @@ public class View extends JFrame implements Observer {
     }
 
     private void makeFullscreenButton() {
+        Dimension prefered = getPreferredSize();
         fullscreenButton = new JButton();
         fullscreenButton.setBackground(Color.WHITE);
         fullscreenButton.setIcon(new ImageIcon("data//fullscreenIcon.png"));
         fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
         fullscreenButton.setFocusable(false);
         fullscreenButton.setActionCommand("fullscreen");
-        fullscreenButton.setBounds(getWidth()-70, getHeight()-getHeight()/3*2,39,37);
+        fullscreenButton.setBounds((int) prefered.getWidth() - 70, (int) prefered.getHeight() - (int) prefered.getHeight() / 3 * 2, 39, 37);
     }
 
 
     private void makeZoomOutButton() {
+        Dimension prefered = getPreferredSize();
         zoomOutButton = new JButton();
         zoomOutButton.setBackground(Color.WHITE);
         zoomOutButton.setIcon(new ImageIcon("data//minusIcon.png"));
         zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
         zoomOutButton.setFocusable(false);
         zoomOutButton.setActionCommand("zoomOut");
-        zoomOutButton.setBounds(getWidth()-115, getHeight()-getHeight()/3*2,39,37);
+        zoomOutButton.setBounds((int)prefered.getWidth()-115, (int) prefered.getHeight()- (int) prefered.getHeight()/3*2,39,37);
     }
 
     private void makeZoomInButton() {
+        Dimension prefered = getPreferredSize();
         zoomInButton = new JButton();
         zoomInButton.setBackground(Color.WHITE);
         zoomInButton.setIcon(new ImageIcon("data//plusIcon.png"));
         zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
         zoomInButton.setFocusable(false);
         zoomInButton.setActionCommand("zoomIn");
-        zoomInButton.setBounds(getWidth()-160,getHeight()-getHeight()/3*2,39,37);
+        zoomInButton.setBounds((int)prefered.getWidth()-160, (int) prefered.getHeight()- (int) prefered.getHeight()/3*2,39,37);
     }
 
     private void makeSearchButton() {
+
         searchButton = new JButton();
         searchButton.setBorder(new CompoundBorder(
                 BorderFactory.createMatteBorder(4, 0, 4, 7, Drawable.lightblue),
@@ -351,20 +355,24 @@ public class View extends JFrame implements Observer {
 
             g.setStroke(min_value); //Just for good measure.
             g.setColor(Color.BLACK);
-            //Drawing everything not categorized as a area or line object.
+
+
+            /*//Drawing everything not categorized as a area or line object.
             for (Shape line : model) {
                 g.draw(line);
-            }
+            }*/
+
+
             //Draw EVERYTHING
-            for (Drawable drawable : model.getDrawables()) {
+            for (MapFeature drawable : model.getMapFeatures()) {
                 if (zoomLevel > -0.4)
                     drawable.drawBoundary(g);
             }
 
 
-            for (Drawable drawable : model.getDrawables()) {
-                if (drawable.getDrawLevel() < zoomLevel)
-                    drawable.draw(g);
+            for (MapFeature mapFeature : model.getMapFeatures()) {
+                if (zoomLevel > mapFeature.getZoom_level() )
+                    mapFeature.drawStandard(g);
             }
 
             //Draws the icons.
@@ -372,7 +380,7 @@ public class View extends JFrame implements Observer {
                 for (MapIcon mapIcon : model.getMapIcons()) {
                     mapIcon.draw(g, transform);
                 }
-
+            }
 
                 // }
 /*
@@ -405,7 +413,7 @@ public class View extends JFrame implements Observer {
 			try {
 				System.out.println("Center: " + transform.inverseTransform(center, null));
 			} catch (NoninvertibleTransformException e) {} */
-            }
+            //}
         }
     }
 

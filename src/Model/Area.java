@@ -12,7 +12,7 @@ public class Area extends Drawable implements Serializable {
      * @param zoom  Zoom used when drawn.
      */
     public Area(Shape shape, Color color,double zoom, int layerVal) {
-        super(shape, color, zoom, layerVal);
+
     }
 
     /**
@@ -20,8 +20,7 @@ public class Area extends Drawable implements Serializable {
      * @param g Graphic 2D with correct transform
      */
     public void draw(Graphics2D g) {
-        g.setColor(getColor());
-        g.fill(getShape());
+
 
     }
 
@@ -30,9 +29,7 @@ public class Area extends Drawable implements Serializable {
      * @param g Graphic 2D with correct transform
      */
     public void drawBoundary(Graphics2D g) {
-        g.setStroke(basicStrokes[1]);
-        g.setColor(Color.BLACK);
-        g.draw(getShape());
+
     }
 
 }
