@@ -1,7 +1,9 @@
+package Model;
+
 import java.util.*;
 import java.util.regex.*;
 
-public class Address {
+public class Address implements Comparable<Address> {
     private String street, house, floor, side, postcode, city;
     static private List<Pattern> patternList = new ArrayList<>();
 
@@ -15,6 +17,31 @@ public class Address {
         postcode = _postcode;
         city = _city;
     }
+
+
+    /**
+     * Specifies the string representation of an address object.
+     * @return the string representation of an address object.
+     */
+    @Override
+    public String toString(){
+        String s = street.trim() + " " + house.trim() + " " + floor.trim() + " " + side.trim()+" " + postcode.trim() + " " + city.trim();
+        s = s.replaceAll(" +", " ");
+        return s;
+    }
+
+
+    /**
+     * Compare this address object with the specified address object for order.
+     * @param addr The address to be compared to.
+     * @return A value which is negative if this object is less than the other, zero if they are equal or positive if this object is larger than the other.
+     */
+    @Override
+    public int compareTo(Address addr) {
+        return this.toString().compareTo(addr.toString()); //TODO: modify according to whether things like city is null
+
+    }
+
 
     public static class Builder {
         private String street = "", house = "", floor = "",
@@ -76,12 +103,12 @@ public class Address {
     }
 
 
-    static String st = "([a-zæøåéA-ZÆØÅÉ -.]*)";
+    static String st = "([a-zæøåéäöëüA-ZÆØÅÉÄÖËÜ -.]*)";
     static String ho = "([0-9a-zæøåéA-ZÆØÅÉ]{0,4})";
     static String fl = "([0-9]{0,2})";
     static String si = "([\\w*]{0,3})";
     static String pc = "([0-9]{4})";
-    static String ci = "([a-zæøåA-ZÆØÅ ]*)";
+    static String ci = "([a-zæøåA-ZÆØÅ .]*)";
     static String filler = "[ ,.-]*";
 
     /**
@@ -109,9 +136,9 @@ public class Address {
 
     /**
      * This function tries to match an input String with different patterns. If a pattern matches it will create
-     * an Address object with the information given.
-     * @param s String, Address
-     * @return Address object.
+     * an Model.Address object with the information given.
+     * @param s String, Model.Address
+     * @return Model.Address object.
      */
     public static Address parse(String s) {
         Builder b = new Builder();

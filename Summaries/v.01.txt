@@ -1,0 +1,30 @@
+
+Features:
+* Can zoom and pan nicely 
+* A lot of colors on our GUI (with the possiblity on expanding)
+
+"Features":
+* Loading slowly with large OSM files
+* Icons does not resize when zooming
+* Highways are sometimes drawn wrong 
+
+Time usage in man hours:
+ 15 hours: lecture and group formation (5 people x 3 hours)
+ 10 hours: fleshing out group constitution
+ 25 hours: merging features from 5 different hand-ins into a Swing based v0.1
+ 10 hours: individuel thinking of ideas and designs for the GUI (homework)
+ 15 hours: starting on our individuel work in the weekend (homework)
+
+Cumulative cost so far: (1h = DKK 625)
+Lectures:               9.375-
+Meetings:               6.250,-
+Code review:            15.625,-
+"Homework"				15.625,-
+
+Wish list for v0.2:
+* Have a sample on a GUI 
+* All zooming features work (almost) properly (e.g. icons size)
+* Save and load binary 
+
+Feedback request:
+ * Is it a smart datastructure we're heading at with an abstract class etc?

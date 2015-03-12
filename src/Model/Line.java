@@ -1,3 +1,7 @@
+package Model;
+
+import Model.Drawable;
+
 import java.awt.*;
 import java.io.Serializable;
 
@@ -6,9 +10,9 @@ public class Line extends Drawable implements Serializable {
     private boolean dashed = false;
 
     /**
-     * Sets up the Line with a shape, color and stroke.
-     * @param shape Shape of Line
-     * @param color Color of Line
+     * Sets up the Model.Line with a shape, color and stroke.
+     * @param shape Shape of Model.Line
+     * @param color Color of Model.Line
      * @param drawLevel When to draw.
      */
     public Line(Shape shape, Color color, int stroke_id, double drawLevel, int layerVal) {
@@ -22,8 +26,8 @@ public class Line extends Drawable implements Serializable {
      */
     public void draw(Graphics2D g) {
         g.setStroke(strokes[stroke_id]);
-        g.setColor(color);
-        g.draw(shape);
+        g.setColor(getColor());
+        g.draw(getShape());
     }
 
     /**
@@ -34,7 +38,7 @@ public class Line extends Drawable implements Serializable {
         if(!dashed) {
             g.setStroke(strokes[stroke_id + 1]);
             g.setColor(Color.BLACK);
-            g.draw(shape);
+            g.draw(getShape());
         }
     }
 

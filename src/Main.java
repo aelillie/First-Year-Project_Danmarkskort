@@ -1,3 +1,7 @@
+import Controller.Controller;
+import Model.Model;
+import View.View;
+
 public class Main {
     public static void main(String[] args) {
         Model m = new Model("data/small.osm");
@@ -15,7 +19,7 @@ public class Main {
         try {
             FileInputStream fileIn = new FileInputStream("");
             ObjectInputStream in = new ObjectInputStream(fileIn);
-            m = (Model) in.readObject();
+            m = (Model.Model) in.readObject();
             in.close();
             fileIn.close();
             System.out.println("Reading in succesfull!");
