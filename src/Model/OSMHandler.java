@@ -221,7 +221,6 @@ public class OSMHandler extends DefaultHandler {
                     mapFeatures.add(new Aeroway(way, getLayer(), kv_map.get("aeroway")));
 
                 } else if (kv_map.containsKey("amenity")) { //##New key!
-
                     mapFeatures.add(new Amenity(way, getLayer(), kv_map.get("amenity")));
                     if (kv_map.get("amenity").equals("parking")) {
                         mapIcons.add(new MapIcon(way, "data//parkingIcon.jpg"));
@@ -363,6 +362,7 @@ public class OSMHandler extends DefaultHandler {
             }
         };
         Collections.sort(mapFeatures, comparator); //iterative mergesort. ~n*lg(n) comparisons
+        //TODO Consider quicksort (3-way). Keep in mind duplicate keys are often encountered.
     }
 
 
