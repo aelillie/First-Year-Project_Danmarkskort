@@ -6,7 +6,7 @@ import View.View;
 public class Main {
     public static void main(String[] args) {
         Model m = Model.getModel();
-        m.loadFile("data/newSmall.osm");
+        m.loadFile("savegame.bin");
 
        /* try {
             FileOutputStream fileOut = new FileOutputStream("");

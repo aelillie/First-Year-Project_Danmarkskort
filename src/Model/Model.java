@@ -18,7 +18,7 @@ public class Model extends Observable implements Serializable {
 
     private OSMHandler OSMReader = new OSMHandler();
     private static Model model = new Model();
-    private BinaryHandler BinaryHandler = new BinaryHandler();
+
 
 
 
@@ -87,10 +87,6 @@ public class Model extends Observable implements Serializable {
 
 
 
-    /**
-     * Sorts the Model.Drawable elements in the drawables list from their layer value.
-     * Takes use of a comparator, which compares their values.
-     */
 
 
 

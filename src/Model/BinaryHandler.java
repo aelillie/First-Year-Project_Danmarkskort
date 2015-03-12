@@ -2,11 +2,12 @@ package Model;
 
 import java.awt.geom.Rectangle2D;
 import java.io.*;
+import java.util.List;
 
 /**
  * Created by Kevin on 11-03-2015.
  */
-public class BinaryHandler {
+public final class BinaryHandler {
 
     /**
      * Writes all the objects of Model.Drawable to a binary file for faster loading. The order of the sequence is important!
@@ -18,15 +19,11 @@ public class BinaryHandler {
         //write the boundaries and the number of shapes.
         Model model = Model.getModel();
         out.writeObject(model.getBbox().getBounds2D());
-        out.writeInt(model.getMapFeatures().size());
 
-        //For every object write the its
-        for(MapFeature  m: model.getMapFeatures() ) {
-            //Write all information needed from the object order matters.
-            out.writeObject(m);
-            //TODO save all icons position and type
-            //TODO save everything!
-        }
+        List<MapFeature> mapF = model.getMapFeatures();
+        out.writeObject(mapF);
+
+        out.writeObject(model.getMapIcons());
     }
 
 
@@ -34,24 +31,22 @@ public class BinaryHandler {
      * loads the shapes from a binary file. The order of the sequence is important!
      * @param filename file load from
      */
-    public void load(String filename)throws IOException, ClassNotFoundException{
+    public static void load(String filename)throws IOException, ClassNotFoundException{
         Model model = Model.getModel();
         ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)));
             //get the bounds of the map
         Rectangle2D rec = (Rectangle2D) in.readObject();
 
         model.setBBox(rec);
+        List<MapFeature> mapF = model.getMapFeatures();
 
-        //First int is the number of shapes
-        int i = in.readInt();
         model.getMapFeatures().clear();
-        while(i-- > 0){
-            //get information needed in correct order and add to drawables-array.
-            MapFeature m = (MapFeature) in.readObject();
 
-            model.getMapFeatures().add(m);
+        mapF.addAll((List<MapFeature>)in.readObject());
 
-        }
+        List<MapIcon> mapIcons= model.getMapIcons();
+
+        mapIcons.addAll((List<MapIcon>) in.readObject());
 
         model.getOSMReader().sortLayers();
     }

@@ -207,7 +207,7 @@ public class OSMHandler extends DefaultHandler {
                     mapFeatures.add(new Aeroway(way, getLayer(), kv_map.get("aeroway")));
 
                 } else if (kv_map.containsKey("amenity")) { //##New key!
-                    mapFeatures.add(new Amenity(way, getLayer(), kv_map.get("amenity")));
+                    mapFeatures.add(new Amenity(way, getLayer(), kv_map.get("amenity"), kv_map.containsKey("building")));
                     if (kv_map.get("amenity").equals("parking")) {
                         mapIcons.add(new MapIcon(way, "data//parkingIcon.jpg"));
                     }
@@ -279,7 +279,7 @@ public class OSMHandler extends DefaultHandler {
                         else if (isSTog) mapIcons.add(new MapIcon(currentCoord, "data//stogIcon.png"));
                     }
                 } else if(kv_map.containsKey("name")) {
-                   /* String name = kv_map.get("name");
+                    String name = kv_map.get("name");
                     if(kv_map.containsKey("place")){
                         String place = kv_map.get("place");
                         name = name.toLowerCase();
@@ -312,7 +312,7 @@ public class OSMHandler extends DefaultHandler {
                         //System.out.println(addr.toString());
                         addressMap.put(addr, currentCoord);
                         addressList.add(addr);
-                    }*/
+                    }
                 }
 
 
@@ -333,6 +333,11 @@ public class OSMHandler extends DefaultHandler {
 
 
     }
+
+    /**
+     * Sorts the Model.Drawable elements in the drawables list from their layer value.
+     * Takes use of a comparator, which compares their values.
+     */
 
     protected void sortLayers() {
         Comparator<MapFeature> comparator = new Comparator<MapFeature>() {
