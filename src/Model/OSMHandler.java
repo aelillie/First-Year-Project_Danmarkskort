@@ -354,6 +354,7 @@ public class OSMHandler extends DefaultHandler {
             }
         };
         Collections.sort(mapFeatures, comparator); //iterative mergesort. ~n*lg(n) comparisons
+        //TODO Consider quicksort (3-way). Keep in mind duplicate keys are often encountered.
     }
 
 

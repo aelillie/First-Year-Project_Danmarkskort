@@ -16,9 +16,14 @@ public abstract class MapFeature implements Colorblind, Standard, Serializable {
 
     public MapFeature(Shape way, int layer_value, String value) {
         this.way = way;
-        this.layer_value = layer_value;
+        if (layer_value == 0) setDefault();//do nothing. Apply value-specified layer_val.
+        else this.layer_value = layer_value;
         this.value = value;
 
+    }
+
+    private void setDefault() {
+        //do nothing
     }
 
     public void setValueSpecs(Color color, double zoom_level) {
