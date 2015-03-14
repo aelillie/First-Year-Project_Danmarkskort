@@ -5,11 +5,9 @@ Group G v0.3
 
 Features added since v0.2:
 
-* 
-* 
-* 
-* 
-*
+* New and improved data structure
+* New components in GUI
+* Improved address searching
 
 
 "Features" discovered/added since v0.2:
@@ -17,40 +15,32 @@ Features added since v0.2:
 * 
 
 Time usage in man hours:
-2,5 hours: 	
-15 hours: 	
-20 hours: 	
-17 hours: 	
-13 hours: 	
-15 hours: 	
-8 hours: 	
-8 hours: 	
-4 hours: 	
+30 hours:       Restructure data structure
+20 hours:       Clean code workshop
+17 hours:       Report
+12 hours:       Address searching
+10 hours:       GUI
+5 hours: 	    Coastlines
 
 Cumulative cost so far: (1h = DKK 625)
 
-Lectures:                9.375,-
-
-Meetings:                6.250,-
-Code review:            15.625,-
-"Homework"		15.625,-
-GUI			10.937,-
-Address search		 5.000,-
-OSM layers		10.625,-
+Workshop:       12.500,-
+Meetings:       21.875,-
+Code review:     6.250,-
+"Homework"		18.750,-
 
 
 
 Wish list for v0.4:
 
-* 
-
-* 
-
-* 
+* Final data structure
+* Tests
+* Beta-GUI
+* Fully implemented address searching
 
 
 Feedback request:
-* 
-* 
+* We've tried to make a better data structure and improved readability, how is this working out?
+* Is there a smart way for our current data structure to add different "modes", for example "Colorblind mode"?
 * 
 * 
