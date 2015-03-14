@@ -55,7 +55,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         Address address = Address.parse(input);
         //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
         view.getCanvas().requestFocusInWindow();
-        model.searchForAddresses(address);
+        model.getOSMReader().searchForAddresses(address);
     }
 
 
@@ -96,10 +96,10 @@ public class Controller extends MouseAdapter implements ActionListener {
                     view.toggleAA();
                     break;
                 case 's':
-                    model.save("savegame.bin");
+                    model.saveBin("binaryModel.bin");
                     break;
                 case 'l':
-                    model.load("savegame.bin");
+                    model.loadFile("binaryModel.bin");
                     break;
             }
             if (e.getKeyCode() == KeyEvent.VK_UP) {

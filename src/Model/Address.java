@@ -103,7 +103,7 @@ public class Address implements Comparable<Address> {
     }
 
 
-    static String st = "([a-zæøåéäöëüA-ZÆØÅÉÄÖËÜ -.]*)";
+    static String st = "([a-zæøåéäöëüA-ZÆØÅÉÄÖËÜ -./]*)";
     static String ho = "([0-9a-zæøåéA-ZÆØÅÉ]{0,4})";
     static String fl = "([0-9]{0,2})";
     static String si = "([\\w*]{0,3})";
