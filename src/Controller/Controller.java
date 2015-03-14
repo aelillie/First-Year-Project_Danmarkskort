@@ -28,6 +28,11 @@ public class Controller extends MouseAdapter implements ActionListener {
         view.getZoomInButton().addActionListener(this);
         view.getZoomOutButton().addActionListener(this);
         view.getFullscreenButton().addActionListener(this);
+        view.getFindRouteButton().addActionListener(this);
+        view.getShowRoutePanelButton().addActionListener(this);
+        view.getCarButton().addActionListener(this);
+        view.getBicycleButton().addActionListener(this);
+        view.getFootButton().addActionListener(this);
     }
 
     @Override
@@ -39,15 +44,20 @@ public class Controller extends MouseAdapter implements ActionListener {
         if (command == "zoomIn") view.zoom(1.2);
         else if (command == "zoomOut") view.zoom(1/1.2);
         else if (command == "fullscreen") view.toggleFullscreen();
-        else if (command == "search"){
-            String input = view.getSearchArea().getText().trim().toLowerCase();
-            Address address = Address.parse(input);
-            //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
-            view.getCanvas().requestFocusInWindow();
-            model.searchForAddresses(address);
-        }
+        else if (command == "search") addressSearch();
         else if (command == "maptype");
+        else if (command == "showRoutePanel") view.showRoutePanel();
+        else if (command == "findRoute");
     }
+
+    private void addressSearch(){
+        String input = view.getSearchArea().getText().trim().toLowerCase();
+        Address address = Address.parse(input);
+        //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
+        view.getCanvas().requestFocusInWindow();
+        model.searchForAddresses(address);
+    }
+
 
     // sets up events for mouse and calls the methods in view.
     private class MouseHandler extends MouseAdapter {
