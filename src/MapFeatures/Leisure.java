@@ -1,6 +1,6 @@
 package MapFeatures;
 
-import Model.Drawable;
+import Model.DrawAttributes;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -19,9 +19,9 @@ public class Leisure extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("garden"))setValueSpecs(Drawable.whitegreen, -1.2);
-        else if (value.equals("common")) setValueSpecs(Drawable.neongreen, -1.2);
-        else if(value.equals("park")) setValueSpecs(Drawable.whitegreen, -1.0);
+        if(value.equals("garden"))setValueSpecs(DrawAttributes.whitegreen, -1.2);
+        else if (value.equals("common")) setValueSpecs(DrawAttributes.neongreen, -1.2);
+        else if(value.equals("park")) setValueSpecs(DrawAttributes.whitegreen, -1.0);
     }
 
     @Override

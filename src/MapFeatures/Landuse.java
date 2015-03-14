@@ -1,6 +1,6 @@
 package MapFeatures;
 
-import Model.Drawable;
+import Model.DrawAttributes;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -17,13 +17,13 @@ public class Landuse extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("cemetery")) setValueSpecs(Drawable.whitegreen, -0.8);
-        else if(value.equals("construction")) setValueSpecs(Drawable.lightgreen, -0.4);
-        else if(value.equals("grass")) setValueSpecs(Drawable.whitegreen, -1.0);
-        else if(value.equals("greenfield")) setValueSpecs(Drawable.bluegreen, -.8);
-        else if(value.equals("industrial")) setValueSpecs(Drawable.bluegreen, -.8);
-        else if(value.equals("orchard")) setValueSpecs(Drawable.bluegreen, -.8);
-        else if(value.equals("reservoir")) setValueSpecs(Drawable.darkblue, -.8);
+        if(value.equals("cemetery")) setValueSpecs(DrawAttributes.whitegreen, -0.8);
+        else if(value.equals("construction")) setValueSpecs(DrawAttributes.lightgreen, -0.4);
+        else if(value.equals("grass")) setValueSpecs(DrawAttributes.whitegreen, -1.0);
+        else if(value.equals("greenfield")) setValueSpecs(DrawAttributes.bluegreen, -.8);
+        else if(value.equals("industrial")) setValueSpecs(DrawAttributes.bluegreen, -.8);
+        else if(value.equals("orchard")) setValueSpecs(DrawAttributes.bluegreen, -.8);
+        else if(value.equals("reservoir")) setValueSpecs(DrawAttributes.darkblue, -.8);
     }
 
     @Override

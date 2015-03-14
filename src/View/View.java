@@ -143,7 +143,7 @@ public class View extends JFrame implements Observer {
 
         //Create The buttons and configure their visual design.
         searchArea.setFont(font);
-        searchArea.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 7, 4, 7, Drawable.lightblue), BorderFactory.createRaisedBevelBorder()));
+        searchArea.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 7, 4, 7, DrawAttributes.lightblue), BorderFactory.createRaisedBevelBorder()));
         searchArea.setBounds(20,20,300,37);
 
         makeSearchButton();
@@ -195,7 +195,7 @@ public class View extends JFrame implements Observer {
 
         searchButton = new JButton();
         searchButton.setBorder(new CompoundBorder(
-                BorderFactory.createMatteBorder(4, 0, 4, 7, Drawable.lightblue),
+                BorderFactory.createMatteBorder(4, 0, 4, 7, DrawAttributes.lightblue),
                 BorderFactory.createRaisedBevelBorder()));
         searchButton.setBackground(new Color(36, 45, 50));
         searchButton.setIcon(new ImageIcon("data//searchIcon.png"));
@@ -417,32 +417,8 @@ public class View extends JFrame implements Observer {
         }
     }
 
-    public Model getModel() {
-        return model;
-    }
-
     public Component getCanvas() {
         return canvas;
-    }
-
-    public AffineTransform getTransform() {
-        return transform;
-    }
-
-    public boolean isAntialias() {
-        return antialias;
-    }
-
-    public Point getDragEndScreen() {
-        return dragEndScreen;
-    }
-
-    public Point getDragStartScreen() {
-        return dragStartScreen;
-    }
-
-    public double getZoomLevel() {
-        return zoomLevel;
     }
 
     public JTextField getSearchArea() {
@@ -463,17 +439,5 @@ public class View extends JFrame implements Observer {
 
     public JButton getFullscreenButton() {
         return fullscreenButton;
-    }
-
-    public boolean isFullscreen() {
-        return isFullscreen;
-    }
-
-    public GraphicsDevice getGd() {
-        return gd;
-    }
-
-    public String getPromptText() {
-        return promptText;
     }
 }

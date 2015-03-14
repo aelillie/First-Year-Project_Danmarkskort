@@ -1,7 +1,7 @@
 package Model;
 
 /**
- * Created by Anders on 10-03-2015.
+ * Changes color of all the MapFeatures
  */
 public interface Colorblind {
     void setColorBlind();

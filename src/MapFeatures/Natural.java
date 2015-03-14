@@ -1,6 +1,6 @@
 package MapFeatures;
 
-import Model.Drawable;
+import Model.DrawAttributes;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -17,18 +17,18 @@ public class Natural extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if (value.equals("wood")) setValueSpecs(Drawable.lightgreen, -2.0);
-        if (value.equals("scrub")) setValueSpecs(Drawable.lightgreen, -1.5);
-        if (value.equals("heath")) setValueSpecs(Drawable.skincolor, -2.0);
-        if (value.equals("grassland")) setValueSpecs(Drawable.bluegreen, -2.0);
-        if (value.equals("sand")) setValueSpecs(Drawable.sand, -2.0);
-        if (value.equals("scree")) setValueSpecs(Drawable.pink, -2.0);
-        if (value.equals("fell")) setValueSpecs(Drawable.orange, -2.0);
-        if (value.equals("water")) setValueSpecs(Drawable.whiteblue, -2.0);
-        if (value.equals("wetland")) setValueSpecs(Drawable.greenblue, -2.0);
-        if (value.equals("beach")) setValueSpecs(Drawable.sand, -2.0);
+        if (value.equals("wood")) setValueSpecs(DrawAttributes.lightgreen, -2.0);
+        if (value.equals("scrub")) setValueSpecs(DrawAttributes.lightgreen, -1.5);
+        if (value.equals("heath")) setValueSpecs(DrawAttributes.skincolor, -2.0);
+        if (value.equals("grassland")) setValueSpecs(DrawAttributes.bluegreen, -2.0);
+        if (value.equals("sand")) setValueSpecs(DrawAttributes.sand, -2.0);
+        if (value.equals("scree")) setValueSpecs(DrawAttributes.pink, -2.0);
+        if (value.equals("fell")) setValueSpecs(DrawAttributes.orange, -2.0);
+        if (value.equals("water")) setValueSpecs(DrawAttributes.whiteblue, -2.0);
+        if (value.equals("wetland")) setValueSpecs(DrawAttributes.greenblue, -2.0);
+        if (value.equals("beach")) setValueSpecs(DrawAttributes.sand, -2.0);
         if (value.equals("coastline")) {
-            setValueSpecs(Drawable.lightblue, -1.0);
+            setValueSpecs(DrawAttributes.lightblue, -1.0);
             isArea = false;
         }
     }

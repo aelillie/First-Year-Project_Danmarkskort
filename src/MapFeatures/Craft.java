@@ -1,6 +1,6 @@
 package MapFeatures;
 
-import Model.Drawable;
+import Model.DrawAttributes;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -17,7 +17,7 @@ public class Craft extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(Drawable.lightgrey, -.8);
+        setValueSpecs(DrawAttributes.lightgrey, -.8);
     }
 
     @Override

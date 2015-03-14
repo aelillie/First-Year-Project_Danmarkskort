@@ -2,6 +2,8 @@ package Model;
 
 import java.awt.*;
 import java.io.Serializable;
+import java.util.HashMap;
+import java.util.Map;
 
 public abstract class MapFeature implements Colorblind, Standard, Serializable {
     protected Shape way;
@@ -48,12 +50,12 @@ public abstract class MapFeature implements Colorblind, Standard, Serializable {
     public void drawBoundary(Graphics2D g) {
         if(!isArea) {
             if(!dashed) {
-                g.setStroke(Drawable.streetStrokes[stroke_id + 1]);
+                g.setStroke(DrawAttributes.streetStrokes[stroke_id + 1]);
                 g.setColor(Color.BLACK);
                 g.draw(way);
             }
         } else {
-            g.setStroke(Drawable.basicStrokes[1]);
+            g.setStroke(DrawAttributes.basicStrokes[1]);
             g.setColor(Color.BLACK);
             g.draw(way);
         }
@@ -67,8 +69,8 @@ public abstract class MapFeature implements Colorblind, Standard, Serializable {
             g.setColor(color);
             g.fill(way);
         } else {
-            if (dashed) g.setStroke(Drawable.dashedStrokes[stroke_id]);
-            else g.setStroke(Drawable.streetStrokes[stroke_id]);
+            if (dashed) g.setStroke(DrawAttributes.dashedStrokes[stroke_id]);
+            else g.setStroke(DrawAttributes.streetStrokes[stroke_id]);
             g.setColor(color);
             g.draw(way);
         }

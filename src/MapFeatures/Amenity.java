@@ -1,6 +1,6 @@
 package MapFeatures;
 
-import Model.Drawable;
+import Model.DrawAttributes;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -19,8 +19,8 @@ public class Amenity extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("parking")) setValueSpecs(Drawable.sand, -1.0);
-        else if(value.equals("university") && isBuilding )setValueSpecs(Drawable.lightgrey, -1.0);
+        if(value.equals("parking")) setValueSpecs(DrawAttributes.sand, -1.0);
+        else if(value.equals("university") && isBuilding )setValueSpecs(DrawAttributes.lightgrey, -1.0);
 
     }
 

@@ -1,6 +1,6 @@
 package MapFeatures;
 
-import Model.Drawable;
+import Model.DrawAttributes;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -17,7 +17,7 @@ public class Bridge extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setLineSpecs(Drawable.grey, -2.0, 0);
+        setLineSpecs(DrawAttributes.grey, -2.0, 0);
     }
 
     @Override

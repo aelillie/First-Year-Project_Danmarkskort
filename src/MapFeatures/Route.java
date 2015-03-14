@@ -1,6 +1,6 @@
 package MapFeatures;
 
-import Model.Drawable;
+import Model.DrawAttributes;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -17,7 +17,7 @@ public class Route extends MapFeature{
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(Drawable.white, -2.0);
+        setValueSpecs(DrawAttributes.white, -2.0);
     }
 
     @Override

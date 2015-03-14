@@ -36,17 +36,17 @@ public class Controller extends MouseAdapter implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if (command == "zoomIn") view.zoom(1.2);
-        else if (command == "zoomOut") view.zoom(1/1.2);
-        else if (command == "fullscreen") view.toggleFullscreen();
-        else if (command == "search"){
+        if (command.equals("zoomIn")) view.zoom(1.2);
+        else if (command.equals("zoomOut")) view.zoom(1/1.2);
+        else if (command.equals("fullscreen")) view.toggleFullscreen();
+        else if (command.equals("search")){
             String input = view.getSearchArea().getText().trim().toLowerCase();
             Address address = Address.parse(input);
             //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
             view.getCanvas().requestFocusInWindow();
            // model.searchForAddresses(address);
         }
-        else if (command == "maptype");
+        else if (command.equals("maptype"));
     }
 
     // sets up events for mouse and calls the methods in view.
@@ -86,10 +86,10 @@ public class Controller extends MouseAdapter implements ActionListener {
                     view.toggleAA();
                     break;
                 case 's':
-                    model.saveBin("savegame.bin");
+                    model.saveBin("binaryModel.bin");
                     break;
                 case 'l':
-                    model.loadFile("savegame.bin");
+                    model.loadFile("binaryModel.bin");
                     break;
             }
             if (e.getKeyCode() == KeyEvent.VK_UP) {

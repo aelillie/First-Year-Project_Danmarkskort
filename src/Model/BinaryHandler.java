@@ -5,7 +5,7 @@ import java.io.*;
 import java.util.List;
 
 /**
- * Created by Kevin on 11-03-2015.
+ * Helper class to save and load data in binary format
  */
 public final class BinaryHandler {
 
