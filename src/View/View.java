@@ -60,6 +60,7 @@ public class View extends JFrame implements Observer {
                 zoomOutButton.setBounds(getWidth()-115, getHeight()-getHeight()/3*2,39,37);
                 fullscreenButton.setBounds(getWidth()-70, getHeight()-getHeight()/3*2,39,37);
                 zoomInButton.setBounds(getWidth()-160,getHeight()- getHeight()/3*2,39,37);
+                mapTypeMenu.setBounds(getWidth()-160,getHeight()-getHeight()/3*2-50,130,30);
             }
         });
         model.addObserver(this);
@@ -210,6 +211,8 @@ public class View extends JFrame implements Observer {
     }
 
     private void makeMaptypeMenu(){
+        Dimension prefered = getPreferredSize();
+
         mapTypeMenu = new JComboBox<>();
         mapTypeMenu.setEditable(false);
 
@@ -223,7 +226,7 @@ public class View extends JFrame implements Observer {
         mapTypeMenu.addItem(colorblindMapImage);
         mapTypeMenu.addItem(transportMapImage);
         mapTypeMenu.setBorder(BorderFactory.createRaisedBevelBorder());
-        mapTypeMenu.setBounds(getWidth()-144,getHeight()-getHeight()/3*2-50,130,30);
+        mapTypeMenu.setBounds((int)prefered.getWidth()-160,(int) (prefered.getHeight()-prefered.getHeight()/3*2-50),130,30);
         mapTypeMenu.setBackground(Color.white);
         mapTypeMenu.setFocusable(false);
         mapTypeMenu.setActionCommand("maptype");
@@ -269,6 +272,7 @@ public class View extends JFrame implements Observer {
         showRoutePanelButton.setFocusable(false);
         showRoutePanelButton.setBackground(Color.WHITE);
         showRoutePanelButton.setBounds(20,55,100,25);
+        showRoutePanelButton.setBorder(BorderFactory.createMatteBorder(4,1,1,1,Color.GRAY));
         showRoutePanelButton.setActionCommand("showRoutePanel");
 
     }
