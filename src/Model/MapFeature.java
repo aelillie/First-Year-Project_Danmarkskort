@@ -65,7 +65,6 @@ public abstract class MapFeature implements Colorblind, Standard, Serializable {
     public void drawStandard(Graphics2D g) {
         if(color == null) return;
         if (isArea) {
-
             g.setColor(color);
             g.fill(way);
         } else {

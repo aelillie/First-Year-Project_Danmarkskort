@@ -364,18 +364,11 @@ public class OSMHandler extends DefaultHandler {
     }
 
     private int getLayer() {
-        int layer_val = 2; //default layer
-        int botLayer = 1;
-        int botLayer2 = 2;
-        //gives space to 2 extra layers
-        int topLayer = 5; //modify this to make extra layers
+        int layer_val = 0; //default layer, if no value is defined in the OSM
         try {
-            int OSM_layer = Integer.parseInt(kv_map.get("layer"));
-            if (OSM_layer == -2) layer_val = botLayer;
-            if (OSM_layer == -1) layer_val = botLayer2;
-            if (OSM_layer == 1) layer_val = topLayer;
+            layer_val = Integer.parseInt(kv_map.get("layer")); //fetch OSM-defined layer value
         } catch (NumberFormatException e) {
-            layer_val = 2;
+            return layer_val; //return the default
         }
         return layer_val;
     }

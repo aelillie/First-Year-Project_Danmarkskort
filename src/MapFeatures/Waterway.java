@@ -6,7 +6,7 @@ import java.awt.*;
 
 public class Waterway extends MapFeature {
 
-    public Waterway(Shape way, int layer_value, String value, Boolean isArea) {
+    public Waterway(Shape way, int layer_value, String value, boolean isArea) {
         super(way, layer_value, value);
         setValueAttributes();
         this.isArea = isArea;
