@@ -251,10 +251,8 @@ public class Address implements Comparable<Address> {
                 break;
             }
         }
-        if(noMatch){
-            return null;
-        }else {
-            return b.build();
-        }
+        if(noMatch)return null;
+        else return b.build();
+
     }
 }
