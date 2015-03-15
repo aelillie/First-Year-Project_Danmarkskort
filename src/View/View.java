@@ -1,5 +1,6 @@
 package View;
 
+import Controller.Controller;
 import Model.*;
 
 import javax.swing.*;
@@ -51,7 +52,6 @@ public class View extends JFrame implements Observer {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
-
         canvas.requestFocusInWindow();
         //This sets up a listener for when the frame is re-sized.
         this.getRootPane().addComponentListener(new ComponentAdapter() {

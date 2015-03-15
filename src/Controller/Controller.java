@@ -17,6 +17,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         //Set up Handlers for mouse and keyboard and let controller set these for view.
         keyHandler kH = new keyHandler();
         view.getCanvas().addKeyListener(kH);
+        view.getSearchArea().addKeyListener(kH);
         MouseHandler mH = new MouseHandler();
         view.addMouseListener(mH);
         view.addMouseMotionListener(mH);
@@ -85,35 +86,42 @@ public class Controller extends MouseAdapter implements ActionListener {
          */
         public void keyPressed(KeyEvent e) {
             //Set up the keyboard handler for different keys.
-            switch (e.getKeyChar()) {
-                case '+':
-                    view.zoom(1.2);
-                    break;
-                case '-':
-                    view.zoom(1/1.2);
-                    break;
-                case 'a':
-                    view.toggleAA();
-                    break;
-                case 's':
-                    model.saveBin("binaryModel.bin");
-                    break;
-                case 'l':
-                    model.loadFile("binaryModel.bin");
-                    break;
+            if(!view.getSearchArea().hasFocus()) {
+                switch (e.getKeyChar()) {
+                    case '+':
+                        view.zoom(1.2);
+                        break;
+                    case '-':
+                        view.zoom(1 / 1.2);
+                        break;
+                    case 'a':
+                        view.toggleAA();
+                        break;
+                    case 's':
+                        model.saveBin("binaryModel.bin");
+                        break;
+                    case 'l':
+                        model.loadFile("binaryModel.bin");
+                        break;
+                }
+                if (e.getKeyCode() == KeyEvent.VK_UP) {
+                    view.pan(0, 10);
+                }
+                if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    view.pan(0, -10);
+                }
+                if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                    view.pan(10, 0);
+                }
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    view.pan(-10, 0);
+                }
             }
-            if (e.getKeyCode() == KeyEvent.VK_UP) {
-                view.pan(0, 10);
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                addressSearch();
             }
-            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                view.pan(0, -10);
-            }
-            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                view.pan(10, 0);
-            }
-            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                view.pan(-10, 0);
-            }
+
+
 
         }
     }
