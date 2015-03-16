@@ -41,13 +41,13 @@ public class Controller extends MouseAdapter implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if (command == "zoomIn") view.zoom(1.2);
-        else if (command == "zoomOut") view.zoom(1/1.2);
-        else if (command == "fullscreen") view.toggleFullscreen();
-        else if (command == "search") addressSearch();
-        else if (command == "maptype");
-        else if (command == "showRoutePanel") view.showRoutePanel();
-        else if (command == "findRoute");
+        if (command.equals("zoomIn")) view.zoom(1.2);
+        else if (command.equals("zoomOut")) view.zoom(1/1.2);
+        else if (command.equals("fullscreen")) view.toggleFullscreen();
+        else if (command.equals("search")) addressSearch();
+        else if (command.equals("maptype"));
+        else if (command.equals("showRoutePanel")) view.showRoutePanel();
+        else if (command.equals("findRoute"));
     }
 
     private void addressSearch(){

@@ -20,8 +20,8 @@ import java.util.List;
 public class OSMHandler extends DefaultHandler {
     private Map<Long, Path2D> relations = new HashMap<>(); //contains all shapes to be used as relations.
     private List<List<Point2D>> coastlinesInCoords = new ArrayList<>();
-    Map<Long, Point2D> map = new HashMap<>(); //Relation between a nodes' id and coordinates
-    Map<String, String> kv_map = new HashMap<>(); //relation between the keys and values in the XML file
+    Map<Long, Point2D> IDcoord_map = new HashMap<>(); //Relation between a nodes' id and coordinates
+    Map<String, String> keyValue_map = new HashMap<>(); //relation between the keys and values in the XML file
     Map<String, String> layer_map = new HashMap<>();
     Map<Long, String> role_map = new HashMap<>(); //
     List<Long> refs = new ArrayList<>();
@@ -67,13 +67,13 @@ public class OSMHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes atts) {
         switch (qName) { //if qName.equals(case)
             case "relation":{
-                kv_map.clear();
+                keyValue_map.clear();
                 role_map.clear();
                 refs.clear();
                 break;
             }
             case "node": {
-                kv_map.clear();
+                keyValue_map.clear();
                 isBusstop = false; isMetro = false;  isSTog = false;
                 hasName = false; hasHouseNo = false; hasPostcode = false; hasCity = false;
 
@@ -82,18 +82,18 @@ public class OSMHandler extends DefaultHandler {
                 long id = Long.parseLong(atts.getValue("id"));
                 Point2D coord = new Point2D.Double(lon, lat);
                 currentCoord = new Point2D.Double(lon,lat);
-                map.put(id, coord);
+                IDcoord_map.put(id, coord);
                 break;
             }
             case "nd": {
                 long id = Long.parseLong(atts.getValue("ref"));
-                Point2D coord = map.get(id);
+                Point2D coord = IDcoord_map.get(id);
                 if (coord == null) return;
                 coords.add(coord);
                 break;
             }
             case "way":
-                kv_map.clear();
+                keyValue_map.clear();
                 coords.clear();
                 isArea = false;
                 hasName = false;
@@ -109,7 +109,7 @@ public class OSMHandler extends DefaultHandler {
             case "tag":
                 String k = atts.getValue("k");
                 String v = atts.getValue("v");
-                kv_map.put(k, v);
+                keyValue_map.put(k, v);
                     if(k.equals("area") && v.equals("yes")) isArea = true;
                 if(k.equals("highway") && v.equals("bus_stop")) isBusstop = true;
                 if(k.equals("subway")&& v.equals("yes")) isMetro = true;
@@ -165,75 +165,75 @@ public class OSMHandler extends DefaultHandler {
                 relations.put(id, way);
 
                 //start of adding shapes from keys and values
-                if (kv_map.containsKey("natural")) { //##New key!
-                    mapFeatures.add(new Natural(way, getLayer(), kv_map.get("natural")));
+                if (keyValue_map.containsKey("natural")) { //##New key!
+                    mapFeatures.add(new Natural(way, fetchOSMLayer(), keyValue_map.get("natural")));
 
-                } else if (kv_map.containsKey("waterway")) { //##New key!
-                    mapFeatures.add(new Waterway(way, getLayer(), kv_map.get("waterway"), isArea));
+                } else if (keyValue_map.containsKey("waterway")) { //##New key!
+                    mapFeatures.add(new Waterway(way, fetchOSMLayer(), keyValue_map.get("waterway"), isArea));
 
-                } else if (kv_map.containsKey("leisure")) { //##New key!
-                    mapFeatures.add(new Leisure(way, getLayer(), kv_map.get("leisure")));
+                } else if (keyValue_map.containsKey("leisure")) { //##New key!
+                    mapFeatures.add(new Leisure(way, fetchOSMLayer(), keyValue_map.get("leisure")));
 
-                } else if (kv_map.containsKey("landuse")) { //##New key!
-                    mapFeatures.add(new Landuse(way, getLayer(), kv_map.get("landuse"), isArea));
+                } else if (keyValue_map.containsKey("landuse")) { //##New key!
+                    mapFeatures.add(new Landuse(way, fetchOSMLayer(), keyValue_map.get("landuse"), isArea));
 
-                } else if (kv_map.containsKey("geological")) { //##New key!
-                    mapFeatures.add(new Geological(way, getLayer(), kv_map.get("geological")));
+                } else if (keyValue_map.containsKey("geological")) { //##New key!
+                    mapFeatures.add(new Geological(way, fetchOSMLayer(), keyValue_map.get("geological")));
 
-                } else if (kv_map.containsKey("building")) { //##New key!
-                    mapFeatures.add(new Building(way, getLayer(), kv_map.get("building")));
+                } else if (keyValue_map.containsKey("building")) { //##New key!
+                    mapFeatures.add(new Building(way, fetchOSMLayer(), keyValue_map.get("building")));
 
-                } else if (kv_map.containsKey("shop")) { //##New key!
-                    mapFeatures.add(new Shop(way, getLayer(), kv_map.get("shop")));
+                } else if (keyValue_map.containsKey("shop")) { //##New key!
+                    mapFeatures.add(new Shop(way, fetchOSMLayer(), keyValue_map.get("shop")));
 
-                } else if (kv_map.containsKey("tourism")) { //##New key!
-                    mapFeatures.add(new Tourism(way, getLayer(), kv_map.get("tourism")));
+                } else if (keyValue_map.containsKey("tourism")) { //##New key!
+                    mapFeatures.add(new Tourism(way, fetchOSMLayer(), keyValue_map.get("tourism")));
 
-                } else if (kv_map.containsKey("man_made")) { //##New key!
-                    mapFeatures.add(new ManMade(way, getLayer(), kv_map.get("man_made")));
-                } else if (kv_map.containsKey("military")) { //##New key!
+                } else if (keyValue_map.containsKey("man_made")) { //##New key!
+                    mapFeatures.add(new ManMade(way, fetchOSMLayer(), keyValue_map.get("man_made")));
+                } else if (keyValue_map.containsKey("military")) { //##New key!
 
 
-                } else if (kv_map.containsKey("historic")) { //##New key!
-                    mapFeatures.add(new Historic(way, getLayer(), kv_map.get("historic")));
+                } else if (keyValue_map.containsKey("historic")) { //##New key!
+                    mapFeatures.add(new Historic(way, fetchOSMLayer(), keyValue_map.get("historic")));
 
-                } else if (kv_map.containsKey("craft")) { //##New key!
-                    mapFeatures.add(new Craft(way, getLayer(), kv_map.get("craft")));
+                } else if (keyValue_map.containsKey("craft")) { //##New key!
+                    mapFeatures.add(new Craft(way, fetchOSMLayer(), keyValue_map.get("craft")));
 
-                } else if (kv_map.containsKey("emergency")) { //##New key!
-                    mapFeatures.add(new Emergency(way, getLayer(), kv_map.get("emergency")));
+                } else if (keyValue_map.containsKey("emergency")) { //##New key!
+                    mapFeatures.add(new Emergency(way, fetchOSMLayer(), keyValue_map.get("emergency")));
 
-                } else if (kv_map.containsKey("aeroway")) { //##New key!
-                    mapFeatures.add(new Aeroway(way, getLayer(), kv_map.get("aeroway")));
+                } else if (keyValue_map.containsKey("aeroway")) { //##New key!
+                    mapFeatures.add(new Aeroway(way, fetchOSMLayer(), keyValue_map.get("aeroway")));
 
-                } else if (kv_map.containsKey("amenity")) { //##New key!
-                    mapFeatures.add(new Amenity(way, getLayer(), kv_map.get("amenity"), kv_map.containsKey("building")));
-                    if (kv_map.get("amenity").equals("parking")) {
+                } else if (keyValue_map.containsKey("amenity")) { //##New key!
+                    mapFeatures.add(new Amenity(way, fetchOSMLayer(), keyValue_map.get("amenity"), keyValue_map.containsKey("building")));
+                    if (keyValue_map.get("amenity").equals("parking")) {
                         mapIcons.add(new MapIcon(way, "data//parkingIcon.jpg"));
                     }
 
-                } else if (kv_map.containsKey("barrier")) { //##New key!
-                    mapFeatures.add(new Barrier(way, getLayer(), kv_map.get("barrier"), isArea));
+                } else if (keyValue_map.containsKey("barrier")) { //##New key!
+                    mapFeatures.add(new Barrier(way, fetchOSMLayer(), keyValue_map.get("barrier"), isArea));
 
-                } else if (kv_map.containsKey("boundary")) { //##New key!
-                    mapFeatures.add(new Boundary(way, getLayer(), kv_map.get("boundary")));
-                } else if (kv_map.containsKey("highway")) { //##New key!
-                    mapFeatures.add(new Highway(way, getLayer(), kv_map.get("highway")));
-                } else if (kv_map.containsKey("railway")) { //##New key!
-                    mapFeatures.add(new Railway(way, getLayer(), kv_map.get("railway")));
+                } else if (keyValue_map.containsKey("boundary")) { //##New key!
+                    mapFeatures.add(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary")));
+                } else if (keyValue_map.containsKey("highway")) { //##New key!
+                    mapFeatures.add(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway")));
+                } else if (keyValue_map.containsKey("railway")) { //##New key!
+                    mapFeatures.add(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
 
-                } else if (kv_map.containsKey("bridge")) { //##New key!
-                    mapFeatures.add(new Bridge(way, getLayer(), kv_map.get("bridge")));
+                } else if (keyValue_map.containsKey("bridge")) { //##New key!
+                    mapFeatures.add(new Bridge(way, fetchOSMLayer(), keyValue_map.get("bridge")));
 
-                } else if (kv_map.containsKey("route")) { //##New key!
-                    mapFeatures.add(new Route(way, getLayer(), kv_map.get("route")));
+                } else if (keyValue_map.containsKey("route")) { //##New key!
+                    mapFeatures.add(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
                 }
 
                 break;
 
             case "relation":
-                if (kv_map.containsKey("type")) {
-                    String val = kv_map.get("type");
+                if (keyValue_map.containsKey("type")) {
+                    String val = keyValue_map.get("type");
                     if (val.equals("multipolygon")) {
                         Long ref = refs.get(0);
                         if (relations.containsKey(ref)) {
@@ -247,14 +247,14 @@ public class OSMHandler extends DefaultHandler {
                                     System.out.println(ref + " ");
                             }
                             path.setWindingRule(Path2D.WIND_EVEN_ODD);
-                            if (kv_map.containsKey("building"))
-                                mapFeatures.add(new Multipolygon(path, getLayer(), "building"));
+                            if (keyValue_map.containsKey("building"))
+                                mapFeatures.add(new Multipolygon(path, fetchOSMLayer(), "building"));
 
-                            if(kv_map.containsKey("place")){
+                            if(keyValue_map.containsKey("place")){
                                 //TODO islets
 
                             }
-                            /*else if (kv_map.containsKey("natural"))
+                            /*else if (keyValue_map.containsKey("natural"))
                                 drawables.add(new Model.Area(path, Model.Drawable.water, -1.5));*/
                             //TODO How do draw harbor.
                         }
@@ -267,21 +267,21 @@ public class OSMHandler extends DefaultHandler {
                 break;
 
             case "node":
-                if (kv_map.containsKey("highway")) {
-                    String val = kv_map.get("highway");
+                if (keyValue_map.containsKey("highway")) {
+                    String val = keyValue_map.get("highway");
                     if (val.equals("bus_stop") && isBusstop)
                         mapIcons.add(new MapIcon(currentCoord, "data//busIcon.png"));
                 }
-                else if (kv_map.containsKey("railway")) {
-                    String val = kv_map.get("railway");
+                else if (keyValue_map.containsKey("railway")) {
+                    String val = keyValue_map.get("railway");
                     if (val.equals("station")) {
                         if (isMetro) mapIcons.add(new MapIcon(currentCoord, "data//metroIcon.png"));
                         else if (isSTog) mapIcons.add(new MapIcon(currentCoord, "data//stogIcon.png"));
                     }
-                } else if(kv_map.containsKey("name")) {
-                    String name = kv_map.get("name");
-                    if(kv_map.containsKey("place")){
-                        String place = kv_map.get("place");
+                } else if(keyValue_map.containsKey("name")) {
+                    String name = keyValue_map.get("name");
+                    if(keyValue_map.containsKey("place")){
+                        String place = keyValue_map.get("place");
                         name = name.toLowerCase();
                         Address addr = Address.parse(name); //Parse places like addresses - they only have a name. Examples: Roskilde, Slotsholmskanelen, Vindinge.
                         //System.out.println(name);
@@ -291,7 +291,7 @@ public class OSMHandler extends DefaultHandler {
                         } else if (place.equals("village")){
                             addressMap.put(addr,currentCoord);
                             addressList.add(addr);
-                        } else if (place.equals("surburb")){
+                        } else if (place.equals("suburb")){
                             addressMap.put(addr,currentCoord);
                             addressList.add(addr);
                         } else if (place.equals("locality")) {
@@ -303,7 +303,7 @@ public class OSMHandler extends DefaultHandler {
                         }
                     }
 
-                } else if (kv_map.containsKey("addr:street")){
+                } else if (keyValue_map.containsKey("addr:street")){
                     if(hasHouseNo && hasCity && hasPostcode){
                         String addressString = streetName + " " + houseNumber + " " + postCode + " " + cityName;
                         addressString = addressString.toLowerCase();
@@ -318,8 +318,8 @@ public class OSMHandler extends DefaultHandler {
 
 
 
-                //else if (kv_map.containsKey("addr:city")) addCityName();
-                //else if (kv_map.containsKey("addr:postcode")) addPostcode();
+                //else if (keyValue_map.containsKey("addr:city")) addCityName();
+                //else if (keyValue_map.containsKey("addr:postcode")) addPostcode();
 
 
                 break;
@@ -363,12 +363,12 @@ public class OSMHandler extends DefaultHandler {
 
     }
 
-    private int getLayer() {
+    private int fetchOSMLayer() {
         int layer_val = 0; //default layer, if no value is defined in the OSM
         try {
-            layer_val = Integer.parseInt(kv_map.get("layer")); //fetch OSM-defined layer value
+            layer_val = Integer.parseInt(keyValue_map.get("layer")); //fetch OSM-defined layer value
         } catch (NumberFormatException e) {
-            return layer_val; //return the default
+            //getPreDefLayer();
         }
         return layer_val;
     }
