@@ -22,6 +22,9 @@ public class Leisure extends MapFeature {
         if(value.equals("garden"))setValueSpecs(DrawAttributes.whitegreen, -1.2);
         else if (value.equals("common")) setValueSpecs(DrawAttributes.neongreen, -1.2);
         else if(value.equals("park")) setValueSpecs(DrawAttributes.whitegreen, -1.0);
+        else if(value.equals("pitch")) setValueSpecs(DrawAttributes.grey, -1.0);
+        else if(value.equals("playground")) setValueSpecs(DrawAttributes.whitegreen, -1.0);
+
     }
 
     @Override

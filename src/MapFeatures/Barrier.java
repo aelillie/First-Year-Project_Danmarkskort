@@ -25,6 +25,8 @@ public class Barrier extends MapFeature{
             else setValueSpecs(DrawAttributes.neongreen, -0.5);
         }
         if(value.equals("fence")) setValueSpecs(DrawAttributes.neongreen, -0.5);
+        if(value.equals("kerb")) setLineSpecs(DrawAttributes.bluegreen, -0.5, 0);
+
     }
 
     @Override

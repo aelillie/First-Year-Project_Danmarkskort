@@ -218,7 +218,7 @@ public class OSMHandler extends DefaultHandler {
                 } else if (keyValue_map.containsKey("boundary")) { //##New key!
                     mapFeatures.add(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary")));
                 } else if (keyValue_map.containsKey("highway")) { //##New key!
-                    mapFeatures.add(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway")));
+                    mapFeatures.add(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea));
                 } else if (keyValue_map.containsKey("railway")) { //##New key!
                     mapFeatures.add(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
 

@@ -65,6 +65,7 @@ public abstract class DrawAttributes {
     public static Color whiteblue = new Color(95,158,160);
     public static Color greenblue = new Color(102,205,170);
     public static Color whitegreen = new Color(144,238,144);
+    public static Color brown = new Color(139,69,19);
 
 
     public static Stroke[] basicStrokes = new Stroke[]{s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11,s12, s13, s14, s15};

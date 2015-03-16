@@ -33,14 +33,14 @@ public abstract class MapFeature implements Colorblind, Standard, Serializable {
         this.zoom_level = zoom_level;
     }
 
-    public void setValueDashedSpecs(Color color, double zoom_level, int stroke_id) {
-        setLineSpecs(color, zoom_level, stroke_id);
-        dashed = true;
-    }
-
     public void setLineSpecs(Color color, double zoom_level, int stroke_id) {
         setValueSpecs(color, zoom_level);
         this.stroke_id = stroke_id;
+    }
+
+    public void setValueDashedSpecs(Color color, double zoom_level, int stroke_id) {
+        setLineSpecs(color, zoom_level, stroke_id);
+        dashed = true;
     }
     public abstract void setValueAttributes();
 

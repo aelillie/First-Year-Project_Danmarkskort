@@ -20,6 +20,7 @@ import static java.lang.Math.max;
 public class View extends JFrame implements Observer {
     public static final long serialVersionUID = 0;
     private Model model;
+
     private Canvas canvas;
     private AffineTransform transform = new AffineTransform();
     private boolean antialias = true;
