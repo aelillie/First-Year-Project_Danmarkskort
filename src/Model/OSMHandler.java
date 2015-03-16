@@ -5,12 +5,10 @@ import MapFeatures.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
-import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.*;
-import java.util.List;
 
 /**
  * Contenthandler, which handles the .osm file written in XML.
@@ -24,18 +22,23 @@ public class OSMHandler extends DefaultHandler {
     Map<String, String> keyValue_map = new HashMap<>(); //relation between the keys and values in the XML file
     Map<String, String> layer_map = new HashMap<>();
     Map<Long, String> role_map = new HashMap<>(); //
-    List<Long> refs = new ArrayList<>();
+    List<Long> refs = new ArrayList<>(); //references
     List<Point2D> coords = new ArrayList<>(); //referenced coordinates
     Path2D way; //<way> tag. A way is the path from one coordinate to another
     Long id;
     Point2D currentCoord; //current coordinate read
-    private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity; //controls how shapes should be added
+    private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity, isStart; //controls how shapes should be added
     private String name;
     private String streetName, houseNumber,cityName, postCode;
-    protected List<String> cityNames = new ArrayList<>();
-    protected List<String> postCodes = new ArrayList<>();
-    protected Map<String, String> streetCityMap = new HashMap<>();
     private List<MapIcon> mapIcons = new ArrayList<>(); //contains all the icons to be drawn
+
+    private static List<Coastline> coastlines = new ArrayList<>();
+
+    public static List<Coastline> getCoastlines() {
+        return coastlines;
+    }
+    private Point2D startPoint;
+    private Point2D endPoint;
 
     protected Rectangle2D bbox = new Rectangle2D.Double();
 
@@ -45,15 +48,13 @@ public class OSMHandler extends DefaultHandler {
 
     private List<MapFeature> mapFeatures = new ArrayList<>();
 
-    private List<Shape> lines = new ArrayList<>(); //contains all shapes to be drawn that are not in drawables
-
-    private Map<String,List<Shape>> streetnameMap = new HashMap<>();
+    private List<Address> addressList = new ArrayList<>();
     private Map<Address,Point2D> addressMap = new HashMap<>(); //Contains relevant places parsed as address objects (e.g. a place Roskilde or an address Lauravej 38 2900 Hellerup etc.) linked to their coordinate.
-    private ArrayList<Address> addressList = new ArrayList<>(); //Contains all addresses to be sorted according to the compareTo method.
 
     public List<MapIcon> getMapIcons() {
         return mapIcons;
     }
+
 
 
 
@@ -88,6 +89,13 @@ public class OSMHandler extends DefaultHandler {
             case "nd": {
                 long id = Long.parseLong(atts.getValue("ref"));
                 Point2D coord = IDcoord_map.get(id);
+
+                if(isStart){ //Saves startpoint (for use in coastlines)
+                    startPoint = coord;
+                    isStart = false;
+                }
+                 endPoint = coord;
+
                 if (coord == null) return;
                 coords.add(coord);
                 break;
@@ -97,6 +105,7 @@ public class OSMHandler extends DefaultHandler {
                 coords.clear();
                 isArea = false;
                 hasName = false;
+                isStart = true;
                 id = Long.parseLong(atts.getValue("id"));
                 break;
             case "bounds":
@@ -165,8 +174,11 @@ public class OSMHandler extends DefaultHandler {
                 relations.put(id, way);
 
                 //start of adding shapes from keys and values
+
                 if (keyValue_map.containsKey("natural")) { //##New key!
                     mapFeatures.add(new Natural(way, fetchOSMLayer(), keyValue_map.get("natural")));
+                    String val = keyValue_map.get("natural");
+                    if (val.equals("coastline")) Coastline.processCoastlines(way, startPoint, endPoint);
 
                 } else if (keyValue_map.containsKey("waterway")) { //##New key!
                     mapFeatures.add(new Waterway(way, fetchOSMLayer(), keyValue_map.get("waterway"), isArea));
@@ -258,10 +270,21 @@ public class OSMHandler extends DefaultHandler {
                                 drawables.add(new Model.Area(path, Model.Drawable.water, -1.5));*/
                             //TODO How do draw harbor.
                         }
+                        Path2D path = MultipolygonCreater.setUpMultipolygon(refs, relations);
+                        if(path == null) return;
+                        if (keyValue_map.containsKey("building"))
+                            mapFeatures.add(new Multipolygon(path, fetchOSMLayer(), "building"));
 
-                        //TODO look at busroute and so forth
+                        if(keyValue_map.containsKey("place")){
+                            //TODO islets
+
+                        }
+                        /*else if (kv_map.containsKey("natural"))
+                            drawables.add(new Model.Area(path, Model.Drawable.water, -1.5));*/
+                        //TODO How do draw harbor.
                     }
 
+                        //TODO look at busroute and so forth
                 }
 
                 break;
@@ -283,7 +306,7 @@ public class OSMHandler extends DefaultHandler {
                     if(keyValue_map.containsKey("place")){
                         String place = keyValue_map.get("place");
                         name = name.toLowerCase();
-                        Address addr = Address.parse(name); //Parse places like addresses - they only have a name. Examples: Roskilde, Slotsholmskanelen, Vindinge.
+                        Address addr = Address.newTown(name); //Parse places like addresses - they only have a name. Examples: Roskilde, Slotsholmskanelen, Vindinge.
                         //System.out.println(name);
                         if(place.equals("town")){
                             addressMap.put(addr,currentCoord);
@@ -292,6 +315,9 @@ public class OSMHandler extends DefaultHandler {
                             addressMap.put(addr,currentCoord);
                             addressList.add(addr);
                         } else if (place.equals("suburb")){
+
+                        }/* else if (place.equals("surburb")){
+>>>>>>> f22e1ce3767717fe30b2495136cc5b01c8b466ac
                             addressMap.put(addr,currentCoord);
                             addressList.add(addr);
                         } else if (place.equals("locality")) {
@@ -300,14 +326,12 @@ public class OSMHandler extends DefaultHandler {
                         } else if (place.equals("neighbourhood")){
                             addressMap.put(addr,currentCoord);
                             addressList.add(addr);
-                        }
+                        }*/
                     }
 
                 } else if (keyValue_map.containsKey("addr:street")){
                     if(hasHouseNo && hasCity && hasPostcode){
-                        String addressString = streetName + " " + houseNumber + " " + postCode + " " + cityName;
-                        addressString = addressString.toLowerCase();
-                        Address addr = Address.parse(addressString);
+                        Address addr = Address.newAddress(streetName, houseNumber, postCode, cityName);
                         //System.out.println(addressString + ", " + currentCoord);
                         //System.out.println(addr.toString());
                         addressMap.put(addr, currentCoord);
@@ -359,9 +383,6 @@ public class OSMHandler extends DefaultHandler {
 
 
 
-    private void addAddress(){
-
-    }
 
     private int fetchOSMLayer() {
         int layer_val = 0; //default layer, if no value is defined in the OSM
@@ -373,31 +394,11 @@ public class OSMHandler extends DefaultHandler {
         return layer_val;
     }
 
+    public void searchForAddressess(Address add){
+        AddressSearcher.searchForAddresses(add, addressList, addressMap);
 
-    /**
-     * Adds all unique cities parsed from the xml file to an arrayList
-     */
-    private void addCityName(){if(!cityNames.contains(cityName)){ cityNames.add(cityName);}}
-
-    /**
-     * Adds all unique postCodes parsed from the xml file to an arrayList
-     */
-    private void addPostcode(){if(!postCodes.contains(postCode)){postCodes.add(postCode);}}
-
-    /**
-     * Adds all unique addresses parsed from the xml file to an arrayList
-     */
-    private void addStreetName(){
-        List<Shape> value = streetnameMap.get(name);
-        if (value == null) {
-            List<Shape> list = new ArrayList<>();
-            list.add(way);
-            streetnameMap.put(name, list);
-        } else {
-            List<Shape> list = streetnameMap.get(name);
-            list.add(way);
-        }
     }
+
 
 
     /**
@@ -410,9 +411,6 @@ public class OSMHandler extends DefaultHandler {
         }
     }
 
-    public Map<String,List<Shape>> getStreetMap(){
-        return streetnameMap;
-    }
 
 
     /**
@@ -423,59 +421,7 @@ public class OSMHandler extends DefaultHandler {
      * @param high The higher bound of the part of the array we want to search.
      * @return The index at which we found the element.
      */
-    private int binSearch(ArrayList<Address> list, Address addr, int low, int high){
-        if(low > high) return -1;
-        int mid = (low+high)/2;
-        if (list.get(mid).compareTo(addr) < 0) return binSearch(list, addr, mid + 1, high); //if addr is larger than mid
-        else if (list.get(mid).compareTo(addr) > 0) return binSearch(list, addr, low, mid - 1); //if addr is smaller than mid
-        else return mid;
-    }
 
-    /**
-     * Since there can be several addresses with the same name (e.g. Lærkevej in Copenhagen and Lærkevej in Roskilde),
-     * this method searches the lower part and higher part of the array bounded by the first element which is found in the list to determine
-     * the bounds of the similiar results in the array.
-     * @param addressInput
-     * @return
-     */
-    public int[] multipleEntriesSearch(Address addressInput){
-        int index = binSearch(addressList,addressInput,0,addressList.size()-1); //Returns the index of the first found element.
-        if(index < 0) return null; //Not found
-
-        int lowerBound = index; //Search to the left of the found element
-        int i = lowerBound;
-        do {
-            lowerBound = i;
-            i = binSearch(addressList, addressInput, 0, lowerBound-1);
-        } while (i != -1); //As long as we find a similiar element, keep searching to determine when we don't anymore.
-
-        int upperBound = index; //Search to the right of the found element
-        i = upperBound;
-        do {
-            upperBound = i;
-            i = binSearch(addressList, addressInput, upperBound+1, addressList.size() - 1);
-        }
-        while (i != -1); //As long as we find a similiar element, keep searching to determine when we don't anymore.
-
-        int[] range = {lowerBound, upperBound}; //The bounds of the similiar elements in the list.
-        return range;
-    }
-
-    public void searchForAddresses(Address addressInput){
-        int[] range = multipleEntriesSearch(addressInput); //search for one or multiple entries
-        if(range == null) { //If it is not found, the return value will be negative
-            System.out.println("Too bad - didn't find!");
-        } else {
-            System.out.println("Found something");
-            int lowerBound = range[0], upperBound = range[1];
-            System.out.printf("low: "+lowerBound + ", high: "+upperBound);
-            for(int i = lowerBound; i <= upperBound; i++){
-                Address foundAddr = addressList.get(i);
-                Point2D coordinate = addressMap.get(foundAddr);
-                //System.out.println("x = " + coordinate.getX() + ", y = " +coordinate.getY());
-            }
-        }
-    }
 
 
 }

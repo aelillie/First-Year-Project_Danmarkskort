@@ -29,11 +29,8 @@ public class Controller extends MouseAdapter implements ActionListener {
         view.getZoomInButton().addActionListener(this);
         view.getZoomOutButton().addActionListener(this);
         view.getFullscreenButton().addActionListener(this);
-        view.getFindRouteButton().addActionListener(this);
         view.getShowRoutePanelButton().addActionListener(this);
-        view.getCarButton().addActionListener(this);
-        view.getBicycleButton().addActionListener(this);
-        view.getFootButton().addActionListener(this);
+
     }
 
     @Override
@@ -56,7 +53,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         Address address = Address.parse(input);
         //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
         view.getCanvas().requestFocusInWindow();
-        model.getOSMReader().searchForAddresses(address);
+        model.searchForAddresses(address);
     }
 
 
