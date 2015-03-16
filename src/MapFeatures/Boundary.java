@@ -19,18 +19,4 @@ public class Boundary extends MapFeature {
         setValueDashedSpecs(Color.white, 2.0, 0);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

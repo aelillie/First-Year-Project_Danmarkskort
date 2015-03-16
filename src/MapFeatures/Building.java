@@ -21,18 +21,4 @@ public class Building extends MapFeature {
         setValueSpecs(DrawAttributes.lightgrey, -.5);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

@@ -1,6 +1,5 @@
 package View;
 
-import Controller.Controller;
 import Model.*;
 
 import javax.swing.*;
@@ -20,7 +19,7 @@ import static java.lang.Math.max;
 public class View extends JFrame implements Observer {
     public static final long serialVersionUID = 0;
     private Model model;
-
+    private Factory factory;
     private Canvas canvas;
     private AffineTransform transform = new AffineTransform();
     private boolean antialias = true;
@@ -66,6 +65,11 @@ public class View extends JFrame implements Observer {
         });
         model.addObserver(this);
         zoomLevel = model.getBbox().getWidth() * -1;
+        setFactory(new DefaultFactory());
+    }
+
+    public void setFactory(Factory factory) {
+        this.factory = factory;
     }
 
     /**
@@ -558,10 +562,11 @@ public class View extends JFrame implements Observer {
                     drawable.drawBoundary(g);
             }
 
+            factory.setColorScheme();
 
             for (MapFeature mapFeature : model.getMapFeatures()) {
                 if (zoomLevel > mapFeature.getZoom_level() )
-                    mapFeature.drawStandard(g);
+                    mapFeature.draw(g);
             }
 
             //Draws the icons.

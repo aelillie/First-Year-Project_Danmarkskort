@@ -23,18 +23,4 @@ public class Multipolygon extends MapFeature {
         if(value.equals("building")) setValueSpecs(DrawAttributes.grey, -0.8);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

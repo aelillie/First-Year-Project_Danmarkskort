@@ -20,18 +20,4 @@ public class Emergency extends MapFeature {
         setValueSpecs(DrawAttributes.lightgrey, -1.0);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

@@ -50,20 +50,5 @@ public class Highway extends MapFeature {
         else if (value.equals("path")) setValueDashedSpecs(DrawAttributes.red, -0.1, 0);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-
-    @Override
-    public void setStandard() {
-
-    }
 
 }

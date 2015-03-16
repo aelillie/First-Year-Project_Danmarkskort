@@ -34,19 +34,9 @@ public class Natural extends MapFeature {
     }
 
 
-    @Override
-    public void setValueIcon() {
+    private void setValueIcon() {
 
     }
 
 
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

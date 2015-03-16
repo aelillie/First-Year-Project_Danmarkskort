@@ -24,18 +24,4 @@ public class Amenity extends MapFeature {
         //TODO: Does not work. in newSmall the university is not drawn because it is not said to be building
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

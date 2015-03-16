@@ -20,18 +20,4 @@ public class Route extends MapFeature{
         setValueSpecs(DrawAttributes.white, -2.0);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

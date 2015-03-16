@@ -2,15 +2,12 @@ package Model;
 
 import java.awt.*;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
-public abstract class MapFeature implements Colorblind, Standard, Serializable {
+public abstract class MapFeature implements Serializable {
     protected Shape way;
     protected int layer_value;
     protected Color color;
     protected double zoom_level;
-    protected boolean hasIcon;
     protected int stroke_id;
     protected boolean dashed = false;
     protected String value;
@@ -45,8 +42,6 @@ public abstract class MapFeature implements Colorblind, Standard, Serializable {
     public abstract void setValueAttributes();
 
 
-    public abstract void setValueIcon();
-
     public void drawBoundary(Graphics2D g) {
         if(!isArea) {
             if(!dashed) {
@@ -62,7 +57,7 @@ public abstract class MapFeature implements Colorblind, Standard, Serializable {
 
     }
 
-    public void drawStandard(Graphics2D g) {
+    public void draw(Graphics2D g) {
         if(color == null) return;
         if (isArea) {
             g.setColor(color);
@@ -74,7 +69,6 @@ public abstract class MapFeature implements Colorblind, Standard, Serializable {
             g.draw(way);
         }
     }
-
 
     public double getZoom_level(){
         return zoom_level;
