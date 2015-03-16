@@ -6,29 +6,32 @@ Group G v0.3
 Features added since v0.2:
 
 * New and improved data structure
-* New components in GUI
+* New components in GUI including findRoutePanel and mapTypeMenu.
 * Improved address searching
 
 
 "Features" discovered/added since v0.2:
-* 
-* 
+* Address parser doesn’t parse all addresses, e.g. 1. Junivej.
+* Some map features, which are areas, don’t have key “Area” and value “yes” defined in the .osm file and are therefore not drawn as areas. For example “landuse”, “grass”.
+* In general it is a problem that for example a footway has to be drawn on top some places, while on the bottom elsewhere.
+
 
 Time usage in man hours:
 30 hours:       Restructure data structure
 20 hours:       Clean code workshop
-17 hours:       Report
+17 hours:       Report writing
 12 hours:       Address searching
 10 hours:       GUI
-5 hours: 	    Coastlines
+ 5 hours:        Coastlines
 
 Cumulative cost so far: (1h = DKK 625)
 
-Workshop:       12.500,-
-Meetings:       21.875,-
-Code review:     6.250,-
-"Homework"		18.750,-
-
+Restructuring 		18.750,-
+Workshop		12.500,-
+Report writing		10.625,-
+Address searching	  7.500,-
+GUI			  6.250,-
+Coastlines		  3.125,-
 
 
 Wish list for v0.4:
@@ -37,10 +40,18 @@ Wish list for v0.4:
 * Tests
 * Beta-GUI
 * Fully implemented address searching
+* Functional processing of coastlines (also for small cutouts of the map)
+* Better visualisation - painting more OSM types and more icons
+* A method for sorting all objects so they will be drawn in correct order.
+* A way implement different drawing styles, eg. “Colorblind Mode”
 
 
 Feedback request:
 * We've tried to make a better data structure and improved readability, how is this working out?
-* Is there a smart way for our current data structure to add different "modes", for example "Colorblind mode"?
-* 
-* 
+* Is there a smart way for our current data structure to add different "map modes", for example "Colorblind mode"?
+* Is there a smarter way to import the address from the OSM-file to be used in the address searching function other than parsing the addresses using the Address.Parse method? This seems to take quite a lot of time for large files. 
+* Is it a smart idea to use binary search as we do (with the modification that it can return several equal results) or would there a better (and faster) way to do this using HashMaps or the like?
+* Would it be faster to use a quicksort variant rather than mergesort, when sorting the MapFeature objects after layer value (sortLayers()) Or should we even consider using a hashmap variant instead?
+* Our getLayer makes certain that .osm-defined layer values gets drawn in the correct order, but ways that do not have a defined layer value gets drawn randomly, depending on the order they appear in the .osm file. Can you give a hint as to how we solve this?
+
+
