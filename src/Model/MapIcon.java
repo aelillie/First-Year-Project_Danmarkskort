@@ -3,15 +3,16 @@ package Model;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.File;
-import java.io.IOException;
+import java.io.*;
 
-public class MapIcon {
+public class MapIcon implements Serializable {
     BufferedImage img;
     Shape shape;
     Point2D coord;
+    String imgPath;
 
     /**
      * Creates a new Icon instance.
@@ -23,6 +24,7 @@ public class MapIcon {
         try {
             img = ImageIO.read(new File(imgPath));
             this.shape = shape;
+            this.imgPath = imgPath;
         } catch(IOException e){
             e.printStackTrace(); //Try to load again?
         }
@@ -38,6 +40,7 @@ public class MapIcon {
         try {
             img = ImageIO.read(new File(imgPath));
             this.coord = coord;
+            this.imgPath = imgPath;
         } catch(IOException e){
             e.printStackTrace(); //Try to load again?
         }
@@ -65,5 +68,22 @@ public class MapIcon {
 
    // Work in progress....
     public void scaleDraw(Graphics2D g, AffineTransform transform, Double scale){}
+
+    private void writeObject(ObjectOutputStream stream)throws IOException{
+        if(shape != null) stream.writeObject(shape);
+        else stream.writeObject(coord);
+        stream.writeUTF(imgPath);
+    }
+
+    private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException{
+
+        Object type = stream.readObject();
+        if(type.getClass() == Path2D.Double.class) shape = (Shape) type;
+        else coord = (Point2D) type;
+        String imgPath = stream.readUTF();
+        img = ImageIO.read(new File(imgPath));
+        this.imgPath = imgPath;
+
+    }
 
 }

@@ -1,14 +1,17 @@
 package View;
 
+import Controller.Controller;
 import Model.*;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
+import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -22,8 +25,12 @@ public class View extends JFrame implements Observer {
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
     private double zoomLevel;
-    private JTextField searchArea;
-    private JButton searchButton, zoomInButton = new JButton(), zoomOutButton = new JButton(), fullscreenButton = new JButton();
+    private JTextField searchArea, startAddressField, endAddressField;
+    private JButton searchButton, zoomInButton, zoomOutButton, fullscreenButton, showRoutePanelButton, findRouteButton;
+    private JButton carButton, bicycleButton, footButton;
+    private JPanel startEndAddressPanel, findRoutePanel;
+    private JComboBox<Icon> mapTypeMenu;
+    private HashMap<Icon, String> mapNameMap = new HashMap<>();
     private boolean isFullscreen = false;
     private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
 
@@ -42,12 +49,20 @@ public class View extends JFrame implements Observer {
         make the buttons and layout for the frame*/
         setScale();
         makeGUI();
-        setResizeController();
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         pack();
-
         canvas.requestFocusInWindow();
-
+        //This sets up a listener for when the frame is re-sized.
+        this.getRootPane().addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                //Re-position the buttons.
+                zoomOutButton.setBounds(getWidth()-115, getHeight()-getHeight()/3*2,39,37);
+                fullscreenButton.setBounds(getWidth()-70, getHeight()-getHeight()/3*2,39,37);
+                zoomInButton.setBounds(getWidth()-160,getHeight()- getHeight()/3*2,39,37);
+                mapTypeMenu.setBounds(getWidth()-160,getHeight()-getHeight()/3*2-50,130,30);
+            }
+        });
         model.addObserver(this);
         zoomLevel = model.getBbox().getWidth() * -1;
     }
@@ -56,7 +71,7 @@ public class View extends JFrame implements Observer {
      * Sets the scale for the afflineTransform object using to bounds from the osm file
      * Also sets up the frame size from screenSize
      */
-    private void setScale() {
+    private void setScale(){
         // bbox.width * xscale * .56 = 512
         // bbox.height * yscale = 512
 
@@ -73,34 +88,22 @@ public class View extends JFrame implements Observer {
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
 
         //Set up the JFrame using the monitors resolution.
-        setSize(screenSize);
-        setPreferredSize(screenSize);
-        setExtendedState(Frame.MAXIMIZED_BOTH);
-    }
-
-    private void setResizeController() {
-        //This sets up a listener for when the frame is re-sized.
-        this.getRootPane().addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                //Re-position the buttons.
-                zoomOutButton.setBounds(getWidth() - 115, getHeight() - getHeight() / 3 * 2, 39, 37);
-                fullscreenButton.setBounds(getWidth() - 70, getHeight() - getHeight() / 3 * 2, 39, 37);
-                zoomInButton.setBounds(getWidth() - 160, getHeight() - getHeight() / 3 * 2, 39, 37);
-            }
-        });
+        setSize(screenSize); //screenSize
+        setPreferredSize(new Dimension(800, 600)); //screenSize
+        setExtendedState(Frame.NORMAL); //Frame.MAXIMIZED_BOTH
     }
 
     /**
      * Makes use of different layers to put JComponent on top
      * of the canvas. Creates the GUI for the
      */
-    private void makeGUI() {
+    private void makeGUI(){
         //retrieve the LayeredPane stored in the frame.
         JLayeredPane layer = getLayeredPane();
         //Create the canvas and Components for GUI.
         canvas = new Canvas();
 
-        canvas.setBounds(0, 0, getWidth(), getHeight());
+        canvas.setBounds(0,0,getWidth(),getHeight());
 
         searchArea = new JTextField();
         searchArea.setText(promptText);
@@ -138,49 +141,256 @@ public class View extends JFrame implements Observer {
         layer.add(zoomInButton, new Integer(2));
         layer.add(zoomOutButton, new Integer(2));
         layer.add(fullscreenButton, new Integer(2));
-
-
+        layer.add(mapTypeMenu, new Integer(2));
+        layer.add(showRoutePanelButton, new Integer(2));
+        layer.add(findRoutePanel, new Integer(2));
     }
 
-    private void makeComponents() {
-        Font font = new Font("Arial", Font.PLAIN, 16);
+    private void makeComponents(){
+        Font font = new Font("Arial",Font.PLAIN,16);
 
         //Create The buttons and configure their visual design.
         searchArea.setFont(font);
-        searchArea.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 7, 4, 7, Drawable.lightblue), BorderFactory.createRaisedBevelBorder()));
-        searchArea.setBounds(20, 20, 300, 37);
+        searchArea.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 7, 4, 7, DrawAttributes.lightblue), BorderFactory.createRaisedBevelBorder()));
+        searchArea.setBounds(20,20,300,37);
 
         makeSearchButton();
-        makeLeftPanelButton(fullscreenButton, 75, new ImageIcon("data//fullscreenIcon.png"));
-        makeLeftPanelButton(zoomInButton, 160, new ImageIcon("data//plusIcon.png"));
-        makeLeftPanelButton(zoomOutButton, 115, new ImageIcon("data//minusIcon.png"));
-
-        fullscreenButton.setActionCommand("fullscreen");
-        zoomInButton.setActionCommand("zoomIn");
-        zoomOutButton.setActionCommand("zoomOut");
-
+        makeZoomInButton();
+        makeZoomOutButton();
+        makeFullscreenButton();
+        makeMaptypeMenu();
+        makeShowRoutePanelButton();
+        makeFindRoutePanel();
     }
 
-    private void makeLeftPanelButton(JButton button, int place, ImageIcon image) {
+    private void makeFullscreenButton() {
+        Dimension prefered = getPreferredSize();
+        fullscreenButton = new JButton();
+        fullscreenButton.setBackground(Color.WHITE);
+        fullscreenButton.setIcon(new ImageIcon("data//fullscreenIcon.png"));
+        fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        fullscreenButton.setFocusable(false);
+        fullscreenButton.setActionCommand("fullscreen");
+        fullscreenButton.setBounds((int) prefered.getWidth() - 70, (int) prefered.getHeight() - (int) prefered.getHeight() / 3 * 2, 39, 37);
+    }
 
-        button.setBackground(Color.WHITE);
-        button.setIcon(image);
-        button.setBorder(BorderFactory.createRaisedBevelBorder());
-        button.setFocusable(false);
-        button.setBounds(getWidth() - place, getHeight() - getHeight() / 3 * 2, 39, 37);
+
+    private void makeZoomOutButton() {
+        Dimension prefered = getPreferredSize();
+        zoomOutButton = new JButton();
+        zoomOutButton.setBackground(Color.WHITE);
+        zoomOutButton.setIcon(new ImageIcon("data//minusIcon.png"));
+        zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        zoomOutButton.setFocusable(false);
+        zoomOutButton.setActionCommand("zoomOut");
+        zoomOutButton.setBounds((int)prefered.getWidth()-115, (int) prefered.getHeight()- (int) prefered.getHeight()/3*2,39,37);
+    }
+
+    private void makeZoomInButton() {
+        Dimension prefered = getPreferredSize();
+        zoomInButton = new JButton();
+        zoomInButton.setBackground(Color.WHITE);
+        zoomInButton.setIcon(new ImageIcon("data//plusIcon.png"));
+        zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
+        zoomInButton.setFocusable(false);
+        zoomInButton.setActionCommand("zoomIn");
+        zoomInButton.setBounds((int)prefered.getWidth()-160, (int) prefered.getHeight()- (int) prefered.getHeight()/3*2,39,37);
     }
 
     private void makeSearchButton() {
+
         searchButton = new JButton();
         searchButton.setBorder(new CompoundBorder(
-                BorderFactory.createMatteBorder(4, 0, 4, 7, Drawable.lightblue),
+                BorderFactory.createMatteBorder(4, 0, 4, 7, DrawAttributes.lightblue),
                 BorderFactory.createRaisedBevelBorder()));
         searchButton.setBackground(new Color(36, 45, 50));
         searchButton.setIcon(new ImageIcon("data//searchIcon.png"));
         searchButton.setFocusable(false);
-        searchButton.setBounds(320, 20, 43, 37);
+        searchButton.setBounds(320,20,43,37);
         searchButton.setActionCommand("search");
     }
+
+    private void makeMaptypeMenu(){
+        Dimension prefered = getPreferredSize();
+
+        mapTypeMenu = new JComboBox<>();
+        mapTypeMenu.setEditable(false);
+
+        ImageIcon standardMapImage = new ImageIcon("data//standardMapImage.png");
+        ImageIcon colorblindMapImage = new ImageIcon("data//colorblindMapImage.png");
+        ImageIcon transportMapImage = new ImageIcon("data//transportMapImage.png");
+        mapNameMap.put(standardMapImage, "Standard");
+        mapNameMap.put(colorblindMapImage, "Colorblind map");
+        mapNameMap.put(transportMapImage, "Transport map");
+        mapTypeMenu.addItem(standardMapImage);
+        mapTypeMenu.addItem(colorblindMapImage);
+        mapTypeMenu.addItem(transportMapImage);
+        mapTypeMenu.setBorder(BorderFactory.createRaisedBevelBorder());
+        mapTypeMenu.setBounds((int)prefered.getWidth()-160,(int) (prefered.getHeight()-prefered.getHeight()/3*2-50),130,30);
+        mapTypeMenu.setBackground(Color.white);
+        mapTypeMenu.setFocusable(false);
+        mapTypeMenu.setActionCommand("maptype");
+        MapTypeBoxRenderer maptypeRend = new MapTypeBoxRenderer();
+        maptypeRend.setPreferredSize(new Dimension(300,50));
+        mapTypeMenu.setRenderer(maptypeRend);
+    }
+
+
+
+    class MapTypeBoxRenderer extends DefaultListCellRenderer {
+        public MapTypeBoxRenderer() {
+            setOpaque(false);
+        }
+        public Component getListCellRendererComponent( JList list, Object value,int index,boolean isSelected, boolean cellHasFocus ) {
+            super.getListCellRendererComponent(list, value, index,
+                    isSelected, cellHasFocus);
+
+            ImageIcon item = (ImageIcon)value;
+            String s = mapNameMap.get(value);
+
+            if (index == -1)
+            {
+                setText(s );
+                setIcon( null );
+            }
+            else if (isSelected) {
+                setText(s);
+                setIcon(null); }
+
+            else {
+                setText(s);
+                setIcon(item);
+            }
+
+            return this;
+        }
+
+    }
+
+    private void makeShowRoutePanelButton(){
+        showRoutePanelButton = new JButton("Route plan");
+        showRoutePanelButton.setFocusable(false);
+        showRoutePanelButton.setBackground(Color.WHITE);
+        showRoutePanelButton.setBounds(20,55,100,25);
+        showRoutePanelButton.setBorder(BorderFactory.createMatteBorder(4,1,1,1,Color.GRAY));
+        showRoutePanelButton.setActionCommand("showRoutePanel");
+
+    }
+
+    private void makeFindRoutePanel(){
+        findRoutePanel = new JPanel();
+        findRoutePanel.setVisible(false);
+        findRoutePanel.setBounds(20, 79, 342, 180);
+        findRoutePanel.setOpaque(true);
+        findRoutePanel.setBackground(Color.WHITE);
+        findRoutePanel.setBorder(new MatteBorder(1, 1, 1, 1, new Color(161, 161, 161)));
+        findRoutePanel.setLayout(new BorderLayout());
+
+        JPanel transportTypePanel = new JPanel();
+        transportTypePanel.setBackground(Color.WHITE);
+        transportTypePanel.setBounds(20, 60, 342, 50);
+        transportTypePanel.setLayout(new FlowLayout(FlowLayout.LEADING));
+        transportTypePanel.setBorder(new MatteBorder(0,0,1,0, new Color(161, 161, 161)));
+
+        carButton = new JButton("Car");
+        carButton.setFocusable(false);
+        carButton.setForeground(new Color(114, 114, 114));
+        carButton.setBackground(Color.WHITE);
+
+
+        bicycleButton = new JButton("Bicycle");
+        bicycleButton.setFocusable(false);
+        bicycleButton.setForeground(new Color(114, 114, 114));
+        bicycleButton.setBackground(Color.WHITE);
+
+
+        footButton = new JButton("By foot");
+        footButton.setFocusable(false);
+        footButton.setForeground(new Color(114, 114, 114));
+        footButton.setBackground(Color.WHITE);
+
+
+        transportTypePanel.add(carButton);
+        transportTypePanel.add(bicycleButton);
+        transportTypePanel.add(footButton);
+
+
+        makeStartEndAddressPanel();
+
+        findRoutePanel.add(startEndAddressPanel, BorderLayout.CENTER);
+        findRoutePanel.add(transportTypePanel, BorderLayout.NORTH);
+
+
+    }
+
+    private void makeStartEndAddressPanel(){
+        startEndAddressPanel = new JPanel();
+        startEndAddressPanel.setLayout(new GridBagLayout()); //A layout allowing you to customize grids moreso than a standard GridLayout.
+
+        GridBagConstraints c;
+
+        JLabel startIconLabel = new JLabel(new ImageIcon("data//startPointIcon.png"));
+        c = new GridBagConstraints();
+        c.fill= GridBagConstraints.NONE;
+        c.gridx = 0; //Which column the component should be in.
+        c.gridy = 0; //Which row the component should be in.
+        c.weightx = 0.15; //The weight amongst the elements in the row
+        c.weighty = 0.5; //The weight amongst the elements in the column.
+        startEndAddressPanel.add(startIconLabel,c);
+
+
+        startAddressField = new JTextField();
+        c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 0;
+        c.ipady = 15;
+        c.weightx = 0.85;
+        c.weighty = 0.5;
+        c.insets = new Insets(5,0,0,25); //Inset/distance from the right.
+        startEndAddressPanel.add(startAddressField,c);
+
+        JLabel endIconLabel = new JLabel(new ImageIcon("data//endPointIcon.png"));
+        c = new GridBagConstraints();
+        c.fill= GridBagConstraints.NONE;
+        c.gridx = 0;
+        c.gridy = 1;
+        c.weightx = 0.15;
+        c.weighty = 0.5;
+        c.anchor = GridBagConstraints.PAGE_START;
+        startEndAddressPanel.add(endIconLabel,c);
+
+        endAddressField = new JTextField();
+        c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 1;
+        c.gridy = 1;
+        c.ipady = 15;
+        c.weightx = 0.85;
+        c.weighty = 0.5;
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        c.insets = new Insets(0,0,0,25); //Inset/distance from the right
+        startEndAddressPanel.add(endAddressField,c);
+
+        findRouteButton = new JButton("Find route");
+        findRouteButton.setBackground(Color.WHITE);
+        findRouteButton.setFocusable(false);
+        findRouteButton.setActionCommand("findRoute");
+        c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.LAST_LINE_END; //Where the component is situated - in this case to the lower right corner.
+        //c.weighty = 0.1;
+        c.gridx = 1;
+        c.gridy = 2;
+        c.insets = new Insets(0,0,10,10);
+        startEndAddressPanel.add(findRouteButton,c);
+    }
+
+    public void showRoutePanel(){
+        boolean isVisible = findRoutePanel.isVisible();
+        findRoutePanel.setVisible(!isVisible);
+        canvas.repaint();
+    }
+
 
     @Override
     public void update(Observable obs, Object obj) {
@@ -191,23 +401,21 @@ public class View extends JFrame implements Observer {
     /**
      * The function of this method is to scale the view of the canvas by a factor given.
      * then pans the view to remove the moving towards 0,0 coord.
-     *
      * @param factor Double, the factor scaling
      */
     public void zoom(double factor) {
         //Check whether we zooming in or out for adjusting the zoomLvl field
-        if (factor > 1) zoomLevel += 0.0765;
+        if(factor > 1) zoomLevel += 0.0765;
         else zoomLevel -= 0.0765;
         //Scale the graphic and pan accordingly
         transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
-        pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
+        pan(getWidth() * (1-factor) / 2, getHeight() * (1-factor) / 2);
     }
 
     /**
      * Creates the inverse transformation of a point given.
      * It simply transforms a device space coordinate back
      * to user space coordinates.
-     *
      * @param p1 Point2D mouse position
      * @return Point2D The point after inverse of the scale.
      * @throws NoninvertibleTransformException
@@ -221,10 +429,9 @@ public class View extends JFrame implements Observer {
     /**
      * Zooms in on the canvas with the mouseWheel. Also translates (pans) towards
      * mouse point when zooming by using its Point2d.
-     *
      * @param e MouseWheelEvent
      */
-    public void wheelZoom(MouseWheelEvent e) {
+    public void wheelZoom(MouseWheelEvent e){
         try {
             int wheelRotation = e.getWheelRotation();
             Point p = e.getPoint();
@@ -258,7 +465,7 @@ public class View extends JFrame implements Observer {
      *
      * @param e MouseEvent
      */
-    public void mousePressed(MouseEvent e) {
+    public void mousePressed(MouseEvent e){
         dragStartScreen = e.getPoint();
         dragEndScreen = null;
     }
@@ -266,10 +473,9 @@ public class View extends JFrame implements Observer {
     /**
      * Moves the screen to where the mouse was dragged, using the transforms translate method with the
      * the difference dragged by the mouse.
-     *
      * @param e MouseEvent
      */
-    public void mouseDragged(MouseEvent e) {
+    public void mouseDragged(MouseEvent e){
         try {
             dragEndScreen = e.getPoint();
             //Create a point2d.float with the
@@ -292,12 +498,11 @@ public class View extends JFrame implements Observer {
 
     /**
      * Moves the canvas by a fixed amount using the Translate method.
-     *
      * @param dx
      * @param dy
      */
     public void pan(double dx, double dy) {
-        transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
+        transform.preConcatenate(AffineTransform.getTranslateInstance(dx,dy));
         repaint();
     }
 
@@ -312,8 +517,8 @@ public class View extends JFrame implements Observer {
     /**
      * Makes the view Frame fullscreen with help of a graphic device.
      */
-    public void toggleFullscreen() {
-        if (!isFullscreen) {
+    public void toggleFullscreen(){
+        if(!isFullscreen) {
             gd.setFullScreenWindow(this);
         } else {
             gd.setFullScreenWindow(null);
@@ -323,6 +528,7 @@ public class View extends JFrame implements Observer {
 
     /**
      * The canvas object is where our map of paths and images (points) will be drawn on
+     *
      */
     class Canvas extends JComponent {
         public static final long serialVersionUID = 4;
@@ -337,20 +543,24 @@ public class View extends JFrame implements Observer {
 
             g.setStroke(min_value); //Just for good measure.
             g.setColor(Color.BLACK);
-            //Drawing everything not categorized as a area or line object.
+
+
+            /*//Drawing everything not categorized as a area or line object.
             for (Shape line : model) {
                 g.draw(line);
-            }
+            }*/
+
+
             //Draw EVERYTHING
-            for (Drawable drawable : model.getDrawables()) {
+            for (MapFeature drawable : model.getMapFeatures()) {
                 if (zoomLevel > -0.4)
                     drawable.drawBoundary(g);
             }
 
 
-            for (Drawable drawable : model.getDrawables()) {
-                if (drawable.getDrawLevel() < zoomLevel)
-                    drawable.draw(g);
+            for (MapFeature mapFeature : model.getMapFeatures()) {
+                if (zoomLevel > mapFeature.getZoom_level() )
+                    mapFeature.drawStandard(g);
             }
 
             //Draws the icons.
@@ -358,7 +568,7 @@ public class View extends JFrame implements Observer {
                 for (MapIcon mapIcon : model.getMapIcons()) {
                     mapIcon.draw(g, transform);
                 }
-
+            }
 
                 // }
 /*
@@ -391,30 +601,12 @@ public class View extends JFrame implements Observer {
 			try {
 				System.out.println("Center: " + transform.inverseTransform(center, null));
 			} catch (NoninvertibleTransformException e) {} */
-            }
+            //}
         }
     }
 
-
     public Component getCanvas() {
         return canvas;
-    }
-
-    public AffineTransform getTransform() {
-        return transform;
-    }
-        
-
-    public Point getDragEndScreen() {
-        return dragEndScreen;
-    }
-
-    public Point getDragStartScreen() {
-        return dragStartScreen;
-    }
-
-    public double getZoomLevel() {
-        return zoomLevel;
     }
 
     public JTextField getSearchArea() {
@@ -437,8 +629,27 @@ public class View extends JFrame implements Observer {
         return fullscreenButton;
     }
 
-    public boolean isFullscreen() {
-        return isFullscreen;
+    public JButton getShowRoutePanelButton() { return showRoutePanelButton; }
+
+    public JButton getFindRouteButton() { return findRouteButton; }
+
+    public JPanel getFindRoutePanel() { return findRoutePanel; }
+
+    public JTextField getStartAddressField() { return startAddressField; }
+
+    public JTextField getEndAddressField() { return endAddressField; }
+
+    public JButton getCarButton() { return carButton; }
+
+    public JButton getBicycleButton() { return bicycleButton; }
+
+    public JButton getFootButton() { return footButton; }
+
+    public GraphicsDevice getGd() {
+        return gd;
+    }
+
+    public String getPromptText() {
+        return promptText;
     }
 }
-

@@ -17,6 +17,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         //Set up Handlers for mouse and keyboard and let controller set these for view.
         keyHandler kH = new keyHandler();
         view.getCanvas().addKeyListener(kH);
+        view.getSearchArea().addKeyListener(kH);
         MouseHandler mH = new MouseHandler();
         view.addMouseListener(mH);
         view.addMouseMotionListener(mH);
@@ -28,6 +29,11 @@ public class Controller extends MouseAdapter implements ActionListener {
         view.getZoomInButton().addActionListener(this);
         view.getZoomOutButton().addActionListener(this);
         view.getFullscreenButton().addActionListener(this);
+        view.getFindRouteButton().addActionListener(this);
+        view.getShowRoutePanelButton().addActionListener(this);
+        view.getCarButton().addActionListener(this);
+        view.getBicycleButton().addActionListener(this);
+        view.getFootButton().addActionListener(this);
     }
 
     @Override
@@ -39,15 +45,20 @@ public class Controller extends MouseAdapter implements ActionListener {
         if (command == "zoomIn") view.zoom(1.2);
         else if (command == "zoomOut") view.zoom(1/1.2);
         else if (command == "fullscreen") view.toggleFullscreen();
-        else if (command == "search"){
-            String input = view.getSearchArea().getText().trim().toLowerCase();
-            Address address = Address.parse(input);
-            //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
-            view.getCanvas().requestFocusInWindow();
-            model.searchForAddresses(address);
-        }
+        else if (command == "search") addressSearch();
         else if (command == "maptype");
+        else if (command == "showRoutePanel") view.showRoutePanel();
+        else if (command == "findRoute");
     }
+
+    private void addressSearch(){
+        String input = view.getSearchArea().getText().trim().toLowerCase();
+        Address address = Address.parse(input);
+        //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
+        view.getCanvas().requestFocusInWindow();
+        model.getOSMReader().searchForAddresses(address);
+    }
+
 
     // sets up events for mouse and calls the methods in view.
     private class MouseHandler extends MouseAdapter {
@@ -75,35 +86,42 @@ public class Controller extends MouseAdapter implements ActionListener {
          */
         public void keyPressed(KeyEvent e) {
             //Set up the keyboard handler for different keys.
-            switch (e.getKeyChar()) {
-                case '+':
-                    view.zoom(1.2);
-                    break;
-                case '-':
-                    view.zoom(1/1.2);
-                    break;
-                case 'a':
-                    view.toggleAA();
-                    break;
-                case 's':
-                    model.save("savegame.bin");
-                    break;
-                case 'l':
-                    model.load("savegame.bin");
-                    break;
+            if(!view.getSearchArea().hasFocus()) {
+                switch (e.getKeyChar()) {
+                    case '+':
+                        view.zoom(1.2);
+                        break;
+                    case '-':
+                        view.zoom(1 / 1.2);
+                        break;
+                    case 'a':
+                        view.toggleAA();
+                        break;
+                    case 's':
+                        model.saveBin("binaryModel.bin");
+                        break;
+                    case 'l':
+                        model.loadFile("binaryModel.bin");
+                        break;
+                }
+                if (e.getKeyCode() == KeyEvent.VK_UP) {
+                    view.pan(0, 10);
+                }
+                if (e.getKeyCode() == KeyEvent.VK_DOWN) {
+                    view.pan(0, -10);
+                }
+                if (e.getKeyCode() == KeyEvent.VK_LEFT) {
+                    view.pan(10, 0);
+                }
+                if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
+                    view.pan(-10, 0);
+                }
             }
-            if (e.getKeyCode() == KeyEvent.VK_UP) {
-                view.pan(0, 10);
+            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+                addressSearch();
             }
-            if (e.getKeyCode() == KeyEvent.VK_DOWN) {
-                view.pan(0, -10);
-            }
-            if (e.getKeyCode() == KeyEvent.VK_LEFT) {
-                view.pan(10, 0);
-            }
-            if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
-                view.pan(-10, 0);
-            }
+
+
 
         }
     }
