@@ -18,12 +18,16 @@ public class Landuse extends MapFeature {
     @Override
     public void setValueAttributes() {
         if(value.equals("cemetery")) setValueSpecs(DrawAttributes.whitegreen, -0.8);
-        else if(value.equals("construction")) setValueSpecs(DrawAttributes.lightgreen, -0.4);
+        else if(value.equals("construction")) setValueSpecs(DrawAttributes.pink, -0.4);
         else if(value.equals("grass")) setValueSpecs(DrawAttributes.whitegreen, -1.0);
         else if(value.equals("greenfield")) setValueSpecs(DrawAttributes.bluegreen, -.8);
         else if(value.equals("industrial")) setValueSpecs(DrawAttributes.bluegreen, -.8);
         else if(value.equals("orchard")) setValueSpecs(DrawAttributes.bluegreen, -.8);
         else if(value.equals("reservoir")) setValueSpecs(DrawAttributes.darkblue, -.8);
+        else if(value.equals("basin")) {
+            isArea = true;
+            setValueSpecs(DrawAttributes.whiteblue,-.8);
+        }
     }
 
     @Override

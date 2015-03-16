@@ -27,10 +27,15 @@ public class OSMHandler extends DefaultHandler {
     Path2D way; //<way> tag. A way is the path from one coordinate to another
     Long id;
     Point2D currentCoord; //current coordinate read
-    private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity; //controls how shapes should be added
+    private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity, isStart; //controls how shapes should be added
     private String name;
     private String streetName, houseNumber,cityName, postCode;
     private List<MapIcon> mapIcons = new ArrayList<>(); //contains all the icons to be drawn
+
+    private static List<Coastline> coastlines = new ArrayList<>();
+    private Point2D startPoint;
+    private Point2D endPoint;
+
     protected Rectangle2D bbox = new Rectangle2D.Double();
 
     public List<MapFeature> getMapFeatures() {
@@ -79,6 +84,12 @@ public class OSMHandler extends DefaultHandler {
             case "nd": {
                 long id = Long.parseLong(atts.getValue("ref"));
                 Point2D coord = map.get(id);
+
+                if(isStart){ //Saves startpoint (for use in coastlines)
+                    startPoint = coord;
+                    isStart = false;
+                }
+                 endPoint = coord;
                 if (coord == null) return;
                 coords.add(coord);
                 break;
@@ -88,6 +99,7 @@ public class OSMHandler extends DefaultHandler {
                 coords.clear();
                 isArea = false;
                 hasName = false;
+                isStart = true;
                 id = Long.parseLong(atts.getValue("id"));
                 break;
             case "bounds":
@@ -158,6 +170,8 @@ public class OSMHandler extends DefaultHandler {
                 //start of adding shapes from keys and values
                 if (kv_map.containsKey("natural")) { //##New key!
                     mapFeatures.add(new Natural(way, getLayer(), kv_map.get("natural")));
+                    String val = kv_map.get("natural");
+                    if (val.equals("coastline")) Coastline.processCoastlines(way, startPoint, endPoint);
 
                 } else if (kv_map.containsKey("waterway")) { //##New key!
                     mapFeatures.add(new Waterway(way, getLayer(), kv_map.get("waterway"), isArea));
@@ -333,6 +347,8 @@ public class OSMHandler extends DefaultHandler {
         Collections.sort(mapFeatures, comparator); //iterative mergesort. ~n*lg(n) comparisons
         //TODO Consider quicksort (3-way). Keep in mind duplicate keys are often encountered.
     }
+
+
 
 
     private int getLayer() {
