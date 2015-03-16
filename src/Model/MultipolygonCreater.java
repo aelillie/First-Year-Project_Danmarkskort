@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class MultipolygonCreater {
 
-
+    
     public static Path2D setUpMultipolygon(List<Long> refs, Map<Long, Path2D> relations) {
         Long ref = refs.get(0);
         if (relations.containsKey(ref)) {

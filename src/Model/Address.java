@@ -1,12 +1,14 @@
 package Model;
 
-import java.util.*;
-import java.util.regex.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 public class Address implements Comparable<Address> {
     private String street, house, floor, side, postcode, city;
     static private List<Pattern> patternList = new ArrayList<>();
-
+    private static List<Address> addressList = new ArrayList<>();
 
 
     private Address(String _street, String _house, String _floor, String _side, String _postcode, String _city) {
@@ -16,6 +18,16 @@ public class Address implements Comparable<Address> {
         side = _side;
         postcode = _postcode;
         city = _city;
+    }
+
+    public static Address newAddress(String streetName, String houseNumber, String postcode, String city ){
+        Builder b = new Builder();
+        b.street(streetName);
+        b.house(houseNumber);
+        b.postcode(postcode);
+        b.city(city);
+        return b.build();
+
     }
 
 
@@ -256,5 +268,11 @@ public class Address implements Comparable<Address> {
         }else {
             return b.build();
         }
+    }
+
+    public static Address newTown(String city){
+        Builder b = new Builder();
+        b.city(city);
+        return b.build();
     }
 }

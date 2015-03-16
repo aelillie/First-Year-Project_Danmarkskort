@@ -10,6 +10,7 @@ import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
 import java.util.zip.ZipInputStream;
@@ -18,6 +19,8 @@ public class Model extends Observable implements Serializable {
 
     private OSMHandler OSMReader = new OSMHandler();
     private static Model model = new Model();
+    private ArrayList<Address> addressList = new ArrayList<>(); //Contains all addresses to be sorted according to the compareTo method.
+
 
 
 
@@ -83,6 +86,11 @@ public class Model extends Observable implements Serializable {
             e.printStackTrace();
 
         }
+    }
+
+    public void searchForAddresses(Address address){
+        OSMReader.searchForAddressess(address);
+
     }
 
 
