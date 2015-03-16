@@ -24,7 +24,7 @@ public class OSMHandler extends DefaultHandler {
     Map<String, String> kv_map = new HashMap<>(); //relation between the keys and values in the XML file
     Map<String, String> layer_map = new HashMap<>();
     Map<Long, String> role_map = new HashMap<>(); //
-    List<Long> refs = new ArrayList<>();
+    List<Long> refs = new ArrayList<>(); //references
     List<Point2D> coords = new ArrayList<>(); //referenced coordinates
     Path2D way; //<way> tag. A way is the path from one coordinate to another
     Long id;
@@ -235,33 +235,21 @@ public class OSMHandler extends DefaultHandler {
                 if (kv_map.containsKey("type")) {
                     String val = kv_map.get("type");
                     if (val.equals("multipolygon")) {
-                        Long ref = refs.get(0);
-                        if (relations.containsKey(ref)) {
-                            Path2D path = relations.get(ref);
-                            for (int i = 1; i < refs.size(); i++) {
-                                ref = refs.get(i);
-                                if (relations.containsKey(ref)) {
-                                    Path2D element = relations.get(refs.get(i));
-                                    path.append(element, false);
-                                } else
-                                    System.out.println(ref + " ");
-                            }
-                            path.setWindingRule(Path2D.WIND_EVEN_ODD);
-                            if (kv_map.containsKey("building"))
-                                mapFeatures.add(new Multipolygon(path, getLayer(), "building"));
+                        Path2D path = MultipolygonCreater.setUpMultipolygon(refs, relations);
+                        if(path == null) return;
+                        if (kv_map.containsKey("building"))
+                            mapFeatures.add(new Multipolygon(path, getLayer(), "building"));
 
-                            if(kv_map.containsKey("place")){
-                                //TODO islets
+                        if(kv_map.containsKey("place")){
+                            //TODO islets
 
-                            }
-                            /*else if (kv_map.containsKey("natural"))
-                                drawables.add(new Model.Area(path, Model.Drawable.water, -1.5));*/
-                            //TODO How do draw harbor.
                         }
-
-                        //TODO look at busroute and so forth
+                        /*else if (kv_map.containsKey("natural"))
+                            drawables.add(new Model.Area(path, Model.Drawable.water, -1.5));*/
+                        //TODO How do draw harbor.
                     }
 
+                        //TODO look at busroute and so forth
                 }
 
                 break;
@@ -326,7 +314,7 @@ public class OSMHandler extends DefaultHandler {
 
             case "osm": //The end of the osm file
                 sortLayers();
-                Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
+                //Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
                 break;
 
         }

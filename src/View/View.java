@@ -52,7 +52,7 @@ public class View extends JFrame implements Observer {
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-        canvas.requestFocusInWindow();
+
         //This sets up a listener for when the frame is re-sized.
         this.getRootPane().addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
@@ -65,6 +65,7 @@ public class View extends JFrame implements Observer {
         });
 
         pack();
+        canvas.requestFocusInWindow();
         model.addObserver(this);
         zoomLevel = model.getBbox().getWidth() * -1;
     }
