@@ -7,19 +7,20 @@ import java.util.HashMap;
 /**
  * Created by Kevin on 17-03-2015.
  */
-public class MapMenu extends JComboBox {
+public class MapMenu extends JComboBox<Icon> {
 
     private HashMap<Icon, String> mapNameMap = new HashMap<>();
 
+    /**
+     * Sets up ComboBox with different types of maps.
+     */
     public MapMenu(){
-        loadImages();
-        setUpOptions();
-
-
+        loadImagesAndOptions();
+        initialize();
     }
 
 
-    private void setUpOptions(){
+    private void initialize(){
         Dimension prefered = getPreferredSize();
 
         setEditable(false);
@@ -34,7 +35,7 @@ public class MapMenu extends JComboBox {
         setRenderer(maptypeRend);
     }
 
-    private void loadImages(){
+    private void loadImagesAndOptions(){
         ImageIcon standardMapImage = new ImageIcon("data//standardMapImage.png");
         ImageIcon colorblindMapImage = new ImageIcon("data//colorblindMapImage.png");
         ImageIcon transportMapImage = new ImageIcon("data//transportMapImage.png");

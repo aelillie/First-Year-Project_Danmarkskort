@@ -16,6 +16,9 @@ public class RouteView extends JPanel{
     private JButton findRouteButton;
     private JButton carButton, bicycleButton, footButton;
 
+    /**
+     * Creates a panel used for getting a path from A to B in the program
+     */
     public RouteView(){
 
         setVisible(false);
@@ -131,6 +134,9 @@ public class RouteView extends JPanel{
         startEndAddressPanel.add(findRouteButton,c);
     }
 
+    /**
+     * Toggle the panel on and off
+     */
     public void showRoutePanel(){
         boolean isVisible = isVisible();
         setVisible(!isVisible);

@@ -12,7 +12,12 @@ import java.util.Map;
  */
 public class PathCreater {
 
-
+    /**
+     * Appends multiple Paths and sets the windingrule
+     * @param refs  List of references to Paths in hashmap
+     * @param relations Map of references to Paths
+     * @return  Path2D
+     */
     public static Path2D setUpMultipolygon(List<Long> refs, Map<Long, Path2D> relations) {
         Long ref = refs.get(0);
         if (relations.containsKey(ref)) {
@@ -34,6 +39,11 @@ public class PathCreater {
         return null;
     }
 
+    /**
+     * Creates a path2D from a list containing coordinates
+     * @param coords List of Point2D's
+     * @return  Path  The path connected by the Points
+     */
     public static Path2D setUpWay(List<Point2D> coords){
         Path2D way = new Path2D.Double();
         Point2D coord = coords.get(0);
