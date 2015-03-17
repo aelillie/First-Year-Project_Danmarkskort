@@ -7,14 +7,16 @@ import java.awt.*;
  */
 public class DrawAttribute {
 
-    public boolean dashed;
-    public int strokeId;
-    public Color color;
+    private boolean dashed;
+    private int strokeId;
+    private Color color;
+    private double zoomLevel;
 
-    public DrawAttribute(boolean dashed, int strokeId, Color color) {
+    public DrawAttribute(boolean dashed, int strokeId, Color color, double zoomLevel) {
         this.dashed = dashed;
         this.strokeId = strokeId;
         this.color = color;
+        this.zoomLevel = zoomLevel;
     }
 
     //Different predefined basicStrokes.
@@ -82,5 +84,21 @@ public class DrawAttribute {
     public static Stroke[] basicStrokes = new Stroke[]{s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11,s12, s13, s14, s15};
     public static Stroke[] dashedStrokes = new Stroke[] {d1, d2, d3, d4};
     public static Stroke[] streetStrokes = new Stroke[] {r00, r01, r02, r03, r04, r05, r06, r07, r08, r09, r10, r11};
+
+    public boolean isDashed() {
+        return dashed;
+    }
+
+    public int getStrokeId() {
+        return strokeId;
+    }
+
+    public Color getColor() {
+        return color;
+    }
+
+    public double getZoomLevel() {
+        return zoomLevel;
+    }
 }
 

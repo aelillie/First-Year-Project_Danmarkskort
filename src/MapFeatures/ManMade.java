@@ -1,5 +1,6 @@
 package MapFeatures;
 
+import Model.ValueName;
 import View.DrawAttribute;
 import Model.MapFeature;
 
@@ -16,7 +17,7 @@ public class ManMade extends MapFeature{
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(DrawAttribute.lightgrey, -1.0);
+        setValueSpecs(ValueName.MANMADE);
     }
 
 }

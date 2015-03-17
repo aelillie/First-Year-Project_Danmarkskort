@@ -1,5 +1,6 @@
 package MapFeatures;
 
+import Model.ValueName;
 import View.DrawAttribute;
 import Model.MapFeature;
 
@@ -25,29 +26,24 @@ public class Highway extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if (value.equals("motorway") || value.equals("motorway_link"))setLineSpecs(DrawAttribute.lightblue, -1.0, 5);
-        else if (value.equals("trunk") || value.equals("trunk_link")) setLineSpecs(DrawAttribute.lightgreen, -1.0, 3);
-        else if (value.equals("primary") || value.equals("primay_link")) setLineSpecs(DrawAttribute.babyred, -1.0, 4);
-        else if (value.equals("secondary") || value.equals("secondary_link")) setLineSpecs(DrawAttribute.lightred, -1.0, 3);
-        else if (value.equals("tertiary") || value.equals("tertiary_link")) setLineSpecs(DrawAttribute.lightyellow, -0.8, 3);
-        else if (value.equals("unclassified")) setLineSpecs(Color.WHITE, -0.8, 1);
-        else if (value.equals("residential")) setLineSpecs(Color.white, -1.0, 2);
-        else if (value.equals("service")) setLineSpecs(Color.white, -1.0, 2);
-        else if (value.equals("living_street")) setLineSpecs(DrawAttribute.grey, -1.0, 2);
-        else if (value.equals("pedestrian")) setLineSpecs(DrawAttribute.white, -0.5, 1);
-        else if (value.equals("track")) setValueDashedSpecs(DrawAttribute.brown, -0.4, 0);
-        else if (value.equals("bus_guideway")) setLineSpecs(DrawAttribute.darkblue, -0.4, 1);
-        else if (value.equals("raceway")) setLineSpecs(DrawAttribute.white, -0.4, 1);
-        else if (value.equals("road")) setLineSpecs(DrawAttribute.grey, -0.4, 1);
-        else if (value.equals("footway")) {
-            if(isArea) {
-                setValueSpecs(DrawAttribute.white, -0.5);
-            } else setValueDashedSpecs(DrawAttribute.red, -0.1, 0);
-        }
-        else if (value.equals("cycleway")) setValueDashedSpecs(DrawAttribute.lightblue, -0.18, 1);
-        else if (value.equals("bridleway")) setValueDashedSpecs(DrawAttribute.lightgreen, -0.1, 0);
-        else if (value.equals("steps")) setValueDashedSpecs(DrawAttribute.red, -0.1, 3);
-        else if (value.equals("path")) setValueDashedSpecs(DrawAttribute.red, -0.1, 0);
+        if (value.equals("motorway") || value.equals("motorway_link"))setValueSpecs(ValueName.MOTORWAY);
+        else if (value.equals("trunk") || value.equals("trunk_link")) setValueSpecs(ValueName.TRUNK);
+        else if (value.equals("primary") || value.equals("primay_link")) setValueSpecs(ValueName.PRIMARY);
+        else if (value.equals("secondary") || value.equals("secondary_link")) setValueSpecs(ValueName.SECONDARY);
+        else if (value.equals("tertiary") || value.equals("tertiary_link")) setValueSpecs(ValueName.TERTIARY);
+        else if (value.equals("unclassified")) setValueSpecs(ValueName.UNCLASSIFIED);
+        else if (value.equals("residential")) setValueSpecs(ValueName.RESIDENTIAL);
+        else if (value.equals("service")) setValueSpecs(ValueName.SERVICE);
+        else if (value.equals("living_street")) setValueSpecs(ValueName.LIVING_STREET);
+        else if (value.equals("pedestrian")) setValueSpecs(ValueName.PEDESTRIAN);
+        else if (value.equals("track")) setValueSpecs(ValueName.TRACK);
+        else if (value.equals("bus_guideway")) setValueSpecs(ValueName.BUS_GUIDEWAY);
+        else if (value.equals("road")) setValueSpecs(ValueName.ROAD);
+        else if (value.equals("footway")) setValueSpecs(ValueName.FOOTWAY); //TODO: FOOTWAY_LINE, FOOTWAY_AREA
+        else if (value.equals("cycleway")) setValueSpecs(ValueName.CYCLEWAY);
+        else if (value.equals("bridleway")) setValueSpecs(ValueName.BRIDLEWAY);
+        else if (value.equals("steps")) setValueSpecs(ValueName.STEPS);
+        else if (value.equals("path")) setValueSpecs(ValueName.PATH);
     }
 
 

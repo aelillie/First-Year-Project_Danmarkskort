@@ -562,8 +562,9 @@ public class View extends JFrame implements Observer {
 
 
             for (MapFeature mapFeature : model.getMapFeatures()) {
-                if (zoomLevel > mapFeature.getZoom_level() )
-                    mapFeature.draw(g, drawAttributeManager.getDrawAttribute(mapFeature.valueName));
+                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.valueName);
+                if (zoomLevel > drawAttribute.getZoomLevel())
+                    mapFeature.draw(g, drawAttribute);
             }
 
             //Draws the icons.

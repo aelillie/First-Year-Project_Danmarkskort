@@ -1,5 +1,6 @@
 package MapFeatures;
 
+import Model.ValueName;
 import View.DrawAttribute;
 import Model.MapFeature;
 
@@ -17,7 +18,7 @@ public class Route extends MapFeature{
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(DrawAttribute.white, -2.0);
+        setValueSpecs(ValueName.ROUTE);
     }
 
 }

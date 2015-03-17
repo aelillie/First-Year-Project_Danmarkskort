@@ -1,5 +1,6 @@
 package MapFeatures;
 
+import Model.ValueName;
 import View.DrawAttribute;
 import Model.MapFeature;
 
@@ -17,7 +18,7 @@ public class Craft extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(DrawAttribute.lightgrey, -.8);
+        setValueSpecs(ValueName.CRAFT);
     }
 
 }

@@ -9,7 +9,6 @@ public abstract class MapFeature implements Serializable {
     protected Shape way;
     protected int layer_value;
     protected String value;
-    protected double zoom_level;
     protected boolean isArea = false;
     public ValueName valueName;
 
@@ -21,9 +20,8 @@ public abstract class MapFeature implements Serializable {
 
     public abstract void setValueAttributes();
 
-    public void setValueSpecs(ValueName valueName, double zoom_level) {
+    public void setValueSpecs(ValueName valueName) {
         this.valueName = valueName;
-        this.zoom_level = zoom_level;
     }
 
     /*
@@ -66,15 +64,9 @@ public abstract class MapFeature implements Serializable {
         }
     }
 
-    public double getZoom_level(){
-        return zoom_level;
-    }
-
     public int getLayerVal() {
         return layer_value;
     }
 
-    public void setZoom_level(double zoom_level) {
-        this.zoom_level = zoom_level;
-    }
+
 }

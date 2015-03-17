@@ -1,6 +1,7 @@
 package MapFeatures;
 
 import Model.MapFeature;
+import Model.ValueName;
 
 import java.awt.*;
 
@@ -16,7 +17,7 @@ public class Boundary extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueDashedSpecs(Color.white, 2.0, 0);
+        setValueSpecs(ValueName.BOUNDARY);
     }
 
 }

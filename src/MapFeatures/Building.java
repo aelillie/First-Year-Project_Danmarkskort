@@ -1,5 +1,6 @@
 package MapFeatures;
 
+import Model.ValueName;
 import View.DrawAttribute;
 import Model.MapFeature;
 
@@ -18,7 +19,7 @@ public class Building extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(DrawAttribute.lightgrey, -.5);
+        setValueSpecs(ValueName.BUILDING);
     }
 
 }
