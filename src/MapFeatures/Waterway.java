@@ -1,5 +1,6 @@
 package MapFeatures;
 
+import Model.DefaultView;
 import Model.MapFeature;
 
 import java.awt.*;
