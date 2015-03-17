@@ -67,7 +67,7 @@ public class View extends JFrame implements Observer {
         pack();
         canvas.requestFocusInWindow();
         model.addObserver(this);
-        zoomLevel = model.getBbox().getWidth() * -1;
+
     }
 
     /**
@@ -89,7 +89,7 @@ public class View extends JFrame implements Observer {
         double scale = max(xscale, yscale);
         transform.scale(.56 * scale, -scale);
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
-
+        zoomLevel = model.getBbox().getWidth() * -1;
         //Set up the JFrame using the monitors resolution.
         setSize(screenSize); //screenSize
         setPreferredSize(new Dimension(800, 600)); //screenSize
@@ -427,13 +427,12 @@ public class View extends JFrame implements Observer {
                     drawable.drawBoundary(g);
             }
 
-
-            for (MapFeature mapFeature : model.getMapFeatures()) {
-                if (zoomLevel > mapFeature.getZoom_level())
-                    mapFeature.drawStandard(g);
+            for (MapFeature drawable : model.getMapFeatures()) {
+                if (zoomLevel > drawable.getZoom_level())
+                    drawable.drawStandard(g);
             }
-
             //Draws the icons.
+
             if (zoomLevel > 0.0) {
                 for (MapIcon mapIcon : model.getMapIcons()) {
                     mapIcon.draw(g, transform);

@@ -8,8 +8,7 @@ import java.awt.event.*;
 public class Controller extends MouseAdapter implements ActionListener {
     Model model;
     View view;
-    double x;
-    double y;
+
 
     public Controller(Model m, View v) {
         model = m;
@@ -114,7 +113,7 @@ public class Controller extends MouseAdapter implements ActionListener {
                     view.pan(-10, 0);
                 }
             }
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                 addressSearch();
             }
 

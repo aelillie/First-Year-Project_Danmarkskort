@@ -15,6 +15,7 @@ import java.util.List;
 import java.util.Observable;
 import java.util.zip.ZipInputStream;
 
+
 public class Model extends Observable implements Serializable {
 
     private OSMHandler OSMReader = new OSMHandler();
@@ -59,10 +60,13 @@ public class Model extends Observable implements Serializable {
             XMLReader reader = XMLReaderFactory.createXMLReader();
             reader.setContentHandler(OSMReader);
             reader.parse(new InputSource(zip));
+            zip.close();
         } catch (SAXException | IOException e) {
             throw new RuntimeException(e);
         }
     }
+
+
 
     private void loadBinary(String filename) {
 

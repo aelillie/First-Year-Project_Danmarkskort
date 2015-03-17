@@ -30,6 +30,12 @@ public class Address implements Comparable<Address> {
 
     }
 
+    public static Address newTown(String city){
+        Builder b = new Builder();
+        b.city(city);
+        return b.build();
+    }
+
 
     /**
      * Specifies the string representation of an address object.
@@ -270,9 +276,5 @@ public class Address implements Comparable<Address> {
         }
     }
 
-    public static Address newTown(String city){
-        Builder b = new Builder();
-        b.city(city);
-        return b.build();
-    }
+
 }

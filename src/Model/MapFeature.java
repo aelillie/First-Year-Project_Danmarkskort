@@ -2,8 +2,6 @@ package Model;
 
 import java.awt.*;
 import java.io.Serializable;
-import java.util.HashMap;
-import java.util.Map;
 
 public abstract class MapFeature implements Colorblind, Standard, Serializable {
     protected Shape way;

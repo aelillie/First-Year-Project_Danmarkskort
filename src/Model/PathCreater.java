@@ -1,13 +1,14 @@
 package Model;
 
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Map;
 
 /**
  * Created by Kevin on 16-03-2015.
  */
-public class MultipolygonCreater {
+public class PathCreater {
 
 
     public static Path2D setUpMultipolygon(List<Long> refs, Map<Long, Path2D> relations) {
@@ -29,5 +30,16 @@ public class MultipolygonCreater {
 
         }
         return null;
+    }
+
+    public static Path2D setUpWay(List<Point2D> coords){
+        Path2D way = new Path2D.Double();
+        Point2D coord = coords.get(0);
+        way.moveTo(coord.getX(), coord.getY());
+        for (int i = 1; i < coords.size(); i++) {
+            coord = coords.get(i);
+            way.lineTo(coord.getX(), coord.getY());
+        }
+        return way;
     }
 }

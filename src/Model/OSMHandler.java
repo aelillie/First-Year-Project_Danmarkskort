@@ -164,14 +164,7 @@ public class OSMHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) {
         switch (qName) {
             case "way": //TODO: insert way names into the addresslist aswelll
-                way = new Path2D.Double();
-                Point2D coord = coords.get(0);
-                way.moveTo(coord.getX(), coord.getY());
-                for (int i = 1; i < coords.size(); i++) {
-                    coord = coords.get(i);
-                    way.lineTo(coord.getX(), coord.getY());
-                }
-                relations.put(id, way);
+                way = PathCreater.setUpWay(coords);
 
                 //start of adding shapes from keys and values
 
@@ -240,6 +233,7 @@ public class OSMHandler extends DefaultHandler {
                 } else if (keyValue_map.containsKey("route")) { //##New key!
                     mapFeatures.add(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
                 }
+                relations.put(id, way);
 
                 break;
 
@@ -247,30 +241,7 @@ public class OSMHandler extends DefaultHandler {
                 if (keyValue_map.containsKey("type")) {
                     String val = keyValue_map.get("type");
                     if (val.equals("multipolygon")) {
-                        Long ref = refs.get(0);
-                        if (relations.containsKey(ref)) {
-                            Path2D path = relations.get(ref);
-                            for (int i = 1; i < refs.size(); i++) {
-                                ref = refs.get(i);
-                                if (relations.containsKey(ref)) {
-                                    Path2D element = relations.get(refs.get(i));
-                                    path.append(element, false);
-                                } else
-                                    System.out.println(ref + " ");
-                            }
-                            path.setWindingRule(Path2D.WIND_EVEN_ODD);
-                            if (keyValue_map.containsKey("building"))
-                                mapFeatures.add(new Multipolygon(path, fetchOSMLayer(), "building"));
-
-                            if(keyValue_map.containsKey("place")){
-                                //TODO islets
-
-                            }
-                            /*else if (keyValue_map.containsKey("natural"))
-                                drawables.add(new Model.Area(path, Model.Drawable.water, -1.5));*/
-                            //TODO How do draw harbor.
-                        }
-                        Path2D path = MultipolygonCreater.setUpMultipolygon(refs, relations);
+                        Path2D path = PathCreater.setUpMultipolygon(refs, relations);
                         if(path == null) return;
                         if (keyValue_map.containsKey("building"))
                             mapFeatures.add(new Multipolygon(path, fetchOSMLayer(), "building"));
@@ -301,12 +272,12 @@ public class OSMHandler extends DefaultHandler {
                         if (isMetro) mapIcons.add(new MapIcon(currentCoord, "data//metroIcon.png"));
                         else if (isSTog) mapIcons.add(new MapIcon(currentCoord, "data//stogIcon.png"));
                     }
-                } else if(keyValue_map.containsKey("name")) {
+                }/* else if(keyValue_map.containsKey("name")) {
                     String name = keyValue_map.get("name");
                     if(keyValue_map.containsKey("place")){
                         String place = keyValue_map.get("place");
                         name = name.toLowerCase();
-                        Address addr = Address.newTown(name); //Parse places like addresses - they only have a name. Examples: Roskilde, Slotsholmskanelen, Vindinge.
+                        Address addr = Address.newTown(name);
                         //System.out.println(name);
                         if(place.equals("town")){
                             addressMap.put(addr,currentCoord);
@@ -317,7 +288,7 @@ public class OSMHandler extends DefaultHandler {
                         } else if (place.equals("suburb")){
 
                         }/* else if (place.equals("surburb")){
->>>>>>> f22e1ce3767717fe30b2495136cc5b01c8b466ac
+
                             addressMap.put(addr,currentCoord);
                             addressList.add(addr);
                         } else if (place.equals("locality")) {
@@ -326,7 +297,7 @@ public class OSMHandler extends DefaultHandler {
                         } else if (place.equals("neighbourhood")){
                             addressMap.put(addr,currentCoord);
                             addressList.add(addr);
-                        }*/
+                        }
                     }
 
                 } else if (keyValue_map.containsKey("addr:street")){
@@ -337,7 +308,7 @@ public class OSMHandler extends DefaultHandler {
                         addressMap.put(addr, currentCoord);
                         addressList.add(addr);
                     }
-                }
+                }*/
 
 
 
