@@ -1,6 +1,6 @@
 package MapFeatures;
 
-import Model.DrawAttributes;
+import View.DrawAttribute;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -21,11 +21,11 @@ public class Barrier extends MapFeature{
     @Override
     public void setValueAttributes() {
         if(value.equals("hence")) {
-            if(isArea) setLineSpecs(DrawAttributes.neongreen, -0.5, 0);
-            else setValueSpecs(DrawAttributes.neongreen, -0.5);
+            if(isArea) setLineSpecs(DrawAttribute.neongreen, -0.5, 0);
+            else setValueSpecs(DrawAttribute.neongreen, -0.5);
         }
-        if(value.equals("fence")) setValueSpecs(DrawAttributes.neongreen, -0.5);
-        if(value.equals("kerb")) setLineSpecs(DrawAttributes.bluegreen, -0.5, 0);
+        if(value.equals("fence")) setValueSpecs(DrawAttribute.neongreen, -0.5);
+        if(value.equals("kerb")) setLineSpecs(DrawAttribute.bluegreen, -0.5, 0);
 
     }
 

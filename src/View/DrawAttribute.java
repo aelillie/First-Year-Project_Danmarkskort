@@ -1,11 +1,21 @@
-package Model;
+package View;
 
 import java.awt.*;
 
 /**
  * Helper class, which only contains predefined strokes and colors.
  */
-public abstract class DrawAttributes {
+public class DrawAttribute {
+
+    public boolean dashed;
+    public int strokeId;
+    public Color color;
+
+    public DrawAttribute(boolean dashed, int strokeId, Color color) {
+        this.dashed = dashed;
+        this.strokeId = strokeId;
+        this.color = color;
+    }
 
     //Different predefined basicStrokes.
     public static Stroke s00 = new BasicStroke(Float.MIN_VALUE);
@@ -67,10 +77,10 @@ public abstract class DrawAttributes {
     public static Color whitegreen = new Color(144,238,144);
     public static Color brown = new Color(139,69,19);
 
-
+    public static Color[] colors = new Color[] {lightblue, lightgreen, darkgreen, lightyellow, darkblue, lightgrey, neongreen, babyred, lightred,
+                                                grey, white, bloodred, red, skincolor, bluegreen, orange, pink, sand, whiteblue, greenblue, whitegreen, brown};
     public static Stroke[] basicStrokes = new Stroke[]{s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11,s12, s13, s14, s15};
     public static Stroke[] dashedStrokes = new Stroke[] {d1, d2, d3, d4};
     public static Stroke[] streetStrokes = new Stroke[] {r00, r01, r02, r03, r04, r05, r06, r07, r08, r09, r10, r11};
-
 }
 

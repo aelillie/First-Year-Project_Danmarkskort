@@ -1,35 +1,32 @@
 package Model;
 
+import View.DrawAttribute;
+
 import java.awt.*;
 import java.io.Serializable;
 
 public abstract class MapFeature implements Serializable {
     protected Shape way;
     protected int layer_value;
-    protected Color color;
-    protected double zoom_level;
-    protected int stroke_id;
-    protected boolean dashed = false;
     protected String value;
+    protected double zoom_level;
     protected boolean isArea = false;
+    public ValueName valueName;
 
     public MapFeature(Shape way, int layer_value, String value) {
         this.way = way;
-        if (layer_value == 0) setDefault();//do nothing. Apply value-specified layer_val.
-        else this.layer_value = layer_value;
+        this.layer_value = layer_value;
         this.value = value;
-
     }
 
-    private void setDefault() {
-        //do nothing
-    }
+    public abstract void setValueAttributes();
 
-    public void setValueSpecs(Color color, double zoom_level) {
-        this.color = color;
+    public void setValueSpecs(ValueName valueName, double zoom_level) {
+        this.valueName = valueName;
         this.zoom_level = zoom_level;
     }
 
+    /*
     public void setLineSpecs(Color color, double zoom_level, int stroke_id) {
         setValueSpecs(color, zoom_level);
         this.stroke_id = stroke_id;
@@ -39,33 +36,32 @@ public abstract class MapFeature implements Serializable {
         setLineSpecs(color, zoom_level, stroke_id);
         dashed = true;
     }
-    public abstract void setValueAttributes();
+    */
 
 
-    public void drawBoundary(Graphics2D g) {
-        if(!isArea) {
-            if(!dashed) {
-                g.setStroke(DrawAttributes.streetStrokes[stroke_id + 1]);
+        public void drawBoundary(Graphics2D g, DrawAttribute drawAttribute) {
+            if(!isArea) {
+            if(!drawAttribute.dashed) {
+                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.strokeId + 1]);
                 g.setColor(Color.BLACK);
                 g.draw(way);
             }
         } else {
-            g.setStroke(DrawAttributes.basicStrokes[1]);
+            g.setStroke(DrawAttribute.basicStrokes[1]);
             g.setColor(Color.BLACK);
             g.draw(way);
         }
 
     }
 
-    public void draw(Graphics2D g) {
-        if(color == null) return;
+    public void draw(Graphics2D g, DrawAttribute drawAttribute) {
         if (isArea) {
-            g.setColor(color);
+            g.setColor(drawAttribute.color);
             g.fill(way);
         } else {
-            if (dashed) g.setStroke(DrawAttributes.dashedStrokes[stroke_id]);
-            else g.setStroke(DrawAttributes.streetStrokes[stroke_id]);
-            g.setColor(color);
+            if (drawAttribute.dashed) g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.strokeId]);
+            else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.strokeId]);
+            g.setColor(drawAttribute.color);
             g.draw(way);
         }
     }
@@ -76,5 +72,9 @@ public abstract class MapFeature implements Serializable {
 
     public int getLayerVal() {
         return layer_value;
+    }
+
+    public void setZoom_level(double zoom_level) {
+        this.zoom_level = zoom_level;
     }
 }

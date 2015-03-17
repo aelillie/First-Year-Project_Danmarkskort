@@ -19,7 +19,6 @@ import static java.lang.Math.max;
 public class View extends JFrame implements Observer {
     public static final long serialVersionUID = 0;
     private Model model;
-    private Factory factory;
     private Canvas canvas;
     private AffineTransform transform = new AffineTransform();
     private boolean antialias = true;
@@ -33,7 +32,7 @@ public class View extends JFrame implements Observer {
     private HashMap<Icon, String> mapNameMap = new HashMap<>();
     private boolean isFullscreen = false;
     private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-
+    private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
     private String promptText = "Enter Address";
 
     /**
@@ -65,12 +64,9 @@ public class View extends JFrame implements Observer {
         });
         model.addObserver(this);
         zoomLevel = model.getBbox().getWidth() * -1;
-        setFactory(new DefaultFactory());
+
     }
 
-    public void setFactory(Factory factory) {
-        this.factory = factory;
-    }
 
     /**
      * Sets the scale for the afflineTransform object using to bounds from the osm file
@@ -156,7 +152,7 @@ public class View extends JFrame implements Observer {
 
         //Create The buttons and configure their visual design.
         searchArea.setFont(font);
-        searchArea.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 7, 4, 7, DrawAttributes.lightblue), BorderFactory.createRaisedBevelBorder()));
+        searchArea.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 7, 4, 7, DrawAttribute.lightblue), BorderFactory.createRaisedBevelBorder()));
         searchArea.setBounds(20,20,300,37);
 
         makeSearchButton();
@@ -206,7 +202,7 @@ public class View extends JFrame implements Observer {
 
         searchButton = new JButton();
         searchButton.setBorder(new CompoundBorder(
-                BorderFactory.createMatteBorder(4, 0, 4, 7, DrawAttributes.lightblue),
+                BorderFactory.createMatteBorder(4, 0, 4, 7, DrawAttribute.lightblue),
                 BorderFactory.createRaisedBevelBorder()));
         searchButton.setBackground(new Color(36, 45, 50));
         searchButton.setIcon(new ImageIcon("data//searchIcon.png"));
@@ -531,6 +527,7 @@ public class View extends JFrame implements Observer {
         isFullscreen = !isFullscreen;
     }
 
+
     /**
      * The canvas object is where our map of paths and images (points) will be drawn on
      *
@@ -557,16 +554,16 @@ public class View extends JFrame implements Observer {
 
 
             //Draw EVERYTHING
-            for (MapFeature drawable : model.getMapFeatures()) {
+            for (MapFeature mapFeature : model.getMapFeatures()) {
                 if (zoomLevel > -0.4)
-                    drawable.drawBoundary(g);
+                    mapFeature.drawBoundary(g, drawAttributeManager.getDrawAttribute(mapFeature.valueName));
             }
 
-            factory.setColorScheme();
+
 
             for (MapFeature mapFeature : model.getMapFeatures()) {
                 if (zoomLevel > mapFeature.getZoom_level() )
-                    mapFeature.draw(g);
+                    mapFeature.draw(g, drawAttributeManager.getDrawAttribute(mapFeature.valueName));
             }
 
             //Draws the icons.

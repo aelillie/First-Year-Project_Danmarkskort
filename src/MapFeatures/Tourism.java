@@ -1,6 +1,7 @@
 package MapFeatures;
 
-import Model.DrawAttributes;
+import Model.ValueName;
+import View.DrawAttribute;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -17,7 +18,7 @@ public class Tourism extends MapFeature{
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(DrawAttributes.lightgrey, -1.0);
+        setValueSpecs(ValueName.TOURISM, -1.0);
 
     }
 

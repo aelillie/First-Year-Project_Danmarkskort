@@ -1,6 +1,6 @@
 package MapFeatures;
 
-import Model.DrawAttributes;
+import View.DrawAttribute;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -19,8 +19,8 @@ public class Amenity extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("parking")) setValueSpecs(DrawAttributes.sand, -1.0);
-        else if(value.equals("university") && isBuilding )setValueSpecs(DrawAttributes.lightgrey, -1.0);
+        if(value.equals("parking")) setValueSpecs(DrawAttribute.sand, -1.0);
+        else if(value.equals("university") && isBuilding )setValueSpecs(DrawAttribute.lightgrey, -1.0);
         //TODO: Does not work. in newSmall the university is not drawn because it is not said to be building
     }
 
