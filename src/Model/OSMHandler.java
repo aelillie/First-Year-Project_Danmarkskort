@@ -165,7 +165,6 @@ public class OSMHandler extends DefaultHandler {
         switch (qName) {
             case "way": //TODO: insert way names into the addresslist aswelll
                 way = PathCreater.setUpWay(coords);
-
                 //start of adding shapes from keys and values
 
                 if (keyValue_map.containsKey("natural")) { //##New key!
@@ -272,7 +271,7 @@ public class OSMHandler extends DefaultHandler {
                         if (isMetro) mapIcons.add(new MapIcon(currentCoord, "data//metroIcon.png"));
                         else if (isSTog) mapIcons.add(new MapIcon(currentCoord, "data//stogIcon.png"));
                     }
-                }/* else if(keyValue_map.containsKey("name")) {
+                } else if(keyValue_map.containsKey("name")) {
                     String name = keyValue_map.get("name");
                     if(keyValue_map.containsKey("place")){
                         String place = keyValue_map.get("place");
@@ -297,7 +296,7 @@ public class OSMHandler extends DefaultHandler {
                         } else if (place.equals("neighbourhood")){
                             addressMap.put(addr,currentCoord);
                             addressList.add(addr);
-                        }
+                        }*/
                     }
 
                 } else if (keyValue_map.containsKey("addr:street")){
@@ -308,7 +307,7 @@ public class OSMHandler extends DefaultHandler {
                         addressMap.put(addr, currentCoord);
                         addressList.add(addr);
                     }
-                }*/
+                }
 
 
 
