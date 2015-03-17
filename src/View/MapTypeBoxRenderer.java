@@ -2,16 +2,17 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
+import java.util.Map;
 
 /**
  * Created by Kevin on 16-03-2015.
  */
 class MapTypeBoxRenderer extends DefaultListCellRenderer {
-    private View v;
+    private Map<Icon, String> map;
 
 
-    public MapTypeBoxRenderer(View v) {
-        this.v = v;
+    public MapTypeBoxRenderer(Map<Icon, String> map) {
+        this.map = map;
         setOpaque(false);
     }
 
@@ -21,7 +22,7 @@ class MapTypeBoxRenderer extends DefaultListCellRenderer {
                 isSelected, cellHasFocus);
 
         ImageIcon item = (ImageIcon)value;
-        String s = v.getMapNameMap().get(value);
+        String s = map.get(value);
 
         if (index == -1)
         {

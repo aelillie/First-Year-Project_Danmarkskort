@@ -12,7 +12,6 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.util.HashMap;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -28,11 +27,12 @@ public class View extends JFrame implements Observer {
     private double zoomLevel;
     private JTextField searchArea;
     private JButton searchButton, zoomInButton, zoomOutButton, fullscreenButton, showRoutePanelButton;
+    private JComboBox<Icon> mapMenu;
     private RouteView routePanel = new RouteView();
     private boolean isFullscreen = false;
     private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-    private JComboBox<Icon> mapTypeMenu;
-    private HashMap<Icon, String> mapNameMap = new HashMap<>();
+
+
 
     private String promptText = "Enter Address";
 
@@ -60,7 +60,7 @@ public class View extends JFrame implements Observer {
                 zoomOutButton.setBounds(getWidth() - 115, getHeight() - getHeight() / 3 * 2, 39, 37);
                 fullscreenButton.setBounds(getWidth() - 70, getHeight() - getHeight() / 3 * 2, 39, 37);
                 zoomInButton.setBounds(getWidth() - 160, getHeight() - getHeight() / 3 * 2, 39, 37);
-                mapTypeMenu.setBounds(getWidth() - 160, getHeight() - getHeight() / 3 * 2 - 50, 130, 30);
+                mapMenu.setBounds(getWidth() - 160, getHeight() - getHeight() / 3 * 2 - 50, 130, 30);
             }
         });
 
@@ -146,7 +146,7 @@ public class View extends JFrame implements Observer {
         layer.add(zoomInButton, new Integer(2));
         layer.add(zoomOutButton, new Integer(2));
         layer.add(fullscreenButton, new Integer(2));
-        layer.add(mapTypeMenu, new Integer(2));
+        layer.add(mapMenu, new Integer(2));
         layer.add(showRoutePanelButton, new Integer(2));
         layer.add(routePanel, new Integer(2));
 
@@ -168,6 +168,9 @@ public class View extends JFrame implements Observer {
         makeMaptypeMenu();
     }
 
+    private void makeMaptypeMenu() {
+        mapMenu = new MapMenu();
+    }
 
     private void makeShowRoutePanelButton() {
         showRoutePanelButton = new JButton("Route plan");
@@ -177,36 +180,6 @@ public class View extends JFrame implements Observer {
         showRoutePanelButton.setBorder(BorderFactory.createMatteBorder(4, 1, 1, 1, Color.GRAY));
         showRoutePanelButton.setActionCommand("showRoutePanel");
 
-    }
-
-    public void showRoutePanel() {
-        routePanel.showRoutePanel();
-        canvas.repaint();
-    }
-
-    private void makeMaptypeMenu() {
-        Dimension prefered = getPreferredSize();
-
-        mapTypeMenu = new JComboBox<>();
-        mapTypeMenu.setEditable(false);
-
-        ImageIcon standardMapImage = new ImageIcon("data//standardMapImage.png");
-        ImageIcon colorblindMapImage = new ImageIcon("data//colorblindMapImage.png");
-        ImageIcon transportMapImage = new ImageIcon("data//transportMapImage.png");
-        mapNameMap.put(standardMapImage, "Standard");
-        mapNameMap.put(colorblindMapImage, "Colorblind map");
-        mapNameMap.put(transportMapImage, "Transport map");
-        mapTypeMenu.addItem(standardMapImage);
-        mapTypeMenu.addItem(colorblindMapImage);
-        mapTypeMenu.addItem(transportMapImage);
-        mapTypeMenu.setBorder(BorderFactory.createRaisedBevelBorder());
-        mapTypeMenu.setBounds((int) prefered.getWidth() - 160, (int) (prefered.getHeight() - prefered.getHeight() / 3 * 2 - 50), 130, 30);
-        mapTypeMenu.setBackground(Color.white);
-        mapTypeMenu.setFocusable(false);
-        mapTypeMenu.setActionCommand("maptype");
-        MapTypeBoxRenderer maptypeRend = new MapTypeBoxRenderer(this);
-        maptypeRend.setPreferredSize(new Dimension(300, 50));
-        mapTypeMenu.setRenderer(maptypeRend);
     }
 
 
@@ -220,7 +193,6 @@ public class View extends JFrame implements Observer {
         fullscreenButton.setActionCommand("fullscreen");
         fullscreenButton.setBounds((int) prefered.getWidth() - 70, (int) prefered.getHeight() - (int) prefered.getHeight() / 3 * 2, 39, 37);
     }
-
 
     private void makeZoomOutButton() {
         Dimension prefered = getPreferredSize();
@@ -257,6 +229,10 @@ public class View extends JFrame implements Observer {
         searchButton.setActionCommand("search");
     }
 
+    public void showRoutePanel() {
+        routePanel.showRoutePanel();
+        canvas.repaint();
+    }
 
     @Override
     public void update(Observable obs, Object obj) {
@@ -496,10 +472,6 @@ public class View extends JFrame implements Observer {
 
     public JButton getFullscreenButton() {
         return fullscreenButton;
-    }
-
-    public HashMap<Icon, String> getMapNameMap() {
-        return mapNameMap;
     }
 
     public JButton getShowRoutePanelButton() {
