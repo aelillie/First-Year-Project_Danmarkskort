@@ -1,6 +1,7 @@
 package MapFeatures;
 
-import Model.DrawAttributes;
+import Model.ValueName;
+import View.DrawAttribute;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -19,25 +20,12 @@ public class Leisure extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("garden"))setValueSpecs(DrawAttributes.whitegreen, -1.2);
-        else if (value.equals("common")) setValueSpecs(DrawAttributes.neongreen, -1.2);
-        else if(value.equals("park")) setValueSpecs(DrawAttributes.whitegreen, -1.0);
-        else if(value.equals("pitch")) setValueSpecs(DrawAttributes.greenblue,-1.0);
-        else if(value.equals("playground")) setValueSpecs(DrawAttributes.bluegreen,-1.0);
+        if(value.equals("garden"))setValueSpecs(ValueName.GARDEN);
+        else if (value.equals("common")) setValueSpecs(ValueName.COMMON);
+        else if(value.equals("park")) setValueSpecs(ValueName.PARK);
+        else if(value.equals("pitch")) setValueSpecs(ValueName.PITCH);
+        else if(value.equals("playground")) setValueSpecs(ValueName.PLAYGROUND);
+        else setValueSpecs(ValueName.LEISURE);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

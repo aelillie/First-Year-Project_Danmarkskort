@@ -1,6 +1,7 @@
 package MapFeatures;
 
-import Model.DrawAttributes;
+import Model.ValueName;
+import View.DrawAttribute;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -20,21 +21,7 @@ public class Multipolygon extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("building")) setValueSpecs(DrawAttributes.grey, -0.8);
+        if(value.equals("building")) setValueSpecs(ValueName.BUILDING);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

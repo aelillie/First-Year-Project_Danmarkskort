@@ -1,7 +1,7 @@
 package MapFeatures;
 
-import Model.DrawAttributes;
 import Model.MapFeature;
+import Model.ValueName;
 
 import java.awt.*;
 
@@ -19,23 +19,13 @@ public class Amenity extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("parking")) setValueSpecs(DrawAttributes.sand, -1.0);
-        else if(value.equals("university") && isBuilding )setValueSpecs(DrawAttributes.lightgrey, -1.0);
+        if(value.equals("parking")) setValueSpecs(ValueName.PARKING);
+        else if(value.equals("university") && isBuilding )setValueSpecs(ValueName.UNIVERSITY);
+        else {
+            isArea = false;
+            setValueSpecs(ValueName.AMENITY);
+        }
         //TODO: Does not work. in newSmall the university is not drawn because it is not said to be building
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }
