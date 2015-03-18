@@ -1,6 +1,7 @@
 package MapFeatures;
 
 import Model.MapFeature;
+import Model.ValueName;
 
 import java.awt.*;
 
@@ -12,26 +13,11 @@ public class Railway extends MapFeature {
     public Railway(Shape way, int layer_value, String value) {
         super(way, layer_value, value);
         setValueAttributes();
-        dashed = true;
     }
 
     @Override
     public void setValueAttributes() {
-        setValueDashedSpecs(Color.DARK_GRAY, -1.9, 0);
+        setValueSpecs(ValueName.RAILWAY);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

@@ -1,7 +1,7 @@
 package MapFeatures;
 
-import Model.DrawAttributes;
 import Model.MapFeature;
+import Model.ValueName;
 
 import java.awt.*;
 
@@ -17,21 +17,8 @@ public class Historic extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("archaeological_site")) setValueSpecs(DrawAttributes.greenblue, -1.0);
+        if(value.equals("archaeological_site")) setValueSpecs(ValueName.ARCHAEOLOGICAL_SITE);
+        else setValueSpecs(ValueName.HISTORIC);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

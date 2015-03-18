@@ -1,9 +1,6 @@
 package View;
 
-import Model.DrawAttributes;
-import Model.MapFeature;
-import Model.MapIcon;
-import Model.Model;
+import Model.*;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -31,9 +28,7 @@ public class View extends JFrame implements Observer {
     private RouteView routePanel = new RouteView();
     private boolean isFullscreen = false;
     private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-
-
-
+    private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
     private String promptText = "Enter Address";
 
     /**
@@ -67,8 +62,9 @@ public class View extends JFrame implements Observer {
         pack();
         canvas.requestFocusInWindow();
         model.addObserver(this);
-
+        zoomLevel = model.getBbox().getWidth() * -1;
     }
+
 
     /**
      * Sets the scale for the afflineTransform object using to bounds from the osm file
@@ -157,8 +153,8 @@ public class View extends JFrame implements Observer {
 
         //Create The buttons and configure their visual design.
         searchArea.setFont(font);
-        searchArea.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 7, 4, 7, DrawAttributes.lightblue), BorderFactory.createRaisedBevelBorder()));
-        searchArea.setBounds(20, 20, 300, 37);
+        searchArea.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 7, 4, 7, DrawAttribute.lightblue), BorderFactory.createRaisedBevelBorder()));
+        searchArea.setBounds(20,20,300,37);
 
         makeSearchButton();
         makeZoomInButton();
@@ -220,7 +216,7 @@ public class View extends JFrame implements Observer {
 
         searchButton = new JButton();
         searchButton.setBorder(new CompoundBorder(
-                BorderFactory.createMatteBorder(4, 0, 4, 7, DrawAttributes.lightblue),
+                BorderFactory.createMatteBorder(4, 0, 4, 7, DrawAttribute.lightblue),
                 BorderFactory.createRaisedBevelBorder()));
         searchButton.setBackground(new Color(36, 45, 50));
         searchButton.setIcon(new ImageIcon("data//searchIcon.png"));
@@ -373,6 +369,7 @@ public class View extends JFrame implements Observer {
         isFullscreen = !isFullscreen;
     }
 
+
     /**
      * The canvas object is where our map of paths and images (points) will be drawn on
      */
@@ -399,13 +396,36 @@ public class View extends JFrame implements Observer {
 
             //Draw EVERYTHING
             for (MapFeature mapFeature : model.getMapFeatures()) {
-                if (zoomLevel > -0.4)
-                    mapFeature.drawBoundary(g);
+                if (zoomLevel > -0.4) {
+
+                    g.setColor(Color.BLACK);
+
+                    DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                    if(drawAttribute.isDashed()) continue;
+                    else if (!mapFeature.isArea())
+                        g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
+                    else g.setStroke(DrawAttribute.basicStrokes[1]);
+                    g.draw(mapFeature.getShape());
+                }
+
             }
 
+
+
             for (MapFeature mapFeature : model.getMapFeatures()) {
-                if (zoomLevel > mapFeature.getZoom_level())
-                    mapFeature.drawStandard(g);
+                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+
+                    if (zoomLevel > drawAttribute.getZoomLevel()) {
+                        g.setColor(drawAttribute.getColor());
+                        if (mapFeature.isArea()) {
+                            g.fill(mapFeature.getShape());
+                        } else {
+                            if (drawAttribute.isDashed())
+                                g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
+                            else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
+                            g.draw(mapFeature.getShape());
+                        }
+                    }
             }
             //Draws the icons.
 

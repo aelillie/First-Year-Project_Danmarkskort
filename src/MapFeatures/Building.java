@@ -1,6 +1,7 @@
 package MapFeatures;
 
-import Model.DrawAttributes;
+import Model.ValueName;
+import View.DrawAttribute;
 import Model.MapFeature;
 
 import java.awt.*;
@@ -18,21 +19,7 @@ public class Building extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(DrawAttributes.lightgrey, -.5);
+        setValueSpecs(ValueName.BUILDING);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }
