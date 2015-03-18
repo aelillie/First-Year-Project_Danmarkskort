@@ -574,15 +574,16 @@ public class View extends JFrame implements Observer {
             for (MapFeature mapFeature : model.getMapFeatures()) {
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
 
-                    if (zoomLevel > drawAttribute.getZoomLevel())
+                    if (zoomLevel > drawAttribute.getZoomLevel()) {
                         g.setColor(drawAttribute.getColor());
-                    if (mapFeature.isArea()) {
-                        g.fill(mapFeature.getShape());
-                    } else {
-                        if (drawAttribute.isDashed())
-                            g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
-                        else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
-                        g.draw(mapFeature.getShape());
+                        if (mapFeature.isArea()) {
+                            g.fill(mapFeature.getShape());
+                        } else {
+                            if (drawAttribute.isDashed())
+                                g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
+                            else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
+                            g.draw(mapFeature.getShape());
+                        }
                     }
 
             }
