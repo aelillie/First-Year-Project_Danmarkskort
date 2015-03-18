@@ -1,8 +1,7 @@
 package MapFeatures;
 
-import Model.ValueName;
-import View.DrawAttribute;
 import Model.MapFeature;
+import Model.ValueName;
 
 import java.awt.*;
 
@@ -22,7 +21,10 @@ public class Amenity extends MapFeature {
     public void setValueAttributes() {
         if(value.equals("parking")) setValueSpecs(ValueName.PARKING);
         else if(value.equals("university") && isBuilding )setValueSpecs(ValueName.UNIVERSITY);
-        else setValueSpecs(ValueName.AMENITY);
+        else {
+            isArea = false;
+            setValueSpecs(ValueName.AMENITY);
+        }
         //TODO: Does not work. in newSmall the university is not drawn because it is not said to be building
     }
 
