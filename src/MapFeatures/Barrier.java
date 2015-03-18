@@ -23,7 +23,7 @@ public class Barrier extends MapFeature{
         if(value.equals("hence"))setValueSpecs(ValueName.HENCE);
         if(value.equals("fence")) setValueSpecs(ValueName.FENCE);
         if(value.equals("kerb")) setValueSpecs(ValueName.KERB);
-
+        else setValueSpecs(ValueName.BARRIER);
     }
 
 }

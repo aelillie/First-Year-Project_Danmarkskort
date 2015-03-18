@@ -44,7 +44,6 @@ public class Highway extends MapFeature {
         else if (value.equals("bridleway")) setValueSpecs(ValueName.BRIDLEWAY);
         else if (value.equals("steps")) setValueSpecs(ValueName.STEPS);
         else if (value.equals("path")) setValueSpecs(ValueName.PATH);
+        else setValueSpecs(ValueName.HIGHWAY);
     }
-
-
 }

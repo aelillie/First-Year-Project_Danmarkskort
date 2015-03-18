@@ -556,13 +556,13 @@ public class View extends JFrame implements Observer {
             //Draw EVERYTHING
             for (MapFeature mapFeature : model.getMapFeatures()) {
                 if (zoomLevel > -0.4)
-                    mapFeature.drawBoundary(g, drawAttributeManager.getDrawAttribute(mapFeature.valueName));
+                    mapFeature.drawBoundary(g, drawAttributeManager.getDrawAttribute(mapFeature.getValueName()));
             }
 
 
 
             for (MapFeature mapFeature : model.getMapFeatures()) {
-                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.valueName);
+                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
                 if (zoomLevel > drawAttribute.getZoomLevel())
                     mapFeature.draw(g, drawAttribute);
             }

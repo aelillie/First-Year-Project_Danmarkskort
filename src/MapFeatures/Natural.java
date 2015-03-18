@@ -19,17 +19,17 @@ public class Natural extends MapFeature {
     @Override
     public void setValueAttributes() {
         if (value.equals("wood")) setValueSpecs(ValueName.WOOD);
-        if (value.equals("scrub")) setValueSpecs(ValueName.SCRUB);
-        if (value.equals("heath")) setValueSpecs(ValueName.HEATH);
-        if (value.equals("grassland")) setValueSpecs(ValueName.GRASSLAND);
-        if (value.equals("sand")) setValueSpecs(ValueName.SAND);
-        if (value.equals("scree")) setValueSpecs(ValueName.SCREE);
-        if (value.equals("fell")) setValueSpecs(ValueName.FELL);
-        if (value.equals("water")) setValueSpecs(ValueName.WATER);
-        if (value.equals("wetland")) setValueSpecs(ValueName.WETLAND);
-        if (value.equals("beach")) setValueSpecs(ValueName.BEACH);
-        if (value.equals("coastline"))setValueSpecs(ValueName.COASTLINE);
-
+        else if (value.equals("scrub")) setValueSpecs(ValueName.SCRUB);
+        else if (value.equals("heath")) setValueSpecs(ValueName.HEATH);
+        else if (value.equals("grassland")) setValueSpecs(ValueName.GRASSLAND);
+        else if (value.equals("sand")) setValueSpecs(ValueName.SAND);
+        else if (value.equals("scree")) setValueSpecs(ValueName.SCREE);
+        else if (value.equals("fell")) setValueSpecs(ValueName.FELL);
+        else if (value.equals("water")) setValueSpecs(ValueName.WATER);
+        else if (value.equals("wetland")) setValueSpecs(ValueName.WETLAND);
+        else if (value.equals("beach")) setValueSpecs(ValueName.BEACH);
+        else if (value.equals("coastline"))setValueSpecs(ValueName.COASTLINE);
+        else setValueSpecs(ValueName.NATURAL);
     }
 
 

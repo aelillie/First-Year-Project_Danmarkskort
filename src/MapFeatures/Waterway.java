@@ -20,5 +20,6 @@ public class Waterway extends MapFeature {
         else if (value.equals("canal")) setValueSpecs(ValueName.CANAL);
         else if (value.equals("river")) setValueSpecs(ValueName.RIVER);
         else if (value.equals("dam")) setValueSpecs(ValueName.DAM);
+        else setValueSpecs(ValueName.WATERWAY);
     }
 }

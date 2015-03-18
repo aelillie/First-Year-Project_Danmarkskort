@@ -10,7 +10,7 @@ public abstract class MapFeature implements Serializable {
     protected int layer_value;
     protected String value;
     protected boolean isArea = false;
-    public ValueName valueName;
+    protected ValueName valueName;
 
     public MapFeature(Shape way, int layer_value, String value) {
         this.way = way;
@@ -54,6 +54,10 @@ public abstract class MapFeature implements Serializable {
             else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
             g.draw(way);
         }
+    }
+
+    public ValueName getValueName() {
+        return valueName;
     }
 
     public int getLayerVal() {

@@ -42,12 +42,15 @@ public class DrawAttributeManager {
     }
 
     public void defineStandardView() {
+        //standardView[ValueName.VALUENAME.ordinal()] =     new DrawAttribute(isDashed, strokeId, color, zoomLevel);
         //AEROWAY
         standardView[ValueName.AEROWAY.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.lightgrey, -1.0);
         //AMENITY
+        standardView[ValueName.AMENITY.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, -1.0);
         standardView[ValueName.PARKING.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.sand, -1.0);
         standardView[ValueName.UNIVERSITY.ordinal()] =      new DrawAttribute(false, 1, DrawAttribute.lightgrey, -1.0);
         //BARRIER
+        standardView[ValueName.BARRIER.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, -1.0);
         standardView[ValueName.HENCE.ordinal()] =           new DrawAttribute(false, 1, DrawAttribute.neongreen, -0.2);
         standardView[ValueName.FENCE.ordinal()] =           new DrawAttribute(false, 1, DrawAttribute.lightblue, -1.0);
         //BOUNDARY
@@ -63,6 +66,7 @@ public class DrawAttributeManager {
         //GEOLOGICAL
         standardView[ValueName.GEOLOGICAL.ordinal()] =      new DrawAttribute(false, 0, DrawAttribute.lightgrey, -1.0);
         //HIGHWAY
+        standardView[ValueName.HIGHWAY.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.white, -1.0);
         standardView[ValueName.MOTORWAY.ordinal()] =        new DrawAttribute(false, 5, DrawAttribute.lightblue, -1.0);
         standardView[ValueName.MOTORWAY_LINK.ordinal()] =   new DrawAttribute(false, 5, DrawAttribute.lightblue, -1.0);
         standardView[ValueName.TRUNK.ordinal()] =           new DrawAttribute(false, 3, DrawAttribute.lightgreen, -1.0);
@@ -86,8 +90,10 @@ public class DrawAttributeManager {
         standardView[ValueName.STEPS.ordinal()] =           new DrawAttribute(true, 2, DrawAttribute.red, -0.1);
         standardView[ValueName.PATH.ordinal()] =            new DrawAttribute(true, 0, DrawAttribute.red, -0.1);
         //HISTORIC
-        standardView[ValueName.ARCHAEOLOGICAL_SITE.ordinal()] =new DrawAttribute(false, 0, DrawAttribute.greenblue, -1.0);
+        standardView[ValueName.HISTORIC.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, -1.0);
+        standardView[ValueName.ARCHAEOLOGICAL_SITE.ordinal()] = new DrawAttribute(false, 0, DrawAttribute.greenblue, -1.0);
         //LANDUSE
+        standardView[ValueName.LANDUSE.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, -1.0);
         standardView[ValueName.CEMETERY.ordinal()] =        new DrawAttribute(false, 0, DrawAttribute.whitegreen, -0.8);
         standardView[ValueName.CONSTRUCTION.ordinal()] =    new DrawAttribute(false, 0, DrawAttribute.pink, -0.4);
         standardView[ValueName.GRASS.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.whitegreen, -1.0);
@@ -97,6 +103,7 @@ public class DrawAttributeManager {
         standardView[ValueName.RESERVOIR.ordinal()] =       new DrawAttribute(false, 0, DrawAttribute.darkblue, -0.8);
         standardView[ValueName.BASIN.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.whiteblue, -0.8);
         //LEISURE
+        standardView[ValueName.LEISURE.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, -1.0);
         standardView[ValueName.GARDEN.ordinal()] =          new DrawAttribute(false, 0, DrawAttribute.whitegreen, -1.2);
         standardView[ValueName.COMMON.ordinal()] =          new DrawAttribute(false, 0, DrawAttribute.neongreen, -1.2);
         standardView[ValueName.PARK.ordinal()] =            new DrawAttribute(false, 0, DrawAttribute.whitegreen, -1.0);
@@ -105,6 +112,7 @@ public class DrawAttributeManager {
         //MANMADE
         standardView[ValueName.MANMADE.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, -1.0);
         //NATURAL
+        standardView[ValueName.NATURAL.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightblue, -1.0);
         standardView[ValueName.WOOD.ordinal()] =            new DrawAttribute(false, 0, DrawAttribute.lightgreen, -2.0);
         standardView[ValueName.SCRUB.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.lightgreen, -1.5);
         standardView[ValueName.HEATH.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.skincolor, -2.0);
@@ -125,6 +133,7 @@ public class DrawAttributeManager {
         //TOURISM
         standardView[ValueName.TOURISM.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, -1.0);
         //WATERWAY
+        standardView[ValueName.WATERWAY.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightblue, -1.0);
         standardView[ValueName.RIVERBANK.ordinal()] =       new DrawAttribute(false, 0, DrawAttribute.lightblue, -1.0);
         standardView[ValueName.STREAM.ordinal()] =          new DrawAttribute(false, 0, DrawAttribute.lightblue, -1.0);
         standardView[ValueName.CANAL.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.lightblue, -1.0);
@@ -133,8 +142,10 @@ public class DrawAttributeManager {
     }
 
     public DrawAttribute getDrawAttribute(ValueName valueName) {
+        /*
         if (isColorblind) return colorblindView[valueName.ordinal()];
-        else return standardView[valueName.ordinal()];
+        else return standardView[valueName.ordinal()]; */
+        return standardView[valueName.ordinal()];
     }
 
     public void toggleColorblindView() {

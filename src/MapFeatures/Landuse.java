@@ -32,6 +32,7 @@ public class Landuse extends MapFeature {
             isArea = true;
             setValueSpecs(ValueName.ALLOTMENTS);
         }
+        else setValueSpecs(ValueName.LANDUSE);
     }
 
 }
