@@ -1,5 +1,6 @@
 package MapFeatures;
 
+import Model.ValueName;
 import View.DrawAttribute;
 import Model.MapFeature;
 
@@ -19,11 +20,11 @@ public class Leisure extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("garden"))setValueSpecs(DrawAttribute.whitegreen, -1.2);
-        else if (value.equals("common")) setValueSpecs(DrawAttribute.neongreen, -1.2);
-        else if(value.equals("park")) setValueSpecs(DrawAttribute.whitegreen, -1.0);
-        else if(value.equals("pitch")) setValueSpecs(DrawAttribute.grey, -1.0);
-        else if(value.equals("playground")) setValueSpecs(DrawAttribute.whitegreen, -1.0);
+        if(value.equals("garden"))setValueSpecs(ValueName.GARDEN);
+        else if (value.equals("common")) setValueSpecs(ValueName.COMMON);
+        else if(value.equals("park")) setValueSpecs(ValueName.PARK);
+        else if(value.equals("pitch")) setValueSpecs(ValueName.PITCH);
+        else if(value.equals("playground")) setValueSpecs(ValueName.PLAYGROUND);
 
     }
 

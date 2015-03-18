@@ -1,5 +1,6 @@
 package MapFeatures;
 
+import Model.ValueName;
 import View.DrawAttribute;
 import Model.MapFeature;
 
@@ -20,7 +21,7 @@ public class Multipolygon extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("building")) setValueSpecs(DrawAttribute.grey, -0.8);
+        if(value.equals("building")) setValueSpecs(ValueName.BUILDING);
     }
 
 }

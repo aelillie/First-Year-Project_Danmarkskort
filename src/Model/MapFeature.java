@@ -39,8 +39,8 @@ public abstract class MapFeature implements Serializable {
 
         public void drawBoundary(Graphics2D g, DrawAttribute drawAttribute) {
             if(!isArea) {
-            if(!drawAttribute.dashed) {
-                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.strokeId + 1]);
+            if(!drawAttribute.isDashed()) {
+                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
                 g.setColor(Color.BLACK);
                 g.draw(way);
             }
@@ -54,12 +54,12 @@ public abstract class MapFeature implements Serializable {
 
     public void draw(Graphics2D g, DrawAttribute drawAttribute) {
         if (isArea) {
-            g.setColor(drawAttribute.color);
+            g.setColor(drawAttribute.getColor());
             g.fill(way);
         } else {
-            if (drawAttribute.dashed) g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.strokeId]);
-            else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.strokeId]);
-            g.setColor(drawAttribute.color);
+            if (drawAttribute.isDashed()) g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
+            else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
+            g.setColor(drawAttribute.getColor());
             g.draw(way);
         }
     }
