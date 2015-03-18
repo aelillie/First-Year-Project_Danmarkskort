@@ -164,13 +164,13 @@ public class OSMHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) {
         switch (qName) {
             case "way": //TODO: insert way names into the addresslist aswelll
-                way = PathCreater.setUpWay(coords);
+                way = PathCreater.createWay(coords);
                 //start of adding shapes from keys and values
 
                 if (keyValue_map.containsKey("natural")) { //##New key!
                     mapFeatures.add(new Natural(way, fetchOSMLayer(), keyValue_map.get("natural")));
                     String val = keyValue_map.get("natural");
-                    if (val.equals("coastline")) PathCreater.setUpCoastLine(way, startPoint, endPoint);
+                    if (val.equals("coastline")) PathCreater.processCoastlines(way, startPoint, endPoint);
 
                 } else if (keyValue_map.containsKey("waterway")) { //##New key!
                     mapFeatures.add(new Waterway(way, fetchOSMLayer(), keyValue_map.get("waterway"), isArea));
@@ -240,7 +240,7 @@ public class OSMHandler extends DefaultHandler {
                 if (keyValue_map.containsKey("type")) {
                     String val = keyValue_map.get("type");
                     if (val.equals("multipolygon")) {
-                        Path2D path = PathCreater.setUpMultipolygon(refs, relations);
+                        Path2D path = PathCreater.createMultipolygon(refs, relations);
                         if(path == null) return;
                         if (keyValue_map.containsKey("building"))
                             mapFeatures.add(new Multipolygon(path, fetchOSMLayer(), "building"));
@@ -320,7 +320,6 @@ public class OSMHandler extends DefaultHandler {
 
             case "osm": //The end of the osm file
                 sortLayers();
-                PathCreater.checkCoastlines(coastlines);
                 Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
                 break;
 

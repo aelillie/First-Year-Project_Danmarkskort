@@ -18,7 +18,7 @@ public class PathCreater {
      * @param relations Map of references to Paths
      * @return  Path2D
      */
-    public static Path2D setUpMultipolygon(List<Long> refs, Map<Long, Path2D> relations) {
+    public static Path2D createMultipolygon(List<Long> refs, Map<Long, Path2D> relations) {
         Long ref = refs.get(0);
         if (relations.containsKey(ref)) {
             Path2D path = relations.get(ref);
@@ -44,7 +44,7 @@ public class PathCreater {
      * @param coords List of Point2D's
      * @return  Path  The path connected by the Points
      */
-    public static Path2D setUpWay(List<Point2D> coords){
+    public static Path2D createWay(List<Point2D> coords){
         Path2D way = new Path2D.Double();
         Point2D coord = coords.get(0);
         way.moveTo(coord.getX(), coord.getY());
@@ -55,7 +55,7 @@ public class PathCreater {
         return way;
     }
 
-    public static void setUpCoastLine(Path2D coastPath, Point2D startPoint, Point2D endPoint){
+    public static void processCoastlines(Path2D coastPath, Point2D startPoint, Point2D endPoint){
         Coastline currentCoastline = new Coastline(coastPath, startPoint, endPoint);
 
         List<Coastline> coastlines = OSMHandler.getCoastlines();
@@ -78,11 +78,12 @@ public class PathCreater {
         if (!hasBeenConnected && !coastlines.contains(currentCoastline)) {
             coastlines.add(currentCoastline);
         }
+        connectCoastlines(coastlines);
 
     }
 
     //Checks the list once more to make sure that every coastline supposed to be connected is connected.
-    public static void checkCoastlines(List<Coastline> coastlines) {
+    private static void connectCoastlines(List<Coastline> coastlines) {
 
         for (int i = 0; i < coastlines.size(); i++) {
             Point2D start = coastlines.get(i).getStart();
