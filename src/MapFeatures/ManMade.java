@@ -13,6 +13,7 @@ public class ManMade extends MapFeature{
 
     public ManMade(Shape way, int layer_value, String value) {
         super(way, layer_value, value);
+        setValueAttributes();
     }
 
     @Override

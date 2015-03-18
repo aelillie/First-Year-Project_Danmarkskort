@@ -25,7 +25,7 @@ public class Leisure extends MapFeature {
         else if(value.equals("park")) setValueSpecs(ValueName.PARK);
         else if(value.equals("pitch")) setValueSpecs(ValueName.PITCH);
         else if(value.equals("playground")) setValueSpecs(ValueName.PLAYGROUND);
-        else setValueSpecs(ValueName.MANMADE);
+        else setValueSpecs(ValueName.LEISURE);
     }
 
 }

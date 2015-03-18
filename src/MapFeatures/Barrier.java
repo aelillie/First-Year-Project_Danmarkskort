@@ -15,7 +15,7 @@ public class Barrier extends MapFeature{
     public Barrier(Shape way, int layer_value, String value, boolean isArea) {
         super(way, layer_value, value);
         this.isArea = isArea;
-
+        setValueAttributes();
     }
 
     @Override
