@@ -397,9 +397,7 @@ public class View extends JFrame implements Observer {
             //Draw EVERYTHING
             for (MapFeature mapFeature : model.getMapFeatures()) {
                 if (zoomLevel > -0.4) {
-
                     g.setColor(Color.BLACK);
-
                     DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
                     if(drawAttribute.isDashed()) continue;
                     else if (!mapFeature.isArea())
@@ -414,7 +412,6 @@ public class View extends JFrame implements Observer {
 
             for (MapFeature mapFeature : model.getMapFeatures()) {
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-
                     if (zoomLevel > drawAttribute.getZoomLevel()) {
                         g.setColor(drawAttribute.getColor());
                         if (mapFeature.isArea()) {
