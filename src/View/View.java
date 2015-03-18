@@ -174,7 +174,11 @@ public class View extends JFrame implements Observer {
         String type = mapMenu.getChosen();
         if(type.equals("Standard")) drawAttributeManager.toggleStandardView();
         else if(type.equals("Colorblind map"))drawAttributeManager.toggleColorblindView();
+        else if(type.equals("Transport map")) drawAttributeManager.toggleTransportView();
+
+        canvas.repaint();
     }
+
     private void makeShowRoutePanelButton() {
         showRoutePanelButton = new JButton("Route plan");
         showRoutePanelButton.setFocusable(false);
