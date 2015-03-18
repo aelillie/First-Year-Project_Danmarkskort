@@ -56,6 +56,7 @@ public class DrawAttribute {
     public static Stroke d4 = new BasicStroke(0.00002f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 20.0f, new float[]{0.00001f}, 0.000001f); //Cycleway
 
     //Predefined colors to use.
+    public static Color black = new Color(0, 0, 0);
     public static Color lightblue = new Color(70, 130, 180);
     public static Color lightgreen = new Color(34,139,34);
     public static Color darkgreen = new Color(0, 100, 0);

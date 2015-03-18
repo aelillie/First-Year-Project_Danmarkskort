@@ -22,7 +22,6 @@ public class MapMenu extends JComboBox<Icon> {
 
     private void initialize(){
         Dimension prefered = getPreferredSize();
-
         setEditable(false);
 
         setBorder(BorderFactory.createRaisedBevelBorder());
