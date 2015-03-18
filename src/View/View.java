@@ -1,5 +1,6 @@
 package View;
 
+import Controller.MapMenuController;
 import Model.*;
 
 import javax.swing.*;
@@ -24,7 +25,7 @@ public class View extends JFrame implements Observer {
     private double zoomLevel;
     private JTextField searchArea;
     private JButton searchButton, zoomInButton, zoomOutButton, fullscreenButton, showRoutePanelButton;
-    private JComboBox<Icon> mapMenu;
+    private MapMenu mapMenu;
     private RouteView routePanel = new RouteView();
     private boolean isFullscreen = false;
     private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
@@ -166,8 +167,14 @@ public class View extends JFrame implements Observer {
 
     private void makeMaptypeMenu() {
         mapMenu = new MapMenu();
+        mapMenu.addActionListener(new MapMenuController(this));
     }
 
+    public void changeMapType(){
+        String type = mapMenu.getChosen();
+        if(type.equals("Standard")) drawAttributeManager.toggleStandardView();
+        else if(type.equals("Colorblind map"))drawAttributeManager.toggleColorblindView();
+    }
     private void makeShowRoutePanelButton() {
         showRoutePanelButton = new JButton("Route plan");
         showRoutePanelButton.setFocusable(false);

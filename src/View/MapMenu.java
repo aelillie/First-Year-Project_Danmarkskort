@@ -29,7 +29,7 @@ public class MapMenu extends JComboBox<Icon> {
         setBounds((int) prefered.getWidth() - 160, (int) (prefered.getHeight() - prefered.getHeight() / 3 * 2 - 50), 130, 30);
         setBackground(Color.white);
         setFocusable(false);
-        setActionCommand("maptype");
+        setActionCommand("mapTypeChange");
         MapTypeBoxRenderer maptypeRend = new MapTypeBoxRenderer(mapNameMap);
         maptypeRend.setPreferredSize(new Dimension(300, 50));
         setRenderer(maptypeRend);
@@ -45,5 +45,10 @@ public class MapMenu extends JComboBox<Icon> {
         addItem(standardMapImage);
         addItem(colorblindMapImage);
         addItem(transportMapImage);
+    }
+
+    public String getChosen(){
+        return mapNameMap.get(getSelectedItem());
+
     }
 }

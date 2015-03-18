@@ -42,7 +42,6 @@ public class Controller extends MouseAdapter implements ActionListener {
         else if (command.equals("zoomOut")) view.zoom(1/1.2);
         else if (command.equals("fullscreen")) view.toggleFullscreen();
         else if (command.equals("search")) addressSearch();
-        else if (command.equals("maptype"));
         else if (command.equals("showRoutePanel")) view.showRoutePanel();
         else if (command.equals("findRoute"));
     }
