@@ -22,6 +22,10 @@ public class DrawAttributeManager {
         else return standardView[valueName.ordinal()];
     }
 
+    public void toggleStandardView() {
+        isColorblind = false;
+    }
+
     public void toggleColorblindView() {
         isColorblind = true;
     }
