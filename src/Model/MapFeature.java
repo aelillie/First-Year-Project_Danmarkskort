@@ -54,5 +54,4 @@ public abstract class MapFeature implements Serializable {
 
     public String getValue(){return value;}
 
-
 }

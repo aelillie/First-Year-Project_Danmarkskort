@@ -53,7 +53,9 @@ public class DrawAttribute {
     public static Stroke d1 = new BasicStroke(0.00001f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{0.0001f}, 0.00001f); //Metro
     public static Stroke d2 = new BasicStroke(0.00002f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,30.0f, new float[]{0.00005f},0.00000f); //Footway
     public static Stroke d3 = new BasicStroke(0.00002f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 20.0f, new float[]{0.0001f}, 0.000001f); //Cycleway
-    public static Stroke d4 = new BasicStroke(0.00002f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 20.0f, new float[]{0.00001f}, 0.000001f); //Cycleway
+    public static Stroke d4 = new BasicStroke(0.00002f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 20.0f, new float[]{0.00001f}, 0.000001f); //
+    public static Stroke d5 = new BasicStroke(0.00003f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10.0f, new float[]{0.00005f}, 0.00003f); //Railways transportview
+
 
     //Predefined colors to use.
     public static Color black = new Color(0, 0, 0);
@@ -82,17 +84,27 @@ public class DrawAttribute {
     public static Color brown = new Color(139,69,19);
     public static Color ground = new Color(238,238,238);
 
+    //Predefined colors for colorblind view
     public static Color cl_red = new Color(255, 0, 0);
     public static Color cl_red1 = new Color(213, 0, 0);
-    public static Color cl_red2= new Color(151, 0, 0);
-    public static Color cl_red3= new Color(105, 0, 0);
-    public static Color cl_red4= new Color(75, 0, 0);
+    public static Color cl_red2 = new Color(151, 0, 0);
+    public static Color cl_red3 = new Color(105, 0, 0);
+    public static Color cl_red4 = new Color(75, 0, 0);
+    public static Color cl_blue = new Color(0, 15, 255);
+    public static Color cl_blue1 = new Color(0, 15, 195);
+    public static Color cl_blue2 = new Color(0, 15, 138);
+    public static Color cl_blue3 = new Color(0, 14, 103);
+    public static Color cl_blue4 = new Color(0, 11, 58);
+    public static Color cl_grey = new Color(173, 171, 175);
+    public static Color cl_grey1 = new Color(129, 127, 131);
+    public static Color cl_grey2 = new Color(87, 85, 88);
+
 
 
     public static Color[] colors = new Color[] {lightblue, lightgreen, darkgreen, lightyellow, darkblue, lightgrey, neongreen, babyred, lightred,
                                                 grey, white, bloodred, red, skincolor, bluegreen, orange, pink, sand, whiteblue, greenblue, whitegreen, brown};
     public static Stroke[] basicStrokes = new Stroke[]{s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11,s12, s13, s14, s15};
-    public static Stroke[] dashedStrokes = new Stroke[] {d1, d2, d3, d4};
+    public static Stroke[] dashedStrokes = new Stroke[] {d1, d2, d3, d4, d5};
     public static Stroke[] streetStrokes = new Stroke[] {r00, r01, r02, r03, r04, r05, r06, r07, r08, r09, r10, r11};
 
     public boolean isDashed() {

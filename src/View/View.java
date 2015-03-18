@@ -412,13 +412,17 @@ public class View extends JFrame implements Observer {
             //Draw EVERYTHING
             for (MapFeature mapFeature : model.getMapFeatures()) {
                 if (zoomLevel > -0.4) {
-                    g.setColor(Color.BLACK);
-                    DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                    if(drawAttribute.isDashed()) continue;
-                    else if (!mapFeature.isArea())
-                        g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
-                    else g.setStroke(DrawAttribute.basicStrokes[1]);
-                    g.draw(mapFeature.getShape());
+                    try {
+                        g.setColor(Color.BLACK);
+                        DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                        if (drawAttribute.isDashed()) continue;
+                        else if (!mapFeature.isArea())
+                            g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
+                        else g.setStroke(DrawAttribute.basicStrokes[1]);
+                        g.draw(mapFeature.getShape());
+                    }catch(NullPointerException e){
+                        System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
+                    }
                 }
 
             }

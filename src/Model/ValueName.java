@@ -52,7 +52,7 @@ public enum ValueName {
     POWER,//##New key##
 
     RAILWAY,//##New key##
-        SUBWAY,
+        LIGHT_RAIL, RAIL, TRAM, SUBWAY,
 
     ROUTE,//##New key##
 
