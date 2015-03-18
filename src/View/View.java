@@ -422,7 +422,7 @@ public class View extends JFrame implements Observer {
 
 
             for (MapFeature mapFeature : model.getMapFeatures()) {
-                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                    DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
                     if (zoomLevel > drawAttribute.getZoomLevel()) {
                         g.setColor(drawAttribute.getColor());
                         if (mapFeature.isArea()) {
@@ -434,6 +434,8 @@ public class View extends JFrame implements Observer {
                             g.draw(mapFeature.getShape());
                         }
                     }
+
+
             }
             //Draws the icons.
 

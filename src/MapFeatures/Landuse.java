@@ -1,16 +1,15 @@
 package MapFeatures;
 
-import Model.ValueName;
-import View.DrawAttribute;
 import Model.MapFeature;
+import Model.ValueName;
 
-import java.awt.*;
+import java.awt.geom.Path2D;
 
 /**
  * Created by Anders on 11-03-2015.
  */
 public class Landuse extends MapFeature {
-    public Landuse(Shape way, int layer_value, String value, boolean isArea) {
+    public Landuse(Path2D way, int layer_value, String value, boolean isArea) {
         super(way, layer_value, value);
         this.isArea = isArea;
         setValueAttributes();

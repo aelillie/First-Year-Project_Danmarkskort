@@ -1,16 +1,16 @@
 package Model;
 
-import java.awt.*;
+import java.awt.geom.Path2D;
 import java.io.Serializable;
 
 public abstract class MapFeature implements Serializable {
-    protected Shape way;
+    protected Path2D way;
     protected int layer_value;
     protected String value;
     protected boolean isArea = false;
     protected ValueName valueName;
 
-    public MapFeature(Shape way, int layer_value, String value) {
+    public MapFeature(Path2D way, int layer_value, String value) {
         this.way = way;
         this.layer_value = layer_value;
         this.value = value;
@@ -48,9 +48,11 @@ public abstract class MapFeature implements Serializable {
         return isArea;
     }
 
-    public Shape getShape(){
+    public Path2D getShape(){
         return way;
     }
+
+    public String getValue(){return value;}
 
 
 }

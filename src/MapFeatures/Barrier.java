@@ -3,7 +3,7 @@ package MapFeatures;
 import Model.MapFeature;
 import Model.ValueName;
 
-import java.awt.*;
+import java.awt.geom.Path2D;
 
 /**
  * Created by Anders on 11-03-2015.
@@ -11,7 +11,7 @@ import java.awt.*;
 public class Barrier extends MapFeature{
 
 
-    public Barrier(Shape way, int layer_value, String value, boolean isArea) {
+    public Barrier(Path2D way, int layer_value, String value, boolean isArea) {
         super(way, layer_value, value);
         this.isArea = isArea;
         setValueAttributes();
