@@ -11,7 +11,6 @@ import java.awt.*;
  */
 public class Barrier extends MapFeature{
 
-    private boolean isArea = false;
 
     public Barrier(Shape way, int layer_value, String value, boolean isArea) {
         super(way, layer_value, value);

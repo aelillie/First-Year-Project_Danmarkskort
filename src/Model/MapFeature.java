@@ -37,29 +37,21 @@ public abstract class MapFeature implements Serializable {
     */
 
 
-        public void drawBoundary(Graphics2D g, DrawAttribute drawAttribute) {
-            if(!isArea) {
-            if(!drawAttribute.isDashed()) {
-                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
-                g.setColor(Color.BLACK);
-                g.draw(way);
-            }
-        } else {
-            g.setStroke(DrawAttribute.basicStrokes[1]);
-            g.setColor(Color.BLACK);
-            g.draw(way);
-        }
+    public void drawBoundary(Graphics2D g, DrawAttribute drawAttribute) {
+        g.setColor(Color.BLACK);
+        if(!isArea && !drawAttribute.isDashed()) g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
+        else g.setStroke(DrawAttribute.basicStrokes[1]);
+        g.draw(way);
 
     }
 
     public void draw(Graphics2D g, DrawAttribute drawAttribute) {
+        g.setColor(drawAttribute.getColor());
         if (isArea) {
-            g.setColor(drawAttribute.getColor());
             g.fill(way);
         } else {
             if (drawAttribute.isDashed()) g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
             else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
-            g.setColor(drawAttribute.getColor());
             g.draw(way);
         }
     }
