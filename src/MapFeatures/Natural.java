@@ -1,14 +1,13 @@
 package MapFeatures;
 
-import Model.ValueName;
-import View.DrawAttribute;
 import Model.MapFeature;
+import Model.ValueName;
 
-import java.awt.*;
+import java.awt.geom.Path2D;
 
 public class Natural extends MapFeature {
 
-    public Natural(Shape way, int layer_value, String value) {
+    public Natural(Path2D way, int layer_value, String value) {
         super(way, layer_value, value);
         isArea = true;
         setValueAttributes();

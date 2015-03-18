@@ -3,14 +3,14 @@ package MapFeatures;
 import Model.MapFeature;
 import Model.ValueName;
 
-import java.awt.*;
+import java.awt.geom.Path2D;
 
 /**
  * Created by Anders on 11-03-2015.
  */
 public class Amenity extends MapFeature {
     private boolean isBuilding = false;
-    public Amenity(Shape way, int layer_value, String value, boolean isBuilding) {
+    public Amenity(Path2D way, int layer_value, String value, boolean isBuilding) {
         super(way, layer_value, value);
         isArea = true;
         setValueAttributes();

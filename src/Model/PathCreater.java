@@ -57,7 +57,7 @@ public class PathCreater {
     }
 
     public static void processCoastlines(Path2D coastPath, Point2D startPoint, Point2D endPoint){
-        Coastline currentCoastline = new Coastline(coastPath, startPoint, endPoint,-2, "coastline");
+        Coastline currentCoastline = new Coastline(coastPath, startPoint, endPoint, -2, "coastline");
 
         List<Coastline> coastlines = OSMHandler.getCoastlines();
         boolean hasBeenConnected = false;
@@ -68,7 +68,7 @@ public class PathCreater {
             Point2D end = coastlines.get(i).getEnd();
 
             if (currentCoastline.getStart().equals(end)) {
-                coastlines.get(i).getPath().append(currentCoastline.getPath(), true);
+                coastlines.get(i).getShape().append(currentCoastline.getShape(), true);
                 coastlines.get(i).setEnd(currentCoastline.getEnd());
                 hasBeenConnected = true;
                 i = 0;
@@ -95,8 +95,8 @@ public class PathCreater {
                 Point2D compareEnd = coastlines.get(j).getEnd();
 
                 if (end.equals(compareStart)) { //First check if the end fits the start of the other coastline.
-                    Path2D newPath = coastlines.get(i).getPath();
-                    newPath.append(coastlines.get(j).getPath(), true);
+                    Path2D newPath = coastlines.get(i).getShape();
+                    newPath.append(coastlines.get(j).getShape(), true);
                     coastlines.get(i).setPath(newPath);
                     coastlines.get(i).setEnd(coastlines.get(j).getEnd());
                     coastlines.remove(j);
@@ -104,8 +104,8 @@ public class PathCreater {
                     break;
 
                 } else if (compareEnd.equals(start)) { //Then check if the end of the second coastline fits the start of the first coastline.
-                    Path2D newPath = coastlines.get(j).getPath();
-                    newPath.append(coastlines.get(i).getPath(), true);
+                    Path2D newPath = coastlines.get(j).getShape();
+                    newPath.append(coastlines.get(i).getShape(), true);
                     coastlines.get(i).setPath(newPath);
                     coastlines.get(i).setStart(coastlines.get(j).getStart());
                     coastlines.remove(j);
@@ -151,7 +151,7 @@ public class PathCreater {
 
             for(Point2D point : pointsToAdd){
                 if(point != null) {
-                    coastline.getPath().lineTo(point.getX(), point.getY());
+                    coastline.getShape().lineTo(point.getX(), point.getY());
                 }
             }
 

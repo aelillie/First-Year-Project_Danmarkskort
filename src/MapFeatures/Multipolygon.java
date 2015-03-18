@@ -1,17 +1,16 @@
 package MapFeatures;
 
-import Model.ValueName;
-import View.DrawAttribute;
 import Model.MapFeature;
+import Model.ValueName;
 
-import java.awt.*;
+import java.awt.geom.Path2D;
 
 /**
  * Created by Anders on 11-03-2015.
  */
 public class Multipolygon extends MapFeature {
 
-    public Multipolygon(Shape way, int layer_value, String value) {
+    public Multipolygon(Path2D way, int layer_value, String value) {
 
         //TODO this is still not done at all!
         super(way, layer_value, value);

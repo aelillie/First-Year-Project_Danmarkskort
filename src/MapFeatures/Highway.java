@@ -3,10 +3,10 @@ package MapFeatures;
 import Model.MapFeature;
 import Model.ValueName;
 
-import java.awt.*;
+import java.awt.geom.Path2D;
 
 public class Highway extends MapFeature {
-    public Highway(Shape way, int layer_value, String value, boolean isArea) {
+    public Highway(Path2D way, int layer_value, String value, boolean isArea) {
         super(way, layer_value, value);
         this.isArea = isArea;
         if (layer_value == 0) setPreDefValues();
@@ -36,7 +36,7 @@ public class Highway extends MapFeature {
         else if (value.equals("living_street")) setValueSpecs(ValueName.LIVING_STREET);
         else if (value.equals("pedestrian")) setValueSpecs(ValueName.PEDESTRIAN);
         else if (value.equals("track")) setValueSpecs(ValueName.TRACK);
-        else if (value.equals("bus_guideway")) setValueSpecs(ValueName.BUS_GUIDEWAY);
+        //else if (value.equals("bus_guideway")) setValueSpecs(ValueName.BUS_GUIDEWAY);
         else if (value.equals("road")) setValueSpecs(ValueName.ROAD);
         else if (value.equals("footway")) setValueSpecs(ValueName.FOOTWAY); //TODO: FOOTWAY_LINE, FOOTWAY_AREA
         else if (value.equals("cycleway")) setValueSpecs(ValueName.CYCLEWAY);

@@ -169,9 +169,11 @@ public class OSMHandler extends DefaultHandler {
 
                 if (keyValue_map.containsKey("natural")) { //##New key!
                     String val = keyValue_map.get("natural");
-                    if (val.equals("coastline")) PathCreater.processCoastlines(way, startPoint, endPoint);
+                    if (val.equals("coastline")) {
+                        PathCreater.processCoastlines(way, startPoint, endPoint);
+                        return;
+                    }
                     mapFeatures.add(new Natural(way, fetchOSMLayer(), keyValue_map.get("natural")));
-
 
                 } else if (keyValue_map.containsKey("waterway")) { //##New key!
                     mapFeatures.add(new Waterway(way, fetchOSMLayer(), keyValue_map.get("waterway"), isArea));
@@ -317,10 +319,11 @@ public class OSMHandler extends DefaultHandler {
                 break;
 
             case "osm": //The end of the osm file
-                sortLayers();
+
                 Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
                 PathCreater.connectCoastlines(bbox);
-
+                mapFeatures.addAll(coastlines);
+                sortLayers();
                 break;
 
         }
