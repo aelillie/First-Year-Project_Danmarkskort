@@ -18,7 +18,7 @@ public class TransportView {
         //[ValueName.VALUENAME.ordinal()] =     new DrawAttribute(isDashed, strokeId, color, zoomLevel);
         //AMENITY
         transportView[ValueName.AMENITY.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, -1.0);
-        transportView[ValueName.PARKING.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.cl_grey, -1.0);
+        transportView[ValueName.PARKING.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.lightergrey, -1.0);
         transportView[ValueName.UNIVERSITY.ordinal()] =      new DrawAttribute(false, 1, DrawAttribute.lightgrey, -1.0);
         //BARRIER
         transportView[ValueName.BARRIER.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, -1.0);
@@ -58,6 +58,7 @@ public class TransportView {
         transportView[ValueName.TRACK.ordinal()] =           new DrawAttribute(false, 1, DrawAttribute.cl_grey, -0.4);
         transportView[ValueName.ROAD.ordinal()] =            new DrawAttribute(false, 1, DrawAttribute.cl_grey, -0.4);
         transportView[ValueName.FOOTWAY.ordinal()] =         new DrawAttribute(true, 1, DrawAttribute.lightgrey, -0.5);
+        transportView[ValueName.FOOTWAY_AREA.ordinal()] =    new DrawAttribute(false, 1, DrawAttribute.lightgrey, -0.5);
         transportView[ValueName.CYCLEWAY.ordinal()] =        new DrawAttribute(true, 1, DrawAttribute.cl_grey, -0.1);
         transportView[ValueName.BRIDLEWAY.ordinal()] =       new DrawAttribute(true, 1, DrawAttribute.cl_grey, -0.1);
         transportView[ValueName.STEPS.ordinal()] =           new DrawAttribute(true, 1, DrawAttribute.cl_grey, -0.1);

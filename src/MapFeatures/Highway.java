@@ -38,6 +38,7 @@ public class Highway extends MapFeature {
         else if (value.equals("track")) setValueSpecs(ValueName.TRACK);
         //else if (value.equals("bus_guideway")) setValueSpecs(ValueName.BUS_GUIDEWAY);
         else if (value.equals("road")) setValueSpecs(ValueName.ROAD);
+        else if (value.equals("footway") && isArea) setValueSpecs(ValueName.FOOTWAY_AREA);
         else if (value.equals("footway")) setValueSpecs(ValueName.FOOTWAY); //TODO: FOOTWAY_LINE, FOOTWAY_AREA
         else if (value.equals("cycleway")) setValueSpecs(ValueName.CYCLEWAY);
         else if (value.equals("bridleway")) setValueSpecs(ValueName.BRIDLEWAY);

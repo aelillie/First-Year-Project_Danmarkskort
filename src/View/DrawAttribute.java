@@ -70,7 +70,7 @@ public class DrawAttribute {
     public static Color babyred = new Color(205,92,92);
     public static Color lightred = new Color(205, 54, 60);
     public static Color grey = new Color(169,169,169);
-    public static Color white = new Color(211,211,211);
+    public static Color white = new Color(255, 255, 255);
     public static Color bloodred = new Color(128,0,0);
     public static Color red = new Color(178,34,34);
     public static Color skincolor = new Color(222,184,135);
