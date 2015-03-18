@@ -4,6 +4,7 @@ import MapFeatures.Coastline;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.util.Map;
 
@@ -56,7 +57,7 @@ public class PathCreater {
     }
 
     public static void processCoastlines(Path2D coastPath, Point2D startPoint, Point2D endPoint){
-        Coastline currentCoastline = new Coastline(coastPath, startPoint, endPoint);
+        Coastline currentCoastline = new Coastline(coastPath, startPoint, endPoint,-2, "coastline");
 
         List<Coastline> coastlines = OSMHandler.getCoastlines();
         boolean hasBeenConnected = false;
@@ -115,4 +116,46 @@ public class PathCreater {
 
         }
     }
+
+    public static void connectCoastlines(Rectangle2D bbox){
+        Point2D southWest = new Point2D.Double(bbox.getX(),bbox.getY());
+        Point2D southEast = new Point2D.Double(bbox.getX()+bbox.getWidth(),bbox.getY());
+        Point2D northWest = new Point2D.Double(bbox.getX(),bbox.getY()+bbox.getHeight());
+        Point2D northEast = new Point2D.Double(bbox.getX()+bbox.getWidth(),bbox.getY()+bbox.getHeight());
+
+        for(Coastline coastline: OSMHandler.getCoastlines()){
+            Point2D[] pointsToAdd = new Point2D[2];
+            Point2D start = coastline.getStart();
+            double startX = start.getX();
+            double startY = start.getY();
+
+            Point2D end = coastline.getEnd();
+            double endX = end.getX();
+            double endY = end.getY();
+
+            if(coastline.getStart().equals(coastline.getEnd())) continue;
+
+            if((startX < northWest.getX()) && (startY > southWest.getY()) && (startY < northWest.getY())){
+                //pointToAdd.add(northWest);
+                if((endX < northEast.getX()) && (endX > northWest.getX()) && (endY > northWest.getY())){
+                    pointsToAdd[0] = northWest;
+                }
+
+            }
+
+            if(startX < southWest.getX() && startY < southWest.getY()){
+                if(endX < northEast.getX() && endX > northWest.getX() && endY > northWest.getY()){
+                    pointsToAdd[0] = northWest;
+                }
+            }
+
+            for(Point2D point : pointsToAdd){
+                if(point != null) {
+                    coastline.getPath().lineTo(point.getX(), point.getY());
+                }
+            }
+
+        }
+    }
+
 }
