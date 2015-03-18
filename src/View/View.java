@@ -396,13 +396,12 @@ public class View extends JFrame implements Observer {
             g.setTransform(transform);
             if (antialias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            //g.setColor(Color.BLUE);
-            //g.fill(model.getBbox());
 
             g.setStroke(min_value); //Just for good measure.
             g.setColor(Color.BLACK);
 
 
+            getContentPane().setBackground(DrawAttribute.whiteblue);
             /*//Drawing everything not categorized as a area or line object.
             for (Shape line : model) {
                 g.draw(line);
