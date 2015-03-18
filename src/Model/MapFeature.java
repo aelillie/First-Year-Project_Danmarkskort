@@ -1,7 +1,5 @@
 package Model;
 
-import View.DrawAttribute;
-
 import java.awt.*;
 import java.io.Serializable;
 
@@ -37,31 +35,21 @@ public abstract class MapFeature implements Serializable {
     */
 
 
-    public void drawBoundary(Graphics2D g, DrawAttribute drawAttribute) {
-        g.setColor(Color.BLACK);
-        if(!isArea && !drawAttribute.isDashed()) g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
-        else g.setStroke(DrawAttribute.basicStrokes[1]);
-        g.draw(way);
-
-    }
-
-    public void draw(Graphics2D g, DrawAttribute drawAttribute) {
-        g.setColor(drawAttribute.getColor());
-        if (isArea) {
-            g.fill(way);
-        } else {
-            if (drawAttribute.isDashed()) g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
-            else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
-            g.draw(way);
-        }
-    }
-
+ 
     public ValueName getValueName() {
         return valueName;
     }
 
     public int getLayerVal() {
         return layer_value;
+    }
+
+    public boolean isArea(){
+        return isArea;
+    }
+
+    public Shape getShape(){
+        return way;
     }
 
 

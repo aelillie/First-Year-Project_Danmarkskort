@@ -207,7 +207,7 @@ public class View extends JFrame implements Observer {
         searchButton.setBackground(new Color(36, 45, 50));
         searchButton.setIcon(new ImageIcon("data//searchIcon.png"));
         searchButton.setFocusable(false);
-        searchButton.setBounds(320,20,43,37);
+        searchButton.setBounds(320, 20, 43, 37);
         searchButton.setActionCommand("search");
     }
 
@@ -555,16 +555,34 @@ public class View extends JFrame implements Observer {
 
             //Draw EVERYTHING
             for (MapFeature mapFeature : model.getMapFeatures()) {
-                if (zoomLevel > -0.4)
-                    mapFeature.drawBoundary(g, drawAttributeManager.getDrawAttribute(mapFeature.getValueName()));
+                if (zoomLevel > -0.4) {
+                    g.setColor(Color.BLACK);
+
+                    DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                    if (!mapFeature.isArea() && !drawAttribute.isDashed())
+                        g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
+                    else g.setStroke(DrawAttribute.basicStrokes[1]);
+                    g.draw(mapFeature.getShape());
+                }
+
             }
 
 
 
             for (MapFeature mapFeature : model.getMapFeatures()) {
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                if (zoomLevel > drawAttribute.getZoomLevel())
-                    mapFeature.draw(g, drawAttribute);
+
+                    if (zoomLevel > drawAttribute.getZoomLevel())
+                        g.setColor(drawAttribute.getColor());
+                    if (mapFeature.isArea()) {
+                        g.fill(mapFeature.getShape());
+                    } else {
+                        if (drawAttribute.isDashed())
+                            g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
+                        else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
+                        g.draw(mapFeature.getShape());
+                    }
+
             }
 
             //Draws the icons.

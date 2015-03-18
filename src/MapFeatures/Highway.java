@@ -1,8 +1,7 @@
 package MapFeatures;
 
-import Model.ValueName;
-import View.DrawAttribute;
 import Model.MapFeature;
+import Model.ValueName;
 
 import java.awt.*;
 
