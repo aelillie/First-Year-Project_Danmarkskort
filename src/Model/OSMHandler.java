@@ -372,8 +372,6 @@ public class OSMHandler extends DefaultHandler {
 
     }
 
-
-
     /**
      * Custom comparator that defines how to compare two addresses. Used when sorting a collection of addresses.
      */

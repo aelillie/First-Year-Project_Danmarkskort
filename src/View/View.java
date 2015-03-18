@@ -391,9 +391,13 @@ public class View extends JFrame implements Observer {
         @Override
         public void paint(Graphics _g) {
             Graphics2D g = (Graphics2D) _g;
+
             //Set the Transform for Graphic2D element before drawing.
             g.setTransform(transform);
             if (antialias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
+            //g.setColor(Color.BLUE);
+            //g.fill(model.getBbox());
 
             g.setStroke(min_value); //Just for good measure.
             g.setColor(Color.BLACK);

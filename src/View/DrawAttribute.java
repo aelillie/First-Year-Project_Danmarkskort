@@ -79,6 +79,7 @@ public class DrawAttribute {
     public static Color greenblue = new Color(102,205,170);
     public static Color whitegreen = new Color(144,238,144);
     public static Color brown = new Color(139,69,19);
+    public static Color ground = new Color(238,238,238);
 
     public static Color[] colors = new Color[] {lightblue, lightgreen, darkgreen, lightyellow, darkblue, lightgrey, neongreen, babyred, lightred,
                                                 grey, white, bloodred, red, skincolor, bluegreen, orange, pink, sand, whiteblue, greenblue, whitegreen, brown};
