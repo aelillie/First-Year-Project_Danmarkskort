@@ -27,14 +27,13 @@ class TextDraw {
         // collect path points
         collectLayoutPoints(getPathPoints());
         for(int j = 0; j < points.length-1; j++) {
-           // double theta = getAngle(j);
+          //double theta = getAngle(j);
             AffineTransform at = AffineTransform.getTranslateInstance(points[j].x, points[j].y);
             AffineTransform tmp = new AffineTransform();
             tmp.setToScale(1,-1);
             tmp.preConcatenate(at);
-           // at.rotate(theta);
             g2.setFont(font.deriveFont(tmp));
-            g2.drawString(text, 0, 0);
+            g2.drawString(text,0,0);
         }
     }
 
@@ -44,6 +43,7 @@ class TextDraw {
 
         while(!pit.isDone())
         {
+
 
         }
     }*/
@@ -64,7 +64,7 @@ class TextDraw {
         }
         Point2D.Double[] points = new Point2D.Double[count];
         pit = path.getPathIterator(null, flatness);
-        double[] coords = new double[10];
+        double[] coords = new double[6];
         count = 0;
         while(!pit.isDone()) {
             int type = pit.currentSegment(coords);
@@ -117,3 +117,11 @@ class TextDraw {
         return start;
     }
 }
+
+/*
+Få alle pointene
+Print streng ud mellem alle pointene
+/Er tokenWidth ikke ligegyldig?
+/Er nextPointIndex ikke ligegyldig?
+
+ */

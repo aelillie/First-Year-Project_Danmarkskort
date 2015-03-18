@@ -117,13 +117,13 @@ public class PathCreater {
         }
     }
 
-    public static void connectCoastlines(Rectangle2D bbox){
-        Point2D southWest = new Point2D.Double(bbox.getX(),bbox.getY());
-        Point2D southEast = new Point2D.Double(bbox.getX()+bbox.getWidth(),bbox.getY());
-        Point2D northWest = new Point2D.Double(bbox.getX(),bbox.getY()+bbox.getHeight());
-        Point2D northEast = new Point2D.Double(bbox.getX()+bbox.getWidth(),bbox.getY()+bbox.getHeight());
+    public static void connectCoastlines(Rectangle2D bbox) {
+        Point2D southWest = new Point2D.Double(bbox.getX(), bbox.getY());
+        Point2D southEast = new Point2D.Double(bbox.getX() + bbox.getWidth(), bbox.getY());
+        Point2D northWest = new Point2D.Double(bbox.getX(), bbox.getY() + bbox.getHeight());
+        Point2D northEast = new Point2D.Double(bbox.getX() + bbox.getWidth(), bbox.getY() + bbox.getHeight());
 
-        for(Coastline coastline: OSMHandler.getCoastlines()){
+        for (Coastline coastline : OSMHandler.getCoastlines()) {
             Point2D[] pointsToAdd = new Point2D[2];
             Point2D start = coastline.getStart();
             double startX = start.getX();
@@ -133,29 +133,144 @@ public class PathCreater {
             double endX = end.getX();
             double endY = end.getY();
 
-            if(coastline.getStart().equals(coastline.getEnd())) continue;
+            if (coastline.getStart().equals(coastline.getEnd())) continue;
 
-            if((startX < northWest.getX()) && (startY > southWest.getY()) && (startY < northWest.getY())){
-                //pointToAdd.add(northWest);
-                if((endX < northEast.getX()) && (endX > northWest.getX()) && (endY > northWest.getY())){
-                    pointsToAdd[0] = northWest;
-                }
 
-            }
-
-            if(startX < southWest.getX() && startY < southWest.getY()){
-                if(endX < northEast.getX() && endX > northWest.getX() && endY > northWest.getY()){
+            //start 7 -> end 2
+            if (startX < southWest.getX() && startY < southWest.getY()) {
+                if (endX < northEast.getX() && endX > northWest.getX() && endY > northWest.getY()) {
                     pointsToAdd[0] = northWest;
                 }
             }
 
-            for(Point2D point : pointsToAdd){
-                if(point != null) {
-                    coastline.getPath().lineTo(point.getX(), point.getY());
+
+            //Start 2
+            if (startX < northEast.getX() && startX > northWest.getX() && startY > northEast.getY()) {
+                if (endX > southEast.getX() && endX < southWest.getX() && endY < southEast.getY()) {
+                    pointsToAdd[0] = southEast;
+                    pointsToAdd[1] = northEast;
+                } else if (endX > southEast.getX() && endY < southEast.getY()) {
+                    pointsToAdd[0] = northEast;
+                } else if (endX > northEast.getX() && endY > southEast.getY() && endY < northEast.getY()) {
+                    pointsToAdd[0] = northEast;
+                } else if (endX < southWest.getX() && endY < southWest.getY()) {
+                    pointsToAdd[0] = southWest;
+                    pointsToAdd[1] = southEast;
+                    pointsToAdd[2] = northEast;
+                } else if (endX > southWest.getX() && endY < northWest.getY() && endY > southWest.getY()) {
+                    pointsToAdd[0] = southWest;
+                    pointsToAdd[1] = southEast;
+                    pointsToAdd[2] = northEast;
                 }
             }
 
+            //Start 3
+            if (startX > northEast.getX() && startY > northEast.getY()) {
+                if (endY < southEast.getY() && endX < southEast.getX() && endX > southWest.getX()) {
+                    pointsToAdd[0] = southEast;
+                    pointsToAdd[1] = northEast;
+                } else if (endX < northWest.getX() && endY < northWest.getY()) {
+                    pointsToAdd[0] = southWest;
+                    pointsToAdd[1] = southEast;
+                    pointsToAdd[2] = northEast;
+                } else if (endX < northWest.getX() && endY < northWest.getY() && endY > southWest.getY()) {
+                    pointsToAdd[0] = southWest;
+                    pointsToAdd[1] = southEast;
+                    pointsToAdd[2] = northEast;
+                }
+            }
+
+            //Start 4
+            if ((startX < northWest.getX()) && (startY > southWest.getY()) && (startY < northWest.getY())) {
+                if (endX < northEast.getX() && endX > northWest.getX() && endY > northWest.getY()) {
+                    pointsToAdd[0] = northWest;
+                } else if (endY > northEast.getY() && endX > northEast.getX()) {
+                    pointsToAdd[0] = northEast;
+                    pointsToAdd[1] = northWest;
+                } else if (endX > southEast.getX() && endY < northEast.getY() && endY > northWest.getY()) {
+                    pointsToAdd[0] = northEast;
+                    pointsToAdd[1] = northWest;
+                } else if (endX < southEast.getX() && endY < southEast.getY()) {
+                    pointsToAdd[0] = southEast;
+                    pointsToAdd[1] = northEast;
+                    pointsToAdd[2] = northWest;
+                } else if (endY < southEast.getY() && endX < southEast.getX() && endX > southWest.getX()) {
+                    pointsToAdd[0] = southEast;
+                    pointsToAdd[1] = northEast;
+                    pointsToAdd[2] = northWest;
+                }
+
+                //Start 7
+                if ((startX < southWest.getX() && startY < southWest.getY())) {
+                    if (endY > northEast.getX() && endX > northWest.getX() && endX < northWest.getX()) {
+                        pointsToAdd[0] = northWest;
+                    }
+                    else if(endX > northEast.getX() && endY > northEast.getY()){
+                        pointsToAdd[0] = northEast;
+                        pointsToAdd[1] = northWest;
+                        pointsToAdd[2] = southWest;
+                    }
+                    else if(endX > northEast.getX() && endY < northEast.getY() && endY > southEast.getY()){
+                        pointsToAdd[0] = northEast;
+                        pointsToAdd[1] = northWest;
+                        pointsToAdd[2] = southWest;
+                    }
+                }
+
+                //Start 8
+                if((startX < southEast.getX() && startX > southWest.getX() && startY < southWest.getY())){
+                    if(endX < southWest.getX() && endY < northWest.getY() && endY > southWest.getY()){
+                        pointsToAdd[0] = southWest;
+                    }
+                    else if(endX < northWest.getX() && endY > northWest.getY()){
+                        pointsToAdd[0] = northWest;
+                        pointsToAdd[1] = southWest;
+                    }
+                    else if(endY > northWest.getY() && endX < northEast.getX() && endX > northWest.getX()){
+                        pointsToAdd[0] = northWest;
+                        pointsToAdd[1] = southWest;
+                    }
+                    else if(endX > northEast.getX() && endY > northEast.getY()){
+                        pointsToAdd[0] = northEast;
+                        pointsToAdd[1] = northWest;
+                        pointsToAdd[2] = southWest;
+                    }
+                    else if(endX > northEast.getX() && endY > southEast.getY() && endY < northEast.getY()) {
+                        pointsToAdd[0] = northEast;
+                        pointsToAdd[1] = northWest;
+                        pointsToAdd[2] = southWest;
+                    }
+                }
+
+                //Start 9
+                if((startX > southEast.getX() && startY < southEast.getY())){
+                    if(endY > northEast.getY() && endX < northEast.getX() && endX > northWest.getX()){
+                        pointsToAdd[0] = northWest;
+                        pointsToAdd[1] = southWest;
+                        pointsToAdd[2] = southEast;
+                    }
+                    else if(endX < northWest.getX() && endY > northWest.getY()){
+                        pointsToAdd[0] = northWest;
+                        pointsToAdd[1] = southWest;
+                        pointsToAdd[2] = southEast;
+                    }
+                    else if(endX < northWest.getX() && endY > southWest.getY() && endY < northWest.getY()){
+                        pointsToAdd[0] = southWest;
+                        pointsToAdd[1] = southEast;
+                    }
+                }
+
+
+                for (Point2D point : pointsToAdd) {
+                    if (point != null) {
+                        coastline.getPath().lineTo(point.getX(), point.getY());
+                    }
+                }
+
+            }
         }
     }
-
 }
+
+
+
