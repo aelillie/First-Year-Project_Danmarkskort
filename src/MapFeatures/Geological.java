@@ -1,15 +1,15 @@
 package MapFeatures;
 
-import Model.DrawAttributes;
 import Model.MapFeature;
+import Model.ValueName;
 
-import java.awt.*;
+import java.awt.geom.Path2D;
 
 /**
  * Created by Anders on 11-03-2015.
  */
 public class Geological extends MapFeature {
-    public Geological(Shape way, int layer_value, String value) {
+    public Geological(Path2D way, int layer_value, String value) {
         super(way, layer_value, value);
         isArea = true;
         setValueAttributes();
@@ -17,21 +17,7 @@ public class Geological extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(DrawAttributes.lightgrey, -1.0);
+        setValueSpecs(ValueName.GEOLOGICAL);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

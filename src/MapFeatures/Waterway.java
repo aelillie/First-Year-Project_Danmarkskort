@@ -1,12 +1,13 @@
 package MapFeatures;
 
 import Model.MapFeature;
+import Model.ValueName;
 
-import java.awt.*;
+import java.awt.geom.Path2D;
 
 public class Waterway extends MapFeature {
 
-    public Waterway(Shape way, int layer_value, String value, boolean isArea) {
+    public Waterway(Path2D way, int layer_value, String value, boolean isArea) {
         super(way, layer_value, value);
         setValueAttributes();
         this.isArea = isArea;
@@ -14,27 +15,11 @@ public class Waterway extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if (value.equals("riverbank")) setValueSpecs(Color.blue, -1.0);
-        else if (value.equals("stream")) setValueSpecs(Color.blue, -1.0);
-        else if (value.equals("canal")) setValueSpecs(Color.blue, -1.0);
-        else if (value.equals("river")) setValueSpecs(Color.blue, -1.0);
-        else if (value.equals("dam")) setValueSpecs(Color.blue, -1.0);
-    }
-
-
-
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
+        if (value.equals("riverbank")) setValueSpecs(ValueName.RIVERBANK);
+        else if (value.equals("stream")) setValueSpecs(ValueName.STREAM);
+        else if (value.equals("canal")) setValueSpecs(ValueName.CANAL);
+        else if (value.equals("river")) setValueSpecs(ValueName.RIVER);
+        else if (value.equals("dam")) setValueSpecs(ValueName.DAM);
+        else setValueSpecs(ValueName.WATERWAY);
     }
 }

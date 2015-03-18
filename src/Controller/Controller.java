@@ -8,8 +8,7 @@ import java.awt.event.*;
 public class Controller extends MouseAdapter implements ActionListener {
     Model model;
     View view;
-    double x;
-    double y;
+
 
     public Controller(Model m, View v) {
         model = m;
@@ -29,11 +28,8 @@ public class Controller extends MouseAdapter implements ActionListener {
         view.getZoomInButton().addActionListener(this);
         view.getZoomOutButton().addActionListener(this);
         view.getFullscreenButton().addActionListener(this);
-        view.getFindRouteButton().addActionListener(this);
         view.getShowRoutePanelButton().addActionListener(this);
-        view.getCarButton().addActionListener(this);
-        view.getBicycleButton().addActionListener(this);
-        view.getFootButton().addActionListener(this);
+
     }
 
     @Override
@@ -42,13 +38,12 @@ public class Controller extends MouseAdapter implements ActionListener {
      */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if (command == "zoomIn") view.zoom(1.2);
-        else if (command == "zoomOut") view.zoom(1/1.2);
-        else if (command == "fullscreen") view.toggleFullscreen();
-        else if (command == "search") addressSearch();
-        else if (command == "maptype");
-        else if (command == "showRoutePanel") view.showRoutePanel();
-        else if (command == "findRoute");
+        if (command.equals("zoomIn")) view.zoom(1.2);
+        else if (command.equals("zoomOut")) view.zoom(1/1.2);
+        else if (command.equals("fullscreen")) view.toggleFullscreen();
+        else if (command.equals("search")) addressSearch();
+        else if (command.equals("showRoutePanel")) view.showRoutePanel();
+        else if (command.equals("findRoute"));
     }
 
     private void addressSearch(){
@@ -56,7 +51,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         Address address = Address.parse(input);
         //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
         view.getCanvas().requestFocusInWindow();
-        model.getOSMReader().searchForAddresses(address);
+        model.searchForAddresses(address);
     }
 
 
@@ -117,7 +112,7 @@ public class Controller extends MouseAdapter implements ActionListener {
                     view.pan(-10, 0);
                 }
             }
-            if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+            if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                 addressSearch();
             }
 

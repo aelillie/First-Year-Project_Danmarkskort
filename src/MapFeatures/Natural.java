@@ -1,13 +1,13 @@
 package MapFeatures;
 
-import Model.DrawAttributes;
 import Model.MapFeature;
+import Model.ValueName;
 
-import java.awt.*;
+import java.awt.geom.Path2D;
 
 public class Natural extends MapFeature {
 
-    public Natural(Shape way, int layer_value, String value) {
+    public Natural(Path2D way, int layer_value, String value) {
         super(way, layer_value, value);
         isArea = true;
         setValueAttributes();
@@ -17,36 +17,27 @@ public class Natural extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if (value.equals("wood")) setValueSpecs(DrawAttributes.lightgreen, -2.0);
-        if (value.equals("scrub")) setValueSpecs(DrawAttributes.lightgreen, -1.5);
-        if (value.equals("heath")) setValueSpecs(DrawAttributes.skincolor, -2.0);
-        if (value.equals("grassland")) setValueSpecs(DrawAttributes.bluegreen, -2.0);
-        if (value.equals("sand")) setValueSpecs(DrawAttributes.sand, -2.0);
-        if (value.equals("scree")) setValueSpecs(DrawAttributes.pink, -2.0);
-        if (value.equals("fell")) setValueSpecs(DrawAttributes.orange, -2.0);
-        if (value.equals("water")) setValueSpecs(DrawAttributes.whiteblue, -2.0);
-        if (value.equals("wetland")) setValueSpecs(DrawAttributes.greenblue, -2.0);
-        if (value.equals("beach")) setValueSpecs(DrawAttributes.sand, -2.0);
-        if (value.equals("coastline")) {
-            setValueSpecs(DrawAttributes.lightblue, -1.0);
+        if (value.equals("wood")) setValueSpecs(ValueName.WOOD);
+        else if (value.equals("scrub")) setValueSpecs(ValueName.SCRUB);
+        else if (value.equals("heath")) setValueSpecs(ValueName.HEATH);
+        else if (value.equals("grassland")) setValueSpecs(ValueName.GRASSLAND);
+        else if (value.equals("sand")) setValueSpecs(ValueName.SAND);
+        else if (value.equals("scree")) setValueSpecs(ValueName.SCREE);
+        else if (value.equals("fell")) setValueSpecs(ValueName.FELL);
+        else if (value.equals("water")) setValueSpecs(ValueName.WATER);
+        else if (value.equals("wetland")) setValueSpecs(ValueName.WETLAND);
+        else if (value.equals("beach")) setValueSpecs(ValueName.BEACH);
+       /* else if (value.equals("coastline")){
             isArea = false;
-        }
+            setValueSpecs(ValueName.COASTLINE);
+        }*/
+        else setValueSpecs(ValueName.NATURAL);
     }
 
 
-    @Override
-    public void setValueIcon() {
+    private void setValueIcon() {
 
     }
 
 
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

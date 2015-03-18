@@ -1,37 +1,27 @@
 package MapFeatures;
 
 import Model.MapFeature;
+import Model.ValueName;
 
-import java.awt.*;
+import java.awt.geom.Path2D;
 
 /**
  * Created by Anders on 11-03-2015.
  */
 public class Railway extends MapFeature {
 
-    public Railway(Shape way, int layer_value, String value) {
+    public Railway(Path2D way, int layer_value, String value) {
         super(way, layer_value, value);
         setValueAttributes();
-        dashed = true;
     }
 
     @Override
     public void setValueAttributes() {
-        setValueDashedSpecs(Color.DARK_GRAY, -1.9, 0);
+        if (value.equals("rail")) setValueSpecs(ValueName.RAIL);
+        else if (value.equals("light_rail")) setValueSpecs(ValueName.LIGHT_RAIL);
+        else if (value.equals("subway")) setValueSpecs(ValueName.SUBWAY);
+        else if (value.equals("tram")) setValueSpecs(ValueName.TRAM);
+        else setValueSpecs(ValueName.RAILWAY);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

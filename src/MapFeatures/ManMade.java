@@ -1,36 +1,23 @@
 package MapFeatures;
 
-import Model.DrawAttributes;
 import Model.MapFeature;
+import Model.ValueName;
 
-import java.awt.*;
+import java.awt.geom.Path2D;
 
 /**
  * Created by Kevin on 11-03-2015.
  */
 public class ManMade extends MapFeature{
 
-    public ManMade(Shape way, int layer_value, String value) {
+    public ManMade(Path2D way, int layer_value, String value) {
         super(way, layer_value, value);
+        setValueAttributes();
     }
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(DrawAttributes.lightgrey, -1.0);
+        setValueSpecs(ValueName.MANMADE);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

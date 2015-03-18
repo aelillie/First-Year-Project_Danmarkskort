@@ -1,15 +1,15 @@
 package MapFeatures;
 
-import Model.DrawAttributes;
 import Model.MapFeature;
+import Model.ValueName;
 
-import java.awt.*;
+import java.awt.geom.Path2D;
 
 /**
  * Created by Anders on 11-03-2015.
  */
 public class Shop extends MapFeature {
-    public Shop(Shape way, int layer_value, String value) {
+    public Shop(Path2D way, int layer_value, String value) {
         super(way, layer_value, value);
         setValueAttributes();
         isArea = true;
@@ -17,21 +17,7 @@ public class Shop extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(DrawAttributes.lightgrey, -1.0);
+        setValueSpecs(ValueName.SHOP);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }

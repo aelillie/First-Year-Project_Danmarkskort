@@ -1,16 +1,16 @@
 package MapFeatures;
 
-import Model.DrawAttributes;
 import Model.MapFeature;
+import Model.ValueName;
 
-import java.awt.*;
+import java.awt.geom.Path2D;
 
 /**
  * Created by Anders on 11-03-2015.
  */
 public class Aeroway extends MapFeature {
 
-    public Aeroway(Shape way, int layer_value, String value) {
+    public Aeroway(Path2D way, int layer_value, String value) {
         super(way, layer_value, value);
         isArea = true;
         setValueAttributes();
@@ -18,21 +18,7 @@ public class Aeroway extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(DrawAttributes.lightgrey, -1.0);
+        setValueSpecs(ValueName.AEROWAY);
     }
 
-    @Override
-    public void setValueIcon() {
-
-    }
-
-    @Override
-    public void setColorBlind() {
-
-    }
-
-    @Override
-    public void setStandard() {
-
-    }
 }
