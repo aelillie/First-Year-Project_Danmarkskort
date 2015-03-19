@@ -6,14 +6,22 @@ package View;
 public class Scaler {
 
 
-    public static double setScale(double scale){
-        double[] scaleNiveau = new double[10];
+    public static double setScale(int zoom){
+
+        return 200 * Math.pow(1.2, zoom*2);
+
+    }
+
+
+
+    public static int calculateZoom(double scale){
+        double[] scaleNiveau = new double[20];
 
         int x = 0;
         for(int i = 0; i < scaleNiveau.length; i ++){
             scaleNiveau[i] = 200 * Math.pow(1.2 , x);
 
-            x += 4;
+            x += 2;
         }
 
         double distance =  Math.abs(scaleNiveau[0] - scale);
@@ -29,22 +37,7 @@ public class Scaler {
 
         }
 
-        return scaleNiveau[idx];
-
-    }
-
-
-
-    public static int calculateZoom(double scale){
-        double value = 200;
-        int x = 0;
-        while(value+1 <= scale){
-
-            value = 200 * Math.pow(1.2, ++x * 4);
-
-
-        }
-        return x;
+        return idx;
 
     }
 

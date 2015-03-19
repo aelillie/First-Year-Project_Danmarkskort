@@ -23,7 +23,7 @@ public class View extends JFrame implements Observer {
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
     private int zoomLevel;
-    private int rotations;
+    private int checkOut = 1, checkIn = 0;
     private JTextField searchArea;
     private JButton searchButton, zoomInButton, zoomOutButton, fullscreenButton, showRoutePanelButton;
     private MapMenu mapMenu;
@@ -85,9 +85,8 @@ public class View extends JFrame implements Observer {
         double xscale = width / .56 / model.getBbox().getWidth();
         double yscale = height / model.getBbox().getHeight();
         double prescale = max(xscale, yscale);
-        double scale = Scaler.setScale(xscale);
-        zoomLevel = Scaler.calculateZoom(scale);
-        scale /= 0.56;
+        zoomLevel = Scaler.calculateZoom(prescale);
+        double scale = Scaler.setScale(zoomLevel);
         transform.scale(.56 * scale, -scale);
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
 
@@ -95,6 +94,7 @@ public class View extends JFrame implements Observer {
         setSize(screenSize); //screenSize
         setPreferredSize(new Dimension(800, 600)); //screenSize
         setExtendedState(Frame.NORMAL); //Frame.MAXIMIZED_BOTH
+        System.out.println(zoomLevel);
 
     }
 
@@ -298,22 +298,19 @@ public class View extends JFrame implements Observer {
                 //point after zoom
                 Point2D p2 = transformPoint(p);
                 transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY()); //Pan towards mouse
-                if((--rotations % 4 == 0|| (rotations + 1) % 4 == 0) && rotations +1  != 0) //TODO This doesnt work
-                    zoomLevel--; //Decrease zoomLevel
+                checkForZoomOut();
                 repaint();
 
-            } else if (wheelRotation < 0 && zoomLevel != 10) {
+            } else if (wheelRotation < 0 && zoomLevel != 20) {
                 Point2D p1 = transformPoint(p);
                 transform.scale(1.2, 1.2);
                 Point2D p2 = transformPoint(p);
                 transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY()); //Pan towards mouse
-                if((++rotations % 4 == 0 || (rotations - 1) % 4 == 0) && rotations - 1 != 0) //TODO This doesnt work
-                    zoomLevel++; //increase zoomLevel
+                checkForZoomIn();
                 repaint();
-
             }
 
-            System.out.println(zoomLevel+ " "+ rotations);
+            System.out.println(zoomLevel+ " ");
         } catch (NoninvertibleTransformException ex) {
             ex.printStackTrace();
         }
@@ -328,6 +325,29 @@ public class View extends JFrame implements Observer {
     public void mousePressed(MouseEvent e) {
         dragStartScreen = e.getPoint();
         dragEndScreen = null;
+    }
+
+    private void checkForZoomIn(){
+        if(checkIn == 1){
+            zoomLevel++;
+            checkOut = 1;
+            checkIn = 0;
+        } else{
+            checkOut = 0;
+            checkIn = 1;
+        }
+
+    }
+
+    private void checkForZoomOut(){
+        if(checkOut == 1){
+            zoomLevel--;
+            checkOut = 0;
+            checkIn = 1;
+        } else{
+            checkOut = 1;
+            checkIn = 0;
+        }
     }
 
     /**
