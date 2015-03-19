@@ -171,9 +171,9 @@ public class OSMHandler extends DefaultHandler {
                     String val = keyValue_map.get("natural");
                     if (val.equals("coastline")) {
                         PathCreater.processCoastlines(way, startPoint, endPoint);
-                        return;
+
                     }
-                    mapFeatures.add(new Natural(way, fetchOSMLayer(), keyValue_map.get("natural")));
+                    else mapFeatures.add(new Natural(way, fetchOSMLayer(), keyValue_map.get("natural")));
 
                 } else if (keyValue_map.containsKey("waterway")) { //##New key!
                     mapFeatures.add(new Waterway(way, fetchOSMLayer(), keyValue_map.get("waterway"), isArea));
@@ -216,7 +216,7 @@ public class OSMHandler extends DefaultHandler {
                 } else if (keyValue_map.containsKey("amenity")) { //##New key!
                     mapFeatures.add(new Amenity(way, fetchOSMLayer(), keyValue_map.get("amenity"), keyValue_map.containsKey("building")));
                     if (keyValue_map.get("amenity").equals("parking")) {
-                        mapIcons.add(new MapIcon(way, "data//parkingIcon.jpg"));
+                        mapIcons.add(new MapIcon(way, "data//parkingIcon.jpg")); //TODO uncomment
                     }
 
                 } else if (keyValue_map.containsKey("barrier")) { //##New key!
@@ -259,7 +259,7 @@ public class OSMHandler extends DefaultHandler {
 
                 break;
 
-            case "node":
+            case "node": //TODO Uncomment!
                 if (keyValue_map.containsKey("highway")) {
                     String val = keyValue_map.get("highway");
                     if (val.equals("bus_stop") && isBusstop)
@@ -271,7 +271,7 @@ public class OSMHandler extends DefaultHandler {
                         if (isMetro) mapIcons.add(new MapIcon(currentCoord, "data//metroIcon.png"));
                         else if (isSTog) mapIcons.add(new MapIcon(currentCoord, "data//stogIcon.png"));
                     }
-                } else if(keyValue_map.containsKey("name")) {
+                }else if(keyValue_map.containsKey("name")) {
                     String name = keyValue_map.get("name");
                     if(keyValue_map.containsKey("place")){
                         String place = keyValue_map.get("place");
@@ -286,7 +286,7 @@ public class OSMHandler extends DefaultHandler {
                             addressList.add(addr);
                         } else if (place.equals("suburb")){
 
-                        }/* else if (place.equals("surburb")){
+                        } else if (place.equals("surburb")){
 
                             addressMap.put(addr,currentCoord);
                             addressList.add(addr);
@@ -296,10 +296,10 @@ public class OSMHandler extends DefaultHandler {
                         } else if (place.equals("neighbourhood")){
                             addressMap.put(addr,currentCoord);
                             addressList.add(addr);
-                        }*/
+                        }
                     }
 
-                } else if (keyValue_map.containsKey("addr:street")){
+                } else if (keyValue_map.containsKey("addr:street")){    //TODO uncomment!
                     if(hasHouseNo && hasCity && hasPostcode){
                         Address addr = Address.newAddress(streetName, houseNumber, postCode, cityName);
                         //System.out.println(addressString + ", " + currentCoord);

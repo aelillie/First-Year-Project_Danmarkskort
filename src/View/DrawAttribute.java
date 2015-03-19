@@ -10,9 +10,9 @@ public class DrawAttribute {
     private boolean dashed;
     private int strokeId;
     private Color color;
-    private double zoomLevel;
+    private int zoomLevel;
 
-    public DrawAttribute(boolean dashed, int strokeId, Color color, double zoomLevel) {
+    public DrawAttribute(boolean dashed, int strokeId, Color color, int zoomLevel) {
         this.dashed = dashed;
         this.strokeId = strokeId;
         this.color = color;

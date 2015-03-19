@@ -22,7 +22,8 @@ public class View extends JFrame implements Observer {
     private AffineTransform transform = new AffineTransform();
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
-    private double zoomLevel;
+    private int zoomLevel;
+    private int rotations;
     private JTextField searchArea;
     private JButton searchButton, zoomInButton, zoomOutButton, fullscreenButton, showRoutePanelButton;
     private MapMenu mapMenu;
@@ -63,7 +64,7 @@ public class View extends JFrame implements Observer {
         pack();
         canvas.requestFocusInWindow();
         model.addObserver(this);
-        zoomLevel = model.getBbox().getWidth() * -1;
+        System.out.println(model.getBbox().getWidth());
     }
 
 
@@ -83,10 +84,13 @@ public class View extends JFrame implements Observer {
         //Set up the scale amount for our Afflinetransform
         double xscale = width / .56 / model.getBbox().getWidth();
         double yscale = height / model.getBbox().getHeight();
-        double scale = max(xscale, yscale);
+        double prescale = max(xscale, yscale);
+        double scale = Scaler.setScale(xscale);
+        zoomLevel = Scaler.calculateZoom(scale);
+        scale /= 0.56;
         transform.scale(.56 * scale, -scale);
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
-        zoomLevel = model.getBbox().getWidth() * -1;
+
         //Set up the JFrame using the monitors resolution.
         setSize(screenSize); //screenSize
         setPreferredSize(new Dimension(800, 600)); //screenSize
@@ -287,25 +291,35 @@ public class View extends JFrame implements Observer {
         try {
             int wheelRotation = e.getWheelRotation();
             Point p = e.getPoint();
-            if (wheelRotation > 0) {
+            if (wheelRotation > 0 && zoomLevel != 0) {
                 //point2d before zoom
                 Point2D p1 = transformPoint(p);
                 transform.scale(1 / 1.2, 1 / 1.2);
                 //point after zoom
                 Point2D p2 = transformPoint(p);
                 transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY()); //Pan towards mouse
-                zoomLevel -= 0.0765; //Decrease zoomLevel
+                if((--rotations % 4 == 0|| (rotations + 1) % 4 == 0) && rotations +1  != 0) {
+                    zoomLevel--; //Decrease zoomLevel
+
+                }
+
                 repaint();
 
-            } else {
+            } else if (wheelRotation < 0 && zoomLevel != 10) {
                 Point2D p1 = transformPoint(p);
                 transform.scale(1.2, 1.2);
                 Point2D p2 = transformPoint(p);
                 transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY()); //Pan towards mouse
-                zoomLevel += 0.0765; //increase zoomLevel
+                if((++rotations % 4 == 0 || (rotations - 1) % 4 == 0) && rotations - 1 != 0) {
+                    zoomLevel++; //increase zoomLevel
+
+                }
+
                 repaint();
 
             }
+
+            System.out.println(zoomLevel+ " "+ rotations);
         } catch (NoninvertibleTransformException ex) {
             ex.printStackTrace();
         }
@@ -397,6 +411,7 @@ public class View extends JFrame implements Observer {
             if (antialias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 
+
             g.setStroke(min_value); //Just for good measure.
             g.setColor(Color.BLACK);
 
@@ -409,7 +424,7 @@ public class View extends JFrame implements Observer {
 
 
             //Draw EVERYTHING
-            for (MapFeature mapFeature : model.getMapFeatures()) {
+           /* for (MapFeature mapFeature : model.getMapFeatures()) {
                 if (zoomLevel > -0.4) {
                     try {
                         g.setColor(Color.BLACK);
@@ -424,13 +439,13 @@ public class View extends JFrame implements Observer {
                     }
                 }
 
-            }
+            }*/
 
 
 
             for (MapFeature mapFeature : model.getMapFeatures()) {
                     DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                    if (zoomLevel > drawAttribute.getZoomLevel()) {
+                    if (zoomLevel >= drawAttribute.getZoomLevel()) {
                         g.setColor(drawAttribute.getColor());
                         if (mapFeature.isArea()) {
                             g.fill(mapFeature.getShape());
@@ -446,7 +461,7 @@ public class View extends JFrame implements Observer {
             }
             //Draws the icons.
 
-            if (zoomLevel > 0.0) {
+            if (zoomLevel >= 9) {
                 for (MapIcon mapIcon : model.getMapIcons()) {
                     mapIcon.draw(g, transform);
                 }
