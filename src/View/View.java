@@ -298,11 +298,8 @@ public class View extends JFrame implements Observer {
                 //point after zoom
                 Point2D p2 = transformPoint(p);
                 transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY()); //Pan towards mouse
-                if((--rotations % 4 == 0|| (rotations + 1) % 4 == 0) && rotations +1  != 0) {
+                if((--rotations % 4 == 0|| (rotations + 1) % 4 == 0) && rotations +1  != 0) //TODO This doesnt work
                     zoomLevel--; //Decrease zoomLevel
-
-                }
-
                 repaint();
 
             } else if (wheelRotation < 0 && zoomLevel != 10) {
@@ -310,11 +307,8 @@ public class View extends JFrame implements Observer {
                 transform.scale(1.2, 1.2);
                 Point2D p2 = transformPoint(p);
                 transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY()); //Pan towards mouse
-                if((++rotations % 4 == 0 || (rotations - 1) % 4 == 0) && rotations - 1 != 0) {
+                if((++rotations % 4 == 0 || (rotations - 1) % 4 == 0) && rotations - 1 != 0) //TODO This doesnt work
                     zoomLevel++; //increase zoomLevel
-
-                }
-
                 repaint();
 
             }
