@@ -13,7 +13,7 @@ public final class BinaryHandler {
      * Writes all the objects of Model.Drawable to a binary file for faster loading. The order of the sequence is important!
      * @param filename File saved to
      */
-    public static void save(String filename) throws IOException {
+    public static void saveShapes(String filename) throws IOException {
 
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
         //write the boundaries and the number of shapes.
@@ -23,7 +23,6 @@ public final class BinaryHandler {
         List<MapFeature> mapF = model.getMapFeatures();
         out.writeObject(mapF);
 
-        out.writeObject(model.getMapIcons());
     }
 
 
@@ -31,10 +30,10 @@ public final class BinaryHandler {
      * loads the shapes from a binary file. The order of the sequence is important!
      * @param filename file load from
      */
-    public static void load(String filename)throws IOException, ClassNotFoundException{
+    public static void loadShapes(String filename)throws IOException, ClassNotFoundException {
         Model model = Model.getModel();
         ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)));
-            //get the bounds of the map
+        //get the bounds of the map
         Rectangle2D rec = (Rectangle2D) in.readObject();
 
         model.setBBox(rec);
@@ -42,13 +41,37 @@ public final class BinaryHandler {
 
         model.getMapFeatures().clear();
 
-        mapF.addAll((List<MapFeature>)in.readObject());
+        mapF.addAll((List<MapFeature>) in.readObject());
 
-        List<MapIcon> mapIcons= model.getMapIcons();
+    }
 
-        mapIcons.addAll((List<MapIcon>) in.readObject());
+    public static void loadIcons(String filename)throws IOException, ClassNotFoundException{
+        Model model = Model.getModel();
+        ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(new FileInputStream(filename)));
 
-        model.getOSMReader().sortLayers();
+        List<MapIcon> icons = model.getMapIcons();
+        icons.addAll((List<MapIcon>)in.readObject());
+
+    }
+
+    public static void saveIcons(String filename)throws IOException{
+
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
+        //write the boundaries and the number of shapes.
+        Model model = Model.getModel();
+
+        out.writeObject(model.getMapIcons());
+    }
+
+
+    public static void loadAll(String shapeFile, String iconFile)throws IOException, ClassNotFoundException{
+        loadShapes(shapeFile);
+        loadIcons(iconFile);
+    }
+
+    public static void saveAll(String shapeFile, String iconFile) throws  IOException{
+        saveShapes(shapeFile);
+        saveIcons(iconFile);
     }
 
 }
