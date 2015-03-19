@@ -17,7 +17,7 @@ public class Route extends MapFeature{
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(ValueName.ROUTE);
+        setValueName(ValueName.ROUTE);
     }
 
 }

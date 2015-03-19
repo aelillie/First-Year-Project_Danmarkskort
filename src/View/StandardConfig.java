@@ -3,12 +3,12 @@ package View;
 import Model.ValueName;
 
 /**
- * Created by Anders on 18-03-2015.
+ * View configuration for the standard and default view presentation
  */
-public class StandardView {
+public class StandardConfig {
     private DrawAttribute[] standardView;
 
-    public StandardView(DrawAttribute[] standardView) {
+    public StandardConfig(DrawAttribute[] standardView) {
         this.standardView = standardView;
         defineStandardView();
     }

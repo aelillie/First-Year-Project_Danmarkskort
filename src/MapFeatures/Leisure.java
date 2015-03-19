@@ -19,12 +19,12 @@ public class Leisure extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("garden"))setValueSpecs(ValueName.GARDEN);
-        else if (value.equals("common")) setValueSpecs(ValueName.COMMON);
-        else if(value.equals("park")) setValueSpecs(ValueName.PARK);
-        else if(value.equals("pitch")) setValueSpecs(ValueName.PITCH);
-        else if(value.equals("playground")) setValueSpecs(ValueName.PLAYGROUND);
-        else setValueSpecs(ValueName.LEISURE);
+        if(value.equals("garden")) setValueName(ValueName.GARDEN);
+        else if (value.equals("common")) setValueName(ValueName.COMMON);
+        else if(value.equals("park")) setValueName(ValueName.PARK);
+        else if(value.equals("pitch")) setValueName(ValueName.PITCH);
+        else if(value.equals("playground")) setValueName(ValueName.PLAYGROUND);
+        else setValueName(ValueName.LEISURE);
     }
 
 }

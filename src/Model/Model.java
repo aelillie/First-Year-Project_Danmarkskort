@@ -115,7 +115,7 @@ public class Model extends Observable implements Serializable {
 
 
     public Rectangle2D getBbox(){
-        return OSMReader.bbox;
+        return OSMReader.getBbox();
     }
 
     public List<MapFeature> getMapFeatures(){
@@ -127,7 +127,7 @@ public class Model extends Observable implements Serializable {
     }
 
     public void setBBox(Rectangle2D bBox){
-        OSMReader.bbox.setRect(bBox);
+        OSMReader.getBbox().setRect(bBox);
     }
 
     public OSMHandler getOSMReader(){

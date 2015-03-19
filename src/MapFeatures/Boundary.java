@@ -17,7 +17,7 @@ public class Boundary extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(ValueName.BOUNDARY);
+        setValueName(ValueName.BOUNDARY);
     }
 
 }

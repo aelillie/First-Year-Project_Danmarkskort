@@ -17,21 +17,21 @@ public class Landuse extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("cemetery")) setValueSpecs(ValueName.CEMETERY);
-        else if(value.equals("construction")) setValueSpecs(ValueName.CONSTRUCTION);
+        if(value.equals("cemetery")) setValueName(ValueName.CEMETERY);
+        else if(value.equals("construction")) setValueName(ValueName.CONSTRUCTION);
         else if(value.equals("grass")) {
             isArea = true;
-            setValueSpecs(ValueName.GRASS);
+            setValueName(ValueName.GRASS);
         }
-        else if(value.equals("greenfield")) setValueSpecs(ValueName.GREENFIELD);
-        else if(value.equals("industrial")) setValueSpecs(ValueName.INDUSTRIAL);
-        else if(value.equals("orchard")) setValueSpecs(ValueName.ORCHARD);
-        else if(value.equals("reservoir")) setValueSpecs(ValueName.RESERVOIR);
+        else if(value.equals("greenfield")) setValueName(ValueName.GREENFIELD);
+        else if(value.equals("industrial")) setValueName(ValueName.INDUSTRIAL);
+        else if(value.equals("orchard")) setValueName(ValueName.ORCHARD);
+        else if(value.equals("reservoir")) setValueName(ValueName.RESERVOIR);
         else if(value.equals("allotments")) {
             isArea = true;
-            setValueSpecs(ValueName.ALLOTMENTS);
+            setValueName(ValueName.ALLOTMENTS);
         }
-        else setValueSpecs(ValueName.LANDUSE);
+        else setValueName(ValueName.LANDUSE);
     }
 
 }

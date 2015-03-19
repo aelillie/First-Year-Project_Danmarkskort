@@ -17,7 +17,7 @@ public class Craft extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(ValueName.CRAFT);
+        setValueName(ValueName.CRAFT);
     }
 
 }

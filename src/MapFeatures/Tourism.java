@@ -17,7 +17,7 @@ public class Tourism extends MapFeature{
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(ValueName.TOURISM);
+        setValueName(ValueName.TOURISM);
 
     }
 

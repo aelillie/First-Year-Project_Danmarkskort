@@ -3,12 +3,12 @@ package View;
 import Model.ValueName;
 
 /**
- * Created by Anders on 18-03-2015.
+ * View configuration for transport
  */
-public class TransportView {
+public class TransportConfig {
     private DrawAttribute[] transportView;
 
-    public TransportView(DrawAttribute[] transportView) {
+    public TransportConfig(DrawAttribute[] transportView) {
         this.transportView = transportView;
         defineTransportView();
     }

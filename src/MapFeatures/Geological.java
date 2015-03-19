@@ -17,7 +17,7 @@ public class Geological extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(ValueName.GEOLOGICAL);
+        setValueName(ValueName.GEOLOGICAL);
     }
 
 }

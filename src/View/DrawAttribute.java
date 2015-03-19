@@ -3,7 +3,8 @@ package View;
 import java.awt.*;
 
 /**
- * Helper class, which only contains predefined strokes and colors.
+ * Class containing all predefined colors and strokes
+ * Object instances of DrawAttribute are used to define how map features should be drawn through the view
  */
 public class DrawAttribute {
 

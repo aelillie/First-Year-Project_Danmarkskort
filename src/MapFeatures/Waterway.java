@@ -15,11 +15,11 @@ public class Waterway extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if (value.equals("riverbank")) setValueSpecs(ValueName.RIVERBANK);
-        else if (value.equals("stream")) setValueSpecs(ValueName.STREAM);
-        else if (value.equals("canal")) setValueSpecs(ValueName.CANAL);
-        else if (value.equals("river")) setValueSpecs(ValueName.RIVER);
-        else if (value.equals("dam")) setValueSpecs(ValueName.DAM);
-        else setValueSpecs(ValueName.WATERWAY);
+        if (value.equals("riverbank")) setValueName(ValueName.RIVERBANK);
+        else if (value.equals("stream")) setValueName(ValueName.STREAM);
+        else if (value.equals("canal")) setValueName(ValueName.CANAL);
+        else if (value.equals("river")) setValueName(ValueName.RIVER);
+        else if (value.equals("dam")) setValueName(ValueName.DAM);
+        else setValueName(ValueName.WATERWAY);
     }
 }

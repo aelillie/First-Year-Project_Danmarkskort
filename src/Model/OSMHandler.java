@@ -16,44 +16,24 @@ import java.util.*;
  * Ultimately adding shapes to be drawn to lists in this class.
  */
 public class OSMHandler extends DefaultHandler {
-    private Map<Long, Path2D> relations = new HashMap<>(); //contains all shapes to be used as relations.
-    private List<List<Point2D>> coastlinesInCoords = new ArrayList<>();
-    Map<Long, Point2D> IDcoord_map = new HashMap<>(); //Relation between a nodes' id and coordinates
-    Map<String, String> keyValue_map = new HashMap<>(); //relation between the keys and values in the XML file
-    Map<String, String> layer_map = new HashMap<>();
-    Map<Long, String> role_map = new HashMap<>(); //
-    List<Long> refs = new ArrayList<>(); //references
-    List<Point2D> coords = new ArrayList<>(); //referenced coordinates
-    Path2D way; //<way> tag. A way is the path from one coordinate to another
-    Long id;
-    Point2D currentCoord; //current coordinate read
-    private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity, isStart; //controls how shapes should be added
-    private String name;
-    private String streetName, houseNumber,cityName, postCode;
-    private List<MapIcon> mapIcons = new ArrayList<>(); //contains all the icons to be drawn
-
-    private static List<Coastline> coastlines = new ArrayList<>();
-
-    public static List<Coastline> getCoastlines() {
-        return coastlines;
-    }
-    private Point2D startPoint;
-    private Point2D endPoint;
-
-    protected Rectangle2D bbox = new Rectangle2D.Double();
-
-    public List<MapFeature> getMapFeatures() {
-        return mapFeatures;
-    }
-
-    private List<MapFeature> mapFeatures = new ArrayList<>();
-
-    private List<Address> addressList = new ArrayList<>();
+    private Map<Long, Point2D> node_map = new HashMap<>(); //Relation between a nodes' id and coordinates
+    private Map<String, String> keyValue_map = new HashMap<>(); //relation between the keys and values in the XML file
+    private Map<Long, Path2D> wayId_map = new HashMap<>(); //Map of ways and their id's
     private Map<Address,Point2D> addressMap = new HashMap<>(); //Contains relevant places parsed as address objects (e.g. a place Roskilde or an address Lauravej 38 2900 Hellerup etc.) linked to their coordinate.
 
-    public List<MapIcon> getMapIcons() {
-        return mapIcons;
-    }
+    private List<MapFeature> mapFeatures = new ArrayList<>(); //Contains all of the mapfeature objects to be drawn
+    private List<Address> addressList = new ArrayList<>(); //list of all the addresses in the .osm file
+    private List<MapIcon> mapIcons = new ArrayList<>(); //contains all the icons to be drawn
+    private List<Long> memberReferences = new ArrayList<>(); //member referenced in a relation of ways
+    private List<Point2D> wayCoords = new ArrayList<>(); //List of referenced coordinates used to make up a single way
+    private static List<Coastline> coastlines = new ArrayList<>(); //List of all of the coastlines to be drawn
+
+    private Long wayId; //Id of the current way
+    private Point2D nodeCoord; //current node's coordinates
+    private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity, isStart; //if a given feature is present
+    private String streetName, houseNumber,cityName, postCode; //address info
+    private Point2D startPoint, endPoint; //coastline start point and end point
+    private Rectangle2D bbox = new Rectangle2D.Double();
 
 
 
@@ -69,8 +49,7 @@ public class OSMHandler extends DefaultHandler {
         switch (qName) { //if qName.equals(case)
             case "relation":{
                 keyValue_map.clear();
-                role_map.clear();
-                refs.clear();
+                memberReferences.clear();
                 break;
             }
             case "node": {
@@ -82,13 +61,13 @@ public class OSMHandler extends DefaultHandler {
                 double lon = Double.parseDouble(atts.getValue("lon"));
                 long id = Long.parseLong(atts.getValue("id"));
                 Point2D coord = new Point2D.Double(lon, lat);
-                currentCoord = new Point2D.Double(lon,lat);
-                IDcoord_map.put(id, coord);
+                nodeCoord = new Point2D.Double(lon,lat);
+                node_map.put(id, coord);
                 break;
             }
-            case "nd": {
+            case "nd": { //references in a way, to other ways
                 long id = Long.parseLong(atts.getValue("ref"));
-                Point2D coord = IDcoord_map.get(id);
+                Point2D coord = node_map.get(id); //fetches coordinate from the referenced id
 
                 if(isStart){ //Saves startpoint (for use in coastlines)
                     startPoint = coord;
@@ -97,35 +76,34 @@ public class OSMHandler extends DefaultHandler {
                  endPoint = coord;
 
                 if (coord == null) return;
-                coords.add(coord);
+                wayCoords.add(coord);
                 break;
             }
-            case "way":
+            case "way": //A way containing references to other ways and possible tags
                 keyValue_map.clear();
-                coords.clear();
+                wayCoords.clear(); //clears list of references coordinates within a way
                 isArea = false;
                 hasName = false;
                 isStart = true;
-                id = Long.parseLong(atts.getValue("id"));
+                wayId = Long.parseLong(atts.getValue("id"));
                 break;
-            case "bounds":
+            case "bounds": //bounds for the given map
                 double minlat = Double.parseDouble(atts.getValue("minlat"));
                 double minlon = Double.parseDouble(atts.getValue("minlon"));
                 double maxlat = Double.parseDouble(atts.getValue("maxlat"));
                 double maxlon = Double.parseDouble(atts.getValue("maxlon"));
                 bbox.setRect( new Rectangle2D.Double(minlon, minlat, maxlon - minlon, maxlat - minlat));
                 break;
-            case "tag":
+            case "tag": //tags define a ways
                 String k = atts.getValue("k");
                 String v = atts.getValue("v");
                 keyValue_map.put(k, v);
-                    if(k.equals("area") && v.equals("yes")) isArea = true;
+                if(k.equals("area") && v.equals("yes")) isArea = true;
                 if(k.equals("highway") && v.equals("bus_stop")) isBusstop = true;
                 if(k.equals("subway")&& v.equals("yes")) isMetro = true;
                 if(k.equals("network") && v.equals("S-Tog")) isSTog = true;
                 if(k.equals("name")){
                     hasName = true;
-                    name = v;
                 }
                 if(k.equals("addr:street")){
                     streetName = v;
@@ -144,10 +122,7 @@ public class OSMHandler extends DefaultHandler {
                 }
                 break;
             case "member":
-                long ref = Long.parseLong(atts.getValue("ref"));
-                String role = atts.getValue("role");
-                role_map.put(ref, role);
-                refs.add(Long.parseLong(atts.getValue("ref")));
+                memberReferences.add(Long.parseLong(atts.getValue("ref")));
                 break;
         }
     }
@@ -164,7 +139,7 @@ public class OSMHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) {
         switch (qName) {
             case "way": //TODO: insert way names into the addresslist aswelll
-                way = PathCreater.createWay(coords);
+                Path2D way = PathCreater.createWay(wayCoords);
                 //start of adding shapes from keys and values
 
                 if (keyValue_map.containsKey("natural")) { //##New key!
@@ -172,73 +147,39 @@ public class OSMHandler extends DefaultHandler {
                     if (val.equals("coastline"))
                         PathCreater.processCoastlines(way, startPoint, endPoint);
                     else mapFeatures.add(new Natural(way, fetchOSMLayer(), keyValue_map.get("natural")));
-
-                } else if (keyValue_map.containsKey("waterway")) { //##New key!
-                    mapFeatures.add(new Waterway(way, fetchOSMLayer(), keyValue_map.get("waterway"), isArea));
-
-                } else if (keyValue_map.containsKey("leisure")) { //##New key!
-                    mapFeatures.add(new Leisure(way, fetchOSMLayer(), keyValue_map.get("leisure")));
-
-                } else if (keyValue_map.containsKey("landuse")) { //##New key!
-                    mapFeatures.add(new Landuse(way, fetchOSMLayer(), keyValue_map.get("landuse"), isArea));
-
-                } else if (keyValue_map.containsKey("geological")) { //##New key!
-                    mapFeatures.add(new Geological(way, fetchOSMLayer(), keyValue_map.get("geological")));
-
-                } else if (keyValue_map.containsKey("building")) { //##New key!
-                    mapFeatures.add(new Building(way, fetchOSMLayer(), keyValue_map.get("building")));
-
-                } else if (keyValue_map.containsKey("shop")) { //##New key!
-                    mapFeatures.add(new Shop(way, fetchOSMLayer(), keyValue_map.get("shop")));
-
-                } else if (keyValue_map.containsKey("tourism")) { //##New key!
-                    mapFeatures.add(new Tourism(way, fetchOSMLayer(), keyValue_map.get("tourism")));
-
-                } else if (keyValue_map.containsKey("man_made")) { //##New key!
-                    mapFeatures.add(new ManMade(way, fetchOSMLayer(), keyValue_map.get("man_made")));
-                } else if (keyValue_map.containsKey("military")) { //##New key!
-
-
-                } else if (keyValue_map.containsKey("historic")) { //##New key!
-                    mapFeatures.add(new Historic(way, fetchOSMLayer(), keyValue_map.get("historic")));
-
-                } else if (keyValue_map.containsKey("craft")) { //##New key!
-                    mapFeatures.add(new Craft(way, fetchOSMLayer(), keyValue_map.get("craft")));
-
-                } else if (keyValue_map.containsKey("emergency")) { //##New key!
-                    mapFeatures.add(new Emergency(way, fetchOSMLayer(), keyValue_map.get("emergency")));
-
-                } else if (keyValue_map.containsKey("aeroway")) { //##New key!
-                    mapFeatures.add(new Aeroway(way, fetchOSMLayer(), keyValue_map.get("aeroway")));
-
-                } else if (keyValue_map.containsKey("amenity")) { //##New key!
+                }
+                else if (keyValue_map.containsKey("waterway")) mapFeatures.add(new Waterway(way, fetchOSMLayer(), keyValue_map.get("waterway"), isArea));
+                else if (keyValue_map.containsKey("leisure"))  mapFeatures.add(new Leisure(way, fetchOSMLayer(), keyValue_map.get("leisure")));
+                else if (keyValue_map.containsKey("landuse"))  mapFeatures.add(new Landuse(way, fetchOSMLayer(), keyValue_map.get("landuse"), isArea));
+                else if (keyValue_map.containsKey("geological")) mapFeatures.add(new Geological(way, fetchOSMLayer(), keyValue_map.get("geological")));
+                else if (keyValue_map.containsKey("building")) mapFeatures.add(new Building(way, fetchOSMLayer(), keyValue_map.get("building")));
+                else if (keyValue_map.containsKey("shop"))  mapFeatures.add(new Shop(way, fetchOSMLayer(), keyValue_map.get("shop")));
+                else if (keyValue_map.containsKey("tourism")) mapFeatures.add(new Tourism(way, fetchOSMLayer(), keyValue_map.get("tourism")));
+                else if (keyValue_map.containsKey("man_made")) mapFeatures.add(new ManMade(way, fetchOSMLayer(), keyValue_map.get("man_made")));
+                else if (keyValue_map.containsKey("historic")) mapFeatures.add(new Historic(way, fetchOSMLayer(), keyValue_map.get("historic")));
+                else if (keyValue_map.containsKey("craft")) mapFeatures.add(new Craft(way, fetchOSMLayer(), keyValue_map.get("craft")));
+                else if (keyValue_map.containsKey("emergency")) mapFeatures.add(new Emergency(way, fetchOSMLayer(), keyValue_map.get("emergency")));
+                else if (keyValue_map.containsKey("aeroway")) mapFeatures.add(new Aeroway(way, fetchOSMLayer(), keyValue_map.get("aeroway")));
+                else if (keyValue_map.containsKey("amenity")) {
                     mapFeatures.add(new Amenity(way, fetchOSMLayer(), keyValue_map.get("amenity"), keyValue_map.containsKey("building")));
                     if (keyValue_map.get("amenity").equals("parking")) {
                         mapIcons.add(new MapIcon(way, "data//parkingIcon.jpg"));
                     }
-
-                } else if (keyValue_map.containsKey("barrier")) { //##New key!
-                    mapFeatures.add(new Barrier(way, fetchOSMLayer(), keyValue_map.get("barrier"), isArea));
-
-                } else if (keyValue_map.containsKey("boundary")) { //##New key!
-                    mapFeatures.add(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary")));
-                } else if (keyValue_map.containsKey("highway")) { //##New key!
-                    mapFeatures.add(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea));
-                } else if (keyValue_map.containsKey("railway")) { //##New key!
-                    mapFeatures.add(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
-
-                } else if (keyValue_map.containsKey("route")) { //##New key!
-                    mapFeatures.add(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
                 }
-                relations.put(id, way);
+                else if (keyValue_map.containsKey("barrier")) mapFeatures.add(new Barrier(way, fetchOSMLayer(), keyValue_map.get("barrier"), isArea));
+                else if (keyValue_map.containsKey("boundary")) mapFeatures.add(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary")));
+                else if (keyValue_map.containsKey("highway")) mapFeatures.add(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea));
+                else if (keyValue_map.containsKey("railway")) mapFeatures.add(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
+                else if (keyValue_map.containsKey("route"))  mapFeatures.add(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
 
+                wayId_map.put(wayId, way);
                 break;
 
             case "relation":
                 if (keyValue_map.containsKey("type")) {
                     String val = keyValue_map.get("type");
                     if (val.equals("multipolygon")) {
-                        Path2D path = PathCreater.createMultipolygon(refs, relations);
+                        Path2D path = PathCreater.createMultipolygon(memberReferences, wayId_map);
                         if(path == null) return;
                         if (keyValue_map.containsKey("building"))
                             mapFeatures.add(new Multipolygon(path, fetchOSMLayer(), "building"));
@@ -261,13 +202,13 @@ public class OSMHandler extends DefaultHandler {
                 if (keyValue_map.containsKey("highway")) {
                     String val = keyValue_map.get("highway");
                     if (val.equals("bus_stop") && isBusstop)
-                        mapIcons.add(new MapIcon(currentCoord, "data//busIcon.png"));
+                        mapIcons.add(new MapIcon(nodeCoord, "data//busIcon.png"));
                 }
                 else if (keyValue_map.containsKey("railway")) {
                     String val = keyValue_map.get("railway");
                     if (val.equals("station")) {
-                        if (isMetro) mapIcons.add(new MapIcon(currentCoord, "data//metroIcon.png"));
-                        else if (isSTog) mapIcons.add(new MapIcon(currentCoord, "data//stogIcon.png"));
+                        if (isMetro) mapIcons.add(new MapIcon(nodeCoord, "data//metroIcon.png"));
+                        else if (isSTog) mapIcons.add(new MapIcon(nodeCoord, "data//stogIcon.png"));
                     }
                 } else if(keyValue_map.containsKey("name")) {
                     String name = keyValue_map.get("name");
@@ -277,22 +218,22 @@ public class OSMHandler extends DefaultHandler {
                         Address addr = Address.newTown(name);
                         //System.out.println(name);
                         if(place.equals("town")){
-                            addressMap.put(addr,currentCoord);
+                            addressMap.put(addr, nodeCoord);
                             addressList.add(addr);
                         } else if (place.equals("village")){
-                            addressMap.put(addr,currentCoord);
+                            addressMap.put(addr, nodeCoord);
                             addressList.add(addr);
                         } else if (place.equals("suburb")){
 
                         }/* else if (place.equals("surburb")){
 
-                            addressMap.put(addr,currentCoord);
+                            addressMap.put(addr,nodeCoord);
                             addressList.add(addr);
                         } else if (place.equals("locality")) {
-                            addressMap.put(addr,currentCoord);
+                            addressMap.put(addr,nodeCoord);
                             addressList.add(addr);
                         } else if (place.equals("neighbourhood")){
-                            addressMap.put(addr,currentCoord);
+                            addressMap.put(addr,nodeCoord);
                             addressList.add(addr);
                         }*/
                     }
@@ -300,9 +241,9 @@ public class OSMHandler extends DefaultHandler {
                 } else if (keyValue_map.containsKey("addr:street")){
                     if(hasHouseNo && hasCity && hasPostcode){
                         Address addr = Address.newAddress(streetName, houseNumber, postCode, cityName);
-                        //System.out.println(addressString + ", " + currentCoord);
+                        //System.out.println(addressString + ", " + nodeCoord);
                         //System.out.println(addr.toString());
-                        addressMap.put(addr, currentCoord);
+                        addressMap.put(addr, nodeCoord);
                         addressList.add(addr);
                     }
                 }
@@ -352,9 +293,6 @@ public class OSMHandler extends DefaultHandler {
         //TODO Consider quicksort (3-way). Keep in mind duplicate keys are often encountered.
     }
 
-
-
-
     private int fetchOSMLayer() {
         int layer_val = 0; //default layer, if no value is defined in the OSM
         try {
@@ -365,10 +303,14 @@ public class OSMHandler extends DefaultHandler {
         return layer_val;
     }
 
+
+
+
     public void searchForAddressess(Address add){
         AddressSearcher.searchForAddresses(add, addressList, addressMap);
 
     }
+
 
     /**
      * Custom comparator that defines how to compare two addresses. Used when sorting a collection of addresses.
@@ -380,18 +322,18 @@ public class OSMHandler extends DefaultHandler {
         }
     }
 
-
-
-
-    /**
-     * Recursive binary search method taking lower- and higher bounds as input. Takes O(log N) time.
-     * @param list The list to be searched.
-     * @param addr The address we are searching for.
-     * @param low The lower bound of the part of the array we want to search.
-     * @param high The higher bound of the part of the array we want to search.
-     * @return The index at which we found the element.
-     */
-
+    public static List<Coastline> getCoastlines() {
+        return coastlines;
+    }
+    public Rectangle2D getBbox() {
+        return bbox;
+    }
+    public List<MapFeature> getMapFeatures() {
+        return mapFeatures;
+    }
+    public List<MapIcon> getMapIcons() {
+        return mapIcons;
+    }
 
 
 }

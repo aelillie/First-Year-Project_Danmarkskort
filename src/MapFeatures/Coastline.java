@@ -34,7 +34,7 @@ public class Coastline extends MapFeature {
     public void setStart(Point2D newStart) {start = newStart;}
 
     public void setValueAttributes(){
-        setValueSpecs(ValueName.COASTLINE);
+        setValueName(ValueName.COASTLINE);
     }
 
 }
