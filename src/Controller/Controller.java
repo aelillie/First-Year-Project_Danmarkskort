@@ -115,9 +115,6 @@ public class Controller extends MouseAdapter implements ActionListener {
             if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                 addressSearch();
             }
-
-
-
         }
     }
 }

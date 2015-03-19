@@ -49,6 +49,15 @@ public class DrawAttribute {
     public static Stroke r09 = new BasicStroke(0.00009f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     public static Stroke r10 = new BasicStroke(0.00010f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     public static Stroke r11 = new BasicStroke(0.00011f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r12 = new BasicStroke(0.00012f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r13 = new BasicStroke(0.00013f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r14 = new BasicStroke(0.00014f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r15 = new BasicStroke(0.00015f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r16 = new BasicStroke(0.00016f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r17 = new BasicStroke(0.00017f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r18 = new BasicStroke(0.00018f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r19 = new BasicStroke(0.00019f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r20 = new BasicStroke(0.00020f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 
     public static Stroke d1 = new BasicStroke(0.00001f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{0.0001f}, 0.00001f); //Metro
     public static Stroke d2 = new BasicStroke(0.00002f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,30.0f, new float[]{0.00005f},0.00000f); //Footway
@@ -105,7 +114,7 @@ public class DrawAttribute {
                                                 grey, white, bloodred, red, skincolor, bluegreen, orange, pink, sand, whiteblue, greenblue, whitegreen, brown};
     public static Stroke[] basicStrokes = new Stroke[]{s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11,s12, s13, s14, s15};
     public static Stroke[] dashedStrokes = new Stroke[] {d1, d2, d3, d4, d5};
-    public static Stroke[] streetStrokes = new Stroke[] {r00, r01, r02, r03, r04, r05, r06, r07, r08, r09, r10, r11};
+    public static Stroke[] streetStrokes = new Stroke[] {r00, r01, r02, r03, r04, r05, r06, r07, r08, r09, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20};
 
     public boolean isDashed() {
         return dashed;

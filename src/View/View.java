@@ -408,7 +408,17 @@ public class View extends JFrame implements Observer {
             }*/
 
 
-            //Draw EVERYTHING
+            //Draw areas first
+            for(MapFeature mapFeature : model.getMapFeatures()){
+                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                if(zoomLevel>drawAttribute.getZoomLevel()){
+                    if(mapFeature.isArea()){
+                        g.setColor(drawAttribute.getColor());
+                        g.fill(mapFeature.getShape());
+                    }
+                }
+            }
+            //Then draw boundaries on top of areas
             for (MapFeature mapFeature : model.getMapFeatures()) {
                 if (zoomLevel > -0.4) {
                     try {
@@ -417,7 +427,7 @@ public class View extends JFrame implements Observer {
                         if (drawAttribute.isDashed()) continue;
                         else if (!mapFeature.isArea())
                             g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
-                        else g.setStroke(DrawAttribute.basicStrokes[1]);
+                        else g.setStroke(DrawAttribute.basicStrokes[0]);
                         g.draw(mapFeature.getShape());
                     }catch(NullPointerException e){
                         System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
@@ -427,23 +437,23 @@ public class View extends JFrame implements Observer {
             }
 
 
-
+            //Draw the fillers on top of boundaries and areas
             for (MapFeature mapFeature : model.getMapFeatures()) {
-                    DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                    if (zoomLevel > drawAttribute.getZoomLevel()) {
-                        g.setColor(drawAttribute.getColor());
-                        if (mapFeature.isArea()) {
-                            g.fill(mapFeature.getShape());
-                        } else {
-                            if (drawAttribute.isDashed())
-                                g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
-                            else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
-                            g.draw(mapFeature.getShape());
-                        }
-                    }
-
-
+                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                if (zoomLevel > drawAttribute.getZoomLevel()) {
+                    g.setColor(drawAttribute.getColor());
+                  /*  if (mapFeature.isArea()) {
+                        g.fill(mapFeature.getShape());
+                    } else {*/
+                        if (drawAttribute.isDashed())
+                            g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
+                        else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
+                        g.draw(mapFeature.getShape());
+               //     }
+                }
             }
+
+
             //Draws the icons.
 
             if (zoomLevel > 0.0) {
