@@ -50,7 +50,7 @@ public class TransportView {
         transportView[ValueName.TERTIARY.ordinal()] =        new DrawAttribute(false, 3, DrawAttribute.black, -0.8);
         transportView[ValueName.TERTIARY_LINK.ordinal()] =   new DrawAttribute(false, 3, DrawAttribute.black, -0.8);
         transportView[ValueName.UNCLASSIFIED.ordinal()] =    new DrawAttribute(false, 1, DrawAttribute.cl_grey, -0.8);
-        transportView[ValueName.RESIDENTIAL.ordinal()] =     new DrawAttribute(false, 1, DrawAttribute.black, -1.0);
+        transportView[ValueName.RESIDENTIAL.ordinal()] =     new DrawAttribute(false, 5, DrawAttribute.lightergrey, -1.0);
         transportView[ValueName.SERVICE.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.black, -1.0);
         transportView[ValueName.LIVING_STREET.ordinal()] =   new DrawAttribute(false, 1, DrawAttribute.cl_grey, -0.8);
         transportView[ValueName.PEDESTRIAN.ordinal()] =      new DrawAttribute(false, 1, DrawAttribute.lightgrey, -0.5);
@@ -98,7 +98,7 @@ public class TransportView {
         transportView[ValueName.WATER.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.whiteblue, -2.0);
         transportView[ValueName.WETLAND.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.whitegreen, -2.0);
         transportView[ValueName.BEACH.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.sand, -2.0);
-        transportView[ValueName.COASTLINE.ordinal()] =       new DrawAttribute(false, 0, DrawAttribute.lightblue, -1.0);
+        transportView[ValueName.COASTLINE.ordinal()] =       new DrawAttribute(false, 0, DrawAttribute.ground, -1.0);
         //RAILWAY
         transportView[ValueName.RAILWAY.ordinal()] =         new DrawAttribute(true, 4, DrawAttribute.cl_red2, -3.0);
         transportView[ValueName.LIGHT_RAIL.ordinal()] =      new DrawAttribute(true, 4, DrawAttribute.cl_red3, -3.0);
