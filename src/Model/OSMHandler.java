@@ -169,11 +169,9 @@ public class OSMHandler extends DefaultHandler {
 
                 if (keyValue_map.containsKey("natural")) { //##New key!
                     String val = keyValue_map.get("natural");
-                    if (val.equals("coastline")) {
+                    if (val.equals("coastline"))
                         PathCreater.processCoastlines(way, startPoint, endPoint);
-                        return;
-                    }
-                    mapFeatures.add(new Natural(way, fetchOSMLayer(), keyValue_map.get("natural")));
+                    else mapFeatures.add(new Natural(way, fetchOSMLayer(), keyValue_map.get("natural")));
 
                 } else if (keyValue_map.containsKey("waterway")) { //##New key!
                     mapFeatures.add(new Waterway(way, fetchOSMLayer(), keyValue_map.get("waterway"), isArea));
