@@ -13,6 +13,7 @@ import java.awt.geom.Point2D;
 import java.util.Observable;
 import java.util.Observer;
 
+import static java.lang.Math.cos;
 import static java.lang.Math.max;
 
 public class View extends JFrame implements Observer {
@@ -72,27 +73,28 @@ public class View extends JFrame implements Observer {
      * Also sets up the frame size from screenSize
      */
     private void setScale() {
-        // bbox.width * xscale * .56 = 512
-        // bbox.height * yscale = 512
-
         //Get the monitors size.
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         double width = screenSize.getWidth();
         double height = screenSize.getHeight();
 
         //Set up the scale amount for our Afflinetransform
-        double xscale = width / .56 / model.getBbox().getWidth();
+        double xscale = width / model.getBbox().getWidth();
         double yscale = height / model.getBbox().getHeight();
         double scale = max(xscale, yscale);
-        transform.scale(.56 * scale, -scale);
+        transform.scale(scale, -scale);
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
         zoomLevel = model.getBbox().getWidth() * -1;
         //Set up the JFrame using the monitors resolution.
         setSize(screenSize); //screenSize
         setPreferredSize(new Dimension(800, 600)); //screenSize
         setExtendedState(Frame.NORMAL); //Frame.MAXIMIZED_BOTH
-
     }
+
+    public static double y2lat(double aY) {
+        return Math.toDegrees(2* Math.atan(Math.exp(Math.toRadians(aY))) - Math.PI/2);
+    }
+
 
     /**
      * Makes use of different layers to put JComponent on top
