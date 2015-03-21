@@ -91,11 +91,6 @@ public class View extends JFrame implements Observer {
         setExtendedState(Frame.NORMAL); //Frame.MAXIMIZED_BOTH
     }
 
-    public static double y2lat(double aY) {
-        return Math.toDegrees(2* Math.atan(Math.exp(Math.toRadians(aY))) - Math.PI/2);
-    }
-
-
     /**
      * Makes use of different layers to put JComponent on top
      * of the canvas. Creates the GUI for the
