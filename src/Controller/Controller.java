@@ -67,9 +67,11 @@ public class Controller extends MouseAdapter implements ActionListener {
         if(returnValue == JFileChooser.APPROVE_OPTION){ //Return value if yes/ok is chosen.
             File file = view.getFileChooser().getSelectedFile();
             String filename = file.getPath();
-          //TODO: How to load in a new file?!
+            model.loadFile(filename);
+            view.repaint();
+            view.scaleAffine();
         } else { //If no file is chosen (the user pressed cancel) or if an error occured
-
+            view.repaint();
         }
     }
 

@@ -22,7 +22,7 @@ public class View extends JFrame implements Observer {
     public static final long serialVersionUID = 0;
     private Model model;
     private Canvas canvas;
-    private AffineTransform transform = new AffineTransform();
+    private AffineTransform transform;
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
     private double zoomLevel;
@@ -62,6 +62,7 @@ public class View extends JFrame implements Observer {
                 zoomInButton.setBounds(getWidth() - 160, getHeight() - getHeight() / 3 * 2, 39, 37);
                 mapMenu.setBounds(getWidth() - 160, getHeight() - getHeight() / 3 * 2 - 50, 130, 30);
                 loadButton.setBounds(getWidth()-65, getHeight()-65,40,20);
+                repaint();
             }
         });
 
@@ -77,9 +78,20 @@ public class View extends JFrame implements Observer {
      * Sets the scale for the afflineTransform object using to bounds from the osm file
      * Also sets up the frame size from screenSize
      */
-    private void setScale() {
+    public void setScale() {
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        scaleAffine();
+
+        //Set up the JFrame using the monitors resolution.
+        setSize(screenSize); //screenSize
+        setPreferredSize(new Dimension(800, 600)); //screenSize
+        setExtendedState(Frame.NORMAL); //Frame.MAXIMIZED_BOTH
+    }
+
+    public void scaleAffine(){
         //Get the monitors size.
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        transform = new AffineTransform();
         double width = screenSize.getWidth();
         double height = screenSize.getHeight();
 
@@ -90,10 +102,6 @@ public class View extends JFrame implements Observer {
         transform.scale(scale, -scale);
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
         zoomLevel = model.getBbox().getWidth() * -1;
-        //Set up the JFrame using the monitors resolution.
-        setSize(screenSize); //screenSize
-        setPreferredSize(new Dimension(800, 600)); //screenSize
-        setExtendedState(Frame.NORMAL); //Frame.MAXIMIZED_BOTH
     }
 
     /**
@@ -394,6 +402,7 @@ public class View extends JFrame implements Observer {
             gd.setFullScreenWindow(null);
         }
         isFullscreen = !isFullscreen;
+        scaleAffine();
     }
 
     /**
@@ -401,8 +410,9 @@ public class View extends JFrame implements Observer {
      * @return A value representing the action taken within the filechooser
      */
     public int openFileChooser(){
-        int returnVal = fc.showOpenDialog(canvas); //Parent component as parameter - affects position of dialog
+        int returnVal = fc.showOpenDialog(getCanvas()); //Parent component as parameter - affects position of dialog
         return returnVal;
+        //TODO: When in fullscreen and opening the dialog, it closes the window?!?
     }
 
 

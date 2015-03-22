@@ -23,14 +23,12 @@ public class Model extends Observable implements Serializable {
     private ArrayList<Address> addressList = new ArrayList<>(); //Contains all addresses to be sorted according to the compareTo method.
 
 
-
-
-
     private Model(){}
 
     public static Model getModel(){
         return model;
     }
+
     public void loadFile(String filename) {
         long time = System.nanoTime();
         Address.addPatterns();

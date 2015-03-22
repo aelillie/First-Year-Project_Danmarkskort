@@ -16,24 +16,24 @@ import java.util.*;
  * Ultimately adding shapes to be drawn to lists in this class.
  */
 public class OSMHandler extends DefaultHandler {
-    private Map<Long, Point2D> node_map = new HashMap<>(); //Relation between a nodes' id and coordinates
-    private Map<String, String> keyValue_map = new HashMap<>(); //relation between the keys and values in the XML file
-    private Map<Long, Path2D> wayId_map = new HashMap<>(); //Map of ways and their id's
-    private Map<Address,Point2D> addressMap = new HashMap<>(); //Contains relevant places parsed as address objects (e.g. a place Roskilde or an address Lauravej 38 2900 Hellerup etc.) linked to their coordinate.
+    private Map<Long, Point2D> node_map; //Relation between a nodes' id and coordinates
+    private Map<String, String> keyValue_map; //relation between the keys and values in the XML file
+    private Map<Long, Path2D> wayId_map; //Map of ways and their id's
+    private Map<Address,Point2D> addressMap; //Contains relevant places parsed as address objects (e.g. a place Roskilde or an address Lauravej 38 2900 Hellerup etc.) linked to their coordinate.
 
-    private List<MapFeature> mapFeatures = new ArrayList<>(); //Contains all of the mapfeature objects to be drawn
-    private List<Address> addressList = new ArrayList<>(); //list of all the addresses in the .osm file
-    private List<MapIcon> mapIcons = new ArrayList<>(); //contains all the icons to be drawn
-    private List<Long> memberReferences = new ArrayList<>(); //member referenced in a relation of ways
-    private List<Point2D> wayCoords = new ArrayList<>(); //List of referenced coordinates used to make up a single way
-    private static List<Coastline> coastlines = new ArrayList<>(); //List of all of the coastlines to be drawn
+    private List<MapFeature> mapFeatures; //Contains all of the mapfeature objects to be drawn
+    private List<Address> addressList; //list of all the addresses in the .osm file
+    private List<MapIcon> mapIcons; //contains all the icons to be drawn
+    private List<Long> memberReferences; //member referenced in a relation of ways
+    private List<Point2D> wayCoords; //List of referenced coordinates used to make up a single way
+    private static List<Coastline> coastlines; //List of all of the coastlines to be drawn
 
     private Long wayId; //Id of the current way
     private Point2D nodeCoord; //current node's coordinates
     private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity, isStart; //if a given feature is present
     private String streetName, houseNumber,cityName, postCode; //address info
     private Point2D startPoint, endPoint; //coastline start point and end point
-    private Rectangle2D bbox = new Rectangle2D.Double();
+    private Rectangle2D bbox;
 
     /**
      * Calculates the latitude to the y-coordinate using spherical Mercator projection
@@ -54,6 +54,20 @@ public class OSMHandler extends DefaultHandler {
      */
     public void startElement(String uri, String localName, String qName, Attributes atts) {
         switch (qName) { //if qName.equals(case)
+            case "osm": { //NOTE: it's important to refresh all lists so that when you load in a new OSM-file, the old elements aren't in the lists.
+                mapFeatures = new ArrayList<>();
+                bbox = new Rectangle2D.Double();
+                coastlines = new ArrayList<>();
+                memberReferences = new ArrayList<>();
+                addressList = new ArrayList<>();
+                wayCoords = new ArrayList<>();
+                mapIcons = new ArrayList<>();
+
+                node_map = new HashMap<>();
+                keyValue_map = new HashMap<>();
+                wayId_map = new HashMap<>();
+                addressMap = new HashMap<>();
+            }
             case "relation":{
                 keyValue_map.clear();
                 memberReferences.clear();
