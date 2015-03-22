@@ -3,7 +3,9 @@ package Controller;
 import Model.*;
 import View.View;
 
+import javax.swing.*;
 import java.awt.event.*;
+import java.io.File;
 
 public class Controller extends MouseAdapter implements ActionListener {
     Model model;
@@ -13,6 +15,11 @@ public class Controller extends MouseAdapter implements ActionListener {
     public Controller(Model m, View v) {
         model = m;
         view = v;
+
+        setHandlers();
+    }
+
+    private void setHandlers(){
         //Set up Handlers for mouse and keyboard and let controller set these for view.
         keyHandler kH = new keyHandler();
         view.getCanvas().addKeyListener(kH);
@@ -27,9 +34,9 @@ public class Controller extends MouseAdapter implements ActionListener {
         view.getSearchButton().addActionListener(this);
         view.getZoomInButton().addActionListener(this);
         view.getZoomOutButton().addActionListener(this);
+        view.getLoadButton().addActionListener(this);
         view.getFullscreenButton().addActionListener(this);
         view.getShowRoutePanelButton().addActionListener(this);
-
     }
 
     @Override
@@ -39,7 +46,8 @@ public class Controller extends MouseAdapter implements ActionListener {
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equals("zoomIn")) view.zoom(1.2);
-        else if (command.equals("zoomOut")) view.zoom(1/1.2);
+        else if (command.equals("zoomOut")) view.zoom(1 / 1.2);
+        else if (command.equals("load")) loadFile();
         else if (command.equals("fullscreen")) view.toggleFullscreen();
         else if (command.equals("search")) addressSearch();
         else if (command.equals("showRoutePanel")) view.showRoutePanel();
@@ -52,6 +60,17 @@ public class Controller extends MouseAdapter implements ActionListener {
         //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
         view.getCanvas().requestFocusInWindow();
         model.searchForAddresses(address);
+    }
+
+    private void loadFile(){
+        int returnValue = view.openFileChooser(); //The returnvalue represents the action taken within the filechooser
+        if(returnValue == JFileChooser.APPROVE_OPTION){ //Return value if yes/ok is chosen.
+            File file = view.getFileChooser().getSelectedFile();
+            String filename = file.getPath();
+          //TODO: How to load in a new file?!
+        } else { //If no file is chosen (the user pressed cancel) or if an error occured
+
+        }
     }
 
 

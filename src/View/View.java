@@ -4,12 +4,14 @@ import Controller.MapMenuController;
 import Model.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -25,13 +27,14 @@ public class View extends JFrame implements Observer {
     private Point dragEndScreen, dragStartScreen;
     private double zoomLevel;
     private JTextField searchArea;
-    private JButton searchButton, zoomInButton, zoomOutButton, fullscreenButton, showRoutePanelButton;
+    private JButton searchButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton;
     private MapMenu mapMenu;
     private RouteView routePanel = new RouteView();
     private boolean isFullscreen = false;
     private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
     private String promptText = "Enter Address";
+    private final JFileChooser fc = new JFileChooser("data"); //sets the initial directory to data
 
     /**
      * Creates the window of our application.
@@ -58,6 +61,7 @@ public class View extends JFrame implements Observer {
                 fullscreenButton.setBounds(getWidth() - 70, getHeight() - getHeight() / 3 * 2, 39, 37);
                 zoomInButton.setBounds(getWidth() - 160, getHeight() - getHeight() / 3 * 2, 39, 37);
                 mapMenu.setBounds(getWidth() - 160, getHeight() - getHeight() / 3 * 2 - 50, 130, 30);
+                loadButton.setBounds(getWidth()-65, getHeight()-65,40,20);
             }
         });
 
@@ -66,6 +70,7 @@ public class View extends JFrame implements Observer {
         model.addObserver(this);
         zoomLevel = model.getBbox().getWidth() * -1;
     }
+
 
 
     /**
@@ -139,6 +144,7 @@ public class View extends JFrame implements Observer {
         layer.add(searchButton, new Integer(2));
         layer.add(zoomInButton, new Integer(2));
         layer.add(zoomOutButton, new Integer(2));
+        layer.add(loadButton, new Integer(2));
         layer.add(fullscreenButton, new Integer(2));
         layer.add(mapMenu, new Integer(2));
         layer.add(showRoutePanelButton, new Integer(2));
@@ -157,6 +163,7 @@ public class View extends JFrame implements Observer {
         makeSearchButton();
         makeZoomInButton();
         makeZoomOutButton();
+        makeLoadButton();
         makeShowRoutePanelButton();
         makeFullscreenButton();
         makeMaptypeMenu();
@@ -188,36 +195,48 @@ public class View extends JFrame implements Observer {
 
 
     private void makeFullscreenButton() {
-        Dimension prefered = getPreferredSize();
+        Dimension preferred = getPreferredSize();
         fullscreenButton = new JButton();
         fullscreenButton.setBackground(Color.WHITE);
         fullscreenButton.setIcon(new ImageIcon("data//fullscreenIcon.png"));
         fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
         fullscreenButton.setFocusable(false);
         fullscreenButton.setActionCommand("fullscreen");
-        fullscreenButton.setBounds((int) prefered.getWidth() - 70, (int) prefered.getHeight() - (int) prefered.getHeight() / 3 * 2, 39, 37);
+        fullscreenButton.setBounds((int) preferred.getWidth() - 70, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37);
     }
 
     private void makeZoomOutButton() {
-        Dimension prefered = getPreferredSize();
+        Dimension preferred = getPreferredSize();
         zoomOutButton = new JButton();
         zoomOutButton.setBackground(Color.WHITE);
         zoomOutButton.setIcon(new ImageIcon("data//minusIcon.png"));
         zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
         zoomOutButton.setFocusable(false);
         zoomOutButton.setActionCommand("zoomOut");
-        zoomOutButton.setBounds((int) prefered.getWidth() - 115, (int) prefered.getHeight() - (int) prefered.getHeight() / 3 * 2, 39, 37);
+        zoomOutButton.setBounds((int) preferred.getWidth() - 115, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37);
     }
 
     private void makeZoomInButton() {
-        Dimension prefered = getPreferredSize();
+        Dimension preferred = getPreferredSize();
         zoomInButton = new JButton();
         zoomInButton.setBackground(Color.WHITE);
         zoomInButton.setIcon(new ImageIcon("data//plusIcon.png"));
         zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
         zoomInButton.setFocusable(false);
         zoomInButton.setActionCommand("zoomIn");
-        zoomInButton.setBounds((int) prefered.getWidth() - 160, (int) prefered.getHeight() - (int) prefered.getHeight() / 3 * 2, 39, 37);
+        zoomInButton.setBounds((int) preferred.getWidth() - 160, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37);
+    }
+
+    private void makeLoadButton(){
+        Dimension preferred = getPreferredSize();
+        loadButton = new JButton("LOAD");
+        loadButton.setBackground(new Color(36, 45, 50));
+        loadButton.setForeground(Color.WHITE);
+        loadButton.setFont(new Font("Arial", Font.BOLD, 10));
+        loadButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        loadButton.setFocusable(false);
+        loadButton.setActionCommand("load");
+        loadButton.setBounds((int) preferred.getWidth()-65,(int) preferred.getHeight()-65,40,20);
     }
 
     private void makeSearchButton() {
@@ -377,6 +396,16 @@ public class View extends JFrame implements Observer {
         isFullscreen = !isFullscreen;
     }
 
+    /**
+     * Opens the filechooser and returns a value.
+     * @return A value representing the action taken within the filechooser
+     */
+    public int openFileChooser(){
+        int returnVal = fc.showOpenDialog(canvas); //Parent component as parameter - affects position of dialog
+        return returnVal;
+    }
+
+
 
     /**
      * The canvas object is where our map of paths and images (points) will be drawn on
@@ -494,6 +523,8 @@ public class View extends JFrame implements Observer {
         }
     }
 
+    public JFileChooser getFileChooser(){ return fc;}
+
     public Component getCanvas() {
         return canvas;
     }
@@ -522,5 +553,6 @@ public class View extends JFrame implements Observer {
         return showRoutePanelButton;
     }
 
+    public JButton getLoadButton(){ return loadButton;}
 
 }
