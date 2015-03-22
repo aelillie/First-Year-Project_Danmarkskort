@@ -1,7 +1,9 @@
 package View;
 
 import Controller.MapMenuController;
-import Model.*;
+import Model.MapFeature;
+import Model.MapIcon;
+import Model.Model;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -13,7 +15,6 @@ import java.awt.geom.Point2D;
 import java.util.Observable;
 import java.util.Observer;
 
-import static java.lang.Math.cos;
 import static java.lang.Math.max;
 
 public class View extends JFrame implements Observer {
@@ -326,6 +327,7 @@ public class View extends JFrame implements Observer {
      * @param e MouseEvent
      */
     public void mouseDragged(MouseEvent e) {
+
         try {
             dragEndScreen = e.getPoint();
             //Create a point2d.float with the
@@ -355,6 +357,10 @@ public class View extends JFrame implements Observer {
     public void pan(double dx, double dy) {
         transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
         repaint();
+    }
+
+    public void setAntialias(boolean antialias){
+        this.antialias = antialias;
     }
 
     /**
@@ -408,8 +414,8 @@ public class View extends JFrame implements Observer {
             //Draw areas first
             for(MapFeature mapFeature : model.getMapFeatures()){
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                if(zoomLevel>drawAttribute.getZoomLevel()){
-                    if(mapFeature.isArea()){
+                if(zoomLevel > drawAttribute.getZoomLevel()){
+                    if(mapFeature.isArea()) {
                         g.setColor(drawAttribute.getColor());
                         g.fill(mapFeature.getShape());
                     }
@@ -442,12 +448,12 @@ public class View extends JFrame implements Observer {
                   /*  if (mapFeature.isArea()) {
                         g.fill(mapFeature.getShape());
                     } else {*/
-                        if (drawAttribute.isDashed())
-                            g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
+
+                        if (drawAttribute.isDashed()) g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
                         else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
                         g.draw(mapFeature.getShape());
-               //     }
-                }
+                    }
+
             }
 
 

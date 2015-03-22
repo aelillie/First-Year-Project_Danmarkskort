@@ -59,6 +59,7 @@ public class Controller extends MouseAdapter implements ActionListener {
     private class MouseHandler extends MouseAdapter {
 
         public void mouseDragged(MouseEvent e) {
+            view.setAntialias(false);
             view.mouseDragged(e);
         }
         public void mouseMoved(MouseEvent e) {}
@@ -66,12 +67,16 @@ public class Controller extends MouseAdapter implements ActionListener {
         public void mouseEntered(MouseEvent e) {}
         public void mouseExited(MouseEvent e) {}
         public void mousePressed(MouseEvent e) {
+
             view.mousePressed(e);
         }
         public void mouseWheelMoved(MouseWheelEvent e) {
             view.wheelZoom(e);
         }
-        public void mouseReleased(MouseEvent e) {}
+        public void mouseReleased(MouseEvent e) {
+            view.setAntialias(true);
+            view.repaint();
+        }
     }
     private class keyHandler extends KeyAdapter{
 
