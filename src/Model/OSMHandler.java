@@ -187,7 +187,7 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("amenity")) {
                     mapFeatures.add(new Amenity(way, fetchOSMLayer(), keyValue_map.get("amenity"), keyValue_map.containsKey("building")));
                     if (keyValue_map.get("amenity").equals("parking")) {
-                        mapIcons.add(new MapIcon(way, "data//parkingIcon.jpg"));
+                        //mapIcons.add(new MapIcon(way, "data//parkingIcon.jpg"));
                     }
                 }
                 else if (keyValue_map.containsKey("barrier")) mapFeatures.add(new Barrier(way, fetchOSMLayer(), keyValue_map.get("barrier"), isArea));
@@ -223,7 +223,7 @@ public class OSMHandler extends DefaultHandler {
                 break;
 
             case "node":
-                if (keyValue_map.containsKey("highway")) {
+               /* if (keyValue_map.containsKey("highway")) {
                     String val = keyValue_map.get("highway");
                     if (val.equals("bus_stop") && isBusstop)
                         mapIcons.add(new MapIcon(nodeCoord, "data//busIcon.png"));
@@ -259,7 +259,7 @@ public class OSMHandler extends DefaultHandler {
                         } else if (place.equals("neighbourhood")){
                             addressMap.put(addr,nodeCoord);
                             addressList.add(addr);
-                        }*/
+                        }
                     }
 
                 } else if (keyValue_map.containsKey("addr:street")){
@@ -270,7 +270,7 @@ public class OSMHandler extends DefaultHandler {
                         addressMap.put(addr, nodeCoord);
                         addressList.add(addr);
                     }
-                }
+                }*/
 
 
 

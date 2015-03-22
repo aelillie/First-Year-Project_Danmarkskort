@@ -66,7 +66,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         int returnValue = view.openFileChooser(); //The returnvalue represents the action taken within the filechooser
         if(returnValue == JFileChooser.APPROVE_OPTION){ //Return value if yes/ok is chosen.
             File file = view.getFileChooser().getSelectedFile();
-            String filename = "file:///" + file.getPath();
+            String filename = file.getPath();
             model.loadFile(filename);
             view.repaint();
             view.scaleAffine();
@@ -80,7 +80,7 @@ public class Controller extends MouseAdapter implements ActionListener {
     private class MouseHandler extends MouseAdapter {
 
         public void mouseDragged(MouseEvent e) {
-            view.setAntialias(false);
+            //view.setAntialias(false);
             view.mouseDragged(e);
         }
         public void mouseMoved(MouseEvent e) {}
@@ -95,8 +95,8 @@ public class Controller extends MouseAdapter implements ActionListener {
             view.wheelZoom(e);
         }
         public void mouseReleased(MouseEvent e) {
-            view.setAntialias(true);
-            view.repaint();
+            //view.setAntialias(true);
+            //view.repaint();
         }
     }
     private class keyHandler extends KeyAdapter{
