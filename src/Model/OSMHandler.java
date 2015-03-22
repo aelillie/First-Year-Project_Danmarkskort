@@ -118,7 +118,7 @@ public class OSMHandler extends DefaultHandler {
                 double maxlon = Double.parseDouble(atts.getValue("maxlon"));
                 bbox.setRect( new Rectangle2D.Double(minlon, minlat, maxlon - minlon, maxlat - minlat));
                 break;
-            case "tag": //tags define a ways
+            case "tag": //tags define ways
                 String k = atts.getValue("k");
                 String v = atts.getValue("v");
                 keyValue_map.put(k, v);
@@ -166,7 +166,7 @@ public class OSMHandler extends DefaultHandler {
                 Path2D way = PathCreater.createWay(wayCoords);
                 //start of adding shapes from keys and values
 
-                if (keyValue_map.containsKey("natural")) { //##New key!
+                if (keyValue_map.containsKey("natural")) {
                     String val = keyValue_map.get("natural");
                     if (val.equals("coastline"))
                         PathCreater.processCoastlines(way, startPoint, endPoint);
