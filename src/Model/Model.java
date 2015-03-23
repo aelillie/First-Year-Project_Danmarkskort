@@ -31,6 +31,8 @@ public class Model extends Observable implements Serializable {
     public static Model getModel(){
         return model;
     }
+
+
     public void loadFile(String filename) {
         long time = System.nanoTime();
         Address.addPatterns();
