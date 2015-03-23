@@ -8,6 +8,7 @@ import org.xml.sax.helpers.DefaultHandler;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
+import java.net.URL;
 import java.util.*;
 
 /**
@@ -185,7 +186,8 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("amenity")) {
                     mapFeatures.add(new Amenity(way, fetchOSMLayer(), keyValue_map.get("amenity"), keyValue_map.containsKey("building")));
                     if (keyValue_map.get("amenity").equals("parking")) {
-                        mapIcons.add(new MapIcon(way, "data//parkingIcon.jpg"));
+                        URL parkingIcon = OSMHandler.class.getResource("/data/parkingIcon.jpg");
+                        mapIcons.add(new MapIcon(way, parkingIcon));
                     }
                 }
                 else if (keyValue_map.containsKey("barrier")) mapFeatures.add(new Barrier(way, fetchOSMLayer(), keyValue_map.get("barrier"), isArea));
@@ -223,14 +225,18 @@ public class OSMHandler extends DefaultHandler {
             case "node":
                 if (keyValue_map.containsKey("highway")) {
                     String val = keyValue_map.get("highway");
-                    if (val.equals("bus_stop") && isBusstop)
-                        mapIcons.add(new MapIcon(nodeCoord, "data//busIcon.png"));
+                    if (val.equals("bus_stop") && isBusstop) {
+                        URL busIcon = OSMHandler.class.getResource("/data/busIcon.png");
+                        mapIcons.add(new MapIcon(nodeCoord, busIcon));
+                    }
                 }
                 else if (keyValue_map.containsKey("railway")) {
                     String val = keyValue_map.get("railway");
                     if (val.equals("station")) {
-                        if (isMetro) mapIcons.add(new MapIcon(nodeCoord, "data//metroIcon.png"));
-                        else if (isSTog) mapIcons.add(new MapIcon(nodeCoord, "data//stogIcon.png"));
+                        URL metroIcon = OSMHandler.class.getResource("/data/metroIcon.png");
+                        URL STogIcon = OSMHandler.class.getResource("/data/stogIcon.png");
+                        if (isMetro) mapIcons.add(new MapIcon(nodeCoord, metroIcon));
+                        else if (isSTog) mapIcons.add(new MapIcon(nodeCoord, STogIcon));
                     }
                 } else if(keyValue_map.containsKey("name")) {
                     String name = keyValue_map.get("name");

@@ -37,7 +37,7 @@ public class Model extends Observable implements Serializable {
         else if (filename.endsWith(".bin")) loadBinary(filename);
         else System.err.println("File not recognized");
 
-        System.out.printf("Model.Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
+        System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
     private void parseOSM(String filename) {

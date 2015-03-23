@@ -6,6 +6,7 @@ import View.View;
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
+import java.net.URL;
 
 public class Controller extends MouseAdapter implements ActionListener {
     Model model;

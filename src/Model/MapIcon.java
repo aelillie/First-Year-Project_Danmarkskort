@@ -7,12 +7,13 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
+import java.net.URL;
 
 public class MapIcon implements Serializable {
     BufferedImage img;
     Shape shape;
     Point2D coord;
-    String imgPath;
+    URL imgPath;
 
     /**
      * Creates a new Icon instance.
@@ -20,9 +21,9 @@ public class MapIcon implements Serializable {
      * @param shape The Shape we want pinpointed by an Icon.
      * @param imgPath The path of the image file.
      */
-    public MapIcon(Shape shape, String imgPath){
+    public MapIcon(Shape shape, URL imgPath){
         try {
-            img = ImageIO.read(new File(imgPath));
+            img = ImageIO.read(imgPath);
             this.shape = shape;
             this.imgPath = imgPath;
         } catch(IOException e){
@@ -36,9 +37,9 @@ public class MapIcon implements Serializable {
      * @param coord The coordinate of the point of orientation we want to pinpoint using an Icon.
      * @param imgPath The path of the image file.
      */
-    public MapIcon(Point2D coord, String imgPath){
+    public MapIcon(Point2D coord, URL imgPath){
         try {
-            img = ImageIO.read(new File(imgPath));
+            img = ImageIO.read(imgPath);
             this.coord = coord;
             this.imgPath = imgPath;
         } catch(IOException e){
@@ -72,7 +73,7 @@ public class MapIcon implements Serializable {
     private void writeObject(ObjectOutputStream stream)throws IOException{
         if(shape != null) stream.writeObject(shape);
         else stream.writeObject(coord);
-        stream.writeUTF(imgPath);
+        stream.writeObject(imgPath);
     }
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException{
@@ -80,8 +81,8 @@ public class MapIcon implements Serializable {
         Object type = stream.readObject();
         if(type.getClass() == Path2D.Double.class) shape = (Shape) type;
         else coord = (Point2D) type;
-        String imgPath = stream.readUTF();
-        img = ImageIO.read(new File(imgPath));
+        URL imgPath = (URL) stream.readObject();
+        img = ImageIO.read(imgPath);
         this.imgPath = imgPath;
 
     }

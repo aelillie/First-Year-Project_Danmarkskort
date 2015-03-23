@@ -4,18 +4,15 @@ import Controller.MapMenuController;
 import Model.*;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
-import static java.lang.Math.cos;
 import static java.lang.Math.max;
 
 public class View extends JFrame implements Observer {
@@ -34,7 +31,7 @@ public class View extends JFrame implements Observer {
     private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
     private String promptText = "Enter Address";
-    private final JFileChooser fc = new JFileChooser("data"); //sets the initial directory to data
+    private final JFileChooser fileChooser = new JFileChooser("data"); //sets the initial directory to data
 
     /**
      * Creates the window of our application.
@@ -415,7 +412,7 @@ public class View extends JFrame implements Observer {
      * @return A value representing the action taken within the filechooser
      */
     public int openFileChooser(){
-        int returnVal = fc.showOpenDialog(getCanvas()); //Parent component as parameter - affects position of dialog
+        int returnVal = fileChooser.showOpenDialog(getCanvas()); //Parent component as parameter - affects position of dialog
         return returnVal;
         //TODO: When in fullscreen and opening the dialog, it closes the window?!?
     }
@@ -538,7 +535,7 @@ public class View extends JFrame implements Observer {
         }
     }
 
-    public JFileChooser getFileChooser(){ return fc;}
+    public JFileChooser getFileChooser(){ return fileChooser;}
 
     public Component getCanvas() {
         return canvas;
