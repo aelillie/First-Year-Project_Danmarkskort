@@ -1,10 +1,11 @@
 package View;
 
 import Controller.MapMenuController;
-import Model.*;
+import Model.MapFeature;
+import Model.MapIcon;
+import Model.Model;
 
 import javax.swing.*;
-import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
@@ -12,11 +13,9 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
-import static java.lang.Math.cos;
 import static java.lang.Math.max;
 
 public class View extends JFrame implements Observer {
@@ -102,11 +101,11 @@ public class View extends JFrame implements Observer {
         double xscale = width / model.getBbox().getWidth();
         double yscale = height / model.getBbox().getHeight();
         double scale = max(xscale, yscale);
-        zoomLevel = Scaler.calculateZoom(prescale);
+        zoomLevel = Scaler.calculateZoom(scale);
         scale = Scaler.setScale(zoomLevel);
         transform.scale(scale, -scale);
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
-        zoomLevel = model.getBbox().getWidth() * -1;
+        
     }
 
     /**
@@ -486,7 +485,7 @@ public class View extends JFrame implements Observer {
             //Draw areas first
             for(MapFeature mapFeature : model.getMapFeatures()){
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                if(zoomLevel>drawAttribute.getZoomLevel()){ //TODO: NullerPointerException when loading "København" and changing to transport map
+                if(zoomLevel >= drawAttribute.getZoomLevel()){ //TODO: NullerPointerException when loading "København" and changing to transport map
                     if(mapFeature.isArea()){
                         g.setColor(drawAttribute.getColor());
                         g.fill(mapFeature.getShape());
@@ -495,7 +494,7 @@ public class View extends JFrame implements Observer {
             }
             //Then draw boundaries on top of areas
             for (MapFeature mapFeature : model.getMapFeatures()) {
-                if (zoomLevel > -0.4) {
+                if (zoomLevel > 14) {
                     try {
                         g.setColor(Color.BLACK);
                         DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());

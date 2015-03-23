@@ -98,7 +98,7 @@ public class TransportConfig {
         transportView[ValueName.WATER.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.whiteblue, -2);
         transportView[ValueName.WETLAND.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.whitegreen, -2);
         transportView[ValueName.BEACH.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.sand, -2);
-        transportView[ValueName.COASTLINE.ordinal()] =       new DrawAttribute(false, 0, DrawAttribute.lightblue, -1);
+        transportView[ValueName.COASTLINE.ordinal()] =       new DrawAttribute(false, 0, DrawAttribute.ground, -1);
         //RAILWAY
         transportView[ValueName.RAILWAY.ordinal()] =         new DrawAttribute(true, 4, DrawAttribute.cl_red2, -3);
         transportView[ValueName.LIGHT_RAIL.ordinal()] =      new DrawAttribute(true, 4, DrawAttribute.cl_red3, -3);
