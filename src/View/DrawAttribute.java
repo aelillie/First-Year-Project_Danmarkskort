@@ -109,7 +109,13 @@ public class DrawAttribute {
     public static Color cl_grey1 = new Color(129, 127, 131);
     public static Color cl_grey2 = new Color(87, 85, 88);
 
-
+    public static Color cl_orange = new Color(250,163,0);
+    public static Color cl_lightblue = new Color(0,183,236);
+    public static Color cl_green = new Color(0, 160, 119);
+    public static Color cl_yellow = new Color(245, 230, 54);
+    public static Color cl_darkblue = new Color(0, 119, 184);
+    public static Color cl_darkorange = new Color(243, 100, 13);
+    public static Color cl_pink = new Color(228, 126, 173);
 
     public static Color[] colors = new Color[] {lightblue, lightgreen, darkgreen, lightyellow, darkblue, lightgrey, neongreen, babyred, lightred,
                                                 grey, white, bloodred, red, skincolor, bluegreen, orange, pink, sand, whiteblue, greenblue, whitegreen, brown};

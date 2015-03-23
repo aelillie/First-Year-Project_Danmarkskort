@@ -6,6 +6,7 @@ import Model.*;
 import javax.swing.*;
 import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
@@ -35,6 +36,7 @@ public class View extends JFrame implements Observer {
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
     private String promptText = "Enter Address";
     private final JFileChooser fc = new JFileChooser("data"); //sets the initial directory to data
+
 
     /**
      * Creates the window of our application.
@@ -415,6 +417,8 @@ public class View extends JFrame implements Observer {
      * @return A value representing the action taken within the filechooser
      */
     public int openFileChooser(){
+        FileNameExtensionFilter filter =  new FileNameExtensionFilter("ZIP & OSM & BIN", "osm", "zip", "bin","OSM","ZIP","BIN"); //The allowed files in the filechooser
+        fc.setFileFilter(filter); //sets the above filter
         int returnVal = fc.showOpenDialog(getCanvas()); //Parent component as parameter - affects position of dialog
         return returnVal;
         //TODO: When in fullscreen and opening the dialog, it closes the window?!?
@@ -439,15 +443,17 @@ public class View extends JFrame implements Observer {
 
 
             g.setStroke(min_value); //Just for good measure.
-            g.setColor(Color.BLACK);
 
 
-            getContentPane().setBackground(DrawAttribute.whiteblue);
+            g.setColor(DrawAttribute.whiteblue);
+            g.fill(model.getBbox());
+            //getContentPane().setBackground(DrawAttribute.whiteblue);
             /*//Drawing everything not categorized as a area or line object.
             for (Shape line : model) {
                 g.draw(line);
             }*/
 
+            g.setColor(Color.BLACK);
 
             //Draw areas first
             for(MapFeature mapFeature : model.getMapFeatures()){
