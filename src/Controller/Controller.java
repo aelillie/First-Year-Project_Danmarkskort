@@ -82,7 +82,7 @@ public class Controller extends MouseAdapter implements ActionListener {
     private class MouseHandler extends MouseAdapter {
 
         public void mouseDragged(MouseEvent e) {
-            //view.setAntialias(false);
+            view.setAntialias(false);
             view.mouseDragged(e);
         }
         public void mouseMoved(MouseEvent e) {}
@@ -97,8 +97,8 @@ public class Controller extends MouseAdapter implements ActionListener {
             view.wheelZoom(e);
         }
         public void mouseReleased(MouseEvent e) {
-            //view.setAntialias(true);
-            //view.repaint();
+            view.setAntialias(true);
+            view.repaint();
         }
     }
     private class keyHandler extends KeyAdapter{
