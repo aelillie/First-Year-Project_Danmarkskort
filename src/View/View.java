@@ -13,6 +13,7 @@ import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.net.URL;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -210,7 +211,8 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
         fullscreenButton = new JButton();
         fullscreenButton.setBackground(Color.WHITE);
-        fullscreenButton.setIcon(new ImageIcon("data//fullscreenIcon.png"));
+        URL fullscreenIcon = View.class.getResource("/data/fullscreenIcon.png");
+        fullscreenButton.setIcon(new ImageIcon(fullscreenIcon));
         fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
         fullscreenButton.setFocusable(false);
         fullscreenButton.setActionCommand("fullscreen");
@@ -221,7 +223,8 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
         zoomOutButton = new JButton();
         zoomOutButton.setBackground(Color.WHITE);
-        zoomOutButton.setIcon(new ImageIcon("data//minusIcon.png"));
+        URL minusIcon = View.class.getResource("/data/minusIcon.png");
+        zoomOutButton.setIcon(new ImageIcon(minusIcon));
         zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
         zoomOutButton.setFocusable(false);
         zoomOutButton.setActionCommand("zoomOut");
@@ -232,7 +235,8 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
         zoomInButton = new JButton();
         zoomInButton.setBackground(Color.WHITE);
-        zoomInButton.setIcon(new ImageIcon("data//plusIcon.png"));
+        URL minusIcon = View.class.getResource("/data/plusIcon.png");
+        zoomInButton.setIcon(new ImageIcon(minusIcon));
         zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
         zoomInButton.setFocusable(false);
         zoomInButton.setActionCommand("zoomIn");
@@ -258,7 +262,8 @@ public class View extends JFrame implements Observer {
                 BorderFactory.createMatteBorder(4, 0, 4, 7, DrawAttribute.lightblue),
                 BorderFactory.createRaisedBevelBorder()));
         searchButton.setBackground(new Color(36, 45, 50));
-        searchButton.setIcon(new ImageIcon("data//searchIcon.png"));
+        URL searchIcon = View.class.getResource("/data/searchIcon.png");
+        searchButton.setIcon(new ImageIcon(searchIcon));
         searchButton.setFocusable(false);
         searchButton.setBounds(320, 20, 43, 37);
         searchButton.setActionCommand("search");

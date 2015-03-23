@@ -2,6 +2,7 @@ package View;
 
 import javax.swing.*;
 import java.awt.*;
+import java.net.URL;
 import java.util.HashMap;
 
 /**
@@ -35,9 +36,12 @@ public class MapMenu extends JComboBox<Icon> {
     }
 
     private void loadImagesAndOptions(){
-        ImageIcon standardMapImage = new ImageIcon("data//standardMapImage.png");
-        ImageIcon colorblindMapImage = new ImageIcon("data//colorblindMapImage.png");
-        ImageIcon transportMapImage = new ImageIcon("data//transportMapImage.png");
+        URL standard = View.class.getResource("/data/standardMapImage.png");
+        URL colorblind = View.class.getResource("/data/colorblindMapImage.png");
+        URL transport = View.class.getResource("/data/transportMapImage.png");
+        ImageIcon standardMapImage = new ImageIcon(standard);
+        ImageIcon colorblindMapImage = new ImageIcon(colorblind);
+        ImageIcon transportMapImage = new ImageIcon(transport);
         mapNameMap.put(standardMapImage, "Standard");
         mapNameMap.put(colorblindMapImage, "Colorblind map");
         mapNameMap.put(transportMapImage, "Transport map");

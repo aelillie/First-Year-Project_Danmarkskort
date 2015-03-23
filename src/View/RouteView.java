@@ -5,6 +5,7 @@ import Controller.RoutePanelController;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.net.URL;
 
 /**
  * Created by Kevin on 16-03-2015.
@@ -77,8 +78,8 @@ public class RouteView extends JPanel{
         startEndAddressPanel.setLayout(new GridBagLayout()); //A layout allowing you to customize grids moreso than a standard GridLayout.
 
         GridBagConstraints c;
-
-        JLabel startIconLabel = new JLabel(new ImageIcon("data//startPointIcon.png"));
+        URL startPointIcon = View.class.getResource("/data/startPointIcon.png");
+        JLabel startIconLabel = new JLabel(new ImageIcon(startPointIcon));
         c = new GridBagConstraints();
         c.fill= GridBagConstraints.NONE;
         c.gridx = 0; //Which column the component should be in.
@@ -98,8 +99,8 @@ public class RouteView extends JPanel{
         c.weighty = 0.5;
         c.insets = new Insets(5,0,0,25); //Inset/distance from the right.
         startEndAddressPanel.add(startAddressField,c);
-
-        JLabel endIconLabel = new JLabel(new ImageIcon("data//endPointIcon.png"));
+        URL endPointIcon = View.class.getResource("/data/endPointIcon.png");
+        JLabel endIconLabel = new JLabel(new ImageIcon(endPointIcon));
         c = new GridBagConstraints();
         c.fill= GridBagConstraints.NONE;
         c.gridx = 0;
