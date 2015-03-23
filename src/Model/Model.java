@@ -42,7 +42,7 @@ public class Model extends Observable implements Serializable {
         System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
-    public void loadFiles(String shapeFile, String iconFile){
+    public void loadFile(String shapeFile, String iconFile){
         long time = System.nanoTime();
         if(shapeFile.endsWith(".bin") && iconFile.endsWith(".bin"))
             loadAll(shapeFile, iconFile);
