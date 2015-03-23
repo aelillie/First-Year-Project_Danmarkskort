@@ -66,11 +66,11 @@ public class Controller extends MouseAdapter implements ActionListener {
     private void loadFile(){
         int returnValue = view.openFileChooser(); //The returnvalue represents the action taken within the filechooser
         if(returnValue == JFileChooser.APPROVE_OPTION){ //Return value if yes/ok is chosen.
-            File file = view.getFileChooser().getSelectedFile();
+            File file = view.getFileChooser().getSelectedFile(); //TODO: Must be URL and parsed like in main
             String filename = "file:///" + file.getPath();
             if(filename.endsWith(".bin"))
                 filename = file.getPath();
-            model.loadFile(filename);
+            model.loadFile(filename, null);
             view.repaint();
             view.scaleAffine();
         } else { //If no file is chosen (the user pressed cancel) or if an error occured
@@ -125,7 +125,7 @@ public class Controller extends MouseAdapter implements ActionListener {
                         model.saveBin("binaryModel.bin");
                         break;
                     case 'l':
-                        model.loadFile("binaryModel.bin");
+                        model.loadFile("binaryModel.bin", null); //TODO: Must be URL and parsed like in main
                         break;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_UP) {

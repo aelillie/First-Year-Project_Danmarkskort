@@ -29,10 +29,10 @@ public class Model extends Observable implements Serializable {
         return model;
     }
 
-    public void loadFile(String filename) {
+    public void loadFile(String filename, InputSource inputSource) {
         long time = System.nanoTime();
         Address.addPatterns();
-        if (filename.endsWith(".osm")) parseOSM(filename);
+        if (filename.endsWith(".osm")) parseOSM(inputSource);
         else if (filename.endsWith(".zip")) parseZIP(filename);
         else if (filename.endsWith(".bin")) loadBinary(filename);
         else System.err.println("File not recognized");
@@ -40,11 +40,11 @@ public class Model extends Observable implements Serializable {
         System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
-    private void parseOSM(String filename) {
+    private void parseOSM(InputSource inputSource) {
         try {
             XMLReader reader = XMLReaderFactory.createXMLReader();
             reader.setContentHandler(OSMReader);
-            reader.parse(filename);
+            reader.parse(inputSource);
 
         } catch (SAXException | IOException e) {
             throw new RuntimeException(e);
