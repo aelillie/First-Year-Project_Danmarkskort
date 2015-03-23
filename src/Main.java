@@ -6,7 +6,7 @@ import View.View;
 public class Main {
     public static void main(String[] args) {
         Model m = Model.getModel();
-        m.loadFile("data/small.osm");
+        m.loadFile("data/newSmall.osm");
         View v = new View(m);
         Controller c = new Controller(m,v);
         v.setVisible(true);

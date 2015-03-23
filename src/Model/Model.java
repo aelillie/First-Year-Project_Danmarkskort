@@ -125,6 +125,7 @@ public class Model extends Observable implements Serializable {
     }
 
     public void setBBox(Rectangle2D bBox){
+
         OSMReader.getBbox().setRect(bBox);
     }
 
