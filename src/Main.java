@@ -7,7 +7,7 @@ public class Main {
     public static void main(String[] args) {
         Model m = Model.getModel();
         //m.loadFile("binaryModel.bin");
-        m.loadFiles("Shapes.bin", "Icons.bin");
+        m.loadFile("shapes.bin");
         View v = new View(m);
         Controller c = new Controller(m,v);
         v.setVisible(true);

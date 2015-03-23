@@ -258,12 +258,15 @@ public class View extends JFrame implements Observer {
      * @param factor Double, the factor scaling
      */
     public void zoom(double factor) {
-        //Check whether we zooming in or out for adjusting the zoomLvl field
-        if (factor > 1) zoomLevel += 0.0765;
-        else zoomLevel -= 0.0765;
         //Scale the graphic and pan accordingly
-        transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
-        pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
+
+        if(zoomLevel < 21 && zoomLevel >=0) {
+            transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+            pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
+            if(factor > 1) checkForZoomIn();
+            else checkForZoomOut();
+        }
+
     }
 
     /**
@@ -394,6 +397,10 @@ public class View extends JFrame implements Observer {
     public void toggleAA() {
         antialias = !antialias;
         repaint();
+    }
+
+    public void setAntialias(boolean antialias){
+        this.antialias = antialias;
     }
 
     /**
