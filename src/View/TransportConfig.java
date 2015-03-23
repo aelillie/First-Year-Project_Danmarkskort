@@ -106,7 +106,8 @@ public class TransportConfig {
         transportView[ValueName.TRAM.ordinal()] =           new DrawAttribute(true, 4, DrawAttribute.cl_red, -3);
         transportView[ValueName.SUBWAY.ordinal()] =         new DrawAttribute(true, 4, DrawAttribute.cl_red, -3);
         //ROUTE
-        transportView[ValueName.ROUTE.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.grey, -2);
+        transportView[ValueName.ROUTE.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.grey, 12);
+        transportView[ValueName.FERRY.ordinal()] =           new DrawAttribute(true, 1, DrawAttribute.lightblue, 12);
         //SHOP
         transportView[ValueName.SHOP.ordinal()] =            new DrawAttribute(false, 0, DrawAttribute.lightgrey, -1);
         //TOURISM

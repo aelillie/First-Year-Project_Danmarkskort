@@ -55,7 +55,6 @@ public class OSMHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes atts) {
         switch (qName) { //if qName.equals(case)
             case "osm": { //NOTE: it's important to refresh all lists so that when you load in a new OSM-file, the old elements aren't in the lists.
-
                 coastlines = new ArrayList<>();
                 memberReferences = new ArrayList<>();
                 addressList = new ArrayList<>();
@@ -115,6 +114,7 @@ public class OSMHandler extends DefaultHandler {
                 maxlat = latToY(maxlat); //transforming according to the Mercator projection
                 double maxlon = Double.parseDouble(atts.getValue("maxlon"));
                 bbox.setRect( new Rectangle2D.Double(minlon, minlat, maxlon - minlon, maxlat - minlat));
+
                 break;
             case "tag": //tags define ways
                 String k = atts.getValue("k");
