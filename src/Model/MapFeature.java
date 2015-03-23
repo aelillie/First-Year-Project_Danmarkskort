@@ -3,6 +3,12 @@ package Model;
 import java.awt.geom.Path2D;
 import java.io.Serializable;
 
+/**
+ * ##Top class in the hierarchy of map features##
+ * Creates objects of map features with a shape, layer to be drawn on and the exact value for a given key passed from
+ * the OSMHandler. When an a map feature is created, it is given an ENUM value name, and in some cases,
+ * whether the map feature is an area or not.
+ */
 public abstract class MapFeature implements Serializable {
     protected Path2D way;
     protected int layer_value;
@@ -16,42 +22,32 @@ public abstract class MapFeature implements Serializable {
         this.value = value;
     }
 
-    public abstract void setValueAttributes();
 
-    public void setValueSpecs(ValueName valueName) {
+    public abstract void setValueAttributes(); //Every new map feature calls this method to set specific attributes
+
+    /**
+     * Assigns a value name from the ENUM class ValueName to map feature created
+     * @param valueName ENUM value name
+     */
+
+    //GETTERS AND SETTERS
+    public void setValueName(ValueName valueName) {
         this.valueName = valueName;
     }
-
-    /*
-    public void setLineSpecs(Color color, double zoom_level, int stroke_id) {
-        setValueSpecs(color, zoom_level);
-        this.stroke_id = stroke_id;
-    }
-
-    public void setValueDashedSpecs(Color color, double zoom_level, int stroke_id) {
-        setLineSpecs(color, zoom_level, stroke_id);
-        dashed = true;
-    }
-    */
-
 
  
     public ValueName getValueName() {
         return valueName;
     }
-
     public int getLayerVal() {
         return layer_value;
     }
-
     public boolean isArea(){
         return isArea;
     }
-
     public Path2D getShape(){
         return way;
     }
-
     public String getValue(){return value;}
 
 }

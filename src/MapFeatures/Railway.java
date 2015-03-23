@@ -17,11 +17,11 @@ public class Railway extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if (value.equals("rail")) setValueSpecs(ValueName.RAIL);
-        else if (value.equals("light_rail")) setValueSpecs(ValueName.LIGHT_RAIL);
-        else if (value.equals("subway")) setValueSpecs(ValueName.SUBWAY);
-        else if (value.equals("tram")) setValueSpecs(ValueName.TRAM);
-        else setValueSpecs(ValueName.RAILWAY);
+        if (value.equals("rail")) setValueName(ValueName.RAIL);
+        else if (value.equals("light_rail")) setValueName(ValueName.LIGHT_RAIL);
+        else if (value.equals("subway")) setValueName(ValueName.SUBWAY);
+        else if (value.equals("tram")) setValueName(ValueName.TRAM);
+        else setValueName(ValueName.RAILWAY);
     }
 
 }

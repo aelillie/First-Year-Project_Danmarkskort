@@ -17,7 +17,7 @@ public class Emergency extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(ValueName.EMERGENCY);
+        setValueName(ValueName.EMERGENCY);
     }
 
 }

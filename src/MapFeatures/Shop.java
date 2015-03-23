@@ -17,7 +17,7 @@ public class Shop extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(ValueName.SHOP);
+        setValueName(ValueName.SHOP);
     }
 
 }

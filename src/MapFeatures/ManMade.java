@@ -17,7 +17,7 @@ public class ManMade extends MapFeature{
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(ValueName.MANMADE);
+        setValueName(ValueName.MANMADE);
     }
 
 }

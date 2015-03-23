@@ -18,7 +18,7 @@ public class Building extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(ValueName.BUILDING);
+        setValueName(ValueName.BUILDING);
     }
 
 }

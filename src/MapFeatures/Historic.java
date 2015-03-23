@@ -17,8 +17,8 @@ public class Historic extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("archaeological_site")) setValueSpecs(ValueName.ARCHAEOLOGICAL_SITE);
-        else setValueSpecs(ValueName.HISTORIC);
+        if(value.equals("archaeological_site")) setValueName(ValueName.ARCHAEOLOGICAL_SITE);
+        else setValueName(ValueName.HISTORIC);
     }
 
 }

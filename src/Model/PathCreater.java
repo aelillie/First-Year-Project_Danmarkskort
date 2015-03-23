@@ -8,9 +8,6 @@ import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Kevin on 16-03-2015.
- */
 public class PathCreater {
 
     /**
@@ -126,7 +123,7 @@ public class PathCreater {
         Point2D northEast = new Point2D.Double(bbox.getX() + bbox.getWidth(), bbox.getY() + bbox.getHeight());
 
         for (Coastline coastline : OSMHandler.getCoastlines()) {
-            Point2D[] pointsToAdd = new Point2D[2];
+            Point2D[] pointsToAdd = new Point2D[3];
             Point2D start = coastline.getStart();
             double startX = start.getX();
             double startY = start.getY();

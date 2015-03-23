@@ -18,7 +18,7 @@ public class Aeroway extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        setValueSpecs(ValueName.AEROWAY);
+        setValueName(ValueName.AEROWAY);
     }
 
 }

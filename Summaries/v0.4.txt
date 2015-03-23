@@ -1,0 +1,77 @@
+Group v0.4
+
+==================
+
+Features added since v0.3:
+* Better use of the MVC design pattern, only view knows how to draw objects from model
+* Coastlines processing is partly done - it does not work for all osm imports yet.
+* Added more details.
+* You can now load OSM files into the program while it is running. 
+* Made use of Enums, creating easy way to switch “map type”; ex. want colorblind map
+* Better distribution of task in the model package.
+* Now possible to actually switch between map types explained above.
+* Stopped parsing every address, just adding them using osm’s data
+* The model now calculates the y-coordinate after the spherical Mercator projection 
+and the view no longer uses an average latitude to distort the map onto a plane.
+
+“Features” discovered/added since v0.3:
+* Still addresses that don’t parse.
+* Still some detail flaws when drawing certain areas.
+* Runs out of heap space for large files such as Denmark - supposedly due to too many Address objects
+* parseZIP() fails for larger files such as Denmark
+* When the processed file doesn’t have any coastlines, everything is drawn as sea.
+
+
+
+Time usage in man hours:
+32 hours: 	Coastlines
+20 hours: 	Refactoring of model classes and view, better separation of tasks.
+12 hours:	Highway stroke increase on zoom in/out (not working properly)
+4 hours: 	Mercator projection research and implementation
+5 hours:	Being able to load new OSM files when the program is running
+5 hours:	Adding config files for colorblind map and transport map
+5  hours:	Working on better a functioning zoom and with more static zoom levels.
+3  hours: 	Debugging, some areas wasn’t drawn correctly.
+2 hours:	Code cleanup
+
+
+Cumulative cost so far: (1h = DKK 625)
+Lectures:                	 9.375,-
+Meetings:                	 6.250,-
+Code review:            	15.625,-
+"Homework"			15.625,-
+GUI				17.187,-
+Address search	 	  	 5.000,-
+OSM layers			10.625,-
+Road names 		 	 8.125,-
+Binary save/load		 2.500,-
+Visualisation 			25.000,-
+Restructuring 			35.625
+Workshop			12.500,-
+Report writing			10.625,-
+Address searching	  	 7.500,-
+Coastlines		 	26.875,-
+Mercator projection 		 2.500,-
+Load files from program 	 3.125,-
+Zoomlevel 			 3.125,-
+
+
+Wishlist for v0.5:
+* Complete and correct processing of coastlines
+* Tests
+* A method for sorting all objects so they will be drawn in correct order.
+* Better Colorblind/Transport visualization.
+* A scalebar upon the map
+* Better address search
+
+Feedback Request:
+* We've moved the handling of how the map is vizualised over to the view as discussed. What do you think of this?
+* Regarding heap space and large files errors as noted in the "Features". How do we deal with this?
+* Overall, how is our progress so far. Are we moving in a good pace? 
+* When our program is in fullscreen mode and you use “load”, 
+the window closes itself down upon opening the JFilechooser. 
+We have speculated that this might be due to the component specified as the parent of the JFilechooser 
+(see the TODO in the openFilechooser method in the view) - but changing it to contentpane doesn’t change anything.
+Why is this and how can we fix it?
+
+

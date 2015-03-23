@@ -3,19 +3,18 @@ package View;
 import Model.ValueName;
 
 /**
- * Created by Anders on 18-03-2015.
+ * View configuration for color blinds
  */
-public class ColorblindView {
+public class ColorblindConfig {
 
     private DrawAttribute[] colorblindView;
 
-    public ColorblindView(DrawAttribute[] colorblindView) {
+    public ColorblindConfig(DrawAttribute[] colorblindView) {
         this.colorblindView = colorblindView;
         defineColorblindView();
     }
 
     private void defineColorblindView() {
-        //colorblindView
         //[ValueName.VALUENAME.ordinal()] =     new DrawAttribute(isDashed, strokeId, color, zoomLevel);
         //AEROWAY
         colorblindView[ValueName.AEROWAY.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.lightgrey, 18);

@@ -19,10 +19,10 @@ public class Barrier extends MapFeature{
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("hence"))setValueSpecs(ValueName.HENCE);
-        if(value.equals("fence")) setValueSpecs(ValueName.FENCE);
-        if(value.equals("kerb")) setValueSpecs(ValueName.KERB);
-        else setValueSpecs(ValueName.BARRIER);
+        if(value.equals("hence")) setValueName(ValueName.HENCE);
+        if(value.equals("fence")) setValueName(ValueName.FENCE);
+        if(value.equals("kerb")) setValueName(ValueName.KERB);
+        else setValueName(ValueName.BARRIER);
     }
 
 }

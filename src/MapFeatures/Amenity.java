@@ -19,11 +19,11 @@ public class Amenity extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("parking")) setValueSpecs(ValueName.PARKING);
-        else if(value.equals("university") && isBuilding )setValueSpecs(ValueName.UNIVERSITY);
+        if(value.equals("parking")) setValueName(ValueName.PARKING);
+        else if(value.equals("university") && isBuilding ) setValueName(ValueName.UNIVERSITY);
         else {
             isArea = false;
-            setValueSpecs(ValueName.AMENITY);
+            setValueName(ValueName.AMENITY);
         }
         //TODO: Does not work. in newSmall the university is not drawn because it is not said to be building
     }

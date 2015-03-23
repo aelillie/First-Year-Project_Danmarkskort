@@ -4,34 +4,38 @@ import Controller.MapMenuController;
 import Model.*;
 
 import javax.swing.*;
+import javax.swing.border.Border;
 import javax.swing.border.CompoundBorder;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.io.File;
 import java.util.Observable;
 import java.util.Observer;
 
+import static java.lang.Math.cos;
 import static java.lang.Math.max;
 
 public class View extends JFrame implements Observer {
     public static final long serialVersionUID = 0;
     private Model model;
     private Canvas canvas;
-    private AffineTransform transform = new AffineTransform();
+    private AffineTransform transform;
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
     private int zoomLevel;
     private int checkOut = 1, checkIn = 0;
     private JTextField searchArea;
-    private JButton searchButton, zoomInButton, zoomOutButton, fullscreenButton, showRoutePanelButton;
+    private JButton searchButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton;
     private MapMenu mapMenu;
     private RouteView routePanel = new RouteView();
     private boolean isFullscreen = false;
     private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
     private String promptText = "Enter Address";
+    private final JFileChooser fc = new JFileChooser("data"); //sets the initial directory to data
 
     /**
      * Creates the window of our application.
@@ -58,44 +62,49 @@ public class View extends JFrame implements Observer {
                 fullscreenButton.setBounds(getWidth() - 70, getHeight() - getHeight() / 3 * 2, 39, 37);
                 zoomInButton.setBounds(getWidth() - 160, getHeight() - getHeight() / 3 * 2, 39, 37);
                 mapMenu.setBounds(getWidth() - 160, getHeight() - getHeight() / 3 * 2 - 50, 130, 30);
+                loadButton.setBounds(getWidth()-65, getHeight()-65,40,20);
+                repaint();
             }
         });
 
         pack();
         canvas.requestFocusInWindow();
         model.addObserver(this);
-        System.out.println(model.getBbox().getWidth());
+       
     }
+
 
 
     /**
      * Sets the scale for the afflineTransform object using to bounds from the osm file
      * Also sets up the frame size from screenSize
      */
-    private void setScale() {
-        // bbox.width * xscale * .56 = 512
-        // bbox.height * yscale = 512
-
-        //Get the monitors size.
+    public void setScale() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
-
-        //Set up the scale amount for our Afflinetransform
-        double xscale = width / .56 / model.getBbox().getWidth();
-        double yscale = height / model.getBbox().getHeight();
-        double prescale = max(xscale, yscale);
-        zoomLevel = Scaler.calculateZoom(prescale);
-        double scale = Scaler.setScale(zoomLevel);
-        transform.scale(.56 * scale, -scale);
-        transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
+        scaleAffine();
 
         //Set up the JFrame using the monitors resolution.
         setSize(screenSize); //screenSize
         setPreferredSize(new Dimension(800, 600)); //screenSize
         setExtendedState(Frame.NORMAL); //Frame.MAXIMIZED_BOTH
-        System.out.println(zoomLevel);
+    }
 
+    public void scaleAffine(){
+        //Get the monitors size.
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        transform = new AffineTransform();
+        double width = screenSize.getWidth();
+        double height = screenSize.getHeight();
+
+        //Set up the scale amount for our Afflinetransform
+        double xscale = width / model.getBbox().getWidth();
+        double yscale = height / model.getBbox().getHeight();
+        double scale = max(xscale, yscale);
+        zoomLevel = Scaler.calculateZoom(prescale);
+        scale = Scaler.setScale(zoomLevel);
+        transform.scale(scale, -scale);
+        transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
+        zoomLevel = model.getBbox().getWidth() * -1;
     }
 
     /**
@@ -146,6 +155,7 @@ public class View extends JFrame implements Observer {
         layer.add(searchButton, new Integer(2));
         layer.add(zoomInButton, new Integer(2));
         layer.add(zoomOutButton, new Integer(2));
+        layer.add(loadButton, new Integer(2));
         layer.add(fullscreenButton, new Integer(2));
         layer.add(mapMenu, new Integer(2));
         layer.add(showRoutePanelButton, new Integer(2));
@@ -164,6 +174,7 @@ public class View extends JFrame implements Observer {
         makeSearchButton();
         makeZoomInButton();
         makeZoomOutButton();
+        makeLoadButton();
         makeShowRoutePanelButton();
         makeFullscreenButton();
         makeMaptypeMenu();
@@ -195,36 +206,48 @@ public class View extends JFrame implements Observer {
 
 
     private void makeFullscreenButton() {
-        Dimension prefered = getPreferredSize();
+        Dimension preferred = getPreferredSize();
         fullscreenButton = new JButton();
         fullscreenButton.setBackground(Color.WHITE);
         fullscreenButton.setIcon(new ImageIcon("data//fullscreenIcon.png"));
         fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
         fullscreenButton.setFocusable(false);
         fullscreenButton.setActionCommand("fullscreen");
-        fullscreenButton.setBounds((int) prefered.getWidth() - 70, (int) prefered.getHeight() - (int) prefered.getHeight() / 3 * 2, 39, 37);
+        fullscreenButton.setBounds((int) preferred.getWidth() - 70, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37);
     }
 
     private void makeZoomOutButton() {
-        Dimension prefered = getPreferredSize();
+        Dimension preferred = getPreferredSize();
         zoomOutButton = new JButton();
         zoomOutButton.setBackground(Color.WHITE);
         zoomOutButton.setIcon(new ImageIcon("data//minusIcon.png"));
         zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
         zoomOutButton.setFocusable(false);
         zoomOutButton.setActionCommand("zoomOut");
-        zoomOutButton.setBounds((int) prefered.getWidth() - 115, (int) prefered.getHeight() - (int) prefered.getHeight() / 3 * 2, 39, 37);
+        zoomOutButton.setBounds((int) preferred.getWidth() - 115, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37);
     }
 
     private void makeZoomInButton() {
-        Dimension prefered = getPreferredSize();
+        Dimension preferred = getPreferredSize();
         zoomInButton = new JButton();
         zoomInButton.setBackground(Color.WHITE);
         zoomInButton.setIcon(new ImageIcon("data//plusIcon.png"));
         zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
         zoomInButton.setFocusable(false);
         zoomInButton.setActionCommand("zoomIn");
-        zoomInButton.setBounds((int) prefered.getWidth() - 160, (int) prefered.getHeight() - (int) prefered.getHeight() / 3 * 2, 39, 37);
+        zoomInButton.setBounds((int) preferred.getWidth() - 160, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37);
+    }
+
+    private void makeLoadButton(){
+        Dimension preferred = getPreferredSize();
+        loadButton = new JButton("LOAD");
+        loadButton.setBackground(new Color(36, 45, 50));
+        loadButton.setForeground(Color.WHITE);
+        loadButton.setFont(new Font("Arial", Font.BOLD, 10));
+        loadButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        loadButton.setFocusable(false);
+        loadButton.setActionCommand("load");
+        loadButton.setBounds((int) preferred.getWidth()-65,(int) preferred.getHeight()-65,40,20);
     }
 
     private void makeSearchButton() {
@@ -314,8 +337,6 @@ public class View extends JFrame implements Observer {
                 checkForZoomIn();
                 repaint();
             }
-
-            System.out.println(zoomLevel+ " ");
         } catch (NoninvertibleTransformException ex) {
             ex.printStackTrace();
         }
@@ -362,6 +383,7 @@ public class View extends JFrame implements Observer {
      * @param e MouseEvent
      */
     public void mouseDragged(MouseEvent e) {
+
         try {
             dragEndScreen = e.getPoint();
             //Create a point2d.float with the
@@ -393,16 +415,16 @@ public class View extends JFrame implements Observer {
         repaint();
     }
 
+    public void setAntialias(boolean antialias){
+        this.antialias = antialias;
+    }
+
     /**
      * Making that canvas look crisp and then back to shit.
      */
     public void toggleAA() {
         antialias = !antialias;
         repaint();
-    }
-
-    public void setAntialias(boolean antialias){
-        this.antialias = antialias;
     }
 
     /**
@@ -415,8 +437,18 @@ public class View extends JFrame implements Observer {
             gd.setFullScreenWindow(null);
         }
         isFullscreen = !isFullscreen;
+        scaleAffine();
     }
 
+    /**
+     * Opens the filechooser and returns a value.
+     * @return A value representing the action taken within the filechooser
+     */
+    public int openFileChooser(){
+        int returnVal = fc.showOpenDialog(getCanvas()); //Parent component as parameter - affects position of dialog
+        return returnVal;
+        //TODO: When in fullscreen and opening the dialog, it closes the window?!?
+    }
 
     /**
      * The canvas object is where our map of paths and images (points) will be drawn on
@@ -434,7 +466,6 @@ public class View extends JFrame implements Observer {
             if (antialias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
 
-
             g.setStroke(min_value); //Just for good measure.
             g.setColor(Color.BLACK);
 
@@ -446,8 +477,18 @@ public class View extends JFrame implements Observer {
             }*/
 
 
-            //Draw EVERYTHING
-           /* for (MapFeature mapFeature : model.getMapFeatures()) {
+            //Draw areas first
+            for(MapFeature mapFeature : model.getMapFeatures()){
+                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                if(zoomLevel>drawAttribute.getZoomLevel()){ //TODO: NullerPointerException when loading "København" and changing to transport map
+                    if(mapFeature.isArea()){
+                        g.setColor(drawAttribute.getColor());
+                        g.fill(mapFeature.getShape());
+                    }
+                }
+            }
+            //Then draw boundaries on top of areas
+            for (MapFeature mapFeature : model.getMapFeatures()) {
                 if (zoomLevel > -0.4) {
                     try {
                         g.setColor(Color.BLACK);
@@ -455,32 +496,30 @@ public class View extends JFrame implements Observer {
                         if (drawAttribute.isDashed()) continue;
                         else if (!mapFeature.isArea())
                             g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
-                        else g.setStroke(DrawAttribute.basicStrokes[1]);
+                        else g.setStroke(DrawAttribute.basicStrokes[0]);
                         g.draw(mapFeature.getShape());
                     }catch(NullPointerException e){
                         System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
                     }
                 }
 
-            }*/
+            }
 
 
-
+            //Draw the fillers on top of boundaries and areas
             for (MapFeature mapFeature : model.getMapFeatures()) {
-                    DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                    if (zoomLevel >= drawAttribute.getZoomLevel()) {
-                        g.setColor(drawAttribute.getColor());
-                        if (mapFeature.isArea()) {
-                            g.fill(mapFeature.getShape());
-                        } else {
-                            if (drawAttribute.isDashed())
-                                g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
-                            else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
-                            g.draw(mapFeature.getShape());
-                        }
-                    }
+                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                if (zoomLevel >= drawAttribute.getZoomLevel()) {
+                    g.setColor(drawAttribute.getColor());
+                  /*  if (mapFeature.isArea()) {
+                        g.fill(mapFeature.getShape());
+                    } else {*/
 
-
+                        if (drawAttribute.isDashed()) g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
+                        else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
+                        g.draw(mapFeature.getShape());
+               //     }
+                }
             }
             //Draws the icons.
 
@@ -525,6 +564,8 @@ public class View extends JFrame implements Observer {
         }
     }
 
+    public JFileChooser getFileChooser(){ return fc;}
+
     public Component getCanvas() {
         return canvas;
     }
@@ -553,5 +594,6 @@ public class View extends JFrame implements Observer {
         return showRoutePanelButton;
     }
 
+    public JButton getLoadButton(){ return loadButton;}
 
 }

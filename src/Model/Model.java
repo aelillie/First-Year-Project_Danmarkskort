@@ -23,9 +23,6 @@ public class Model extends Observable implements Serializable {
     private ArrayList<Address> addressList = new ArrayList<>(); //Contains all addresses to be sorted according to the compareTo method.
 
 
-
-
-
     private Model(){}
 
     public static Model getModel(){
@@ -156,7 +153,7 @@ public class Model extends Observable implements Serializable {
 
 
     public Rectangle2D getBbox(){
-        return OSMReader.bbox;
+        return OSMReader.getBbox();
     }
 
     public List<MapFeature> getMapFeatures(){
@@ -168,7 +165,8 @@ public class Model extends Observable implements Serializable {
     }
 
     public void setBBox(Rectangle2D bBox){
-        OSMReader.bbox.setRect(bBox);
+
+        OSMReader.getBbox().setRect(bBox);
     }
 
     public OSMHandler getOSMReader(){

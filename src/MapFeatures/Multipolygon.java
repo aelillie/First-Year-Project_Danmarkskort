@@ -20,7 +20,7 @@ public class Multipolygon extends MapFeature {
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("building")) setValueSpecs(ValueName.BUILDING);
+        if(value.equals("building")) setValueName(ValueName.BUILDING);
     }
 
 }
