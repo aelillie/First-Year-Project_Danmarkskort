@@ -258,15 +258,17 @@ public class View extends JFrame implements Observer {
      * @param factor Double, the factor scaling
      */
     public void zoom(double factor) {
+        //Check whether we zooming in or out for adjusting the zoomLvl field
         //Scale the graphic and pan accordingly
-
-        if(zoomLevel < 21 && zoomLevel >=0) {
+        if(factor>1 && zoomLevel!=20) {
             transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
             pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
-            if(factor > 1) checkForZoomIn();
-            else checkForZoomOut();
-        }
-
+            checkForZoomIn();
+        }else if(zoomLevel!=0 && factor<1){
+            transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+            pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
+            checkForZoomOut();
+        }System.out.println(zoomLevel);
     }
 
     /**
@@ -482,7 +484,7 @@ public class View extends JFrame implements Observer {
             }
             //Draws the icons.
 
-            if (zoomLevel >= 9) {
+            if (zoomLevel >= 17) {
                 for (MapIcon mapIcon : model.getMapIcons()) {
                     mapIcon.draw(g, transform);
                 }
