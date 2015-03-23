@@ -1,10 +1,13 @@
 package View;
 
 import Controller.MapMenuController;
-import Model.*;
+import Model.MapFeature;
+import Model.MapIcon;
+import Model.Model;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
+import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.AffineTransform;
@@ -22,7 +25,8 @@ public class View extends JFrame implements Observer {
     private AffineTransform transform;
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
-    private double zoomLevel;
+    private int zoomLevel;
+    private int checkOut = 1, checkIn = 0;
     private JTextField searchArea;
     private JButton searchButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton;
     private MapMenu mapMenu;
@@ -32,6 +36,7 @@ public class View extends JFrame implements Observer {
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
     private String promptText = "Enter Address";
     private final JFileChooser fileChooser = new JFileChooser("data"); //sets the initial directory to data
+
 
     /**
      * Creates the window of our application.
@@ -66,7 +71,7 @@ public class View extends JFrame implements Observer {
         pack();
         canvas.requestFocusInWindow();
         model.addObserver(this);
-        zoomLevel = model.getBbox().getWidth() * -1;
+       
     }
 
 
@@ -96,9 +101,11 @@ public class View extends JFrame implements Observer {
         double xscale = width / model.getBbox().getWidth();
         double yscale = height / model.getBbox().getHeight();
         double scale = max(xscale, yscale);
+        zoomLevel = Scaler.calculateZoom(scale);
+        scale = Scaler.setScale(zoomLevel);
         transform.scale(scale, -scale);
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
-        zoomLevel = model.getBbox().getWidth() * -1;
+        
     }
 
     /**
@@ -241,7 +248,7 @@ public class View extends JFrame implements Observer {
         loadButton.setBorder(BorderFactory.createRaisedBevelBorder());
         loadButton.setFocusable(false);
         loadButton.setActionCommand("load");
-        loadButton.setBounds((int) preferred.getWidth()-65,(int) preferred.getHeight()-65,40,20);
+        loadButton.setBounds((int) preferred.getWidth() - 65, (int) preferred.getHeight() - 65, 40, 20);
     }
 
     private void makeSearchButton() {
@@ -276,11 +283,16 @@ public class View extends JFrame implements Observer {
      */
     public void zoom(double factor) {
         //Check whether we zooming in or out for adjusting the zoomLvl field
-        if (factor > 1) zoomLevel += 0.0765;
-        else zoomLevel -= 0.0765;
         //Scale the graphic and pan accordingly
-        transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
-        pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
+        if(factor>1 && zoomLevel!=20) {
+            transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+            pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
+            checkForZoomIn();
+        }else if(zoomLevel!=0 && factor<1){
+            transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
+            pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
+            checkForZoomOut();
+        }System.out.println(zoomLevel);
     }
 
     /**
@@ -308,24 +320,23 @@ public class View extends JFrame implements Observer {
         try {
             int wheelRotation = e.getWheelRotation();
             Point p = e.getPoint();
-            if (wheelRotation > 0) {
+            if (wheelRotation > 0 && zoomLevel != 0) {
                 //point2d before zoom
                 Point2D p1 = transformPoint(p);
                 transform.scale(1 / 1.2, 1 / 1.2);
                 //point after zoom
                 Point2D p2 = transformPoint(p);
                 transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY()); //Pan towards mouse
-                zoomLevel -= 0.0765; //Decrease zoomLevel
+                checkForZoomOut();
                 repaint();
 
-            } else {
+            } else if (wheelRotation < 0 && zoomLevel != 20) {
                 Point2D p1 = transformPoint(p);
                 transform.scale(1.2, 1.2);
                 Point2D p2 = transformPoint(p);
                 transform.translate(p2.getX() - p1.getX(), p2.getY() - p1.getY()); //Pan towards mouse
-                zoomLevel += 0.0765; //increase zoomLevel
+                checkForZoomIn();
                 repaint();
-
             }
         } catch (NoninvertibleTransformException ex) {
             ex.printStackTrace();
@@ -341,6 +352,29 @@ public class View extends JFrame implements Observer {
     public void mousePressed(MouseEvent e) {
         dragStartScreen = e.getPoint();
         dragEndScreen = null;
+    }
+
+    private void checkForZoomIn(){
+        if(checkIn == 1){
+            zoomLevel++;
+            checkOut = 1;
+            checkIn = 0;
+        } else{
+            checkOut = 0;
+            checkIn = 1;
+        }
+
+    }
+
+    private void checkForZoomOut(){
+        if(checkOut == 1){
+            zoomLevel--;
+            checkOut = 0;
+            checkIn = 1;
+        } else{
+            checkOut = 1;
+            checkIn = 0;
+        }
     }
 
     /**
@@ -413,11 +447,11 @@ public class View extends JFrame implements Observer {
      */
     public int openFileChooser(){
         int returnVal = fileChooser.showOpenDialog(getCanvas()); //Parent component as parameter - affects position of dialog
+        FileNameExtensionFilter filter =  new FileNameExtensionFilter("ZIP & OSM & BIN", "osm", "zip", "bin","OSM","ZIP","BIN"); //The allowed files in the filechooser
+        fileChooser.setFileFilter(filter); //sets the above filter
         return returnVal;
         //TODO: When in fullscreen and opening the dialog, it closes the window?!?
     }
-
-
 
     /**
      * The canvas object is where our map of paths and images (points) will be drawn on
@@ -436,20 +470,22 @@ public class View extends JFrame implements Observer {
 
 
             g.setStroke(min_value); //Just for good measure.
-            g.setColor(Color.BLACK);
 
 
-            getContentPane().setBackground(DrawAttribute.whiteblue);
+            g.setColor(DrawAttribute.whiteblue);
+            g.fill(model.getBbox());
+            //getContentPane().setBackground(DrawAttribute.whiteblue);
             /*//Drawing everything not categorized as a area or line object.
             for (Shape line : model) {
                 g.draw(line);
             }*/
 
+            g.setColor(Color.BLACK);
 
             //Draw areas first
             for(MapFeature mapFeature : model.getMapFeatures()){
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                if(zoomLevel>drawAttribute.getZoomLevel()){ //TODO: NullerPointerException when loading "København" and changing to transport map
+                if(zoomLevel >= drawAttribute.getZoomLevel()){ //TODO: NullerPointerException when loading "København" and changing to transport map
                     if(mapFeature.isArea()){
                         g.setColor(drawAttribute.getColor());
                         g.fill(mapFeature.getShape());
@@ -458,7 +494,7 @@ public class View extends JFrame implements Observer {
             }
             //Then draw boundaries on top of areas
             for (MapFeature mapFeature : model.getMapFeatures()) {
-                if (zoomLevel > -0.4) {
+                if (zoomLevel > 14) {
                     try {
                         g.setColor(Color.BLACK);
                         DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
@@ -478,7 +514,7 @@ public class View extends JFrame implements Observer {
             //Draw the fillers on top of boundaries and areas
             for (MapFeature mapFeature : model.getMapFeatures()) {
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                if (zoomLevel > drawAttribute.getZoomLevel()) {
+                if (zoomLevel >= drawAttribute.getZoomLevel()) {
                     g.setColor(drawAttribute.getColor());
                   /*  if (mapFeature.isArea()) {
                         g.fill(mapFeature.getShape());
@@ -490,11 +526,9 @@ public class View extends JFrame implements Observer {
                //     }
                 }
             }
-
-
             //Draws the icons.
 
-            if (zoomLevel > 0.0) {
+            if (zoomLevel >= 17) {
                 for (MapIcon mapIcon : model.getMapIcons()) {
                     mapIcon.draw(g, transform);
                 }

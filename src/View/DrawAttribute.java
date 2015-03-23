@@ -11,9 +11,9 @@ public class DrawAttribute {
     private boolean dashed;
     private int strokeId;
     private Color color;
-    private double zoomLevel;
+    private int zoomLevel;
 
-    public DrawAttribute(boolean dashed, int strokeId, Color color, double zoomLevel) {
+    public DrawAttribute(boolean dashed, int strokeId, Color color, int zoomLevel) {
         this.dashed = dashed;
         this.strokeId = strokeId;
         this.color = color;
@@ -109,7 +109,15 @@ public class DrawAttribute {
     public static Color cl_grey1 = new Color(129, 127, 131);
     public static Color cl_grey2 = new Color(87, 85, 88);
 
-
+    public static Color cl_orange = new Color(255,193,51);
+    public static Color cl_lightblue = new Color(0,183,236);
+    public static Color cl_green = new Color(0, 160, 119);
+    public static Color cl_white = new Color(199, 199, 199);
+    public static Color cl_darkblue = new Color(0, 128, 200);
+    public static Color cl_darkorange = new Color(235, 104, 0);
+    public static Color cl_pink = new Color(228, 126, 173);
+    public static Color cl_purple = new Color(170,144,158);
+    public static Color cl_whiteblue = new Color(115,193,237);
 
     public static Color[] colors = new Color[] {lightblue, lightgreen, darkgreen, lightyellow, darkblue, lightgrey, neongreen, babyred, lightred,
                                                 grey, white, bloodred, red, skincolor, bluegreen, orange, pink, sand, whiteblue, greenblue, whitegreen, brown};

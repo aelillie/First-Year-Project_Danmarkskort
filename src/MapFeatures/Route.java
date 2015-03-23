@@ -17,7 +17,8 @@ public class Route extends MapFeature{
 
     @Override
     public void setValueAttributes() {
-        setValueName(ValueName.ROUTE);
+        if(value.equals("ferry"))setValueName(ValueName.FERRY);
+        else setValueName(ValueName.ROUTE);
     }
 
 }

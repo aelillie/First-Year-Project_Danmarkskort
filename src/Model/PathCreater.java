@@ -26,8 +26,8 @@ public class PathCreater {
                 if (relations.containsKey(ref)) {
                     Path2D element = relations.get(refs.get(i));
                     path.append(element, false);
-                } else
-                    System.out.println(ref + " ");
+                } else {}
+
             }
 
             path.setWindingRule(Path2D.WIND_EVEN_ODD);

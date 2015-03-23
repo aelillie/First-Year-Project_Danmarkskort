@@ -122,10 +122,16 @@ public class Controller extends MouseAdapter implements ActionListener {
                         view.toggleAA();
                         break;
                     case 's':
-                        model.saveBin("binaryModel.bin");
+                        model.saveAll("Shapes.bin", "Icons.bin");
                         break;
                     case 'l':
                         model.loadFile("binaryModel.bin", null); //TODO: Must be URL and parsed like in main
+                        break;
+                    case 'i':
+                        model.saveIcons("Icons.bin");
+                        break;
+                    case 'g':
+                        model.saveShapes("Shapes.bin");
                         break;
                 }
                 if (e.getKeyCode() == KeyEvent.VK_UP) {

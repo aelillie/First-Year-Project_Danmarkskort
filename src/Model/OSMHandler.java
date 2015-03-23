@@ -56,7 +56,6 @@ public class OSMHandler extends DefaultHandler {
     public void startElement(String uri, String localName, String qName, Attributes atts) {
         switch (qName) { //if qName.equals(case)
             case "osm": { //NOTE: it's important to refresh all lists so that when you load in a new OSM-file, the old elements aren't in the lists.
-
                 coastlines = new ArrayList<>();
                 memberReferences = new ArrayList<>();
                 addressList = new ArrayList<>();
@@ -116,6 +115,7 @@ public class OSMHandler extends DefaultHandler {
                 maxlat = latToY(maxlat); //transforming according to the Mercator projection
                 double maxlon = Double.parseDouble(atts.getValue("maxlon"));
                 bbox.setRect( new Rectangle2D.Double(minlon, minlat, maxlon - minlon, maxlat - minlat));
+
                 break;
             case "tag": //tags define ways
                 String k = atts.getValue("k");
@@ -266,14 +266,14 @@ public class OSMHandler extends DefaultHandler {
                         }*/
                     }
 
-                } else if (keyValue_map.containsKey("addr:street")){
-                    if(hasHouseNo && hasCity && hasPostcode){
+                } else if (keyValue_map.containsKey("addr:street")){    //TODO uncomment!
+                    /*if(hasHouseNo && hasCity && hasPostcode){
                         Address addr = Address.newAddress(streetName, houseNumber, postCode, cityName);
                         //System.out.println(addressString + ", " + nodeCoord);
                         //System.out.println(addr.toString());
                         addressMap.put(addr, nodeCoord);
                         addressList.add(addr);
-                    }
+                    }*/
                 }
 
 
@@ -320,6 +320,9 @@ public class OSMHandler extends DefaultHandler {
         Collections.sort(mapFeatures, comparator); //iterative mergesort. ~n*lg(n) comparisons
         //TODO Consider quicksort (3-way). Keep in mind duplicate keys are often encountered.
     }
+
+
+
 
     private int fetchOSMLayer() {
         int layer_val = 0; //default layer, if no value is defined in the OSM

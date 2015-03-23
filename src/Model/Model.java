@@ -34,11 +34,20 @@ public class Model extends Observable implements Serializable {
         Address.addPatterns();
         if (filename.endsWith(".osm")) parseOSM(inputSource);
         else if (filename.endsWith(".zip")) parseZIP(filename);
-        else if (filename.endsWith(".bin")) loadBinary(filename);
+        else if (filename.endsWith(".bin")) loadShapes(filename);
         else System.err.println("File not recognized");
 
         System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
+
+    /*
+    public void loadFile(String shapeFile, String iconFile){
+        long time = System.nanoTime();
+        if(shapeFile.endsWith(".bin") && iconFile.endsWith(".bin"))
+            loadAll(shapeFile, iconFile);
+        else System.err.println("File not recognized");
+        System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
+    }*/
 
     private void parseOSM(InputSource inputSource) {
         try {
@@ -66,11 +75,11 @@ public class Model extends Observable implements Serializable {
 
 
 
-    private void loadBinary(String filename) {
+    private void loadShapes(String filename) {
 
         try {
 
-            BinaryHandler.load(filename);
+            BinaryHandler.loadShapes(filename);
 
         } catch (IOException e) {
             throw new RuntimeException(e);
@@ -79,16 +88,47 @@ public class Model extends Observable implements Serializable {
         }
     }
 
-    public void saveBin(String filename) {
+    public void saveShapes(String filename) {
 
         try {
-            BinaryHandler.save(filename);
+            BinaryHandler.saveShapes(filename);
             System.out.println("Done");
         } catch (IOException e) {
             e.printStackTrace();
 
         }
     }
+
+    public void saveIcons(String filename){
+
+        try{
+            BinaryHandler.saveIcons(filename);
+            System.out.println("Done");
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    public void saveAll(String shapeFile, String iconFile){
+
+        try{
+            BinaryHandler.saveAll(shapeFile, iconFile);
+            System.out.println("Done");
+        } catch(IOException e){
+            e.printStackTrace();
+        }
+    }
+
+    private void loadAll(String shapeFile, String iconFile){
+        try{
+            BinaryHandler.loadAll(shapeFile, iconFile);
+        } catch (IOException e) {
+            throw new RuntimeException(e);
+        }catch (ClassNotFoundException e){
+            e.printStackTrace();
+        }
+    }
+
 
     public void searchForAddresses(Address address){
         OSMReader.searchForAddressess(address);
