@@ -2,10 +2,12 @@ package Controller;
 
 import Model.*;
 import View.View;
+import org.xml.sax.InputSource;
 
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
+import java.io.IOException;
 import java.net.URL;
 
 public class Controller extends MouseAdapter implements ActionListener {
@@ -48,7 +50,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         String command = e.getActionCommand();
         if (command.equals("zoomIn")) view.zoom(1.2);
         else if (command.equals("zoomOut")) view.zoom(1 / 1.2);
-        else if (command.equals("load")) loadFile();
+        else if (command.equals("load")) loadSelectedFile();
         else if (command.equals("fullscreen")) view.toggleFullscreen();
         else if (command.equals("search")) addressSearch();
         else if (command.equals("showRoutePanel")) view.showRoutePanel();
@@ -63,14 +65,18 @@ public class Controller extends MouseAdapter implements ActionListener {
         model.searchForAddresses(address);
     }
 
-    private void loadFile(){
+    private void loadSelectedFile(){
         int returnValue = view.openFileChooser(); //The returnvalue represents the action taken within the filechooser
         if(returnValue == JFileChooser.APPROVE_OPTION){ //Return value if yes/ok is chosen.
-            File file = view.getFileChooser().getSelectedFile(); //TODO: Must be URL and parsed like in main
-            String filename = "file:///" + file.getPath();
-            if(filename.endsWith(".bin"))
-                filename = file.getPath();
-            model.loadFile(filename, null);
+            try {
+                File file = view.getFileChooser().getSelectedFile(); //fetch file
+                URL fileURL = file.toURI().toURL(); //Convert to URL
+                InputSource inputSource = new InputSource(fileURL.openStream()); //Convert to InputSource
+                String filename = fileURL.getFile();
+                model.loadFile(filename, inputSource);
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
             view.repaint();
             view.scaleAffine();
         } else { //If no file is chosen (the user pressed cancel) or if an error occured
@@ -125,7 +131,11 @@ public class Controller extends MouseAdapter implements ActionListener {
                         model.saveAll("Shapes.bin", "Icons.bin");
                         break;
                     case 'l':
-                        model.loadFile("binaryModel.bin", null); //TODO: Must be URL and parsed like in main
+                        try {
+                            model.loadFile("binaryModel.bin", new InputSource("/binaryModel.bin"));
+                        } catch (NullPointerException n) {
+                            System.out.println("There is no 'binaryModel.bin' to load.");
+                        }
                         break;
                     case 'i':
                         model.saveIcons("Icons.bin");

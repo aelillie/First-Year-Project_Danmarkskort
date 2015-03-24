@@ -33,8 +33,8 @@ public class Model extends Observable implements Serializable {
         long time = System.nanoTime();
         Address.addPatterns();
         if (filename.endsWith(".osm")) parseOSM(inputSource);
-        else if (filename.endsWith(".zip")) parseZIP(filename);
-        else if (filename.endsWith(".bin")) loadShapes(filename);
+        else if (filename.endsWith(".zip")) parseZIP(inputSource);
+        else if (filename.endsWith(".bin")) loadShapes(inputSource);
         else System.err.println("File not recognized");
 
         System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
@@ -56,34 +56,32 @@ public class Model extends Observable implements Serializable {
             reader.parse(inputSource);
 
         } catch (SAXException | IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
 
-    private void parseZIP(String filename) {
-        try (ZipInputStream zip = new ZipInputStream(new BufferedInputStream(new FileInputStream(filename)))) {
+    private void parseZIP(InputSource inputSource) {
+        try (ZipInputStream zip = new ZipInputStream(new BufferedInputStream(inputSource.getByteStream()))) {
             zip.getNextEntry();
             XMLReader reader = XMLReaderFactory.createXMLReader();
             reader.setContentHandler(OSMReader);
             reader.parse(new InputSource(zip));
             zip.close();
         } catch (SAXException | IOException e) {
-            throw new RuntimeException(e);
+            e.printStackTrace();
         }
     }
 
 
 
-    private void loadShapes(String filename) {
+    private void loadShapes(InputSource inputSource) {
 
         try {
 
-            BinaryHandler.loadShapes(filename);
+            BinaryHandler.loadShapes(inputSource);
 
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }catch (ClassNotFoundException e){
+        } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
     }
@@ -92,7 +90,7 @@ public class Model extends Observable implements Serializable {
 
         try {
             BinaryHandler.saveShapes(filename);
-            System.out.println("Done");
+            System.out.println("Shapes saved");
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -103,7 +101,7 @@ public class Model extends Observable implements Serializable {
 
         try{
             BinaryHandler.saveIcons(filename);
-            System.out.println("Done");
+            System.out.println("Icons saved");
         } catch(IOException e){
             e.printStackTrace();
         }
@@ -113,15 +111,15 @@ public class Model extends Observable implements Serializable {
 
         try{
             BinaryHandler.saveAll(shapeFile, iconFile);
-            System.out.println("Done");
+            System.out.println("All shapes and icons saved");
         } catch(IOException e){
             e.printStackTrace();
         }
     }
 
-    private void loadAll(String shapeFile, String iconFile){
+    private void loadAll(InputSource shapeSource, InputSource iconSource){
         try{
-            BinaryHandler.loadAll(shapeFile, iconFile);
+            BinaryHandler.loadAll(shapeSource, iconSource);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }catch (ClassNotFoundException e){
