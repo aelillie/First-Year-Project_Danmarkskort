@@ -4,6 +4,7 @@ import View.View;
 import org.xml.sax.InputSource;
 
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 
@@ -11,9 +12,11 @@ public class Main {
     public static void main(String[] args) {
         Model m = Model.getModel();
         try {
-            URL input = Main.class.getResource("/data/newSmall.osm");
-            InputSource inputSource = new InputSource(input.openStream());
-            m.loadFile(input.getFile(),inputSource);
+            URL fileURL = Main.class.getResource("/data/newSmall.osm");
+            InputStream inputStream = Main.class.getResourceAsStream("/data/newSmall.osm");
+            System.out.println("inputStream.toString(): " + inputStream.toString());
+            m.loadFile(fileURL.getFile(), inputStream);
+            inputStream.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
