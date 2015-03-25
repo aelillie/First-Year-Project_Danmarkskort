@@ -30,26 +30,26 @@ public final class BinaryHandler {
 
     /**
      * loads the shapes from a binary file. The order of the sequence is important!
-     * @param inputSource file load from
+     * @param inputStream file load from
      */
-    public static void loadShapes(InputSource inputSource)throws IOException, ClassNotFoundException {
+    public static void loadShapes(InputStream inputStream)throws IOException, ClassNotFoundException {
         Model model = Model.getModel();
-        ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(inputSource.getByteStream()));
+        ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(inputStream));
         //get the bounds of the map
         Rectangle2D rec = (Rectangle2D) in.readObject();
 
         model.setBBox(rec);
         List<MapFeature> mapF = model.getMapFeatures();
 
-        model.getMapFeatures().clear();
+        model.getOSMReader().clearData();
 
         mapF.addAll((List<MapFeature>) in.readObject());
 
     }
 
-    public static void loadIcons(InputSource iconSource)throws IOException, ClassNotFoundException{
+    public static void loadIcons(InputStream iconStream)throws IOException, ClassNotFoundException{
         Model model = Model.getModel();
-        ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(iconSource.getByteStream()));
+        ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(iconStream));
 
         List<MapIcon> icons = model.getMapIcons();
         icons.addAll((List<MapIcon>)in.readObject());
@@ -66,9 +66,9 @@ public final class BinaryHandler {
     }
 
 
-    public static void loadAll(InputSource shapeSource, InputSource iconSource)throws IOException, ClassNotFoundException{
-        loadShapes(shapeSource);
-        loadIcons(iconSource);
+    public static void loadAll(InputStream shapeStream, InputStream iconStream)throws IOException, ClassNotFoundException{
+        loadShapes(shapeStream);
+        loadIcons(iconStream);
     }
 
     public static void saveAll(String shapeFile, String iconFile) throws  IOException{

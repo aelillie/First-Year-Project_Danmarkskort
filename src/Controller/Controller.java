@@ -8,6 +8,7 @@ import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
+import java.io.InputStream;
 import java.net.URL;
 
 public class Controller extends MouseAdapter implements ActionListener {
@@ -68,12 +69,14 @@ public class Controller extends MouseAdapter implements ActionListener {
     private void loadSelectedFile(){
         int returnValue = view.openFileChooser(); //The returnvalue represents the action taken within the filechooser
         if(returnValue == JFileChooser.APPROVE_OPTION){ //Return value if yes/ok is chosen.
+            model.getOSMReader().clearData();
             try {
                 File file = view.getFileChooser().getSelectedFile(); //fetch file
                 URL fileURL = file.toURI().toURL(); //Convert to URL
-                InputSource inputSource = new InputSource(fileURL.openStream()); //Convert to InputSource
+                InputStream inputStream = fileURL.openStream();
                 String filename = fileURL.getFile();
-                model.loadFile(filename, inputSource);
+                model.loadFile(filename, inputStream);
+                inputStream.close();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -115,6 +118,7 @@ public class Controller extends MouseAdapter implements ActionListener {
          * Listens for keyboard events
          */
         public void keyPressed(KeyEvent e) {
+            InputStream inputStream = Controller.class.getResourceAsStream("/binaryModel.bin");
             //Set up the keyboard handler for different keys.
             if(!view.getSearchArea().hasFocus()) {
                 switch (e.getKeyChar()) {
@@ -132,9 +136,10 @@ public class Controller extends MouseAdapter implements ActionListener {
                         break;
                     case 'l':
                         try {
-                            model.loadFile("binaryModel.bin", new InputSource("/binaryModel.bin"));
-                        } catch (NullPointerException n) {
+                            model.loadFile("binaryModel.bin", inputStream);
+                        } catch (NullPointerException | IOException n) {
                             System.out.println("There is no 'binaryModel.bin' to load.");
+                            n.printStackTrace();
                         }
                         break;
                     case 'i':

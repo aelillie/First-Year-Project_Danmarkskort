@@ -5,11 +5,11 @@ import org.xml.sax.SAXException;
 import org.xml.sax.XMLReader;
 import org.xml.sax.helpers.XMLReaderFactory;
 
+import javax.xml.parsers.ParserConfigurationException;
+import javax.xml.parsers.SAXParser;
+import javax.xml.parsers.SAXParserFactory;
 import java.awt.geom.Rectangle2D;
-import java.io.BufferedInputStream;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.Serializable;
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -29,14 +29,13 @@ public class Model extends Observable implements Serializable {
         return model;
     }
 
-    public void loadFile(String filename, InputSource inputSource) {
+    public void loadFile(String filename, InputStream inputStream) throws IOException {
         long time = System.nanoTime();
         Address.addPatterns();
-        if (filename.endsWith(".osm")) parseOSM(inputSource);
-        else if (filename.endsWith(".zip")) parseZIP(inputSource);
-        else if (filename.endsWith(".bin")) loadShapes(inputSource);
+        if (filename.endsWith(".osm")) parseOSM(inputStream);
+        else if (filename.endsWith(".zip")) parseZIP(inputStream);
+        else if (filename.endsWith(".bin")) loadShapes(inputStream);
         else System.err.println("File not recognized");
-
         System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
@@ -49,37 +48,36 @@ public class Model extends Observable implements Serializable {
         System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }*/
 
-    private void parseOSM(InputSource inputSource) {
+    private void parseOSM(InputStream inputStream) {
         try {
-            XMLReader reader = XMLReaderFactory.createXMLReader();
-            reader.setContentHandler(OSMReader);
-            reader.parse(inputSource);
-
-        } catch (SAXException | IOException e) {
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            SAXParser parser = factory.newSAXParser();
+            parser.parse(inputStream, OSMReader);
+        } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         }
     }
 
 
-    private void parseZIP(InputSource inputSource) {
-        try (ZipInputStream zip = new ZipInputStream(new BufferedInputStream(inputSource.getByteStream()))) {
+    private void parseZIP(InputStream inputStream) {
+        try (ZipInputStream zip = new ZipInputStream(new BufferedInputStream(inputStream))) {
             zip.getNextEntry();
-            XMLReader reader = XMLReaderFactory.createXMLReader();
-            reader.setContentHandler(OSMReader);
-            reader.parse(new InputSource(zip));
+            SAXParserFactory factory = SAXParserFactory.newInstance();
+            SAXParser parser = factory.newSAXParser();
+            parser.parse(new InputSource(zip), OSMReader);
             zip.close();
-        } catch (SAXException | IOException e) {
+        } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         }
     }
 
 
 
-    private void loadShapes(InputSource inputSource) {
+    private void loadShapes(InputStream inputStream) {
 
         try {
 
-            BinaryHandler.loadShapes(inputSource);
+            BinaryHandler.loadShapes(inputStream);
 
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
@@ -117,9 +115,9 @@ public class Model extends Observable implements Serializable {
         }
     }
 
-    private void loadAll(InputSource shapeSource, InputSource iconSource){
+    private void loadAll(InputStream shapeStream, InputStream iconStream){
         try{
-            BinaryHandler.loadAll(shapeSource, iconSource);
+            BinaryHandler.loadAll(shapeStream, iconStream);
         } catch (IOException e) {
             throw new RuntimeException(e);
         }catch (ClassNotFoundException e){
