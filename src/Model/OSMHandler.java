@@ -183,8 +183,10 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("amenity")) {
                     mapFeatures.add(new Amenity(way, fetchOSMLayer(), keyValue_map.get("amenity"), keyValue_map.containsKey("building")));
                     if (keyValue_map.get("amenity").equals("parking")) {
-                        mapIcons.add(new MapIcon(way, MapIcon.parkingIcon));
-                    }
+                        mapIcons.add(new MapIcon(way, MapIcon.parkingIcon));}
+
+                    //if(keyValue_map.get("amenity").equals("atm")){
+                      //  mapIcons.add(new MapIcon(way, MapIcon.atmIcon));}
                 }
                 else if (keyValue_map.containsKey("barrier")) mapFeatures.add(new Barrier(way, fetchOSMLayer(), keyValue_map.get("barrier"), isArea));
                 else if (keyValue_map.containsKey("boundary")) mapFeatures.add(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary")));
@@ -225,6 +227,15 @@ public class OSMHandler extends DefaultHandler {
                         mapIcons.add(new MapIcon(nodeCoord, MapIcon.busIcon));
                     }
                 }
+                else if(keyValue_map.containsKey("amenity")) {
+                    String val = keyValue_map.get("amenity");
+                    if(val.equals("pub") || val.equals("bar")) {
+                            mapIcons.add(new MapIcon(nodeCoord, MapIcon.pubIcon));}
+                    else if(val.equals("atm")){
+                            mapIcons.add(new MapIcon(nodeCoord,MapIcon.atmIcon));
+                        }
+                    }
+
                 else if (keyValue_map.containsKey("railway")) {
                     String val = keyValue_map.get("railway");
                     if (val.equals("station")) {

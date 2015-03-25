@@ -1,11 +1,11 @@
 package Tests;
 
-import org.junit.Test;
+//import org.junit.Test;
 
 /**
  * Created by Anders on 23-03-2015.
  */
-public class OSMHandlerTest {
+/*public class OSMHandlerTest {
 
     @Test
     public void testSomething() {
@@ -14,4 +14,4 @@ public class OSMHandlerTest {
 
 
 
-}
+}*/

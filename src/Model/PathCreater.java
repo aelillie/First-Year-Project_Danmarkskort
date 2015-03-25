@@ -134,53 +134,31 @@ public class PathCreater {
 
             if (coastline.getStart().equals(coastline.getEnd())) continue;
 
-
+            //start 1
             if ((startX < northWest.getX()) && startY > northWest.getY()) { //start 1
-                if ((endX > southEast.getX()) && (endY < northEast.getY()) && (endY > southEast.getY())) { //end 6
+                if((endX>northWest.getX() && endX<northEast.getX() && endY > northEast.getY())){ //end 2
+                    pointsToAdd[0] = northWest;
+                } else if((endX>northEast.getX() && endY > northEast.getY())) { //end 3
                     pointsToAdd[0] = northEast;
-                } else if ((endX > southEast.getX() && endY < southEast.getY())) { //end 9
-                    pointsToAdd[0] = southEast;
-                    pointsToAdd[1] = northEast;
+                    pointsToAdd[1] = northWest;
+                }else if((endX<southWest.getX() && endY > southWest.getY() && endY<northWest.getY())){//end 4
+                    pointsToAdd[0] = northEast;
+                    pointsToAdd[1] = northWest;
+                } else if ((endX > southEast.getX()) && (endY < northEast.getY()) && (endY > southEast.getY())) { //end 6
+                    pointsToAdd[0] = northEast;
+                } else if((endX<southWest.getX() && endY<southWest.getY())){ //end7
+                    pointsToAdd[0] = southWest;
+                    pointsToAdd[1] = southEast;
+                    pointsToAdd[2] = northEast;
+                    pointsToAdd[3] = northWest;
                 } else if (endX > southWest.getX() && endX < southEast.getX() && endY < southWest.getY()) { //end 8
                     pointsToAdd[0] = southEast;
                     pointsToAdd[1] = northEast;
-                }
-            }
-
-            if ((startX > northEast.getX() && startY > southEast.getY() && startY < northEast.getY())) { //start 6
-                if (endX > southWest.getX() && endX < southEast.getX() && startY < southWest.getY()) { //end 8
+                } else if ((endX > southEast.getX() && endY < southEast.getY())) { //end 9
                     pointsToAdd[0] = southEast;
-                } else if (endX < southWest.getX() && endY < southWest.getY()) { //end 7
-                    pointsToAdd[0] = southWest;
-                    pointsToAdd[1] = southEast;
-                } else if (endX < southWest.getX() && endY > southWest.getY() && endY < northWest.getY()) { //end 4
-                    pointsToAdd[0] = southWest;
-                    pointsToAdd[1] = southEast;
-                } else if (endX < northWest.getX() && endY > northWest.getY()) { //end 1
-                    pointsToAdd[0] = northWest;
-                    pointsToAdd[1] = southWest;
-                    pointsToAdd[2] = southEast;
-                } else if (endX > northWest.getX() && endX < northEast.getX() && endY > northWest.getY()) { //end 2
-                    pointsToAdd[0] = northWest;
-                    pointsToAdd[1] = southWest;
-                    pointsToAdd[2] = southEast;
+                    pointsToAdd[1] = northEast;
                 }
             }
-
-            if ((startX < northWest.getX()) && (startY > southWest.getY()) && (startY < northWest.getY())) {
-                //pointToAdd.add(northWest);
-                if ((endX < northEast.getX()) && (endX > northWest.getX()) && (endY > northWest.getY())) {
-
-                }
-                //start 7 -> end 2
-                if (startX < southWest.getX() && startY < southWest.getY()) {
-                    if (endX < northEast.getX() && endX > northWest.getX() && endY > northWest.getY()) {
-                        pointsToAdd[0] = northWest;
-                    }
-                }
-            }
-
-
             //Start 2
             if (startX < northEast.getX() && startX > northWest.getX() && startY > northEast.getY()) {
                 if (endX > southEast.getX() && endX < southWest.getX() && endY < southEast.getY()) {
@@ -203,14 +181,18 @@ public class PathCreater {
 
             //Start 3
             if (startX > northEast.getX() && startY > northEast.getY()) {
-                if (endY < southEast.getY() && endX < southEast.getX() && endX > southWest.getX()) {
+                if(endY > northWest.getY() && endX< northWest.getY()) { //end 1
+                    pointsToAdd[0] = northWest;
+                } else if(endY> northWest.getY() && endX < northWest.getX() && endX > northEast.getY()){ //end 2
+                    pointsToAdd[0] = northWest;
+                } else if (endY < southEast.getY() && endX < southEast.getX() && endX > southWest.getX()) { //end 8
                     pointsToAdd[0] = southEast;
                     pointsToAdd[1] = northEast;
-                } else if (endX < northWest.getX() && endY < northWest.getY()) {
+                } else if (endX < northWest.getX() && endY < northWest.getY()) { // 7
                     pointsToAdd[0] = southWest;
                     pointsToAdd[1] = southEast;
                     pointsToAdd[2] = northEast;
-                } else if (endX < northWest.getX() && endY < northWest.getY() && endY > southWest.getY()) {
+                } else if (endX < northWest.getX() && endY < northWest.getY() && endY > southWest.getY()) { //4
                     pointsToAdd[0] = southWest;
                     pointsToAdd[1] = southEast;
                     pointsToAdd[2] = northEast;
@@ -235,6 +217,27 @@ public class PathCreater {
                     pointsToAdd[0] = southEast;
                     pointsToAdd[1] = northEast;
                     pointsToAdd[2] = northWest;
+                }
+            }
+
+            //start 6
+            if ((startX > northEast.getX() && startY > southEast.getY() && startY < northEast.getY())) { //start 6
+                if (endX > southWest.getX() && endX < southEast.getX() && startY < southWest.getY()) { //end 8
+                    pointsToAdd[0] = southEast;
+                } else if (endX < southWest.getX() && endY < southWest.getY()) { //end 7
+                    pointsToAdd[0] = southWest;
+                    pointsToAdd[1] = southEast;
+                } else if (endX < southWest.getX() && endY > southWest.getY() && endY < northWest.getY()) { //end 4
+                    pointsToAdd[0] = southWest;
+                    pointsToAdd[1] = southEast;
+                } else if (endX < northWest.getX() && endY > northWest.getY()) { //end 1
+                    pointsToAdd[0] = northWest;
+                    pointsToAdd[1] = southWest;
+                    pointsToAdd[2] = southEast;
+                } else if (endX > northWest.getX() && endX < northEast.getX() && endY > northWest.getY()) { //end 2
+                    pointsToAdd[0] = northWest;
+                    pointsToAdd[1] = southWest;
+                    pointsToAdd[2] = southEast;
                 }
             }
 

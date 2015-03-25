@@ -32,6 +32,7 @@ public class View extends JFrame implements Observer {
     private JButton searchButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton;
     private MapMenu mapMenu;
     private RouteView routePanel = new RouteView();
+   // private IconPanel iconPanel = new IconPanel();
     private boolean isFullscreen = false;
     private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -162,6 +163,7 @@ public class View extends JFrame implements Observer {
         layer.add(mapMenu, new Integer(2));
         layer.add(showRoutePanelButton, new Integer(2));
         layer.add(routePanel, new Integer(2));
+      //  layer.add(iconPanel, new Integer(2));
 
     }
 
