@@ -30,13 +30,12 @@ public class View extends JFrame implements Observer {
     private int checkOut = 1, checkIn = 0;
     private JTextField searchArea;
     private JButton searchButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton;
-    private MapMenu mapMenu;
     private RouteView routePanel = new RouteView();
     private boolean isFullscreen = false;
     private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
-    private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
     private String promptText = "Enter Address";
     private final JFileChooser fileChooser = new JFileChooser("data"); //sets the initial directory to data
+    private MapMenu mapMenu;
 
 
     /**
@@ -47,12 +46,12 @@ public class View extends JFrame implements Observer {
     public View(Model m) {
         super("This is our map");
         model = m;
+        transform = new AffineTransform();
 
         /*Two helper functions to set up the AfflineTransform object and
         make the buttons and layout for the frame*/
         setScale();
         makeGUI();
-
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
@@ -72,7 +71,7 @@ public class View extends JFrame implements Observer {
         pack();
         canvas.requestFocusInWindow();
         model.addObserver(this);
-       
+
     }
 
 
@@ -94,7 +93,6 @@ public class View extends JFrame implements Observer {
     public void scaleAffine(){
         //Get the monitors size.
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        transform = new AffineTransform();
         double width = screenSize.getWidth();
         double height = screenSize.getHeight();
 
@@ -117,7 +115,7 @@ public class View extends JFrame implements Observer {
         //retrieve the LayeredPane stored in the frame.
         JLayeredPane layer = getLayeredPane();
         //Create the canvas and Components for GUI.
-        canvas = new Canvas();
+        canvas = new Canvas(this, transform);
 
         canvas.setBounds(0, 0, getWidth(), getHeight());
 
@@ -182,19 +180,7 @@ public class View extends JFrame implements Observer {
         makeMaptypeMenu();
     }
 
-    private void makeMaptypeMenu() {
-        mapMenu = new MapMenu();
-        mapMenu.addActionListener(new MapMenuController(this));
-    }
 
-    public void changeMapType(){
-        String type = mapMenu.getChosen();
-        if(type.equals("Standard")) drawAttributeManager.toggleStandardView();
-        else if(type.equals("Colorblind map"))drawAttributeManager.toggleColorblindView();
-        else if(type.equals("Transport map")) drawAttributeManager.toggleTransportView();
-
-        canvas.repaint();
-    }
 
     private void makeShowRoutePanelButton() {
         showRoutePanelButton = new JButton("Route plan");
@@ -345,6 +331,11 @@ public class View extends JFrame implements Observer {
 
     }
 
+    private void makeMaptypeMenu() {
+        mapMenu = new MapMenu();
+        mapMenu.addActionListener(new MapMenuController(this));
+    }
+
     /**
      * Sets the point of where the mouse was dragged from
      *
@@ -454,125 +445,9 @@ public class View extends JFrame implements Observer {
         //TODO: When in fullscreen and opening the dialog, it closes the window?!?
     }
 
-    /**
-     * The canvas object is where our map of paths and images (points) will be drawn on
-     */
-    class Canvas extends JComponent {
-        public static final long serialVersionUID = 4;
-        Stroke min_value = new BasicStroke(Float.MIN_VALUE);
-
-        @Override
-        public void paint(Graphics _g) {
-            Graphics2D g = (Graphics2D) _g;
-
-            //Set the Transform for Graphic2D element before drawing.
-            g.setTransform(transform);
-            if (antialias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-
-
-            g.setStroke(min_value); //Just for good measure.
-
-
-            g.setColor(DrawAttribute.whiteblue);
-            g.fill(model.getBbox());
-            //getContentPane().setBackground(DrawAttribute.whiteblue);
-            /*//Drawing everything not categorized as a area or line object.
-            for (Shape line : model) {
-                g.draw(line);
-            }*/
-
-            g.setColor(Color.BLACK);
-
-            //Draw areas first
-            for(MapFeature mapFeature : model.getMapFeatures()){
-                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                if(zoomLevel >= drawAttribute.getZoomLevel()){ //TODO: NullerPointerException when loading "København" and changing to transport map
-                    if(mapFeature.isArea()){
-                        g.setColor(drawAttribute.getColor());
-                        g.fill(mapFeature.getShape());
-                    }
-                }
-            }
-            //Then draw boundaries on top of areas
-            for (MapFeature mapFeature : model.getMapFeatures()) {
-                if (zoomLevel > 14) {
-                    try {
-                        g.setColor(Color.BLACK);
-                        DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                        if (drawAttribute.isDashed()) continue;
-                        else if (!mapFeature.isArea())
-                            g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
-                        else g.setStroke(DrawAttribute.basicStrokes[0]);
-                        g.draw(mapFeature.getShape());
-                    }catch(NullPointerException e){
-                        System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
-                    }
-                }
-
-            }
-
-
-            //Draw the fillers on top of boundaries and areas
-            for (MapFeature mapFeature : model.getMapFeatures()) {
-                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                if (zoomLevel >= drawAttribute.getZoomLevel()) {
-                    g.setColor(drawAttribute.getColor());
-                  /*  if (mapFeature.isArea()) {
-                        g.fill(mapFeature.getShape());
-                    } else {*/
-
-                        if (drawAttribute.isDashed()) g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
-                        else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
-                        g.draw(mapFeature.getShape());
-               //     }
-                }
-            }
-            //Draws the icons.
-
-            if (zoomLevel >= 17) {
-                for (MapIcon mapIcon : model.getMapIcons()) {
-                    mapIcon.draw(g, transform);
-                }
-            }
-
-            // }
-/*
-                //AMALIE Iterator it = model.getStreetMap().entrySet().iterator();
-            while (it.hasNext()) {
-                int count1 = 0;
-                Map.Entry pair = (Map.Entry) it.next();
-                java.util.List<Shape> list = (java.util.List<Shape>) pair.getValue();
-                String streetName = (String) pair.getKey();
-                //g.setStroke(txSt);
-                TextDraw txtDr = new TextDraw();
-                System.out.println(streetName);
-                Path2D.Double street1 = new Path2D.Double();
-                g.setColor(Color.BLACK);
-                for (Shape street : list) {
-                    //if(count == 0){
-                    //	street1 =  (Path2D.Double) street;
-                    //	count++;
-                    //} else {
-                    //	street1.append(street,true);
-                    //}
-                    txtDr.draw(g,new GeneralPath(street),streetName,70.);
-                }
-            }
-*/
-
-            /*
-			//Prints out the current center coordinates
-			Point2D center = new Point2D.Double(getWidth() / 2, getHeight() / 2);
-			try {
-				System.out.println("Center: " + transform.inverseTransform(center, null));
-			} catch (NoninvertibleTransformException e) {} */
-            //}
-        }
-    }
-
     public JFileChooser getFileChooser(){ return fileChooser;}
 
-    public Component getCanvas() {
+    public Canvas getCanvas() {
         return canvas;
     }
 
@@ -602,4 +477,15 @@ public class View extends JFrame implements Observer {
 
     public JButton getLoadButton(){ return loadButton;}
 
+    public int getZoomLevel() {
+        return zoomLevel;
+    }
+
+    public MapMenu getMapMenu() {
+        return mapMenu;
+    }
+
+    public boolean isAntialias() {
+        return antialias;
+    }
 }

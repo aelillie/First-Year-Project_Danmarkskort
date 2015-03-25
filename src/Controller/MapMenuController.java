@@ -19,7 +19,7 @@ public class MapMenuController implements ActionListener {
     public void actionPerformed(ActionEvent e){
         String command = e.getActionCommand();
         if (command.equals("mapTypeChange"))
-            v.changeMapType();
+            v.getCanvas().changeMapType();
 
     }
 
