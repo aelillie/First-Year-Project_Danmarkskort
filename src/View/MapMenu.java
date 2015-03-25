@@ -1,5 +1,7 @@
 package View;
 
+import Model.MapIcon;
+
 import javax.swing.*;
 import java.awt.*;
 import java.net.URL;
@@ -36,12 +38,9 @@ public class MapMenu extends JComboBox<Icon> {
     }
 
     private void loadImagesAndOptions(){
-        URL standard = View.class.getResource("/data/standardMapImage.png");
-        URL colorblind = View.class.getResource("/data/colorblindMapImage.png");
-        URL transport = View.class.getResource("/data/transportMapImage.png");
-        ImageIcon standardMapImage = new ImageIcon(standard);
-        ImageIcon colorblindMapImage = new ImageIcon(colorblind);
-        ImageIcon transportMapImage = new ImageIcon(transport);
+        ImageIcon standardMapImage = new ImageIcon(MapIcon.standard);
+        ImageIcon colorblindMapImage = new ImageIcon(MapIcon.colorblind);
+        ImageIcon transportMapImage = new ImageIcon(MapIcon.transport);
         mapNameMap.put(standardMapImage, "Standard");
         mapNameMap.put(colorblindMapImage, "Colorblind map");
         mapNameMap.put(transportMapImage, "Transport map");

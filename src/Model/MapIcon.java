@@ -10,6 +10,19 @@ import java.io.*;
 import java.net.URL;
 
 public class MapIcon implements Serializable {
+    public static final URL metroIcon = MapIcon.class.getResource("/data/metroIcon.png");
+    public static final URL STogIcon = MapIcon.class.getResource("/data/stogIcon.png");
+    public static final URL parkingIcon = MapIcon.class.getResource("/data/parkingIcon.jpg");
+    public static final URL busIcon = MapIcon.class.getResource("/data/busIcon.png");
+    public static final URL standard = MapIcon.class.getResource("/data/standardMapImage.png");
+    public static final URL colorblind = MapIcon.class.getResource("/data/colorblindMapImage.png");
+    public static final URL transport = MapIcon.class.getResource("/data/transportMapImage.png");
+    public static final URL startPointIcon = MapIcon.class.getResource("/data/startPointIcon.png");
+    public static final URL endPointIcon = MapIcon.class.getResource("/data/endPointIcon.png");
+    public static final URL fullscreenIcon = MapIcon.class.getResource("/data/fullscreenIcon.png");
+    public static final URL minusIcon = MapIcon.class.getResource("/data/minusIcon.png");
+    public static final URL plusIcon = MapIcon.class.getResource("/data/plusIcon.png");
+    public static final URL searchIcon = MapIcon.class.getResource("/data/searchIcon.png");
     BufferedImage img;
     Shape shape;
     Point2D coord;

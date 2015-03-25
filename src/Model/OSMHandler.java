@@ -186,8 +186,7 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("amenity")) {
                     mapFeatures.add(new Amenity(way, fetchOSMLayer(), keyValue_map.get("amenity"), keyValue_map.containsKey("building")));
                     if (keyValue_map.get("amenity").equals("parking")) {
-                        URL parkingIcon = OSMHandler.class.getResource("/data/parkingIcon.jpg");
-                        mapIcons.add(new MapIcon(way, parkingIcon));
+                        mapIcons.add(new MapIcon(way, MapIcon.parkingIcon));
                     }
                 }
                 else if (keyValue_map.containsKey("barrier")) mapFeatures.add(new Barrier(way, fetchOSMLayer(), keyValue_map.get("barrier"), isArea));
@@ -226,17 +225,14 @@ public class OSMHandler extends DefaultHandler {
                 if (keyValue_map.containsKey("highway")) {
                     String val = keyValue_map.get("highway");
                     if (val.equals("bus_stop") && isBusstop) {
-                        URL busIcon = OSMHandler.class.getResource("/data/busIcon.png");
-                        mapIcons.add(new MapIcon(nodeCoord, busIcon));
+                        mapIcons.add(new MapIcon(nodeCoord, MapIcon.busIcon));
                     }
                 }
                 else if (keyValue_map.containsKey("railway")) {
                     String val = keyValue_map.get("railway");
                     if (val.equals("station")) {
-                        URL metroIcon = OSMHandler.class.getResource("/data/metroIcon.png");
-                        URL STogIcon = OSMHandler.class.getResource("/data/stogIcon.png");
-                        if (isMetro) mapIcons.add(new MapIcon(nodeCoord, metroIcon));
-                        else if (isSTog) mapIcons.add(new MapIcon(nodeCoord, STogIcon));
+                        if (isMetro) mapIcons.add(new MapIcon(nodeCoord, MapIcon.metroIcon));
+                        else if (isSTog) mapIcons.add(new MapIcon(nodeCoord, MapIcon.STogIcon));
                     }
                 } else if(keyValue_map.containsKey("name")) {
                     String name = keyValue_map.get("name");

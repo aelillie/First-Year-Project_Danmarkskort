@@ -211,8 +211,7 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
         fullscreenButton = new JButton();
         fullscreenButton.setBackground(Color.WHITE);
-        URL fullscreenIcon = View.class.getResource("/data/fullscreenIcon.png");
-        fullscreenButton.setIcon(new ImageIcon(fullscreenIcon));
+        fullscreenButton.setIcon(new ImageIcon(MapIcon.fullscreenIcon));
         fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
         fullscreenButton.setFocusable(false);
         fullscreenButton.setActionCommand("fullscreen");
@@ -223,8 +222,7 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
         zoomOutButton = new JButton();
         zoomOutButton.setBackground(Color.WHITE);
-        URL minusIcon = View.class.getResource("/data/minusIcon.png");
-        zoomOutButton.setIcon(new ImageIcon(minusIcon));
+        zoomOutButton.setIcon(new ImageIcon(MapIcon.minusIcon));
         zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
         zoomOutButton.setFocusable(false);
         zoomOutButton.setActionCommand("zoomOut");
@@ -235,8 +233,7 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
         zoomInButton = new JButton();
         zoomInButton.setBackground(Color.WHITE);
-        URL minusIcon = View.class.getResource("/data/plusIcon.png");
-        zoomInButton.setIcon(new ImageIcon(minusIcon));
+        zoomInButton.setIcon(new ImageIcon(MapIcon.plusIcon));
         zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
         zoomInButton.setFocusable(false);
         zoomInButton.setActionCommand("zoomIn");
@@ -262,8 +259,7 @@ public class View extends JFrame implements Observer {
                 BorderFactory.createMatteBorder(4, 0, 4, 7, DrawAttribute.lightblue),
                 BorderFactory.createRaisedBevelBorder()));
         searchButton.setBackground(new Color(36, 45, 50));
-        URL searchIcon = View.class.getResource("/data/searchIcon.png");
-        searchButton.setIcon(new ImageIcon(searchIcon));
+        searchButton.setIcon(new ImageIcon(MapIcon.searchIcon));
         searchButton.setFocusable(false);
         searchButton.setBounds(320, 20, 43, 37);
         searchButton.setActionCommand("search");
