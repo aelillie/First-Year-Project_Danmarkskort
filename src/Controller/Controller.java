@@ -1,8 +1,8 @@
 package Controller;
 
-import Model.*;
+import Model.Address;
+import Model.Model;
 import View.View;
-import org.xml.sax.InputSource;
 
 import javax.swing.*;
 import java.awt.event.*;
@@ -69,7 +69,6 @@ public class Controller extends MouseAdapter implements ActionListener {
     private void loadSelectedFile(){
         int returnValue = view.openFileChooser(); //The returnvalue represents the action taken within the filechooser
         if(returnValue == JFileChooser.APPROVE_OPTION){ //Return value if yes/ok is chosen.
-            model.getOSMReader().clearData();
             try {
                 File file = view.getFileChooser().getSelectedFile(); //fetch file
                 URL fileURL = file.toURI().toURL(); //Convert to URL
@@ -132,7 +131,7 @@ public class Controller extends MouseAdapter implements ActionListener {
                         view.toggleAA();
                         break;
                     case 's':
-                        model.saveAll("Shapes.bin", "Icons.bin");
+                        model.saveBin("binaryModel.bin");
                         break;
                     case 'l':
                         try {
@@ -142,12 +141,7 @@ public class Controller extends MouseAdapter implements ActionListener {
                             n.printStackTrace();
                         }
                         break;
-                    case 'i':
-                        model.saveIcons("Icons.bin");
-                        break;
-                    case 'g':
-                        model.saveShapes("Shapes.bin");
-                        break;
+
                 }
                 if (e.getKeyCode() == KeyEvent.VK_UP) {
                     view.pan(0, 10);
