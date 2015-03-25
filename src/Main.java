@@ -1,7 +1,6 @@
 import Controller.Controller;
 import Model.Model;
 import View.View;
-import org.xml.sax.InputSource;
 
 import java.io.IOException;
 import java.io.InputStream;

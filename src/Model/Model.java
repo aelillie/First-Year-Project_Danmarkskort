@@ -2,14 +2,15 @@ package Model;
 
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
-import org.xml.sax.XMLReader;
-import org.xml.sax.helpers.XMLReaderFactory;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 import java.awt.geom.Rectangle2D;
-import java.io.*;
+import java.io.BufferedInputStream;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -34,7 +35,7 @@ public class Model extends Observable implements Serializable {
         Address.addPatterns();
         if (filename.endsWith(".osm")) parseOSM(inputStream);
         else if (filename.endsWith(".zip")) parseZIP(inputStream);
-        else if (filename.endsWith(".bin")) loadShapes(inputStream);
+        else if (filename.endsWith(".bin")) loadBin(inputStream);
         else System.err.println("File not recognized");
         System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
@@ -73,21 +74,21 @@ public class Model extends Observable implements Serializable {
 
 
 
-    private void loadShapes(InputStream inputStream) {
+    private void loadBin(InputStream inputStream) {
 
         try {
 
-            BinaryHandler.loadShapes(inputStream);
+            BinaryHandler.load(inputStream);
 
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
     }
 
-    public void saveShapes(String filename) {
+    public void saveBin(String filename) {
 
         try {
-            BinaryHandler.saveShapes(filename);
+            BinaryHandler.save(filename);
             System.out.println("Shapes saved");
         } catch (IOException e) {
             e.printStackTrace();
@@ -95,35 +96,6 @@ public class Model extends Observable implements Serializable {
         }
     }
 
-    public void saveIcons(String filename){
-
-        try{
-            BinaryHandler.saveIcons(filename);
-            System.out.println("Icons saved");
-        } catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    public void saveAll(String shapeFile, String iconFile){
-
-        try{
-            BinaryHandler.saveAll(shapeFile, iconFile);
-            System.out.println("All shapes and icons saved");
-        } catch(IOException e){
-            e.printStackTrace();
-        }
-    }
-
-    private void loadAll(InputStream shapeStream, InputStream iconStream){
-        try{
-            BinaryHandler.loadAll(shapeStream, iconStream);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }catch (ClassNotFoundException e){
-            e.printStackTrace();
-        }
-    }
 
 
     public void searchForAddresses(Address address){
