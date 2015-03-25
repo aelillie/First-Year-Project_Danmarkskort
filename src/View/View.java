@@ -4,16 +4,16 @@ import Controller.MapMenuController;
 import Model.MapFeature;
 import Model.MapIcon;
 import Model.Model;
+import Model.*;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
-import java.awt.geom.Point2D;
+import java.awt.geom.*;
 import java.net.URL;
+import java.text.DecimalFormat;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -439,7 +439,7 @@ public class View extends JFrame implements Observer {
             gd.setFullScreenWindow(null);
         }
         isFullscreen = !isFullscreen;
-        scaleAffine();
+        //scaleAffine();
     }
 
     /**
@@ -452,6 +452,40 @@ public class View extends JFrame implements Observer {
         fileChooser.setFileFilter(filter); //sets the above filter
         return returnVal;
         //TODO: When in fullscreen and opening the dialog, it closes the window?!?
+    }
+
+    public void drawScaleBar(Graphics2D g){
+        g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+        Point2D.Double lineStart = new Point2D.Double(getWidth()-200,getContentPane().getHeight()-13);
+        Point2D.Double lineEnd = new Point2D.Double(getWidth()-100,getContentPane().getHeight()-13);
+        Point2D.Double transformedStart = new Point2D.Double();
+        Point2D.Double transformedEnd = new Point2D.Double();
+
+        double lineWidth = lineEnd.getX()-lineStart.getX();
+        g.setColor(new Color(255,255,255,200));
+        g.fill(new Rectangle2D.Double(lineStart.getX() - 60, lineStart.getY() - 13, lineWidth + 80,20));
+
+        g.setColor(Color.BLACK);
+        g.setStroke(new BasicStroke(2));
+        g.draw(new Line2D.Double(lineStart, lineEnd));
+        g.draw(new Line2D.Double(lineStart,new Point2D.Double(lineStart.getX(),lineStart.getY()-5)));
+        g.draw(new Line2D.Double(lineEnd,new Point2D.Double(lineEnd.getX(),lineStart.getY()-5)));
+
+        try {
+            transform.inverseTransform(lineStart, transformedStart);
+            transform.inverseTransform(lineEnd,transformedEnd);
+        } catch (NoninvertibleTransformException e){
+            e.printStackTrace();
+        }
+        double distance = MapCalculator.haversineDist(transformedStart.getX(),transformedStart.getY(),
+                                    transformedEnd.getX(),transformedEnd.getY());
+        double distanceInMeters = distance*1000;
+
+        if(distance%1000 < 1){
+            g.drawString(new DecimalFormat("####").format(distanceInMeters) + " m", (int) lineStart.getX() - 57, (int) lineStart.getY());
+        } else {
+            g.drawString(new DecimalFormat("##.##").format(distance) + " km", (int) lineStart.getX() - 57, (int) lineStart.getY());
+        }
     }
 
     /**
@@ -482,6 +516,7 @@ public class View extends JFrame implements Observer {
             }*/
 
             g.setColor(Color.BLACK);
+            MapCalculator.getCurrentScaleDistance(transform,model);
 
             //Draw areas first
             for(MapFeature mapFeature : model.getMapFeatures()){
@@ -535,6 +570,13 @@ public class View extends JFrame implements Observer {
                 }
             }
 
+            g.setTransform(new AffineTransform());
+            drawScaleBar(g);
+
+            g.setTransform(transform);
+
+
+
             // }
 /*
                 //AMALIE Iterator it = model.getStreetMap().entrySet().iterator();
@@ -569,6 +611,8 @@ public class View extends JFrame implements Observer {
             //}
         }
     }
+
+
 
     public JFileChooser getFileChooser(){ return fileChooser;}
 

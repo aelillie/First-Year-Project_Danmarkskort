@@ -49,14 +49,6 @@ public class OSMHandler extends DefaultHandler {
         mapFeatures = new ArrayList<>();
     }
 
-    /**
-     * Calculates the latitude to the y-coordinate using spherical Mercator projection
-     * @param aLat The latitude of the point
-     * @return the y-coordinate on a plane
-     */
-    public static double latToY(double aLat) {
-        return Math.toDegrees(Math.log(Math.tan(Math.PI/4+Math.toRadians(aLat)/2)));
-    }
 
 
     /**
@@ -82,7 +74,7 @@ public class OSMHandler extends DefaultHandler {
                 hasName = false; hasHouseNo = false; hasPostcode = false; hasCity = false;
 
                 double lat = Double.parseDouble(atts.getValue("lat"));
-                lat = latToY(lat); //transforming according to the Mercator projection
+                lat = MapCalculator.latToY(lat); //transforming according to the Mercator projection
                 double lon = Double.parseDouble(atts.getValue("lon"));
                 long id = Long.parseLong(atts.getValue("id"));
                 Point2D coord = new Point2D.Double(lon, lat);
@@ -114,10 +106,10 @@ public class OSMHandler extends DefaultHandler {
                 break;
             case "bounds": //bounds for the given map
                 double minlat = Double.parseDouble(atts.getValue("minlat"));
-                minlat = latToY(minlat); //transforming according to the Mercator projection
+                minlat = MapCalculator.latToY(minlat); //transforming according to the Mercator projection
                 double minlon = Double.parseDouble(atts.getValue("minlon"));
                 double maxlat = Double.parseDouble(atts.getValue("maxlat"));
-                maxlat = latToY(maxlat); //transforming according to the Mercator projection
+                maxlat = MapCalculator.latToY(maxlat); //transforming according to the Mercator projection
                 double maxlon = Double.parseDouble(atts.getValue("maxlon"));
                 bbox.setRect( new Rectangle2D.Double(minlon, minlat, maxlon - minlon, maxlat - minlat));
 
