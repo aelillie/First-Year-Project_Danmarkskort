@@ -36,7 +36,6 @@ public class Model extends Observable implements Serializable {
         else if (filename.endsWith(".zip")) parseZIP(inputStream);
         else if (filename.endsWith(".bin")) loadShapes(inputStream);
         else System.err.println("File not recognized");
-        inputStream.close();
         System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
@@ -54,7 +53,6 @@ public class Model extends Observable implements Serializable {
             SAXParserFactory factory = SAXParserFactory.newInstance();
             SAXParser parser = factory.newSAXParser();
             parser.parse(inputStream, OSMReader);
-            inputStream.close();
         } catch (SAXException | IOException | ParserConfigurationException e) {
             e.printStackTrace();
         }

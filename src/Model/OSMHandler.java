@@ -36,6 +36,19 @@ public class OSMHandler extends DefaultHandler {
     private Point2D startPoint, endPoint; //coastline start point and end point
     private Rectangle2D bbox = new Rectangle2D.Double();
 
+    public void clearData() {
+        mapFeatures.clear();
+        mapIcons.clear();
+        coastlines.clear();
+        memberReferences.clear();
+        addressList.clear();
+        wayCoords.clear();
+        node_map.clear();
+        keyValue_map.clear();
+        wayId_map.clear();
+        addressMap.clear();
+    }
+
     /**
      * Calculates the latitude to the y-coordinate using spherical Mercator projection
      * @param aLat The latitude of the point

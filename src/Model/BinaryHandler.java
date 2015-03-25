@@ -41,7 +41,7 @@ public final class BinaryHandler {
         model.setBBox(rec);
         List<MapFeature> mapF = model.getMapFeatures();
 
-        model.getMapFeatures().clear();
+        model.getOSMReader().clearData();
 
         mapF.addAll((List<MapFeature>) in.readObject());
 
