@@ -518,7 +518,7 @@ public class View extends JFrame implements Observer {
             }*/
 
             g.setColor(Color.BLACK);
-            MapCalculator.getCurrentScaleDistance(transform,model);
+
 
             //Draw areas first
             for(MapFeature mapFeature : model.getMapFeatures()){
