@@ -91,7 +91,6 @@ public class Model extends Observable implements Serializable {
 
         try {
             BinaryHandler.save(filename);
-            System.out.println("Binary model saved as " + currentFilename + ".bin");
         } catch (IOException e) {
             e.printStackTrace();
 
