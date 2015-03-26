@@ -74,6 +74,7 @@ public class Controller extends MouseAdapter implements ActionListener {
                 URL fileURL = file.toURI().toURL(); //Convert to URL
                 InputStream inputStream = fileURL.openStream();
                 String filename = fileURL.getFile();
+                model.setCurrentFilename(filename);
                 model.loadFile(filename, inputStream);
                 inputStream.close();
             } catch (IOException e) {
@@ -117,7 +118,7 @@ public class Controller extends MouseAdapter implements ActionListener {
          * Listens for keyboard events
          */
         public void keyPressed(KeyEvent e) {
-            InputStream inputStream = Controller.class.getResourceAsStream("/binaryModel.bin");
+            //InputStream inputStream = Controller.class.getResourceAsStream("/binaryModel.bin");
             //Set up the keyboard handler for different keys.
             if(!view.getSearchArea().hasFocus()) {
                 switch (e.getKeyChar()) {
@@ -131,16 +132,16 @@ public class Controller extends MouseAdapter implements ActionListener {
                         view.toggleAA();
                         break;
                     case 's':
-                        model.saveBin("binaryModel.bin");
+                        model.saveBin(model.getCurrentFilename() + ".bin");
                         break;
-                    case 'l':
+                    /*case 'l': use loadSelectedFile in runtime instead
                         try {
                             model.loadFile("binaryModel.bin", inputStream);
                         } catch (NullPointerException | IOException n) {
                             System.out.println("There is no 'binaryModel.bin' to load.");
                             n.printStackTrace();
                         }
-                        break;
+                        break;*/
 
                 }
                 if (e.getKeyCode() == KeyEvent.VK_UP) {

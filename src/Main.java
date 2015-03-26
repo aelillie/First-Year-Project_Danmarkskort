@@ -2,8 +2,10 @@ import Controller.Controller;
 import Model.Model;
 import View.View;
 
+import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
+import java.net.URISyntaxException;
 import java.net.URL;
 
 
@@ -11,10 +13,10 @@ public class Main {
     public static void main(String[] args) {
         Model m = Model.getModel();
         try {
-            URL fileURL = Main.class.getResource("/data/small.osm"); //Is only fetched to get filename to determine the file format
-            InputStream inputStream = Main.class.getResourceAsStream("/data/small.osm");
-            m.loadFile(fileURL.getFile(), inputStream);
-            inputStream.close();
+            String filename = "/data/newSmall.osm"; //Is used to get filename in order to determine the file format
+            InputStream inputStream = Main.class.getResourceAsStream(filename);
+            m.loadFile(filename, inputStream);
+            m.setCurrentFilename(filename);
         } catch (IOException e) {
             e.printStackTrace();
         }

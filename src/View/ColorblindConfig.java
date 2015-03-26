@@ -44,22 +44,16 @@ public class ColorblindConfig {
         //HIGHWAY
         colorblindView[ValueName.HIGHWAY.ordinal()] =         new DrawAttribute(false, 12, DrawAttribute.cl_white, 15);
         colorblindView[ValueName.MOTORWAY.ordinal()] =        new DrawAttribute(false, 12, DrawAttribute.cl_white, 0);
-        colorblindView[ValueName.MOTORWAY_LINK.ordinal()] =   new DrawAttribute(false, 12, DrawAttribute.cl_white, 0);
         colorblindView[ValueName.TRUNK.ordinal()] =           new DrawAttribute(false, 3, DrawAttribute.cl_green, 5);
-        colorblindView[ValueName.TRUNK_LINK.ordinal()] =      new DrawAttribute(false, 3, DrawAttribute.cl_green, 5);
         colorblindView[ValueName.PRIMARY.ordinal()] =         new DrawAttribute(false, 12, DrawAttribute.cl_whiteblue, 5);
-        colorblindView[ValueName.PRIMARY_LINK.ordinal()] =    new DrawAttribute(false, 12, DrawAttribute.cl_whiteblue, 5);
         colorblindView[ValueName.SECONDARY.ordinal()] =       new DrawAttribute(false, 6, DrawAttribute.cl_whiteblue, 10);
-        colorblindView[ValueName.SECONDARY_LINK.ordinal()] =  new DrawAttribute(false, 6, DrawAttribute.cl_whiteblue, 10);
         colorblindView[ValueName.TERTIARY.ordinal()] =        new DrawAttribute(false, 12, DrawAttribute.cl_white, 12);
-        colorblindView[ValueName.TERTIARY_LINK.ordinal()] =   new DrawAttribute(false, 12, DrawAttribute.cl_white, 12);
         colorblindView[ValueName.UNCLASSIFIED.ordinal()] =    new DrawAttribute(false, 6, DrawAttribute.cl_purple, 14);
         colorblindView[ValueName.RESIDENTIAL.ordinal()] =     new DrawAttribute(false, 6, DrawAttribute.cl_purple, 10);
         colorblindView[ValueName.SERVICE.ordinal()] =         new DrawAttribute(false, 6, DrawAttribute.cl_purple, 14);
         colorblindView[ValueName.LIVING_STREET.ordinal()] =   new DrawAttribute(false, 1, DrawAttribute.grey, 14);
         colorblindView[ValueName.PEDESTRIAN.ordinal()] =      new DrawAttribute(false, 1, DrawAttribute.cl_pink, 14);
         colorblindView[ValueName.TRACK.ordinal()] =           new DrawAttribute(true, 0, DrawAttribute.cl_pink, 14);
-        colorblindView[ValueName.TRACK.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.darkblue, 12);
         colorblindView[ValueName.ROAD.ordinal()] =            new DrawAttribute(false, 4, DrawAttribute.cl_purple, 12);
         colorblindView[ValueName.FOOTWAY.ordinal()] =         new DrawAttribute(true, 1, DrawAttribute.cl_pink, 16);
         colorblindView[ValueName.FOOTWAY_AREA.ordinal()] =    new DrawAttribute(false, 1, DrawAttribute.cl_pink, 16);

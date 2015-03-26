@@ -19,6 +19,7 @@ import java.util.zip.ZipInputStream;
 
 public class Model extends Observable implements Serializable {
 
+    private String currentFilename;
     private OSMHandler OSMReader = new OSMHandler();
     private static Model model = new Model();
     private ArrayList<Address> addressList = new ArrayList<>(); //Contains all addresses to be sorted according to the compareTo method.
@@ -37,7 +38,8 @@ public class Model extends Observable implements Serializable {
         else if (filename.endsWith(".zip")) parseZIP(inputStream);
         else if (filename.endsWith(".bin")) loadBin(inputStream);
         else System.err.println("File not recognized");
-        System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
+        inputStream.close(); //closes current input stream and releases any system resources associated with it
+        System.out.printf("Complete model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
     /*
@@ -89,7 +91,7 @@ public class Model extends Observable implements Serializable {
 
         try {
             BinaryHandler.save(filename);
-            System.out.println("Shapes saved");
+            System.out.println("Binary model saved as " + currentFilename + ".bin");
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -117,8 +119,17 @@ public class Model extends Observable implements Serializable {
     }*/
 
 
+    public String getCurrentFilename() {
+        return currentFilename;
+    }
 
-
+    public void setCurrentFilename(String currentFilename) {
+        if (currentFilename.endsWith(".osm"))
+            currentFilename = currentFilename.substring(0, currentFilename.indexOf(".osm"));
+        else if (currentFilename.endsWith(".zip"))
+            currentFilename = currentFilename.substring(0, currentFilename.indexOf(".zip"));
+        this.currentFilename = currentFilename;
+    }
 
     public Rectangle2D getBbox(){
         return OSMReader.getBbox();
