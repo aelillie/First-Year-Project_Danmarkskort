@@ -26,8 +26,14 @@ public class Landuse extends MapFeature {
         else if(value.equals("greenfield")) setValueName(ValueName.GREENFIELD);
         else if(value.equals("industrial")) setValueName(ValueName.INDUSTRIAL);
         else if(value.equals("orchard")) setValueName(ValueName.ORCHARD);
-        else if(value.equals("reservoir")) setValueName(ValueName.RESERVOIR);
-        else if(value.equals("allotments")) {
+        else if(value.equals("reservoir")){
+            isArea = true;
+            setValueName(ValueName.RESERVOIR);
+        }
+        else if(value.equals("basin")) {
+            isArea = true;
+            setValueName(ValueName.BASIN);
+       } else if(value.equals("allotments")) {
             isArea = true;
             setValueName(ValueName.ALLOTMENTS);
         }

@@ -47,44 +47,4 @@ public class MapCalculator {
         return distance; //distance in kilometers
     }
 
-    public static double getCurrentScaleDistance(AffineTransform transform, Model model){
-        Rectangle2D bbox = model.getBbox();
-
-        transform.getScaleX();
-
-        //inverseTransform
-
-        //float zoom = (float) Math.sqrt(transform.getDeterminant()); //Determinant is the combined scale of x and y
-
-        /*
-        double startLon = -transform.getTranslateX();
-
-        double endLon = startLon + bbox.getWidth()*transform.getScaleX();
-
-        double latitude = transform.getTranslateY();
-        */
-
-        //System.out.println("StartLon: " + startLon + ", EndLon: " + endLon);
-
-        //double distance = haversineDist(startLon,latitude,endLon,latitude);
-
-        //System.out.println("Distance: " + distance);
-
-
-        /*
-        Find the width of the current zoomed bounding box:
-        Find the start x of the width using translation and scale instance -  Modregn translation og scale
-        getTranslateX       måske *getScaleX
-
-
-        Find endwidth of the current zoomed bounding box
-        Find the end x of the width using translation and scale
-        getTranslateX*getScaleX + bbox.getWidth * transform.getScale
-
-
-         */
-
-        return 0; //Do nothing for now - work in progress!
-    }
-
 }

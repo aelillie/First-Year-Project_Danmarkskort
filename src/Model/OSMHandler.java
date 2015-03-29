@@ -19,7 +19,8 @@ public class OSMHandler extends DefaultHandler {
     private Map<Long, Point2D> node_map; //Relation between a nodes' id and coordinates
     private Map<String, String> keyValue_map; //relation between the keys and values in the XML file
     private Map<Long, Path2D> wayId_map; //Map of ways and their id's
-    private Map<Address,Point2D> addressMap; //Contains relevant places parsed as address objects (e.g. a place Roskilde or an address Lauravej 38 2900 Hellerup etc.) linked to their coordinate.
+    //Contains relevant places parsed as address objects linked to their coordinate.
+    private Map<Address,Point2D> addressMap;
 
     private List<MapFeature> mapFeatures; //Contains all of the mapfeature objects to be drawn
     private List<Address> addressList; //list of all the addresses in the .osm file
@@ -30,7 +31,8 @@ public class OSMHandler extends DefaultHandler {
 
     private Long wayId; //Id of the current way
     private Point2D nodeCoord; //current node's coordinates
-    private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity, isStart; //if a given feature is present
+    //if a given feature is present:
+    private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity, isStart;
     private String streetName, houseNumber,cityName, postCode; //address info
     private Point2D startPoint, endPoint; //coastline start point and end point
     private Rectangle2D bbox = new Rectangle2D.Double();
@@ -60,7 +62,8 @@ public class OSMHandler extends DefaultHandler {
      */
     public void startElement(String uri, String localName, String qName, Attributes atts) {
         switch (qName) { //if qName.equals(case)
-            case "osm": { //NOTE: it's important to refresh all lists so that when you load in a new OSM-file, the old elements aren't in the lists.
+            case "osm": {
+                //NOTE: refresh all lists so that when you load in a new OSM-file, the old elements aren't in the lists.
                 initializeCollections();
             }
             case "relation":{
@@ -290,8 +293,9 @@ public class OSMHandler extends DefaultHandler {
                 break;
 
             case "osm": //The end of the osm file
-
+                long time = System.nanoTime();
                 Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
+                System.out.printf("sorted all addresses, time: %d ms\n", (System.nanoTime() - time) / 1000000);
                 PathCreater.connectCoastlines(bbox);
                 mapFeatures.addAll(coastlines);
                 sortLayers();
@@ -308,6 +312,7 @@ public class OSMHandler extends DefaultHandler {
      */
 
     protected void sortLayers() {
+        long time = System.nanoTime();
         Comparator<MapFeature> comparator = new Comparator<MapFeature>() {
             @Override
             /**
@@ -322,7 +327,7 @@ public class OSMHandler extends DefaultHandler {
             }
         };
         Collections.sort(mapFeatures, comparator); //iterative mergesort. ~n*lg(n) comparisons
-        //TODO Consider quicksort (3-way). Keep in mind duplicate keys are often encountered.
+        System.out.printf("sorted all layers, time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
 

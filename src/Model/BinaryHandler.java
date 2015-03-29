@@ -14,17 +14,20 @@ public final class BinaryHandler {
      * @param filename File saved to
      */
     public static void save(String filename) throws IOException {
+        try {
+            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
+            //write the boundaries and the number of shapes.
+            Model model = Model.getModel();
+            out.writeObject(model.getBbox().getBounds2D());
 
-        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
-        //write the boundaries and the number of shapes.
-        Model model = Model.getModel();
-        out.writeObject(model.getBbox().getBounds2D());
+            List<MapFeature> mapF = model.getMapFeatures();
+            out.writeObject(mapF);
 
-        List<MapFeature> mapF = model.getMapFeatures();
-        out.writeObject(mapF);
-
-        out.writeObject(model.getMapIcons());
-
+            out.writeObject(model.getMapIcons());
+            System.out.println("Binary model saved as " + filename);
+        } catch (FileNotFoundException e) {
+            System.out.println("Binary model failed to save. Load a new file, then try again..");
+        }
     }
 
 
