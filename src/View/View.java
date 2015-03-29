@@ -5,6 +5,7 @@ import Model.MapFeature;
 import Model.MapIcon;
 import Model.Model;
 import Model.*;
+import javafx.scene.transform.NonInvertibleTransformException;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -14,6 +15,8 @@ import java.awt.event.*;
 import java.awt.geom.*;
 import java.net.URL;
 import java.text.DecimalFormat;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -27,6 +30,7 @@ public class View extends JFrame implements Observer {
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
     private int zoomLevel;
+    private Map<Integer,Double> zoomLevelDistances;
     private int checkOut = 1, checkIn = 0;
     private JTextField searchArea;
     private JButton searchButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton;
@@ -85,6 +89,7 @@ public class View extends JFrame implements Observer {
     public void setScale() {
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
         scaleAffine();
+        putZoomLevelDistances();
 
         //Set up the JFrame using the monitors resolution.
         setSize(screenSize); //screenSize
@@ -108,6 +113,32 @@ public class View extends JFrame implements Observer {
         transform.scale(scale, -scale);
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
         
+    }
+
+    private void putZoomLevelDistances(){
+        zoomLevelDistances = new HashMap<>();
+        zoomLevelDistances.put(20,0.025);
+        zoomLevelDistances.put(19,0.030);
+        zoomLevelDistances.put(18,0.050);
+        zoomLevelDistances.put(17,0.075);
+        zoomLevelDistances.put(16,0.1);
+        zoomLevelDistances.put(15,0.15);
+        zoomLevelDistances.put(14,0.2);
+        zoomLevelDistances.put(13,0.3);
+        zoomLevelDistances.put(12,0.45);
+        zoomLevelDistances.put(11,0.6);
+        zoomLevelDistances.put(10,0.9);
+        zoomLevelDistances.put(9,1.0);
+        zoomLevelDistances.put(8,1.5);
+        zoomLevelDistances.put(7,2.0);
+        zoomLevelDistances.put(6,3.0);
+        zoomLevelDistances.put(5,5.0);
+        zoomLevelDistances.put(4,8.0);
+        zoomLevelDistances.put(3,10.0);
+        zoomLevelDistances.put(2,15.0);
+        zoomLevelDistances.put(1,20.0);
+        zoomLevelDistances.put(0,25.0);
+
     }
 
     /**
@@ -456,16 +487,34 @@ public class View extends JFrame implements Observer {
         //TODO: When in fullscreen and opening the dialog, it closes the window?!?
     }
 
+
+
     public void drawScaleBar(Graphics2D g){
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        Point2D.Double lineStart = new Point2D.Double(getWidth()-200,getContentPane().getHeight()-13);
-        Point2D.Double lineEnd = new Point2D.Double(getWidth()-100,getContentPane().getHeight()-13);
+        Point2D.Double lineStart = new Point2D.Double(getWidth()-200,getContentPane().getHeight()-13); //Place the linestart at a arbitrary location to start with
+        final Point2D.Double lineEnd = new Point2D.Double(getWidth()-100,getContentPane().getHeight()-13); //The endpoint is static
         Point2D.Double transformedStart = new Point2D.Double();
         Point2D.Double transformedEnd = new Point2D.Double();
 
         double lineWidth = lineEnd.getX()-lineStart.getX();
         g.setColor(new Color(255,255,255,200));
-        g.fill(new Rectangle2D.Double(lineStart.getX() - 60, lineStart.getY() - 13, lineWidth + 80,20));
+        g.fill(new Rectangle2D.Double(lineStart.getX() - 95, lineStart.getY() - 13, lineWidth + 115,20));
+
+        try {
+            transform.inverseTransform(lineStart, transformedStart); //Use inverse transform to calculate the points to their corresponding lat and lon according to our transform
+            transform.inverseTransform(lineEnd,transformedEnd);
+        } catch (NoninvertibleTransformException e){
+            e.printStackTrace();
+        }
+
+        double distance = MapCalculator.haversineDist(transformedStart.getX(),transformedStart.getY(), //Calculate distance between the two points
+                transformedEnd.getX(),transformedEnd.getY());
+
+
+
+        double lineWidthPerKm = lineWidth/distance; //Used to calculate the desireddistance in pixels
+        double desiredDistance = zoomLevelDistances.get(zoomLevel); //The distance we want to display according to the zoomlevel
+        lineStart.setLocation(lineEnd.getX()-desiredDistance*lineWidthPerKm,lineStart.getY()); //Change the x coordinate to form the desired distance.
 
         g.setColor(Color.BLACK);
         g.setStroke(new BasicStroke(2));
@@ -473,20 +522,22 @@ public class View extends JFrame implements Observer {
         g.draw(new Line2D.Double(lineStart,new Point2D.Double(lineStart.getX(),lineStart.getY()-5)));
         g.draw(new Line2D.Double(lineEnd,new Point2D.Double(lineEnd.getX(),lineStart.getY()-5)));
 
-        try {
-            transform.inverseTransform(lineStart, transformedStart);
-            transform.inverseTransform(lineEnd,transformedEnd);
-        } catch (NoninvertibleTransformException e){
-            e.printStackTrace();
-        }
-        double distance = MapCalculator.haversineDist(transformedStart.getX(),transformedStart.getY(),
-                                    transformedEnd.getX(),transformedEnd.getY());
-        double distanceInMeters = distance*1000;
+        double distanceInMeters = desiredDistance*1000;
 
-        if(distance%1000 < 1){
-            g.drawString(new DecimalFormat("####").format(distanceInMeters) + " m", (int) lineStart.getX() - 57, (int) lineStart.getY());
+        if(desiredDistance%1000 < 1){ //If the distance is less than a kilometer, display it in meters, otherwise display it in kilometers
+            String meterDist = new DecimalFormat("####").format(distanceInMeters) + " m";
+            if(meterDist.length() <= 4) {
+                g.drawString(meterDist, (int) lineStart.getX() - 40, (int) lineStart.getY()+1);
+            } else {
+                g.drawString(meterDist, (int) lineStart.getX() - 45, (int) lineStart.getY()+1);
+            }
         } else {
-            g.drawString(new DecimalFormat("##.##").format(distance) + " km", (int) lineStart.getX() - 57, (int) lineStart.getY());
+            String kilometerDist = new DecimalFormat("##.##").format(desiredDistance) + " km";
+            if(kilometerDist.length() >= 5){
+                g.drawString(kilometerDist, (int) lineStart.getX() - 45, (int) lineStart.getY()+1);
+            } else {
+                g.drawString(kilometerDist, (int) lineStart.getX() - 35, (int) lineStart.getY()+1);
+            }
         }
     }
 

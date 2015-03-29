@@ -47,29 +47,4 @@ public class MapCalculator {
         return distance; //distance in kilometers
     }
 
-    /**
-     * Calculates the destination point given a startpoint, a distance and a bearing.
-     * @param startLon The longitude of the starting point
-     * @param startLat The latitude of the starting point
-     * @param distance The distance to the destination point
-     * @param bearingDeg The bearing (Relative and clockwise from the north pole, N = 0 degrees) in degrees
-     */
-    public static Point2D calculateEndpoint(double startLon, double startLat, double distance, double bearingDeg){
-        /*
-        Formula:	φ2 = asin( sin φ1 ⋅ cos δ + cos φ1 ⋅ sin δ ⋅ cos θ )
-        λ2 = λ1 + atan2( sin θ ⋅ sin δ ⋅ cos φ1, cos δ − sin φ1 ⋅ sin φ2 )
-        where	φ is latitude, λ is longitude, θ is the bearing, δ is the angular distance d/R; d being the distance travelled, R the earth’s radius
-         */
-        double bearing = Math.toRadians(bearingDeg);
-        startLon = Math.toRadians(startLat);
-        startLat = Math.toRadians(startLat);
-
-
-        double angularDistance = distance/earthRadius;
-        double endLat = Math.asin( Math.sin(startLat)*Math.cos(angularDistance) + Math.cos(startLat)*Math.sin(angularDistance)*Math.cos(bearing) );
-        double endLon = startLon + Math.atan2(Math.sin(bearing)*Math.sin(angularDistance)*Math.cos(startLat), Math.cos(angularDistance)-Math.sin(startLat)*Math.sin(endLat));
-
-        return new Point2D.Double(endLon,endLat);
-    }
-
 }
