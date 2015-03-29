@@ -159,6 +159,7 @@ public class Address implements Comparable<Address> {
      * @return Model.Address object.
      */
     public static Address parse(String s) {
+        addPatterns();
         Builder b = new Builder();
         boolean noMatch = false;
         for(int i = 0; i<patternList.size(); i++){

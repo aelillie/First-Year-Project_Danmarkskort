@@ -24,6 +24,15 @@ public class View extends JFrame implements Observer {
     private Model model;
     private Canvas canvas;
     private AffineTransform transform;
+
+    public boolean isAntialias() {
+        return antialias;
+    }
+
+    public AffineTransform getTransform() {
+        return transform;
+    }
+
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
     private int zoomLevel;

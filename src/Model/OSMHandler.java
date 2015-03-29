@@ -366,9 +366,10 @@ public class OSMHandler extends DefaultHandler {
     public List<MapFeature> getMapFeatures() {
         return mapFeatures;
     }
-    public List<MapIcon> getMapIcons() {
-        return mapIcons;
-    }
+    public List<MapIcon> getMapIcons() {return mapIcons;}
+    public List<Point2D> getWayCoords(){return wayCoords;}
+    public Map<Long,Path2D> getWayIdMap(){return wayId_map;}
+    public Map<Long, Point2D> getNodeMap(){return node_map;}
 
 
 }
