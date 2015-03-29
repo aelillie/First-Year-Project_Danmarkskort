@@ -1,0 +1,70 @@
+Group G v0.5
+==================
+
+Features added since v0.4:
+* Improved colorblindmode visualisation
+* Dynamically resizing scalebar
+* (Working on quad tree implementation in another branch)
+* More tests
+* New GUI design (not entirely done)
+* You can now make a self-contained .jar-file, meaning that it can load files “internally”
+* Saved binaries are now saved with different names and in the data directory, depending on which map file you have loaded
+
+“Features” discovered/added since v0.4:
+* Coastlines still don’t work for all map cutouts
+* It is not currently possible to save a binary file from the default loading file in the program, you must first click “Load”, choose any file and then save it (using ‘s’).
+
+
+Time usage in man hours:
+10 hours:	Lectures
+10 hours:	Group presentation and mutual feedback
+ 3 hours:	Colorblindmap and transportationmap visualisation
+10 hours: 	Distance formula and scalebar
+ 8 hours:	OSM handler / addressparser tests 
+16 hours: 	GUI
+15 hours:	Self-contained .jar
+ 3 hours:	Modifying the save-binary function
+18 hours:       Quad tree
+
+
+Cumulative cost so far: (1h = DKK 625)
+Lectures:                	15.625,-
+Meetings:                	 6.250,-
+Code review:            	15.625,-
+"Homework"			15.625,-
+GUI				33.435,-
+Address search	 	  	 5.000,-
+OSM layers			10.625,-
+Road names 		 	 8.125,-
+Binary save/load		 4.375,-
+Visualisation 			25.000,-
+Restructuring 			35.625,-
+Workshop			12.500,-
+Report writing			10.625,-
+Address searching	  	 7.500,-
+Coastlines		 	26.875,-
+Mercator projection 		 2.500,-
+Load files from program 	 3.125,-
+Self-contained jar		 9.375,-
+Zoomlevel 			 3.125,-
+Group presentations		 6.250,-
+Maptypes			 1.875,-
+Scalebar			 6.250,-
+Tests 				 5.000,-
+Quadtree.                       11.250,-
+
+
+Wishlist for v0.6:
+* Address search complete since we haven’t looked at it this week.
+* Quad tree fully implemented.
+* Improved GUI
+* More tests
+* Working stroke increase/decrease based on zoomLevel
+* More optimal way of modifying the draw config files
+
+Feedback Request:
+* A way to get the the corresponding latitude and longitude of the window for accessing the right data from the Quad Tree.
+* Should the “View” class be shorter? Should we distribute the methods and make some more classes? Should the inner class “Canvas” be moved to its own?
+* How thorough should the tests for the OSMHandler be? 
+
+
