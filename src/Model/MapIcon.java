@@ -25,6 +25,8 @@ public class MapIcon implements Serializable {
     public static final URL searchIcon = MapIcon.class.getResource("/data/searchIcon.png");
     public static final URL pubIcon = MapIcon.class.getResource("/data/pubIcon.png");
     public static final URL atmIcon = MapIcon.class.getResource("/data/atmIcon.png");
+    public static final URL optionsIcon = MapIcon.class.getResource("/data/optionsIcon.png");
+
     BufferedImage img;
     Shape shape;
     Point2D coord;

@@ -5,6 +5,7 @@ import Model.Model;
 import View.View;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
@@ -41,6 +42,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         view.getLoadButton().addActionListener(this);
         view.getFullscreenButton().addActionListener(this);
         view.getShowRoutePanelButton().addActionListener(this);
+        view.getOptionsButton().addActionListener(this);
     }
 
     @Override
@@ -56,6 +58,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         else if (command.equals("search")) addressSearch();
         else if (command.equals("showRoutePanel")) view.showRoutePanel();
         else if (command.equals("findRoute"));
+        else if (command.equals("showOptions"))view.repaint();
     }
 
     private void addressSearch(){

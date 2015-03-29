@@ -42,7 +42,7 @@ public class View extends JFrame implements Observer {
     private Scalebar scalebar;
     private int checkOut = 1, checkIn = 0;
     private JTextField searchArea;
-    private JButton searchButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton;
+    private JButton searchButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton, optionsButton;
     private MapMenu mapMenu;
     private RouteView routePanel = new RouteView();
    // private IconPanel iconPanel = new IconPanel();
@@ -51,6 +51,7 @@ public class View extends JFrame implements Observer {
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
     private String promptText = "Enter Address";
     private final JFileChooser fileChooser = new JFileChooser("data"); //sets the initial directory to data
+
 
 
     /**
@@ -74,11 +75,12 @@ public class View extends JFrame implements Observer {
         this.getRootPane().addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 //Re-position the buttons.
-                zoomOutButton.setBounds(getWidth() - 115, getHeight() - getHeight() / 3 * 2, 39, 37);
-                fullscreenButton.setBounds(getWidth() - 70, getHeight() - getHeight() / 3 * 2, 39, 37);
-                zoomInButton.setBounds(getWidth() - 160, getHeight() - getHeight() / 3 * 2, 39, 37);
-                mapMenu.setBounds(getWidth() - 160, getHeight() - getHeight() / 3 * 2 - 50, 130, 30);
+                zoomOutButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2+39, 30, 35);
+                fullscreenButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2+100, 30, 35);
+                zoomInButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2, 30, 35);
+                mapMenu.setBounds(getWidth() - 150, getHeight() - getHeight() / 3 * 2 - 50, 130, 30);
                 loadButton.setBounds(getWidth()-65, getHeight()-65,40,20);
+                optionsButton.setBounds((int) getWidth() - 60, (int) getHeight() - (int) (getHeight()*0.98), 39, 37);
                 repaint();
             }
         });
@@ -177,6 +179,7 @@ public class View extends JFrame implements Observer {
         layer.add(mapMenu, new Integer(2));
         layer.add(showRoutePanelButton, new Integer(2));
         layer.add(routePanel, new Integer(2));
+        layer.add(optionsButton, new Integer(2));
       //  layer.add(iconPanel, new Integer(2));
 
     }
@@ -188,6 +191,8 @@ public class View extends JFrame implements Observer {
         searchArea.setFont(font);
         searchArea.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 7, 4, 7, DrawAttribute.lightblue), BorderFactory.createRaisedBevelBorder()));
         searchArea.setBounds(20,20,300,37);
+
+        makeOptionsButton();
 
         makeSearchButton();
         makeZoomInButton();
@@ -212,6 +217,19 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
+    private void makeOptionsButton(){
+        Dimension preferred = getPreferredSize();
+        optionsButton = new JButton();
+        optionsButton.setFocusable(false);
+        optionsButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight()*0.98), 39, 37);
+        optionsButton.setIcon(new ImageIcon(MapIcon.optionsIcon));
+        optionsButton.setOpaque(false);
+        optionsButton.setBackground(new Color(0,0,0,180));
+        optionsButton.setBorderPainted(false);
+        optionsButton.setRolloverEnabled(false);
+        optionsButton.setActionCommand("showOptions");
+    }
+
     private void makeShowRoutePanelButton() {
         showRoutePanelButton = new JButton("Route plan");
         showRoutePanelButton.setFocusable(false);
@@ -226,34 +244,46 @@ public class View extends JFrame implements Observer {
     private void makeFullscreenButton() {
         Dimension preferred = getPreferredSize();
         fullscreenButton = new JButton();
-        fullscreenButton.setBackground(Color.WHITE);
+        fullscreenButton.setBackground(Color.BLACK);
         fullscreenButton.setIcon(new ImageIcon(MapIcon.fullscreenIcon));
         fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
         fullscreenButton.setFocusable(false);
+        fullscreenButton.setOpaque(false);
         fullscreenButton.setActionCommand("fullscreen");
-        fullscreenButton.setBounds((int) preferred.getWidth() - 70, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37);
+        fullscreenButton.setBackground(new Color(0,0,0,180));
+        fullscreenButton.setBorderPainted(false);
+        fullscreenButton.setRolloverEnabled(false);
+        fullscreenButton.setBounds((int)preferred.getWidth() - 60,(int) (preferred.getHeight() - preferred.getHeight() / 3 * 2+100), 39, 37);
     }
 
     private void makeZoomOutButton() {
         Dimension preferred = getPreferredSize();
         zoomOutButton = new JButton();
-        zoomOutButton.setBackground(Color.WHITE);
+        zoomOutButton.setBackground(Color.BLACK);
         zoomOutButton.setIcon(new ImageIcon(MapIcon.minusIcon));
         zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
         zoomOutButton.setFocusable(false);
+        zoomOutButton.setOpaque(false);
+        zoomOutButton.setBackground(new Color(0,0,0,180));
+        zoomOutButton.setBorderPainted(false);
+        zoomOutButton.setRolloverEnabled(false);
         zoomOutButton.setActionCommand("zoomOut");
-        zoomOutButton.setBounds((int) preferred.getWidth() - 115, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37);
+        zoomOutButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() / 3 * 2+45), 39, 37);
     }
 
     private void makeZoomInButton() {
         Dimension preferred = getPreferredSize();
         zoomInButton = new JButton();
-        zoomInButton.setBackground(Color.WHITE);
+        zoomInButton.setBackground(Color.BLACK);
         zoomInButton.setIcon(new ImageIcon(MapIcon.plusIcon));
         zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
         zoomInButton.setFocusable(false);
+        zoomInButton.setOpaque(false);
+        zoomInButton.setBackground(new Color(0,0,0,180));
+        zoomInButton.setBorderPainted(false);
+        zoomInButton.setRolloverEnabled(false);
         zoomInButton.setActionCommand("zoomIn");
-        zoomInButton.setBounds((int) preferred.getWidth() - 160, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37);
+        zoomInButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37);
     }
 
     private void makeLoadButton(){
@@ -422,6 +452,7 @@ public class View extends JFrame implements Observer {
 
     }
 
+
     /**
      * Moves the canvas by a fixed amount using the Translate method.
      *
@@ -485,6 +516,7 @@ public class View extends JFrame implements Observer {
             //Set the Transform for Graphic2D element before drawing.
             g.setTransform(transform);
             if (antialias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
+
 
 
             g.setStroke(min_value); //Just for good measure.
@@ -555,6 +587,19 @@ public class View extends JFrame implements Observer {
 
            scalebar = new Scalebar(g,zoomLevel,View.this,transform);
 
+
+            g.setTransform(new AffineTransform());
+            g.setColor(new Color(0,0,0,180));
+            RoundRectangle2D optionsButtonArea = new RoundRectangle2D.Double(getContentPane().getWidth()-50,(int)(getContentPane().getHeight()-getContentPane().getHeight()*0.98),60,40,15,15);
+            RoundRectangle2D zoomInOutArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2+10, 60, 80, 15, 15);
+            RoundRectangle2D fullscreenArea = new RoundRectangle2D.Double(getContentPane().getWidth()-30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2+110,60,38,15,15);
+            g.fill(optionsButtonArea);
+            g.fill(zoomInOutArea);
+            g.fill(fullscreenArea);
+
+            g.setColor(Color.BLACK);
+
+
             // }
 /*
                 //AMALIE Iterator it = model.getStreetMap().entrySet().iterator();
@@ -623,5 +668,7 @@ public class View extends JFrame implements Observer {
     }
 
     public JButton getLoadButton(){ return loadButton;}
+
+    public JButton getOptionsButton(){ return optionsButton;}
 
 }
