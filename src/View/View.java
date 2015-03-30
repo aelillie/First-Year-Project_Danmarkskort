@@ -522,8 +522,6 @@ public class View extends JFrame implements Observer {
             g.setStroke(min_value); //Just for good measure.
 
 
-            g.setColor(DrawAttribute.whiteblue);
-            g.fill(model.getBbox());
             //getContentPane().setBackground(DrawAttribute.whiteblue);
             /*//Drawing everything not categorized as a area or line object.
             for (Shape line : model) {

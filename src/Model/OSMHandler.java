@@ -5,10 +5,12 @@ import MapFeatures.*;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
+import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.*;
+import java.util.List;
 
 /**
  * Contenthandler, which handles the .osm file written in XML.
@@ -114,7 +116,14 @@ public class OSMHandler extends DefaultHandler {
                 double maxlat = Double.parseDouble(atts.getValue("maxlat"));
                 maxlat = MapCalculator.latToY(maxlat); //transforming according to the Mercator projection
                 double maxlon = Double.parseDouble(atts.getValue("maxlon"));
-                bbox.setRect( new Rectangle2D.Double(minlon, minlat, maxlon - minlon, maxlat - minlat));
+                Rectangle2D rect =  new Rectangle2D.Double(minlon, minlat, maxlon - minlon, maxlat - minlat);
+                Path2D rectPath = new Path2D.Double();
+                rectPath.moveTo(minlon,minlat);
+                rectPath.lineTo(minlon+maxlon-minlon,minlat);
+                rectPath.lineTo(minlon+maxlon-minlon,minlat+maxlat-minlat);
+                rectPath.lineTo(minlon,minlat+maxlat-minlat);
+                mapFeatures.add(new Bounds(rectPath, -5, null));
+                bbox.setRect(rect);
 
                 break;
             case "tag": //tags define ways
