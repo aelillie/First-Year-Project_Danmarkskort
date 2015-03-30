@@ -560,7 +560,7 @@ public class View extends JFrame implements Observer {
             g.setColor(drawBox.getColor());
             g.fill(box.getShape());
 
-            for(MapFeature coastLine : model.getCoastlines()){
+            for (MapFeature coastLine : model.getCoastlines()) {
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(coastLine.getValueName());
                 g.setColor(drawAttribute.getColor());
                 g.fill(coastLine.getShape());
@@ -575,7 +575,7 @@ public class View extends JFrame implements Observer {
             g.setColor(Color.BLACK);
 
             //Draw areas first
-            for(int i = 0; i < mapFeatures.size(); i++) {
+            for (int i = 0; i < mapFeatures.size(); i++) {
                 model.sortLayers(mapFeatures.get(i));
                 for (MapFeature mapFeature : mapFeatures.get(i)) {
                     DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
@@ -600,50 +600,49 @@ public class View extends JFrame implements Observer {
                         } catch (NullPointerException e) {
                             System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
                         }
-            }
-            //Then draw boundaries on top of areas
-            for (MapFeature mapFeature : model.getMapFeatures()) {
-                if (zoomLevel > 14) {
-                    try {
-                        g.setColor(Color.BLACK);
-                        DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                        if (drawAttribute.isDashed()) continue;
-                        else if (!mapFeature.isArea())
-                            if(mapFeature instanceof  Highway) {
-                                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor + 1]);
-                            }
-                            else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
-                        else g.setStroke(DrawAttribute.basicStrokes[0]);
-                        g.draw(mapFeature.getShape());
-                    }catch(NullPointerException e){
-                        System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
+                    }
+                }
+
+                //Then draw boundaries on top of areas
+                for (MapFeature mapFeature : mapFeatures.get(i)) {
+                    if (zoomLevel > 14) {
+                        try {
+                            g.setColor(Color.BLACK);
+                            DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                            if (drawAttribute.isDashed()) continue;
+                            else if (!mapFeature.isArea())
+                                if (mapFeature instanceof Highway) {
+                                    g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor + 1]);
+                                } else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
+                            else g.setStroke(DrawAttribute.basicStrokes[0]);
+                            g.draw(mapFeature.getShape());
+                        } catch (NullPointerException e) {
+                            System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
+                        }
                     }
                 }
 
 
                 //Draw the fillers on top of boundaries and areas
-                for (MapFeature mapFeature :  mapFeatures.get(i)) {
+                for (MapFeature mapFeature : mapFeatures.get(i)) {
                     DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
                     if (zoomLevel >= drawAttribute.getZoomLevel()) {
                         g.setColor(drawAttribute.getColor());
-                  /*  if (mapFeature.isArea()) {
-                        g.fill(mapFeature.getShape());
-                    } else {*/
-
-                        if (drawAttribute.isDashed()) g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
+                        if (drawAttribute.isDashed())
+                            g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
                         else {
-                            if(mapFeature instanceof Highway) {
+                            if (mapFeature instanceof Highway) {
                                 g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
-                            }else{
+                            } else {
                                 g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
                             }
                         }
                         g.draw(mapFeature.getShape());
-                        //     }
                     }
                 }
+
             }
-            //Draws the icons.
+                    //Draws the icons.
 
             if (zoomLevel >= 17) {
                 for (MapIcon mapIcon : model.getMapIcons()) {
@@ -651,22 +650,19 @@ public class View extends JFrame implements Observer {
                 }
             }
 
-           scalebar = new Scalebar(g,zoomLevel,View.this,transform);
 
+            scalebar = new Scalebar(g, zoomLevel, View.this, transform);
 
             g.setTransform(new AffineTransform());
-            g.setColor(new Color(0,0,0,180));
-            RoundRectangle2D optionsButtonArea = new RoundRectangle2D.Double(getContentPane().getWidth()-50,(int)(getContentPane().getHeight()-getContentPane().getHeight()*0.98),60,40,15,15);
-            RoundRectangle2D zoomInOutArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2+10, 60, 80, 15, 15);
-            RoundRectangle2D fullscreenArea = new RoundRectangle2D.Double(getContentPane().getWidth()-30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2+110,60,38,15,15);
+            g.setColor(new Color(0, 0, 0, 180));
+            RoundRectangle2D optionsButtonArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 50, (int) (getContentPane().getHeight() - getContentPane().getHeight() * 0.98), 60, 40, 15, 15);
+            RoundRectangle2D zoomInOutArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2 + 10, 60, 80, 15, 15);
+            RoundRectangle2D fullscreenArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2 + 110, 60, 38, 15, 15);
             g.fill(optionsButtonArea);
             g.fill(zoomInOutArea);
             g.fill(fullscreenArea);
 
-            g.setColor(Color.BLACK);
-
-
-            // }
+                        // }
 /*
                 //AMALIE Iterator it = model.getStreetMap().entrySet().iterator();
             while (it.hasNext()) {
@@ -697,9 +693,12 @@ public class View extends JFrame implements Observer {
 			try {
 				System.out.println("Center: " + transform.inverseTransform(center, null));
 			} catch (NoninvertibleTransformException e) {} */
-            //}
+                    //}
         }
     }
+
+
+
 
 
 
