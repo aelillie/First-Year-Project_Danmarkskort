@@ -1,6 +1,7 @@
 package View;
 
 import Controller.MapMenuController;
+import MapFeatures.Highway;
 import Model.MapFeature;
 import Model.MapIcon;
 import Model.Model;
@@ -39,6 +40,7 @@ public class View extends JFrame implements Observer {
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
     private int zoomLevel;
+    private int zoomFactor;
     private Scalebar scalebar;
     private int checkOut = 1, checkIn = 0;
     private JTextField searchArea;
@@ -67,6 +69,7 @@ public class View extends JFrame implements Observer {
         make the buttons and layout for the frame*/
         setScale();
         makeGUI();
+        adjustZoomFactor();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -250,7 +253,7 @@ public class View extends JFrame implements Observer {
         fullscreenButton.setFocusable(false);
         fullscreenButton.setOpaque(false);
         fullscreenButton.setActionCommand("fullscreen");
-        fullscreenButton.setBackground(new Color(0,0,0,180));
+        fullscreenButton.setBackground(new Color(0, 0, 0, 180));
         fullscreenButton.setBorderPainted(false);
         fullscreenButton.setRolloverEnabled(false);
         fullscreenButton.setBounds((int)preferred.getWidth() - 60,(int) (preferred.getHeight() - preferred.getHeight() / 3 * 2+100), 39, 37);
@@ -264,7 +267,7 @@ public class View extends JFrame implements Observer {
         zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
         zoomOutButton.setFocusable(false);
         zoomOutButton.setOpaque(false);
-        zoomOutButton.setBackground(new Color(0,0,0,180));
+        zoomOutButton.setBackground(new Color(0, 0, 0, 180));
         zoomOutButton.setBorderPainted(false);
         zoomOutButton.setRolloverEnabled(false);
         zoomOutButton.setActionCommand("zoomOut");
@@ -279,7 +282,7 @@ public class View extends JFrame implements Observer {
         zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
         zoomInButton.setFocusable(false);
         zoomInButton.setOpaque(false);
-        zoomInButton.setBackground(new Color(0,0,0,180));
+        zoomInButton.setBackground(new Color(0, 0, 0, 180));
         zoomInButton.setBorderPainted(false);
         zoomInButton.setRolloverEnabled(false);
         zoomInButton.setActionCommand("zoomIn");
@@ -339,7 +342,8 @@ public class View extends JFrame implements Observer {
             transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
             pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
             checkForZoomOut();
-        }System.out.println(zoomLevel);
+        }System.out.println("level "+zoomLevel);
+        System.out.println("factor "+zoomFactor);
     }
 
     /**
@@ -404,6 +408,7 @@ public class View extends JFrame implements Observer {
     private void checkForZoomIn(){
         if(checkIn == 1){
             zoomLevel++;
+            adjustZoomFactor();
             checkOut = 1;
             checkIn = 0;
         } else{
@@ -416,6 +421,7 @@ public class View extends JFrame implements Observer {
     private void checkForZoomOut(){
         if(checkOut == 1){
             zoomLevel--;
+            adjustZoomFactor();
             checkOut = 0;
             checkIn = 1;
         } else{
@@ -501,6 +507,32 @@ public class View extends JFrame implements Observer {
         //TODO: When in fullscreen and opening the dialog, it closes the window?!?
     }
 
+    public void adjustZoomFactor(){
+        switch(zoomLevel){
+            case 0:zoomFactor = 39; break;
+            case 1:zoomFactor = 37; break;
+            case 2:zoomFactor = 35; break;
+            case 3:zoomFactor = 33; break;
+            case 4:zoomFactor = 31; break;
+            case 5:zoomFactor = 29; break;
+            case 6:zoomFactor = 27; break;
+            case 7:zoomFactor = 25; break;
+            case 8:zoomFactor = 23; break;
+            case 9:zoomFactor = 21; break;
+            case 10:zoomFactor = 20; break;
+            case 11:zoomFactor = 18; break;
+            case 12:zoomFactor = 16; break;
+            case 13:zoomFactor = 14; break;
+            case 14:zoomFactor = 12; break;
+            case 15:zoomFactor = 10; break;
+            case 16:zoomFactor = 8; break;
+            case 17:zoomFactor = 6; break;
+            case 18:zoomFactor = 4; break;
+            case 19:zoomFactor = 2; break;
+            case 20:zoomFactor = 0; break;
+        }
+    }
+
 
     /**
      * The canvas object is where our map of paths and images (points) will be drawn on
@@ -551,7 +583,10 @@ public class View extends JFrame implements Observer {
                         DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
                         if (drawAttribute.isDashed()) continue;
                         else if (!mapFeature.isArea())
-                            g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
+                            if(mapFeature instanceof  Highway) {
+                                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor + 1]);
+                            }
+                            else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
                         else g.setStroke(DrawAttribute.basicStrokes[0]);
                         g.draw(mapFeature.getShape());
                     }catch(NullPointerException e){
@@ -572,7 +607,13 @@ public class View extends JFrame implements Observer {
                     } else {*/
 
                         if (drawAttribute.isDashed()) g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
-                        else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
+                        else {
+                            if(mapFeature instanceof Highway) {
+                                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
+                            }else{
+                                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
+                            }
+                        }
                         g.draw(mapFeature.getShape());
                //     }
                 }
@@ -670,5 +711,4 @@ public class View extends JFrame implements Observer {
     public JButton getLoadButton(){ return loadButton;}
 
     public JButton getOptionsButton(){ return optionsButton;}
-
 }
