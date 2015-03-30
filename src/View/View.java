@@ -45,7 +45,7 @@ public class View extends JFrame implements Observer {
     private JButton searchButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton, optionsButton;
     private MapMenu mapMenu;
     private RouteView routePanel = new RouteView();
-   // private IconPanel iconPanel = new IconPanel();
+    private IconPanel iconPanel = new IconPanel();
     private boolean isFullscreen = false;
     private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -181,6 +181,7 @@ public class View extends JFrame implements Observer {
         layer.add(routePanel, new Integer(2));
         layer.add(optionsButton, new Integer(2));
       //  layer.add(iconPanel, new Integer(2));
+        layer.add(iconPanel, new Integer(2));
 
     }
 
@@ -579,7 +580,7 @@ public class View extends JFrame implements Observer {
             }
             //Draws the icons.
 
-            if (zoomLevel >= 17) {
+            if (zoomLevel >= 16) {
                 for (MapIcon mapIcon : model.getMapIcons()) {
                     mapIcon.draw(g, transform);
                 }
