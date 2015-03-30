@@ -32,6 +32,8 @@ public final class BinaryHandler {
         out.writeObject(model.getCoastlines());
         //TODO total redo
 
+        System.out.print("done");
+
     }
 
 
