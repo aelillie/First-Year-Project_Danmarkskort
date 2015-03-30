@@ -1,5 +1,7 @@
 package Model;
 
+import MapFeatures.Coastline;
+import QuadTree.QuadTree;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -133,9 +135,13 @@ public class Model extends Observable implements Serializable {
         return OSMReader.getBbox();
     }
 
-    public List<MapFeature> getMapFeatures(){
-        return OSMReader.getMapFeatures();
+    public QuadTree getQuadTree(){
+        return OSMReader.getQuadTree();
     }
+
+    public ArrayList<Rectangle2D> getNodes(){return OSMReader.getNodes();}
+
+    public void setQuadTree(QuadTree qt){OSMReader.setQuadTree(qt);}
 
     public List<MapIcon>  getMapIcons(){
         return OSMReader.getMapIcons();
@@ -146,8 +152,21 @@ public class Model extends Observable implements Serializable {
         OSMReader.getBbox().setRect(bBox);
     }
 
+    public List<Coastline> getCoastlines(){
+        return OSMReader.getCoastlines();
+    }
+
     public OSMHandler getOSMReader(){
         return OSMReader;
+    }
+
+    public ArrayList<List<MapFeature>> getVisibleData(Rectangle2D visibleArea){
+        return OSMReader.getQuadTree().query2D(visibleArea);
+
+    }
+
+    public void sortLayers(List<MapFeature> mapFeatures){
+        OSMReader.sortLayers(mapFeatures);
     }
 
 }

@@ -1,10 +1,14 @@
 package View;
 
 import Controller.MapMenuController;
+import MapFeatures.Highway;
+import MapFeatures.Bounds;
 import Model.MapFeature;
 import Model.MapIcon;
 import Model.Model;
-
+import Model.PathCreater;
+import java.util.ArrayList;
+import java.util.List;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
@@ -29,10 +33,11 @@ public class View extends JFrame implements Observer {
     public AffineTransform getTransform() {
         return transform;
     }
-
+    private CanvasBounds bounds;
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
     private int zoomLevel;
+    private int zoomFactor;
     private Scalebar scalebar;
     private int checkOut = 1, checkIn = 0;
     private JTextField searchArea;
@@ -60,6 +65,7 @@ public class View extends JFrame implements Observer {
         make the buttons and layout for the frame*/
         setScale();
         makeGUI();
+        adjustZoomFactor();
 
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
@@ -68,12 +74,14 @@ public class View extends JFrame implements Observer {
         this.getRootPane().addComponentListener(new ComponentAdapter() {
             public void componentResized(ComponentEvent e) {
                 //Re-position the buttons.
-                zoomOutButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2+39, 30, 35);
-                fullscreenButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2+100, 30, 35);
+                zoomOutButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2 + 39, 30, 35);
+                fullscreenButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2 + 100, 30, 35);
                 zoomInButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2, 30, 35);
                 mapMenu.setBounds(getWidth() - 150, getHeight() - getHeight() / 3 * 2 - 50, 130, 30);
                 loadButton.setBounds(getWidth()-65, getHeight()-65,40,20);
                 optionsButton.setBounds(getWidth() - 60, getHeight() - (int) (getHeight()*0.98), 39, 37);
+                loadButton.setBounds(getWidth() - 65, getHeight() - 65, 40, 20);
+                optionsButton.setBounds(getWidth() - 60, getHeight() - (int) (getHeight() * 0.98), 39, 37);
                 repaint();
             }
         });
@@ -115,7 +123,8 @@ public class View extends JFrame implements Observer {
         scale = Scaler.setScale(zoomLevel);
         transform.scale(scale, -scale);
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
-        
+
+        bounds = new CanvasBounds(getBounds(), transform);
     }
 
     /**
@@ -213,7 +222,7 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
         optionsButton = new JButton();
         optionsButton.setFocusable(false);
-        optionsButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight()*0.98), 39, 37);
+        optionsButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() * 0.98), 39, 37);
         optionsButton.setIcon(new ImageIcon(MapIcon.optionsIcon));
         optionsButton.setOpaque(false);
         optionsButton.setBackground(DrawAttribute.fadeblack);
@@ -331,7 +340,8 @@ public class View extends JFrame implements Observer {
             transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
             pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
             checkForZoomOut();
-        }System.out.println(zoomLevel);
+        }System.out.println("level "+zoomLevel);
+        System.out.println("factor "+zoomFactor);
     }
 
     /**
@@ -396,6 +406,7 @@ public class View extends JFrame implements Observer {
     private void checkForZoomIn(){
         if(checkIn == 1){
             zoomLevel++;
+            adjustZoomFactor();
             checkOut = 1;
             checkIn = 0;
         } else{
@@ -408,6 +419,7 @@ public class View extends JFrame implements Observer {
     private void checkForZoomOut(){
         if(checkOut == 1){
             zoomLevel--;
+            adjustZoomFactor();
             checkOut = 0;
             checkIn = 1;
         } else{
@@ -491,6 +503,31 @@ public class View extends JFrame implements Observer {
         return returnVal;
     }
 
+    public void adjustZoomFactor(){
+        switch(zoomLevel){
+            case 0:zoomFactor = 39; break;
+            case 1:zoomFactor = 37; break;
+            case 2:zoomFactor = 35; break;
+            case 3:zoomFactor = 33; break;
+            case 4:zoomFactor = 31; break;
+            case 5:zoomFactor = 29; break;
+            case 6:zoomFactor = 27; break;
+            case 7:zoomFactor = 25; break;
+            case 8:zoomFactor = 23; break;
+            case 9:zoomFactor = 21; break;
+            case 10:zoomFactor = 20; break;
+            case 11:zoomFactor = 18; break;
+            case 12:zoomFactor = 16; break;
+            case 13:zoomFactor = 14; break;
+            case 14:zoomFactor = 12; break;
+            case 15:zoomFactor = 10; break;
+            case 16:zoomFactor = 8; break;
+            case 17:zoomFactor = 6; break;
+            case 18:zoomFactor = 4; break;
+            case 19:zoomFactor = 2; break;
+            case 20:zoomFactor = 0; break;
+        }
+    }
 
     /**
      * The canvas object is where our map of paths and images (points) will be drawn on
@@ -503,17 +540,29 @@ public class View extends JFrame implements Observer {
         public void paint(Graphics _g) {
             Graphics2D g = (Graphics2D) _g;
 
+            bounds.updateBounds(getBounds());
+
             //Set the Transform for Graphic2D element before drawing.
             g.setTransform(transform);
             if (antialias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
+            Rectangle2D windowBounds = bounds.getBounds();
 
+            ArrayList<List<MapFeature>> mapFeatures = model.getVisibleData(windowBounds);
 
             g.setStroke(min_value); //Just for good measure.
 
+            Bounds box = PathCreater.createBounds(model.getBbox());
+            DrawAttribute drawBox = drawAttributeManager.getDrawAttribute(box.getValueName());
+            g.setColor(drawBox.getColor());
+            g.fill(box.getShape());
 
-            g.setColor(DrawAttribute.whiteblue);
-            g.fill(model.getBbox());
+            for (MapFeature coastLine : model.getCoastlines()) {
+                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(coastLine.getValueName());
+                g.setColor(drawAttribute.getColor());
+                g.fill(coastLine.getShape());
+            }
+
             //getContentPane().setBackground(DrawAttribute.whiteblue);
             /*//Drawing everything not categorized as a area or line object.
             for (Shape line : model) {
@@ -522,52 +571,75 @@ public class View extends JFrame implements Observer {
 
             g.setColor(Color.BLACK);
 
-
             //Draw areas first
-            for(MapFeature mapFeature : model.getMapFeatures()){
-                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                if(zoomLevel >= drawAttribute.getZoomLevel()){ //TODO: NullerPointerException when loading "København" and changing to transport map
-                    if(mapFeature.isArea()){
+            for (int i = 0; i < mapFeatures.size(); i++) {
+                model.sortLayers(mapFeatures.get(i));
+                for (MapFeature mapFeature : mapFeatures.get(i)) {
+                    DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                    if (zoomLevel >= drawAttribute.getZoomLevel()) { //TODO: NullerPointerException when loading "København" and changing to transport map
+                        if (mapFeature.isArea()) {
+                            g.setColor(drawAttribute.getColor());
+                            g.fill(mapFeature.getShape());
+                        }
+                    }
+                }
+                //Then draw boundaries on top of areas
+                for (MapFeature mapFeature : mapFeatures.get(i)) {
+                    if (zoomLevel > 14) {
+                        try {
+                            g.setColor(Color.BLACK);
+                            DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                            if (drawAttribute.isDashed()) continue;
+                            else if (!mapFeature.isArea())
+                                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
+                            else g.setStroke(DrawAttribute.basicStrokes[0]);
+                            g.draw(mapFeature.getShape());
+                        } catch (NullPointerException e) {
+                            System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
+                        }
+                    }
+                }
+
+                //Then draw boundaries on top of areas
+                for (MapFeature mapFeature : mapFeatures.get(i)) {
+                    if (zoomLevel > 14) {
+                        try {
+                            g.setColor(Color.BLACK);
+                            DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                            if (drawAttribute.isDashed()) continue;
+                            else if (!mapFeature.isArea())
+                                if (mapFeature instanceof Highway) {
+                                    g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor + 1]);
+                                } else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
+                            else g.setStroke(DrawAttribute.basicStrokes[0]);
+                            g.draw(mapFeature.getShape());
+                        } catch (NullPointerException e) {
+                            System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
+                        }
+                    }
+                }
+
+
+                //Draw the fillers on top of boundaries and areas
+                for (MapFeature mapFeature : mapFeatures.get(i)) {
+                    DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                    if (zoomLevel >= drawAttribute.getZoomLevel()) {
                         g.setColor(drawAttribute.getColor());
-                        g.fill(mapFeature.getShape());
-                    }
-                }
-            }
-            //Then draw boundaries on top of areas
-            for (MapFeature mapFeature : model.getMapFeatures()) {
-                if (zoomLevel > 14) {
-                    try {
-                        g.setColor(Color.BLACK);
-                        DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                        if (drawAttribute.isDashed()) continue;
-                        else if (!mapFeature.isArea())
-                            g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
-                        else g.setStroke(DrawAttribute.basicStrokes[0]);
+                        if (drawAttribute.isDashed())
+                            g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
+                        else {
+                            if (mapFeature instanceof Highway) {
+                                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
+                            } else {
+                                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
+                            }
+                        }
                         g.draw(mapFeature.getShape());
-                    }catch(NullPointerException e){
-                        System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
                     }
                 }
 
             }
-
-
-            //Draw the fillers on top of boundaries and areas
-            for (MapFeature mapFeature : model.getMapFeatures()) {
-                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                if (zoomLevel >= drawAttribute.getZoomLevel()) {
-                    g.setColor(drawAttribute.getColor());
-                  /*  if (mapFeature.isArea()) {
-                        g.fill(mapFeature.getShape());
-                    } else {*/
-
-                        if (drawAttribute.isDashed()) g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
-                        else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
-                        g.draw(mapFeature.getShape());
-               //     }
-                }
-            }
-            //Draws the icons.
+                    //Draws the icons.
 
             if (zoomLevel >= 17) {
                 for (MapIcon mapIcon : model.getMapIcons()) {
@@ -575,22 +647,19 @@ public class View extends JFrame implements Observer {
                 }
             }
 
-           scalebar = new Scalebar(g,zoomLevel,View.this,transform);
 
+            scalebar = new Scalebar(g, zoomLevel, View.this, transform);
 
             g.setTransform(new AffineTransform());
-            g.setColor(new Color(0,0,0,180));
-            RoundRectangle2D optionsButtonArea = new RoundRectangle2D.Double(getContentPane().getWidth()-50,(int)(getContentPane().getHeight()-getContentPane().getHeight()*0.98),60,40,15,15);
-            RoundRectangle2D zoomInOutArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2+10, 60, 80, 15, 15);
-            RoundRectangle2D fullscreenArea = new RoundRectangle2D.Double(getContentPane().getWidth()-30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2+110,60,38,15,15);
+            g.setColor(new Color(0, 0, 0, 180));
+            RoundRectangle2D optionsButtonArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 50, (int) (getContentPane().getHeight() - getContentPane().getHeight() * 0.98), 60, 40, 15, 15);
+            RoundRectangle2D zoomInOutArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2 + 10, 60, 80, 15, 15);
+            RoundRectangle2D fullscreenArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2 + 110, 60, 38, 15, 15);
             g.fill(optionsButtonArea);
             g.fill(zoomInOutArea);
             g.fill(fullscreenArea);
 
-            g.setColor(Color.BLACK);
-
-
-            // }
+                        // }
 /*
                 //AMALIE Iterator it = model.getStreetMap().entrySet().iterator();
             while (it.hasNext()) {
@@ -621,9 +690,12 @@ public class View extends JFrame implements Observer {
 			try {
 				System.out.println("Center: " + transform.inverseTransform(center, null));
 			} catch (NoninvertibleTransformException e) {} */
-            //}
+                    //}
         }
     }
+
+
+
 
 
 
@@ -660,5 +732,4 @@ public class View extends JFrame implements Observer {
     public JButton getLoadButton(){ return loadButton;}
 
     public JButton getOptionsButton(){ return optionsButton;}
-
 }

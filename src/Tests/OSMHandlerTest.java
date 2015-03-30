@@ -40,18 +40,9 @@ public class OSMHandlerTest {
 
             testStream = Main.class.getResourceAsStream("/data/test_map.osm");
             SAXParser parser = factory.newSAXParser();
-            parser.parse(testStream, new TestHandler());
+            //parser.parse(testStream, new TestHandler());
         } catch (IOException | ParserConfigurationException | SAXException e) {
             e.printStackTrace();
         }
-    }
-
-    @Test
-    public void test() {
-
-    }
-
-    class TestHandler extends DefaultHandler {
-
     }
 }

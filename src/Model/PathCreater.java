@@ -1,5 +1,6 @@
 package Model;
 
+import MapFeatures.Bounds;
 import MapFeatures.Coastline;
 
 import java.awt.geom.Path2D;
@@ -301,6 +302,15 @@ public class PathCreater {
             }
 
         }
+    }
+
+    public static Bounds createBounds(Rectangle2D bbox){
+        Path2D rectPath = new Path2D.Double();
+        rectPath.moveTo(bbox.getMinX(),bbox.getMinY());
+        rectPath.lineTo(bbox.getMaxX(),bbox.getMinY());
+        rectPath.lineTo(bbox.getMaxX(),bbox.getMaxY());
+        rectPath.lineTo(bbox.getMinX(),bbox.getMaxY());
+        return new Bounds(rectPath, -5, "bounds");
     }
 }
 
