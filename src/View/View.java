@@ -45,7 +45,7 @@ public class View extends JFrame implements Observer {
     private JButton searchButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton, optionsButton;
     private MapMenu mapMenu;
     private RouteView routePanel = new RouteView();
-    private IconPanel iconPanel = new IconPanel();
+    private IconPanel iconPanel;
     private boolean isFullscreen = false;
     private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -62,6 +62,7 @@ public class View extends JFrame implements Observer {
     public View(Model m) {
         super("This is our map");
         model = m;
+        iconPanel = new IconPanel();
 
         /*Two helper functions to set up the AfflineTransform object and
         make the buttons and layout for the frame*/
@@ -90,8 +91,6 @@ public class View extends JFrame implements Observer {
         model.addObserver(this);
        
     }
-
-
 
     /**
      * Sets the scale for the afflineTransform object using to bounds from the osm file

@@ -8,6 +8,7 @@ import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.*;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class MapIcon implements Serializable {
     public static final URL metroIcon = MapIcon.class.getResource("/data/metroIcon.png");
@@ -27,6 +28,7 @@ public class MapIcon implements Serializable {
     public static final URL atmIcon = MapIcon.class.getResource("/data/atmIcon.png");
     public static final URL optionsIcon = MapIcon.class.getResource("/data/optionsIcon.png");
 
+    static ArrayList<URL> icons = addIcons();
     BufferedImage img;
     Shape shape;
     Point2D coord;
@@ -103,5 +105,18 @@ public class MapIcon implements Serializable {
         this.imgPath = imgPath;
 
     }
+
+    private static ArrayList<URL> addIcons(){
+        ArrayList iconsOne = new ArrayList<>();
+        iconsOne.add(metroIcon);
+        iconsOne.add(busIcon);
+        return iconsOne;
+    }
+    public static ArrayList<URL> getIcons(){
+        addIcons();
+        return icons;
+    }
+
+
 
 }

@@ -38,6 +38,7 @@ public class OSMHandler extends DefaultHandler {
     private Rectangle2D bbox = new Rectangle2D.Double();
 
 
+
     public void initializeCollections(){
         coastlines = new ArrayList<>();
         memberReferences = new ArrayList<>();
@@ -342,8 +343,6 @@ public class OSMHandler extends DefaultHandler {
         }
         return layer_val;
     }
-
-
 
 
     public void searchForAddressess(Address add){

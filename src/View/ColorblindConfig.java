@@ -21,8 +21,8 @@ public class ColorblindConfig {
         //AMENITY
         colorblindView[ValueName.AMENITY.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, 16);
         colorblindView[ValueName.PARKING.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.cl_pink, 17);
-        colorblindView[ValueName.PUB.ordinal()]     =             new DrawAttribute(false, 1, DrawAttribute.cl_pink, 17);
-        colorblindView[ValueName.BAR.ordinal()]     =             new DrawAttribute(false, 1, DrawAttribute.cl_pink, 17);
+        colorblindView[ValueName.PUB.ordinal()]     =         new DrawAttribute(false, 1, DrawAttribute.cl_pink, 17);
+        colorblindView[ValueName.BAR.ordinal()]     =         new DrawAttribute(false, 1, DrawAttribute.cl_pink, 17);
         colorblindView[ValueName.UNIVERSITY.ordinal()] =      new DrawAttribute(false, 1, DrawAttribute.cl_darkorange, 14);
         //BARRIER
         colorblindView[ValueName.BARRIER.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.cl_darkorange, 18);
@@ -57,7 +57,7 @@ public class ColorblindConfig {
         colorblindView[ValueName.ROAD.ordinal()] =            new DrawAttribute(false, 4, DrawAttribute.cl_purple, 12);
         colorblindView[ValueName.FOOTWAY.ordinal()] =         new DrawAttribute(true, 1, DrawAttribute.cl_pink, 16);
         colorblindView[ValueName.FOOTWAY_AREA.ordinal()] =    new DrawAttribute(false, 1, DrawAttribute.cl_pink, 16);
-        colorblindView[ValueName.CYCLEWAY.ordinal()] =         new DrawAttribute(true, 1, DrawAttribute.lightblue, 15);
+        colorblindView[ValueName.CYCLEWAY.ordinal()] =        new DrawAttribute(true, 1, DrawAttribute.lightblue, 15);
         colorblindView[ValueName.BRIDLEWAY.ordinal()] =       new DrawAttribute(true, 0, DrawAttribute.cl_pink, 17);
         colorblindView[ValueName.STEPS.ordinal()] =           new DrawAttribute(true, 2, DrawAttribute.cl_pink, 16);
         colorblindView[ValueName.PATH.ordinal()] =            new DrawAttribute(true, 0, DrawAttribute.cl_pink, 16);

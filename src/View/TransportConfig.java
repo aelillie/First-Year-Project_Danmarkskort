@@ -26,7 +26,7 @@ public class TransportConfig {
         transportView[ValueName.BARRIER.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, -1);
         transportView[ValueName.HENCE.ordinal()] =           new DrawAttribute(true, 1, DrawAttribute.neongreen, -0);
         transportView[ValueName.FENCE.ordinal()] =           new DrawAttribute(true, 1, DrawAttribute.lightblue, -0);
-        transportView[ValueName.KERB.ordinal()] =           new DrawAttribute(true, 1, DrawAttribute.lightblue, -0);
+        transportView[ValueName.KERB.ordinal()] =            new DrawAttribute(true, 1, DrawAttribute.lightblue, -0);
         //BOUNDARY
         transportView[ValueName.BOUNDARY.ordinal()] =        new DrawAttribute(true, 0, DrawAttribute.white, 2);
         //BRIDGE
@@ -99,8 +99,8 @@ public class TransportConfig {
         transportView[ValueName.RAILWAY.ordinal()] =         new DrawAttribute(true, 4, DrawAttribute.cl_red2, -3);
         transportView[ValueName.LIGHT_RAIL.ordinal()] =      new DrawAttribute(true, 4, DrawAttribute.cl_red3, -3);
         transportView[ValueName.RAIL.ordinal()] =            new DrawAttribute(true, 4, DrawAttribute.cl_red1, -3);
-        transportView[ValueName.TRAM.ordinal()] =           new DrawAttribute(true, 4, DrawAttribute.cl_red, -3);
-        transportView[ValueName.SUBWAY.ordinal()] =         new DrawAttribute(true, 4, DrawAttribute.cl_red, -3);
+        transportView[ValueName.TRAM.ordinal()] =            new DrawAttribute(true, 4, DrawAttribute.cl_red, -3);
+        transportView[ValueName.SUBWAY.ordinal()] =          new DrawAttribute(true, 4, DrawAttribute.cl_red, -3);
         //ROUTE
         transportView[ValueName.ROUTE.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.grey, 12);
         transportView[ValueName.FERRY.ordinal()] =           new DrawAttribute(true, 1, DrawAttribute.lightblue, 12);
