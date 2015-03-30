@@ -22,6 +22,12 @@ public class Address implements Comparable<Address> {
 
     public static Address newAddress(String streetName, String houseNumber, String postcode, String city ){
         Builder b = new Builder();
+
+        streetName = streetName.intern();
+        houseNumber = houseNumber.intern();
+        postcode = postcode.intern();
+        city = city.intern();
+
         b.street(streetName);
         b.house(houseNumber);
         b.postcode(postcode);
@@ -32,6 +38,7 @@ public class Address implements Comparable<Address> {
 
     public static Address newTown(String city){
         Builder b = new Builder();
+        city = city.intern();
         b.city(city);
         return b.build();
     }
