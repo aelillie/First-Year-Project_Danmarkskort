@@ -274,13 +274,13 @@ public class OSMHandler extends DefaultHandler {
                     }
 
                 } else if (keyValue_map.containsKey("addr:street")){    //TODO uncomment!
-                    /*if(hasHouseNo && hasCity && hasPostcode){
+                    if(hasHouseNo && hasCity && hasPostcode){
                         Address addr = Address.newAddress(streetName, houseNumber, postCode, cityName);
                         //System.out.println(addressString + ", " + nodeCoord);
                         //System.out.println(addr.toString());
                         addressMap.put(addr, nodeCoord);
                         addressList.add(addr);
-                    }*/
+                    }
                 }
 
 
