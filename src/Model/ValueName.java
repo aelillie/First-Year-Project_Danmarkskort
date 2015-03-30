@@ -18,7 +18,7 @@ public enum ValueName {
     BOUNDARY, //##New key##
         ADMINISTRATIVE, NATIONAL_PARK,
 
-    BBOX, //##New key## //TODO: bbox
+    BOUNDS, //##New key## //TODO: bbox
 
     BUILDING, //##New key##
         HOTEL, CATHEDRAL, CHAPEL, CHURCH, MOSQUE, TEMPLE, SYNAGOGUE, HOSPITAL, SCHOOL, UNIVERSITY, BRIDGE,
