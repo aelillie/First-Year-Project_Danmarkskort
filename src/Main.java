@@ -2,11 +2,8 @@ import Controller.Controller;
 import Model.Model;
 import View.View;
 
-import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
-import java.net.URISyntaxException;
-import java.net.URL;
 
 
 public class Main {

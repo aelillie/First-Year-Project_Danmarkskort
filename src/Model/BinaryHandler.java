@@ -1,5 +1,8 @@
 package Model;
 
+import MapFeatures.Coastline;
+import QuadTree.QuadTree;
+
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.util.List;
@@ -14,20 +17,21 @@ public final class BinaryHandler {
      * @param filename File saved to
      */
     public static void save(String filename) throws IOException {
-        try {
-            ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
-            //write the boundaries and the number of shapes.
-            Model model = Model.getModel();
-            out.writeObject(model.getBbox().getBounds2D());
 
-            List<MapFeature> mapF = model.getMapFeatures();
-            out.writeObject(mapF);
+        ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
+        //write the boundaries and the number of shapes.
+        Model model = Model.getModel();
+        out.writeObject(model.getBbox().getBounds2D());
 
-            out.writeObject(model.getMapIcons());
-            System.out.println("Binary model saved as " + filename);
-        } catch (FileNotFoundException e) {
-            System.out.println("Binary model failed to save. Load a new file, then try again..");
-        }
+
+        QuadTree qT = model.getQuadTree();
+        out.writeObject(qT);
+
+        out.writeObject(model.getMapIcons());
+
+        out.writeObject(model.getCoastlines());
+        //TODO total redo
+
     }
 
 
@@ -43,16 +47,17 @@ public final class BinaryHandler {
         Rectangle2D rec = (Rectangle2D) in.readObject();
 
         model.setBBox(rec);
-        List<MapFeature> mapF = model.getMapFeatures();
+        QuadTree qT = (QuadTree) in.readObject();
 
-
-
-
-        mapF.addAll((List<MapFeature>) in.readObject());
+        model.setQuadTree(qT);
 
         List<MapIcon> icons = model.getMapIcons();
-        icons.addAll((List<MapIcon>)in.readObject());
+        icons = (List<MapIcon>)in.readObject();
 
+        List<Coastline> coasts = model.getCoastlines();
+        coasts.addAll((List<Coastline>)in.readObject());
+
+        //TODO total redo with quadTree
 
     }
 
