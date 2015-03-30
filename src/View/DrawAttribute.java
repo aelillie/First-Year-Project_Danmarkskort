@@ -69,6 +69,7 @@ public class DrawAttribute {
 
     //Predefined colors to use.
     public static Color black = new Color(0, 0, 0);
+    public static Color fadeblack = new Color(0,0,0,180);
     public static Color lightblue = new Color(70, 130, 180);
     public static Color lightgreen = new Color(34,139,34);
     public static Color darkgreen = new Color(0, 100, 0);

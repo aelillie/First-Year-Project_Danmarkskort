@@ -4,8 +4,6 @@ import Controller.MapMenuController;
 import Model.MapFeature;
 import Model.MapIcon;
 import Model.Model;
-import Model.*;
-import javafx.scene.transform.NonInvertibleTransformException;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -13,10 +11,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
-import java.net.URL;
-import java.text.DecimalFormat;
-import java.util.HashMap;
-import java.util.Map;
 import java.util.Observable;
 import java.util.Observer;
 
@@ -47,7 +41,6 @@ public class View extends JFrame implements Observer {
     private RouteView routePanel = new RouteView();
    // private IconPanel iconPanel = new IconPanel();
     private boolean isFullscreen = false;
-    private GraphicsDevice gd = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
     private String promptText = "Enter Address";
     private final JFileChooser fileChooser = new JFileChooser("data"); //sets the initial directory to data
@@ -80,7 +73,7 @@ public class View extends JFrame implements Observer {
                 zoomInButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2, 30, 35);
                 mapMenu.setBounds(getWidth() - 150, getHeight() - getHeight() / 3 * 2 - 50, 130, 30);
                 loadButton.setBounds(getWidth()-65, getHeight()-65,40,20);
-                optionsButton.setBounds((int) getWidth() - 60, (int) getHeight() - (int) (getHeight()*0.98), 39, 37);
+                optionsButton.setBounds(getWidth() - 60, getHeight() - (int) (getHeight()*0.98), 39, 37);
                 repaint();
             }
         });
@@ -88,7 +81,6 @@ public class View extends JFrame implements Observer {
         pack();
         canvas.requestFocusInWindow();
         model.addObserver(this);
-       
     }
 
 
@@ -224,7 +216,7 @@ public class View extends JFrame implements Observer {
         optionsButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight()*0.98), 39, 37);
         optionsButton.setIcon(new ImageIcon(MapIcon.optionsIcon));
         optionsButton.setOpaque(false);
-        optionsButton.setBackground(new Color(0,0,0,180));
+        optionsButton.setBackground(DrawAttribute.fadeblack);
         optionsButton.setBorderPainted(false);
         optionsButton.setRolloverEnabled(false);
         optionsButton.setActionCommand("showOptions");
@@ -250,10 +242,10 @@ public class View extends JFrame implements Observer {
         fullscreenButton.setFocusable(false);
         fullscreenButton.setOpaque(false);
         fullscreenButton.setActionCommand("fullscreen");
-        fullscreenButton.setBackground(new Color(0,0,0,180));
+        fullscreenButton.setBackground(DrawAttribute.fadeblack);
         fullscreenButton.setBorderPainted(false);
         fullscreenButton.setRolloverEnabled(false);
-        fullscreenButton.setBounds((int)preferred.getWidth() - 60,(int) (preferred.getHeight() - preferred.getHeight() / 3 * 2+100), 39, 37);
+        fullscreenButton.setBounds((int) preferred.getWidth() - 60, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 + 100), 39, 37);
     }
 
     private void makeZoomOutButton() {
@@ -264,7 +256,7 @@ public class View extends JFrame implements Observer {
         zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
         zoomOutButton.setFocusable(false);
         zoomOutButton.setOpaque(false);
-        zoomOutButton.setBackground(new Color(0,0,0,180));
+        zoomOutButton.setBackground(DrawAttribute.fadeblack);
         zoomOutButton.setBorderPainted(false);
         zoomOutButton.setRolloverEnabled(false);
         zoomOutButton.setActionCommand("zoomOut");
@@ -279,7 +271,7 @@ public class View extends JFrame implements Observer {
         zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
         zoomInButton.setFocusable(false);
         zoomInButton.setOpaque(false);
-        zoomInButton.setBackground(new Color(0,0,0,180));
+        zoomInButton.setBackground(DrawAttribute.fadeblack);
         zoomInButton.setBorderPainted(false);
         zoomInButton.setRolloverEnabled(false);
         zoomInButton.setActionCommand("zoomIn");
@@ -481,12 +473,11 @@ public class View extends JFrame implements Observer {
      */
     public void toggleFullscreen() {
         if (!isFullscreen) {
-            gd.setFullScreenWindow(this);
+            setExtendedState(JFrame.MAXIMIZED_BOTH);
         } else {
-            gd.setFullScreenWindow(null);
+            setExtendedState(JFrame.NORMAL);
         }
         isFullscreen = !isFullscreen;
-        //scaleAffine();
     }
 
     /**
@@ -498,7 +489,6 @@ public class View extends JFrame implements Observer {
         FileNameExtensionFilter filter =  new FileNameExtensionFilter("ZIP & OSM & BIN", "osm", "zip", "bin","OSM","ZIP","BIN"); //The allowed files in the filechooser
         fileChooser.setFileFilter(filter); //sets the above filter
         return returnVal;
-        //TODO: When in fullscreen and opening the dialog, it closes the window?!?
     }
 
 
