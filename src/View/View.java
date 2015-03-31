@@ -7,6 +7,7 @@ import Model.MapFeature;
 import Model.MapIcon;
 import Model.Model;
 import Model.PathCreater;
+import Model.OSMHandler;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -560,7 +561,7 @@ public class View extends JFrame implements Observer {
             g.setColor(drawBox.getColor());
             g.fill(box.getShape());
 
-            for (MapFeature coastLine : model.getCoastlines()) {
+            for (MapFeature coastLine : OSMHandler.getCoastlines()) {
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(coastLine.getValueName());
                 g.setColor(drawAttribute.getColor());
                 g.fill(coastLine.getShape());
@@ -576,7 +577,7 @@ public class View extends JFrame implements Observer {
 
             //Draw areas first
             for (int i = 0; i < mapFeatures.size(); i++) {
-                model.sortLayers(mapFeatures.get(i));
+                //model.sortLayers(mapFeatures.get(i));
                 for (MapFeature mapFeature : mapFeatures.get(i)) {
                     DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
                     if (zoomLevel >= drawAttribute.getZoomLevel()) { //TODO: NullerPointerException when loading "København" and changing to transport map
@@ -649,7 +650,9 @@ public class View extends JFrame implements Observer {
                     mapIcon.draw(g, transform);
                 }
             }
-
+            g.setColor(Color.black);
+            g.setStroke(new BasicStroke(0.00008f));
+            g.draw(windowBounds);
 
             scalebar = new Scalebar(g, zoomLevel, View.this, transform);
 
