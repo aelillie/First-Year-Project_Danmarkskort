@@ -16,6 +16,8 @@ public class TransportConfig {
     private void defineTransportView() {
         //transportView
         //[ValueName.VALUENAME.ordinal()] =     new DrawAttribute(isDashed, strokeId, color, zoomLevel);
+        //AEROWAY
+        transportView[ValueName.AEROWAY.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.lightgrey, 18);
         //AMENITY
         transportView[ValueName.AMENITY.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, -1);
         transportView[ValueName.PARKING.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.lightergrey, -1);
