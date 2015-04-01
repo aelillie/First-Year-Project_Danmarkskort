@@ -136,7 +136,7 @@ public class Controller extends MouseAdapter implements ActionListener {
                         view.toggleAA();
                         break;
                     case 's':
-                        model.saveBin(model.getCurrentFilename() + ".bin");
+                        model.saveBin();
                         break;
                     /*case 'l': use loadSelectedFile in runtime instead
                         try {

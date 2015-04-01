@@ -30,7 +30,13 @@ public class CanvasBounds {
 
         Path2D.Double tmp = (Path2D.Double) inverser.createTransformedShape(viewRect);
 
-        bounds = tmp.getBounds2D();
+        Rectangle2D tmpRect = tmp.getBounds2D();
+
+        bounds = new Rectangle2D.Double(
+                tmpRect.getX()- tmpRect.getWidth()/4,
+                tmpRect.getY()- tmpRect.getHeight()/4,
+                tmpRect.getWidth()* 1.25,
+                tmpRect.getHeight() * 1.25);
     }
 
     public Rectangle2D getBounds(){return bounds;}

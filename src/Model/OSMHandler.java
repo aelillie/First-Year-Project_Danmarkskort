@@ -317,7 +317,7 @@ public class OSMHandler extends DefaultHandler {
         Comparator<MapFeature> comparator = new Comparator<MapFeature>() {
             @Override
             /**
-             * Compares two Model.Drawable objects.
+             * Compares two MapFeature objects.
              * Returns a negative integer, zero, or a positive integer as the first argument
              * is less than, equal to, or greater than the second.
              */
