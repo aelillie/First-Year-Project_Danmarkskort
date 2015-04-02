@@ -1,6 +1,6 @@
 package Controller;
 
-import View.View;
+import View.*;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -10,17 +10,23 @@ import java.awt.event.ActionListener;
  */
 public class MapMenuController implements ActionListener {
     private View v;
-    public MapMenuController(View v){
-        this.v = v;
-
+    public MapMenuController(MapTypePanel panel){
+        v = panel.getView();
+        panel.getStandardButton().addActionListener(this);
+        panel.getColorblindButton().addActionListener(this);
+        panel.getTransportButton().addActionListener(this);
 
     }
 
     public void actionPerformed(ActionEvent e){
         String command = e.getActionCommand();
-        if (command.equals("mapTypeChange"))
-            v.changeMapType();
-
+        if (command.equals("standardMap")){
+            v.changeToStandard();
+        } else if (command.equals("colorblindMap")){
+            v.changeToColorblind();
+        } else if (command.equals("transportMap")){
+            v.changeToTransport();
+        }
     }
 
 

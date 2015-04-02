@@ -42,9 +42,10 @@ public class View extends JFrame implements Observer {
     private Scalebar scalebar;
     private int checkOut = 1, checkIn = 0;
     private JTextField searchArea;
-    private JButton searchButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton, optionsButton;
+    private JButton searchButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton, optionsButton, mapTypeButton;
     private MapMenu mapMenu;
     private RouteView routePanel = new RouteView();
+    private MapTypePanel mapTypePanel = new MapTypePanel(this);
    // private IconPanel iconPanel = new IconPanel();
     private boolean isFullscreen = false;
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -78,11 +79,12 @@ public class View extends JFrame implements Observer {
                 zoomOutButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2 + 39, 30, 35);
                 fullscreenButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2 + 100, 30, 35);
                 zoomInButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2, 30, 35);
-                mapMenu.setBounds(getWidth() - 150, getHeight() - getHeight() / 3 * 2 - 50, 130, 30);
-                loadButton.setBounds(getWidth()-65, getHeight()-65,40,20);
-                optionsButton.setBounds(getWidth() - 60, getHeight() - (int) (getHeight()*0.98), 39, 37);
+                //mapMenu.setBounds(getWidth() - 300, getHeight() - getHeight() / 3 * 2 - 50, 130, 30);
+                mapTypePanel.setBounds(getWidth()-330, getHeight() - getHeight() / 3 * 2 - 45, 280, 200);
                 loadButton.setBounds(getWidth() - 65, getHeight() - 65, 40, 20);
                 optionsButton.setBounds(getWidth() - 60, getHeight() - (int) (getHeight() * 0.98), 39, 37);
+                mapTypeButton.setBounds(getWidth() - 49, getHeight() - getHeight() / 3 * 2 - 45, 39, 37);
+
                 repaint();
             }
         });
@@ -178,10 +180,12 @@ public class View extends JFrame implements Observer {
         layer.add(zoomOutButton, new Integer(2));
         layer.add(loadButton, new Integer(2));
         layer.add(fullscreenButton, new Integer(2));
-        layer.add(mapMenu, new Integer(2));
+        //layer.add(mapMenu, new Integer(2));
         layer.add(showRoutePanelButton, new Integer(2));
         layer.add(routePanel, new Integer(2));
         layer.add(optionsButton, new Integer(2));
+        layer.add(mapTypeButton, new Integer(2));
+        layer.add(mapTypePanel, new Integer(2));
       //  layer.add(iconPanel, new Integer(2));
 
     }
@@ -203,20 +207,52 @@ public class View extends JFrame implements Observer {
         makeShowRoutePanelButton();
         makeFullscreenButton();
         makeMaptypeMenu();
+        makeMapTypeButton();
     }
 
     private void makeMaptypeMenu() {
-        mapMenu = new MapMenu();
-        mapMenu.addActionListener(new MapMenuController(this));
+        //mapMenu = new MapMenu();
+        //mapMenu.addActionListener(new MapMenuController(this));
+
+
     }
 
-    public void changeMapType(){
+
+    public void changeToStandard(){
+       drawAttributeManager.toggleStandardView();
+        canvas.repaint();
+    }
+
+    public void changeToColorblind(){
+        drawAttributeManager.toggleColorblindView();
+        canvas.repaint();
+    }
+
+    public void changeToTransport(){
+        drawAttributeManager.toggleTransportView();
+        canvas.repaint();
+    }
+
+    /*public void changeMapType(){
         String type = mapMenu.getChosen();
         if(type.equals("Standard")) drawAttributeManager.toggleStandardView();
         else if(type.equals("Colorblind map"))drawAttributeManager.toggleColorblindView();
         else if(type.equals("Transport map")) drawAttributeManager.toggleTransportView();
 
         canvas.repaint();
+    }*/
+
+    private void makeMapTypeButton(){
+        Dimension preferred = getPreferredSize();
+        mapTypeButton = new JButton();
+        mapTypeButton.setIcon(new ImageIcon(MapIcon.layerIcon));
+        mapTypeButton.setFocusable(false);
+        mapTypeButton.setOpaque(false);
+        mapTypeButton.setBackground(new Color(0,0,0,180));
+        mapTypeButton.setBorderPainted(false);
+        mapTypeButton.setRolloverEnabled(false);
+        mapTypeButton.setActionCommand("mapType");
+        mapTypeButton.setBounds((int)preferred.getWidth() - 49, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 - 45), 39, 37);
     }
 
     private void makeOptionsButton(){
@@ -319,10 +355,14 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
+    public void showMapTypePanel(){
+        mapTypePanel.showMapTypePanel();
+        canvas.repaint();
+    }
+
     @Override
     public void update(Observable obs, Object obj) {
         canvas.repaint();
-
     }
 
     /**
@@ -503,6 +543,7 @@ public class View extends JFrame implements Observer {
         FileNameExtensionFilter filter =  new FileNameExtensionFilter("ZIP & OSM & BIN", "osm", "zip", "bin","OSM","ZIP","BIN"); //The allowed files in the filechooser
         fileChooser.setFileFilter(filter); //sets the above filter
         return returnVal;
+        //TODO: When in fullscreen and opening the dialog, it closes the window?!?
     }
 
     public void adjustZoomFactor(){
@@ -572,6 +613,7 @@ public class View extends JFrame implements Observer {
             }*/
 
             g.setColor(Color.BLACK);
+
 
             //Draw areas first
             for (int i = 0; i < mapFeatures.size(); i++) {
@@ -654,14 +696,17 @@ public class View extends JFrame implements Observer {
 
             scalebar = new Scalebar(g, zoomLevel, View.this, transform);
 
+
             g.setTransform(new AffineTransform());
-            g.setColor(new Color(0, 0, 0, 180));
-            RoundRectangle2D optionsButtonArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 50, (int) (getContentPane().getHeight() - getContentPane().getHeight() * 0.98), 60, 40, 15, 15);
-            RoundRectangle2D zoomInOutArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2 + 10, 60, 80, 15, 15);
-            RoundRectangle2D fullscreenArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2 + 110, 60, 38, 15, 15);
+            g.setColor(new Color(0,0,0,180));
+            RoundRectangle2D optionsButtonArea = new RoundRectangle2D.Double(getContentPane().getWidth()-50,(int)(getContentPane().getHeight()-getContentPane().getHeight()*0.98),60,40,15,15);
+            RoundRectangle2D zoomInOutArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2+10, 60, 80, 15, 15);
+            RoundRectangle2D fullscreenArea = new RoundRectangle2D.Double(getContentPane().getWidth()-30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2+110,60,38,15,15);
+            RoundRectangle2D mapTypeButtonArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2 - 33, 39, 37,15,15);
             g.fill(optionsButtonArea);
             g.fill(zoomInOutArea);
             g.fill(fullscreenArea);
+            g.fill(mapTypeButtonArea);
 
                         // }
 /*
@@ -698,11 +743,6 @@ public class View extends JFrame implements Observer {
         }
     }
 
-
-
-
-
-
     public JFileChooser getFileChooser(){ return fileChooser;}
 
     public Component getCanvas() {
@@ -729,11 +769,12 @@ public class View extends JFrame implements Observer {
         return fullscreenButton;
     }
 
-    public JButton getShowRoutePanelButton() {
-        return showRoutePanelButton;
-    }
+    public JButton getShowRoutePanelButton() { return showRoutePanelButton;}
 
     public JButton getLoadButton(){ return loadButton;}
 
     public JButton getOptionsButton(){ return optionsButton;}
+
+    public JButton getMapTypeButton() { return mapTypeButton;}
+
 }
