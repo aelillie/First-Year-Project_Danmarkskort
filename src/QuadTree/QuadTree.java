@@ -18,7 +18,6 @@ public class QuadTree implements Serializable{
 
 
         Node(Double x, Double y, Double width, Double height) {
-            //System.out.println("New Node: " + x + " " + y);
             this.x = x;
             this.y = y;
             this.width = width/2;
@@ -28,6 +27,9 @@ public class QuadTree implements Serializable{
 
         }
 
+        /**
+         * Divide the Node into four new and spread the values.
+         */
         public void subdivide(){
             Double newWidth = width/2;
             Double newHeight = height/2;
@@ -59,9 +61,11 @@ public class QuadTree implements Serializable{
     }
 
 
-    /***********************************************************************
-     *  Insert (x, y) into appropriate quadrant
-     ***********************************************************************/
+    /**
+     * Insertion of values.
+     *
+     * @param value Value
+     */
     public void insert(MapFeature value) {
 
         Rectangle2D bounds = value.getShape().getBounds2D();
@@ -90,10 +94,11 @@ public class QuadTree implements Serializable{
     }
 
 
-    /***********************************************************************
-     *  Range search.
-     ***********************************************************************/
-
+    /**
+     * Range search in the QuadTree
+     * @param rect Range needed
+     * @return List of List of MapFeatures
+     */
     public ArrayList<List<MapFeature>> query2D(Rectangle2D rect) {
 
         ArrayList<List<MapFeature>> values = new ArrayList<>();

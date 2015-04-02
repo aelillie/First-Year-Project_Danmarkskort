@@ -22,7 +22,10 @@ public abstract class MapFeature implements Serializable {
         this.value = value;
     }
 
-
+    /**
+     * When instances are created this method is
+     * called to set the ValueName of the object
+     */
     public abstract void setValueAttributes(); //Every new map feature calls this method to set specific attributes
 
     /**
@@ -34,8 +37,6 @@ public abstract class MapFeature implements Serializable {
     public void setValueName(ValueName valueName) {
         this.valueName = valueName;
     }
-
- 
     public ValueName getValueName() {
         return valueName;
     }

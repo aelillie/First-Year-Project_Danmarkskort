@@ -88,6 +88,7 @@ public class Model extends Observable implements Serializable {
         }
     }
 
+
     public void saveBin() {
         saveBin(currentFilename);
     }
