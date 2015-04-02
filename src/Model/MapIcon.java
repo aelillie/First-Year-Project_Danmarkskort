@@ -10,6 +10,7 @@ import java.io.*;
 import java.net.URL;
 
 public class MapIcon implements Serializable {
+    public static final long serialVersionUID = 5;
     public static final URL metroIcon = MapIcon.class.getResource("/data/metroIcon.png");
     public static final URL STogIcon = MapIcon.class.getResource("/data/stogIcon.png");
     public static final URL parkingIcon = MapIcon.class.getResource("/data/parkingIcon.jpg");

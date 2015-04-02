@@ -306,7 +306,7 @@ public class View extends JFrame implements Observer {
         zoomOutButton.setBorderPainted(false);
         zoomOutButton.setRolloverEnabled(false);
         zoomOutButton.setActionCommand("zoomOut");
-        zoomOutButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() / 3 * 2+45), 39, 37);
+        zoomOutButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() / 3 * 2 + 45), 39, 37);
     }
 
     private void makeZoomInButton() {
@@ -606,18 +606,16 @@ public class View extends JFrame implements Observer {
                 g.fill(coastLine.getShape());
             }
 
-            //getContentPane().setBackground(DrawAttribute.whiteblue);
-            /*//Drawing everything not categorized as a area or line object.
-            for (Shape line : model) {
-                g.draw(line);
-            }*/
-
+            //long time = System.currentTimeMillis();
+            for(List<MapFeature> mf : mapFeatures)
+                model.sortLayers(mf);
+            //System.out.println("Sorting : " + (System.currentTimeMillis() - time) + "ms");
             g.setColor(Color.BLACK);
 
 
             //Draw areas first
             for (int i = 0; i < mapFeatures.size(); i++) {
-                //model.sortLayers(mapFeatures.get(i));
+
                 for (MapFeature mapFeature : mapFeatures.get(i)) {
                     DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
                     if (zoomLevel >= drawAttribute.getZoomLevel()) { //TODO: NullerPointerException when loading "København" and changing to transport map
