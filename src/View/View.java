@@ -120,8 +120,8 @@ public class View extends JFrame implements Observer {
         double xscale = width / model.getBbox().getWidth();
         double yscale = height / model.getBbox().getHeight();
         double scale = max(xscale, yscale);
-        zoomLevel = Scaler.calculateZoom(scale);
-        scale = Scaler.setScale(zoomLevel);
+        zoomLevel = ZoomCalculator.calculateZoom(scale);
+        scale = ZoomCalculator.setScale(zoomLevel);
         transform.scale(scale, -scale);
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
 
@@ -312,6 +312,7 @@ public class View extends JFrame implements Observer {
         searchButton.setBounds(320, 20, 43, 37);
         searchButton.setActionCommand("search");
     }
+
 
     public void showRoutePanel() {
         routePanel.showRoutePanel();

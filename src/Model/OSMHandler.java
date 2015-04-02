@@ -211,12 +211,13 @@ public class OSMHandler extends DefaultHandler {
                         if (keyValue_map.containsKey("building"))
                             quadTree.insert(new Multipolygon(path, fetchOSMLayer(), "building"));
 
-                        if(keyValue_map.containsKey("place")){
+                        /*if(keyValue_map.containsKey("place")){
                             //TODO islets
 
-                        }
-                        /*else if (kv_map.containsKey("natural"))
-                            drawables.add(new Model.Area(path, Model.Drawable.water, -1.5));*/
+                        }*/
+                        /*else if (keyValue_map.containsKey("natural"))
+                            if(keyValue_map.get("natural").equals("water"))
+                                quadTree.insert(new Natural(path, fetchOSMLayer(), "water"));*/
                         //TODO How do draw harbor.
                     }
 
