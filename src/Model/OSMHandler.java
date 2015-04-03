@@ -100,7 +100,7 @@ public class OSMHandler extends DefaultHandler {
             }
             case "way": //A way containing references to other ways and possible tags
                 keyValue_map.clear();
-                wayCoords.clear(); //clears list of references coordinates within a way
+                wayCoords.clear(); //clears list of referenced coordinates within a way
                 isArea = false;
                 hasName = false;
                 isStart = true;
@@ -178,7 +178,7 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("landuse"))  quadTree.insert(new Landuse(way, fetchOSMLayer(), keyValue_map.get("landuse"), isArea));
                 else if (keyValue_map.containsKey("geological")) quadTree.insert(new Geological(way, fetchOSMLayer(), keyValue_map.get("geological")));
                 else if (keyValue_map.containsKey("building")) quadTree.insert(new Building(way, fetchOSMLayer(), keyValue_map.get("building")));
-                else if (keyValue_map.containsKey("shop"))  quadTree.insert(new Shop(way, fetchOSMLayer(), keyValue_map.get("shop")));
+                else if (keyValue_map.containsKey("shop"))  quadTree.insert(new Shop(way, fetchOSMLayer(), keyValue_map.get("shop"))); //This seems to only appear under <node
                 else if (keyValue_map.containsKey("tourism")) quadTree.insert(new Tourism(way, fetchOSMLayer(), keyValue_map.get("tourism")));
                 else if (keyValue_map.containsKey("man_made")) quadTree.insert(new ManMade(way, fetchOSMLayer(), keyValue_map.get("man_made")));
                 else if (keyValue_map.containsKey("historic")) quadTree.insert(new Historic(way, fetchOSMLayer(), keyValue_map.get("historic")));
@@ -194,10 +194,10 @@ public class OSMHandler extends DefaultHandler {
                       //  mapIcons.add(new MapIcon(way, MapIcon.atmIcon));}
                 }
                 else if (keyValue_map.containsKey("barrier")) quadTree.insert(new Barrier(way, fetchOSMLayer(), keyValue_map.get("barrier"), isArea));
-                else if (keyValue_map.containsKey("boundary")) quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary")));
+                else if (keyValue_map.containsKey("boundary")) quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary"))); //Appears in <relation
                 else if (keyValue_map.containsKey("highway")) quadTree.insert(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea));
                 else if (keyValue_map.containsKey("railway")) quadTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
-                else if (keyValue_map.containsKey("route"))  quadTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
+                else if (keyValue_map.containsKey("route"))  quadTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route"))); //Appears in <relation
 
                 wayId_map.put(wayId, way);
                 break;
@@ -378,6 +378,7 @@ public class OSMHandler extends DefaultHandler {
     public Map<Long,Path2D> getWayIdMap(){return wayId_map;}
     public Map<Long, Point2D> getNodeMap(){return node_map;}
     public ArrayList<Rectangle2D> getNodes(){return quadTree.getNodeRects();}
+
     public void setQuadTree(QuadTree quadTree) {this.quadTree = quadTree; }
 
 }

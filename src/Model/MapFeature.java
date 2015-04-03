@@ -51,4 +51,11 @@ public abstract class MapFeature implements Serializable {
     }
     public String getValue(){return value;}
 
+    public Path2D getWay() {
+        return way;
+    }
+
+    public int getLayer_value() {
+        return layer_value;
+    }
 }

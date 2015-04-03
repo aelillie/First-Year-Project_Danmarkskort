@@ -14,18 +14,18 @@ public class PathCreater {
     /**
      * Appends multiple Paths and sets the windingrule
      *
-     * @param refs      List of references to Paths in hashmap
-     * @param relations Map of references to Paths
+     * @param memberReferences      List of references to Paths in hashmap
+     * @param wayId_map Map of references to Paths
      * @return Path2D
      */
-    public static Path2D createMultipolygon(List<Long> refs, Map<Long, Path2D> relations) {
-        Long ref = refs.get(0);
-        if (relations.containsKey(ref)) {
-            Path2D path = relations.get(ref);
-            for (int i = 1; i < refs.size(); i++) {
-                ref = refs.get(i);
-                if (relations.containsKey(ref)) {
-                    Path2D element = relations.get(refs.get(i));
+    public static Path2D createMultipolygon(List<Long> memberReferences, Map<Long, Path2D> wayId_map) {
+        Long ref = memberReferences.get(0);
+        if (wayId_map.containsKey(ref)) {
+            Path2D path = wayId_map.get(ref);
+            for (int i = 1; i < memberReferences.size(); i++) {
+                ref = memberReferences.get(i);
+                if (wayId_map.containsKey(ref)) {
+                    Path2D element = wayId_map.get(memberReferences.get(i));
                     path.append(element, false);
                 } else {}
 

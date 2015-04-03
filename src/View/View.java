@@ -578,7 +578,7 @@ public class View extends JFrame implements Observer {
                 //model.sortLayers(mapFeatures.get(i));
                 for (MapFeature mapFeature : mapFeatures.get(i)) {
                     DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                    if (zoomLevel >= drawAttribute.getZoomLevel()) { //TODO: NullerPointerException when loading "København" and changing to transport map
+                    if (zoomLevel >= drawAttribute.getZoomLevel()) { //TODO: NullPointerException when loading "København" and changing to transport map
                         if (mapFeature.isArea()) {
                             g.setColor(drawAttribute.getColor());
                             g.fill(mapFeature.getShape());
