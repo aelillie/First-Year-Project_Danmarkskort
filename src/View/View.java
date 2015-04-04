@@ -544,12 +544,12 @@ public class View extends JFrame implements Observer {
     }
 
     public void findNearest(Point position){
-
+        if(zoomLevel < 11) return;
         //Rectangle2D rec = new Rectangle2D.Double(position.getX(), position.getY(),0,0);
         ArrayList<List<MapFeature>> node = model.getVisibleData(bounds.getBounds());
 
         MapFeature champion = null;
-        Point2D championPoint = new Point2D.Double(0,0);
+        Line2D championLine = null;
         for(int i = 0; i < node.size(); i++) {
             for (MapFeature mp : node.get(i)) {
                 if (mp instanceof Highway) {
@@ -557,13 +557,21 @@ public class View extends JFrame implements Observer {
                     PathIterator pI = mp.getShape().getPathIterator(transform);
                     while(!pI.isDone()) {
                         pI.currentSegment(points);
-                        //System.out.println(points[0] + " " + points[1] );
-                        Point2D path = new Point2D.Double(points[0], points[1]);
-                        if(position.distance(path) < position.distance(championPoint)){
-                            champion = mp;
-                            championPoint = path;
-                        }
+                        Point2D p1 = new Point2D.Double(points[0], points[1]);
                         pI.next();
+
+                        if(pI.isDone()) continue;
+                        
+                        pI.currentSegment(points);
+                        Point2D p2 = new Point2D.Double(points[0], points[1]);
+                        Line2D path = new Line2D.Double(p1,p2);
+                        if(championLine == null)
+                            championLine = path;
+                        else if(path.ptSegDist(position) < championLine.ptSegDist(position)){
+                            champion = mp;
+                            championLine = path;
+
+                        }
                     }
                 }
 
