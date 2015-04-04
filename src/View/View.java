@@ -1,6 +1,7 @@
 package View;
 
 import Controller.MapMenuController;
+import Controller.SearchResultMouseHandler;
 import MapFeatures.Highway;
 import MapFeatures.Bounds;
 import Model.MapFeature;
@@ -49,7 +50,7 @@ public class View extends JFrame implements Observer {
     private RouteView routePanel = new RouteView();
     private MapTypePanel mapTypePanel = new MapTypePanel(this);
    // private IconPanel iconPanel = new IconPanel();
-
+    private SearchResultMouseHandler searchResultMH = new SearchResultMouseHandler(this, model);
     private JScrollPane resultPane = new JScrollPane();
     private JList<Address> addressSearchResults;
 
@@ -247,6 +248,7 @@ public class View extends JFrame implements Observer {
         resultPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
         resultPane.getViewport().setBackground(Color.WHITE);
         resultPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        resultPane.getViewport().getView().addMouseListener(searchResultMH);
     }
 
     private void makeMapTypeButton(){
