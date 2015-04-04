@@ -1,6 +1,10 @@
 package QuadTree;
 
 import Model.MapFeature;
+
+import java.awt.*;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -99,7 +103,7 @@ public class QuadTree implements Serializable{
      * @param rect Range needed
      * @return List of List of MapFeatures
      */
-    public ArrayList<List<MapFeature>> query2D(Rectangle2D rect) {
+    public ArrayList<List<MapFeature>> query2D(Shape rect) {
 
         ArrayList<List<MapFeature>> values = new ArrayList<>();
         if(rect != null)
@@ -107,8 +111,9 @@ public class QuadTree implements Serializable{
         return values;
     }
 
-    private void query2D(Node h, Rectangle2D rect, ArrayList<List<MapFeature>> values) {
+    private void query2D(Node h, Shape query, ArrayList<List<MapFeature>> values) {
         if (h == null) return;
+        Rectangle2D rect = query.getBounds2D();
         Double xmin = rect.getMinX();
         Double ymin = rect.getMinY();
         Double xmax = rect.getMaxX();
@@ -149,7 +154,7 @@ public class QuadTree implements Serializable{
         ArrayList<Rectangle2D> wut = new ArrayList<>();
         if(h == null) return null;
         else{
-            wut.add(new Rectangle2D.Double(h.x - h.width , h.y - h.height , h.width*2, h.height*2));
+            wut.add(new Rectangle2D.Double(h.x - h.width, h.y - h.height, h.width * 2, h.height * 2));
 
             if(h.NW != null)wut.addAll(getNodeRects(h.NW));
             if(h.NE != null)wut.addAll(getNodeRects(h.NE));
@@ -161,6 +166,8 @@ public class QuadTree implements Serializable{
 
         return wut;
     }
+
+
 
 
 }

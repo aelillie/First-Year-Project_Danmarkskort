@@ -28,7 +28,7 @@ public class View extends JFrame implements Observer {
     private Model model;
     private Canvas canvas;
     private AffineTransform transform;
-
+    private MapFeature nearestNeighbor;
     public boolean isAntialias() {
         return antialias;
     }
@@ -202,7 +202,7 @@ public class View extends JFrame implements Observer {
         //Create The buttons and configure their visual design.
         searchArea.setFont(font);
         searchArea.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 7, 4, 7, DrawAttribute.lightblue), BorderFactory.createRaisedBevelBorder()));
-        searchArea.setBounds(20,20,300,37);
+        searchArea.setBounds(20, 20, 300, 37);
         searchArea.setActionCommand("searchAreaInput");
 
         makeOptionsButton();
@@ -255,11 +255,11 @@ public class View extends JFrame implements Observer {
         mapTypeButton.setIcon(new ImageIcon(MapIcon.layerIcon));
         mapTypeButton.setFocusable(false);
         mapTypeButton.setOpaque(false);
-        mapTypeButton.setBackground(new Color(0,0,0,180));
+        mapTypeButton.setBackground(new Color(0, 0, 0, 180));
         mapTypeButton.setBorderPainted(false);
         mapTypeButton.setRolloverEnabled(false);
         mapTypeButton.setActionCommand("mapType");
-        mapTypeButton.setBounds((int)preferred.getWidth() - 49, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 - 45), 39, 37);
+        mapTypeButton.setBounds((int) preferred.getWidth() - 49, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 - 45), 39, 37);
     }
 
     private void makeOptionsButton(){
@@ -390,7 +390,7 @@ public class View extends JFrame implements Observer {
             pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
             checkForZoomOut();
         }System.out.println("level "+zoomLevel);
-        System.out.println("factor "+zoomFactor);
+        System.out.println("factor " + zoomFactor);
     }
 
     /**
@@ -541,6 +541,37 @@ public class View extends JFrame implements Observer {
             setExtendedState(JFrame.NORMAL);
         }
         isFullscreen = !isFullscreen;
+    }
+
+    public void findNearest(Point position){
+
+        //Rectangle2D rec = new Rectangle2D.Double(position.getX(), position.getY(),0,0);
+        ArrayList<List<MapFeature>> node = model.getVisibleData(bounds.getBounds());
+
+        MapFeature champion = null;
+        Point2D championPoint = new Point2D.Double(0,0);
+        for(int i = 0; i < node.size(); i++) {
+            for (MapFeature mp : node.get(i)) {
+                if (mp instanceof Highway) {
+                    double[] points = new double[6];
+                    PathIterator pI = mp.getShape().getPathIterator(transform);
+                    while(!pI.isDone()) {
+                        pI.currentSegment(points);
+                        //System.out.println(points[0] + " " + points[1] );
+                        Point2D path = new Point2D.Double(points[0], points[1]);
+                        if(position.distance(path) < position.distance(championPoint)){
+                            champion = mp;
+                            championPoint = path;
+                        }
+                        pI.next();
+                    }
+                }
+
+            }
+        }
+
+        nearestNeighbor = champion;
+        //TODO First draft.... Working on a way to use vectors and trigonometri to get more precise way.
     }
 
     /**
@@ -697,12 +728,17 @@ public class View extends JFrame implements Observer {
                     mapIcon.draw(g, transform);
                 }
             }
-            g.setColor(Color.black);
-            g.setStroke(new BasicStroke(0.00008f));
-            g.draw(windowBounds);
+
 
             scalebar = new Scalebar(g, zoomLevel, View.this, transform);
 
+            if(nearestNeighbor != null) {
+
+                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(nearestNeighbor.getValueName());
+                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
+                g.setColor(Color.CYAN);
+                g.draw(nearestNeighbor.getShape());
+            }
 
             g.setTransform(new AffineTransform());
             g.setColor(new Color(0,0,0,180));
@@ -714,6 +750,7 @@ public class View extends JFrame implements Observer {
             g.fill(zoomInOutArea);
             g.fill(fullscreenArea);
             g.fill(mapTypeButtonArea);
+
 
                         // }
 /*
