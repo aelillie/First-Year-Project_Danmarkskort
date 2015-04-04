@@ -202,10 +202,10 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("route"))  quadTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
                 if (keyValue_map.containsKey("name")) {
                     if(keyValue_map.containsKey("highway")||keyValue_map.containsKey("cycleway")||keyValue_map.containsKey("motorroad")) {
-                        String street = keyValue_map.get("name");
+                        String street = keyValue_map.get("name").toLowerCase().trim();
                         Address addr = Address.newStreet(street);
-                        boolean streetAlreadyExists = addStreetToMap(way, addr);
-                        if(!streetAlreadyExists) addressList.add(addr); //Make sure the street is not added again
+                        //System.out.println(addr);
+                        addStreetToMap(way, addr);
                     }
                 }
 
@@ -338,20 +338,17 @@ public class OSMHandler extends DefaultHandler {
 
 
 
-    private boolean addStreetToMap(Path2D way, Address street){
+    private void addStreetToMap(Path2D way, Address street){
         List<Path2D> existingList = streetMap.get(street);
-        boolean existsAlready;
         if (existingList == null) {
-            existsAlready = false;
             List<Path2D> list = new ArrayList<>();
             list.add(way);
-            streetMap.put(street, list);
+            streetMap.put(street, list); //Make sure the street is not added again
+            addressList.add(street);
         } else {
             List<Path2D> list = streetMap.get(street);
             list.add(way);
-            existsAlready = true;
         }
-        return existsAlready;
     }
 
     public Address[] searchForAddressess(Address add){

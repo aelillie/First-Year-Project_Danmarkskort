@@ -54,9 +54,9 @@ public class AddressSearcher {
             System.out.println("Too bad - didn't find!");
             return null;
         } else {
-            System.out.println("Found something");
+            System.out.println("Congratulations! Found something!");
             int lowerBound = range[0], upperBound = range[1];
-            System.out.printf("low: "+lowerBound + ", high: "+upperBound);
+            //System.out.printf("low: "+lowerBound + ", high: "+upperBound);
             Address[] results = new Address[upperBound-lowerBound+1];
             int arrayIndex = 0;
             for(int i = lowerBound; i <= upperBound; i++){
