@@ -571,7 +571,7 @@ public class View extends JFrame implements Observer {
         }
 
         nearestNeighbor = champion;
-        //TODO First draft.... Working on a way to use vectors and trigonometri to get more precise way.
+        //TODO First draft.... Working on a way to use vectors and trigonometri to get more precise way..
     }
 
     /**
