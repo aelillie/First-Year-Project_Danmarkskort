@@ -105,9 +105,8 @@ public class Model extends Observable implements Serializable {
 
 
 
-    public void searchForAddresses(Address address){
-        OSMReader.searchForAddressess(address);
-
+    public Address[] searchForAddresses(Address address){
+        return OSMReader.searchForAddressess(address);
     }
 
 

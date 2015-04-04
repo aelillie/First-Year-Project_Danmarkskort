@@ -7,17 +7,19 @@ import Model.MapFeature;
 import Model.MapIcon;
 import Model.Model;
 import Model.PathCreater;
-import java.util.ArrayList;
-import java.util.List;
+
+import java.util.*;
+
 import Model.OSMHandler;
+import Model.Address;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
+import javax.swing.border.MatteBorder;
 import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
-import java.util.Observable;
-import java.util.Observer;
+import java.util.List;
 
 import static java.lang.Math.max;
 
@@ -47,6 +49,10 @@ public class View extends JFrame implements Observer {
     private RouteView routePanel = new RouteView();
     private MapTypePanel mapTypePanel = new MapTypePanel(this);
    // private IconPanel iconPanel = new IconPanel();
+
+    private JScrollPane resultPane = new JScrollPane();
+    private JList<Address> addressSearchResults;
+
     private boolean isFullscreen = false;
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
     private String promptText = "Enter Address";
@@ -180,12 +186,12 @@ public class View extends JFrame implements Observer {
         layer.add(zoomOutButton, new Integer(2));
         layer.add(loadButton, new Integer(2));
         layer.add(fullscreenButton, new Integer(2));
-        //layer.add(mapMenu, new Integer(2));
         layer.add(showRoutePanelButton, new Integer(2));
         layer.add(routePanel, new Integer(2));
         layer.add(optionsButton, new Integer(2));
         layer.add(mapTypeButton, new Integer(2));
         layer.add(mapTypePanel, new Integer(2));
+        layer.add(resultPane, new Integer(3));
       //  layer.add(iconPanel, new Integer(2));
 
     }
@@ -197,6 +203,7 @@ public class View extends JFrame implements Observer {
         searchArea.setFont(font);
         searchArea.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 7, 4, 7, DrawAttribute.lightblue), BorderFactory.createRaisedBevelBorder()));
         searchArea.setBounds(20,20,300,37);
+        searchArea.setActionCommand("searchAreaInput");
 
         makeOptionsButton();
 
@@ -206,17 +213,9 @@ public class View extends JFrame implements Observer {
         makeLoadButton();
         makeShowRoutePanelButton();
         makeFullscreenButton();
-        makeMaptypeMenu();
         makeMapTypeButton();
+        //makeResultPane();
     }
-
-    private void makeMaptypeMenu() {
-        //mapMenu = new MapMenu();
-        //mapMenu.addActionListener(new MapMenuController(this));
-
-
-    }
-
 
     public void changeToStandard(){
        drawAttributeManager.toggleStandardView();
@@ -233,14 +232,22 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
-    /*public void changeMapType(){
-        String type = mapMenu.getChosen();
-        if(type.equals("Standard")) drawAttributeManager.toggleStandardView();
-        else if(type.equals("Colorblind map"))drawAttributeManager.toggleColorblindView();
-        else if(type.equals("Transport map")) drawAttributeManager.toggleTransportView();
+    private void makeResultPane(){
+        resultPane = new JScrollPane();
 
-        canvas.repaint();
-    }*/
+       //resultPane.setBounds(26,52,286,200);
+
+    }
+
+    public void addToResultPane(Address[] resultArray){
+        addressSearchResults = new JList<>(resultArray);
+        resultPane.setVisible(true);
+        resultPane.setViewportView(addressSearchResults);
+        resultPane.setBounds(26, 52, 286, 100);
+        resultPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
+        resultPane.getViewport().setBackground(Color.WHITE);
+        resultPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+    }
 
     private void makeMapTypeButton(){
         Dimension preferred = getPreferredSize();
@@ -443,6 +450,8 @@ public class View extends JFrame implements Observer {
     public void mousePressed(MouseEvent e) {
         dragStartScreen = e.getPoint();
         dragEndScreen = null;
+        resultPane.setVisible(false);
+        canvas.requestFocusInWindow();
     }
 
     private void checkForZoomIn(){
@@ -775,4 +784,7 @@ public class View extends JFrame implements Observer {
 
     public JButton getMapTypeButton() { return mapTypeButton;}
 
+    public JScrollPane getResultPane() { return resultPane; }
+
+    public JList<Address> getAddressSearchResults() { return addressSearchResults; }
 }

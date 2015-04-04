@@ -5,12 +5,15 @@ import Model.Model;
 import View.View;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.ArrayList;
 
 public class Controller extends MouseAdapter implements ActionListener {
     Model model;
@@ -26,17 +29,16 @@ public class Controller extends MouseAdapter implements ActionListener {
 
     private void setHandlers(){
         //Set up Handlers for mouse and keyboard and let controller set these for view.
+        SearchController searchController = new SearchController(model, view);
         keyHandler kH = new keyHandler();
         view.getCanvas().addKeyListener(kH);
-        view.getSearchArea().addKeyListener(kH);
         MouseHandler mH = new MouseHandler();
         view.addMouseListener(mH);
         view.addMouseMotionListener(mH);
         view.addMouseWheelListener(mH);
 
         // The controller handles what should happen if a button is pressed.
-        view.getSearchArea().addActionListener(this);
-        view.getSearchButton().addActionListener(this);
+
         view.getZoomInButton().addActionListener(this);
         view.getZoomOutButton().addActionListener(this);
         view.getLoadButton().addActionListener(this);
@@ -56,20 +58,12 @@ public class Controller extends MouseAdapter implements ActionListener {
         else if (command.equals("zoomOut")) view.zoom(1 / 1.2);
         else if (command.equals("load")) loadSelectedFile();
         else if (command.equals("fullscreen")) view.toggleFullscreen();
-        else if (command.equals("search")) addressSearch();
         else if (command.equals("showRoutePanel")) view.showRoutePanel();
         else if (command.equals("findRoute"));
         else if (command.equals("showOptions")) view.repaint();
-        else if (command.equals("mapType")) {view.showMapTypePanel(); }
+        else if (command.equals("mapType")) view.showMapTypePanel();
     }
 
-    private void addressSearch(){
-        String input = view.getSearchArea().getText().trim().toLowerCase();
-        Address address = Address.parse(input);
-        //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
-        view.getCanvas().requestFocusInWindow();
-        model.searchForAddresses(address);
-    }
 
     private void loadSelectedFile(){
         int returnValue = view.openFileChooser(); //The returnvalue represents the action taken within the filechooser
@@ -162,9 +156,6 @@ public class Controller extends MouseAdapter implements ActionListener {
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     view.pan(-10, 0);
                 }
-            }
-            if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                addressSearch();
             }
         }
     }

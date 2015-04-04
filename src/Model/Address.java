@@ -36,9 +36,16 @@ public class Address implements Comparable<Address> {
 
     }
 
+    public static Address newStreet(String street){
+        Builder b = new Builder();
+        street = street.intern(); //Using string pool
+        b.street(street);
+        return b.build();
+    }
+
     public static Address newTown(String city){
         Builder b = new Builder();
-        city = city.intern();
+        city = city.intern(); //Using string pool
         b.city(city);
         return b.build();
     }
@@ -52,6 +59,7 @@ public class Address implements Comparable<Address> {
     public String toString(){
         String s = street.trim() + " " + house.trim() + " " + floor.trim() + " " + side.trim()+" " + postcode.trim() + " " + city.trim();
         s = s.replaceAll(" +", " ");
+        s = s.trim();
         return s;
     }
 
@@ -64,9 +72,12 @@ public class Address implements Comparable<Address> {
     @Override
     public int compareTo(Address addr) {
         return this.toString().compareTo(addr.toString()); //TODO: modify according to whether things like city is null
-
     }
 
+    public int searchCompare(Address addr){
+        if(this.toString().startsWith(addr.toString())) return 0;
+        else return this.toString().compareTo(addr.toString());
+    }
 
     public static class Builder {
         private String street = "", house = "", floor = "",
