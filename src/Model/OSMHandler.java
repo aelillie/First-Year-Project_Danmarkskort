@@ -21,6 +21,8 @@ public class OSMHandler extends DefaultHandler {
     private Map<Long, Path2D> wayId_map; //Map of ways and their id's
     //Contains relevant places parsed as address objects linked to their coordinate.
     private Map<Address,Point2D> addressMap;
+    private Map<Address, List<Path2D>> streetMap;
+
     private QuadTree quadTree;
     private List<Address> addressList; //list of all the addresses in the .osm file
     private List<MapIcon> mapIcons; //contains all the icons to be drawn
@@ -47,7 +49,7 @@ public class OSMHandler extends DefaultHandler {
         keyValue_map = new HashMap<>();
         wayId_map = new HashMap<>();
         addressMap = new HashMap<>();
-
+        streetMap = new HashMap<>();
     }
 
 
@@ -198,6 +200,14 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("highway")) quadTree.insert(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea));
                 else if (keyValue_map.containsKey("railway")) quadTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  quadTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
+                if (keyValue_map.containsKey("name")) {
+                    if(keyValue_map.containsKey("highway")||keyValue_map.containsKey("cycleway")||keyValue_map.containsKey("motorroad")) {
+                        String street = keyValue_map.get("name");
+                        Address addr = Address.newStreet(street);
+                        boolean streetAlreadyExists = addStreetToMap(way, addr);
+                        if(!streetAlreadyExists) addressList.add(addr); //Make sure the street is not added again
+                    }
+                }
 
                 wayId_map.put(wayId, way);
                 break;
@@ -249,46 +259,28 @@ public class OSMHandler extends DefaultHandler {
                         else if (isSTog) mapIcons.add(new MapIcon(nodeCoord, MapIcon.STogIcon));
                     }
                 } else if(keyValue_map.containsKey("name")) {
-                   /* String name = keyValue_map.get("name");
+                    String name = keyValue_map.get("name");
                     if(keyValue_map.containsKey("place")){
                         String place = keyValue_map.get("place");
                         name = name.toLowerCase();
                         Address addr = Address.newTown(name);
                         //System.out.println(name);
-                        if(place.equals("town")){
+                        if(place.equals("town") || place.equals("village") || place.equals("suburb") || place.equals("locality")|| place.equals("neighbourhood")){
                             addressMap.put(addr, nodeCoord);
                             addressList.add(addr);
-                        } else if (place.equals("village")){
-                            addressMap.put(addr, nodeCoord);
-                            addressList.add(addr);
-                        } else if (place.equals("suburb")){
-
-                        }/* else if (place.equals("surburb")){
-
-                            addressMap.put(addr,nodeCoord);
-                            addressList.add(addr);
-                        } else if (place.equals("locality")) {
-                            addressMap.put(addr,nodeCoord);
-                            addressList.add(addr);
-                        } else if (place.equals("neighbourhood")){
-                            addressMap.put(addr,nodeCoord);
-                            addressList.add(addr);
+                            System.out.println(name);
                         }
-                    }*/
+                    }
 
                 } else if (keyValue_map.containsKey("addr:street")){    //TODO uncomment!
                     if(hasHouseNo && hasCity && hasPostcode){
-                       /* Address addr = Address.newAddress(streetName, houseNumber, postCode, cityName);
+                       Address addr = Address.newAddress(streetName.toLowerCase(), houseNumber.toLowerCase(), postCode.toLowerCase(), cityName.toLowerCase());
                         //System.out.println(addressString + ", " + nodeCoord);
                         //System.out.println(addr.toString());
                         addressMap.put(addr, nodeCoord);
-                        addressList.add(addr);*/
+                        addressList.add(addr);
                     }
                 }
-
-
-
-
                 //else if (keyValue_map.containsKey("addr:city")) addCityName();
                 //else if (keyValue_map.containsKey("addr:postcode")) addPostcode();
 
@@ -300,7 +292,6 @@ public class OSMHandler extends DefaultHandler {
                 Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
                 System.out.printf("sorted all addresses, time: %d ms\n", (System.nanoTime() - time) / 1000000);
                 PathCreater.connectCoastlines(bbox);
-
                 break;
 
         }
@@ -347,10 +338,24 @@ public class OSMHandler extends DefaultHandler {
 
 
 
+    private boolean addStreetToMap(Path2D way, Address street){
+        List<Path2D> existingList = streetMap.get(street);
+        boolean existsAlready;
+        if (existingList == null) {
+            existsAlready = false;
+            List<Path2D> list = new ArrayList<>();
+            list.add(way);
+            streetMap.put(street, list);
+        } else {
+            List<Path2D> list = streetMap.get(street);
+            list.add(way);
+            existsAlready = true;
+        }
+        return existsAlready;
+    }
 
-    public void searchForAddressess(Address add){
-        AddressSearcher.searchForAddresses(add, addressList, addressMap);
-
+    public Address[] searchForAddressess(Address add){
+        return AddressSearcher.searchForAddresses(add, addressList, addressMap);
     }
 
 
