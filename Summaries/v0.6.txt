@@ -1,0 +1,69 @@
+Group G v0.6
+==================
+
+Features added since v0.5:
+* Fully implemented quadtree
+* Improved GUI (the maptype chooser in particular)
+* Dynamic strokewidth upon zoom
+* Using string pool pattern to save addresses
+* Address results appearing in scrollpane, improved implementation of search
+* Early version of finding closest way to mouse
+* Now possible to save/load from the default loaded file
+
+“Features” discovered/added since v0.5:
+* Doesn’t always find the actual nearest road from mouse.
+
+
+Time usage in man hours:
+12 hours: maven on mac and Icon checkboxes (unimplemented)
+8 hours: improving GUI
+16 hours: Address search (string pool, JScrollpane, binarySearch, focus in windows, hashcode)
+8 hours: dynamic strokewidth upon zoom (finally working as intended)
+8 Hours: QuadTree improvement and merging with master.
+6 Hours: Visualisation.
+5 Hours: Nearest Neighbor.
+5 hours: Constructing XML-file for testing the OSMHandler
+5 hours: Code trimming
+2 hours: Saving/loading files dynamically
+
+
+Cumulative cost so far: (1h = DKK 625)
+Lectures:                	15.625,-
+Meetings:                	 7.187,-
+Code review:            	15.625,-
+"Homework":			15.625,-
+GUI				45.935,-
+Code trimming:			 3.125,-
+Address search	 	 	15.000,-
+OSM layers			10.625,-
+Road names 		 	 8.125,-
+Binary save/load		 4.375,-
+Visualisation 			28.625,-
+Restructuring 			35.625,-
+Workshop			12.500,-
+Report writing			10.625,-
+Address searching	  	 7.500,-
+Coastlines		 	26.875,-
+Mercator projection 		 2.500,-
+Load files from program 	 4.375,-
+Self-contained jar		 9.375,-
+Zoomlevel 			 3.125,-
+Group presentations	  	 6.250,-
+Maptypes			 1.875,-
+Scalebar			 6.250,-
+Tests 				 8.125,-
+Quadtree                        16.250,-
+Strokewidth 			 5.000,-
+Nearest neighbor		 3.125,-
+
+
+Wishlist for v0.7:
+*(names on roads)
+*closest point of interest to mouse cursor improved.
+*tests, tests, tests
+
+
+Feedback Request:
+
+
+
