@@ -2,6 +2,7 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -293,5 +294,17 @@ public class Address implements Comparable<Address> {
 
     }
 
+    @Override
+    public boolean equals(Object obj){
+        if (!(obj instanceof Address)) return false;
+        if (obj == this) return true;
+        Address addr = (Address) obj;
+        return this.toString().equals(addr.toString());
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(street,house,floor,side,postcode,city);
+    }
 
 }

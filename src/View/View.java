@@ -1,6 +1,7 @@
 package View;
 
 import Controller.MapMenuController;
+import Controller.SearchResultMouseHandler;
 import MapFeatures.Highway;
 import MapFeatures.Bounds;
 import Model.MapFeature;
@@ -28,7 +29,7 @@ public class View extends JFrame implements Observer {
     private Model model;
     private Canvas canvas;
     private AffineTransform transform;
-
+    private MapFeature nearestNeighbor;
     public boolean isAntialias() {
         return antialias;
     }
@@ -49,7 +50,7 @@ public class View extends JFrame implements Observer {
     private RouteView routePanel = new RouteView();
     private MapTypePanel mapTypePanel = new MapTypePanel(this);
    // private IconPanel iconPanel = new IconPanel();
-
+    private SearchResultMouseHandler searchResultMH = new SearchResultMouseHandler(this, model);
     private JScrollPane resultPane = new JScrollPane();
     private JList<Address> addressSearchResults;
 
@@ -202,7 +203,7 @@ public class View extends JFrame implements Observer {
         //Create The buttons and configure their visual design.
         searchArea.setFont(font);
         searchArea.setBorder(new CompoundBorder(BorderFactory.createMatteBorder(4, 7, 4, 7, DrawAttribute.lightblue), BorderFactory.createRaisedBevelBorder()));
-        searchArea.setBounds(20,20,300,37);
+        searchArea.setBounds(20, 20, 300, 37);
         searchArea.setActionCommand("searchAreaInput");
 
         makeOptionsButton();
@@ -247,6 +248,7 @@ public class View extends JFrame implements Observer {
         resultPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
         resultPane.getViewport().setBackground(Color.WHITE);
         resultPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        resultPane.getViewport().getView().addMouseListener(searchResultMH);
     }
 
     private void makeMapTypeButton(){
@@ -255,11 +257,11 @@ public class View extends JFrame implements Observer {
         mapTypeButton.setIcon(new ImageIcon(MapIcon.layerIcon));
         mapTypeButton.setFocusable(false);
         mapTypeButton.setOpaque(false);
-        mapTypeButton.setBackground(new Color(0,0,0,180));
+        mapTypeButton.setBackground(new Color(0, 0, 0, 180));
         mapTypeButton.setBorderPainted(false);
         mapTypeButton.setRolloverEnabled(false);
         mapTypeButton.setActionCommand("mapType");
-        mapTypeButton.setBounds((int)preferred.getWidth() - 49, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 - 45), 39, 37);
+        mapTypeButton.setBounds((int) preferred.getWidth() - 49, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 - 45), 39, 37);
     }
 
     private void makeOptionsButton(){
@@ -390,7 +392,7 @@ public class View extends JFrame implements Observer {
             pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
             checkForZoomOut();
         }System.out.println("level "+zoomLevel);
-        System.out.println("factor "+zoomFactor);
+        System.out.println("factor " + zoomFactor);
     }
 
     /**
@@ -541,6 +543,45 @@ public class View extends JFrame implements Observer {
             setExtendedState(JFrame.NORMAL);
         }
         isFullscreen = !isFullscreen;
+    }
+
+    public void findNearest(Point position){
+        if(zoomLevel < 11) return;
+        //Rectangle2D rec = new Rectangle2D.Double(position.getX(), position.getY(),0,0);
+        ArrayList<List<MapFeature>> node = model.getVisibleData(bounds.getBounds());
+
+        MapFeature champion = null;
+        Line2D championLine = null;
+        for(int i = 0; i < node.size(); i++) {
+            for (MapFeature mp : node.get(i)) {
+                if (mp instanceof Highway) {
+                    double[] points = new double[6];
+                    PathIterator pI = mp.getShape().getPathIterator(transform);
+                    while(!pI.isDone()) {
+                        pI.currentSegment(points);
+                        Point2D p1 = new Point2D.Double(points[0], points[1]);
+                        pI.next();
+
+                        if(pI.isDone()) continue;
+                        
+                        pI.currentSegment(points);
+                        Point2D p2 = new Point2D.Double(points[0], points[1]);
+                        Line2D path = new Line2D.Double(p1,p2);
+                        if(championLine == null)
+                            championLine = path;
+                        else if(path.ptSegDist(position) < championLine.ptSegDist(position)){
+                            champion = mp;
+                            championLine = path;
+
+                        }
+                    }
+                }
+
+            }
+        }
+
+        nearestNeighbor = champion;
+        //TODO First draft.... Working on a way to use vectors and trigonometri to get more precise way..
     }
 
     /**
@@ -697,12 +738,17 @@ public class View extends JFrame implements Observer {
                     mapIcon.draw(g, transform);
                 }
             }
-            g.setColor(Color.black);
-            g.setStroke(new BasicStroke(0.00008f));
-            g.draw(windowBounds);
+
 
             scalebar = new Scalebar(g, zoomLevel, View.this, transform);
 
+            if(nearestNeighbor != null) {
+
+                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(nearestNeighbor.getValueName());
+                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
+                g.setColor(Color.CYAN);
+                g.draw(nearestNeighbor.getShape());
+            }
 
             g.setTransform(new AffineTransform());
             g.setColor(new Color(0,0,0,180));
@@ -714,6 +760,7 @@ public class View extends JFrame implements Observer {
             g.fill(zoomInOutArea);
             g.fill(fullscreenArea);
             g.fill(mapTypeButtonArea);
+
 
                         // }
 /*

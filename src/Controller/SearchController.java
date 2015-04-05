@@ -24,7 +24,6 @@ public class SearchController extends MouseAdapter implements ActionListener {
         view.getSearchArea().addActionListener(this);
         view.getSearchArea().addKeyListener(new SearchAreaKeyHandler());
         view.getSearchButton().addActionListener(this);
-        //view.getResultPane().getViewport().getView().addMouseListener(new ResultPaneMouseHandler());
         setInputChangeHandler();
     }
 
@@ -76,15 +75,6 @@ public class SearchController extends MouseAdapter implements ActionListener {
             if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                 addressSearch();
             }
-        }
-    }
-
-    private class ResultPaneMouseHandler extends MouseAdapter {
-
-        @Override
-        public void mouseClicked(MouseEvent e) {
-            Address selectedItem = view.getAddressSearchResults().getSelectedValue();
-            System.out.println("DV");
         }
     }
 
