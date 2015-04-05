@@ -371,4 +371,6 @@ public class OSMHandler extends DefaultHandler {
 
     public void setQuadTree(QuadTree quadTree) {this.quadTree = quadTree; }
 
+    public Map<Address,Point2D> getAddressMap(){ return  addressMap;}
+    public Map<Address, List<Path2D>> getStreetMap() {return streetMap;}
 }

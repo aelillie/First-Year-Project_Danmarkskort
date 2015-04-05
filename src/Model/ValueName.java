@@ -25,6 +25,8 @@ public enum ValueName {
 
     CRAFT,//##New key##
 
+    CURRENTSTREET, //##New key##
+
     EMERGENCY,//##New key##
 
     GEOLOGICAL,//##New key##

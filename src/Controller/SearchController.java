@@ -61,6 +61,7 @@ public class SearchController extends MouseAdapter implements ActionListener {
             else view.getResultPane().setVisible(false);
         } else {
             view.getResultPane().setVisible(false);
+            view.setCurrentAddress(null);
         }
     }
 

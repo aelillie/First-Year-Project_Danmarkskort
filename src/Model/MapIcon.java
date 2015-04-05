@@ -31,6 +31,7 @@ public class MapIcon implements Serializable {
     public static final URL searchIcon = MapIcon.class.getResource("/data/searchIcon.png");
     public static final URL optionsIcon = MapIcon.class.getResource("/data/optionsIcon.png");
     public static final URL layerIcon = MapIcon.class.getResource("/data/layerIcon.png");
+    public static final URL chosenAddressIcon = MapIcon.class.getResource("/data/chosenAddressIcon.png");
 
     BufferedImage img;
     Shape shape;
@@ -88,9 +89,6 @@ public class MapIcon implements Serializable {
         it.scale((1 / transform.getScaleX()), (1 / transform.getScaleY())); //Sets off against the transform of the context, scaling the transform of the icon accordingly.
         g.drawImage(img, it, null);
     }
-
-   // Work in progress....
-    public void scaleDraw(Graphics2D g, AffineTransform transform, Double scale){}
 
     private void writeObject(ObjectOutputStream stream)throws IOException{
         if(shape != null) stream.writeObject(shape);

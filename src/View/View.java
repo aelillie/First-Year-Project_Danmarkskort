@@ -50,9 +50,12 @@ public class View extends JFrame implements Observer {
     private RouteView routePanel = new RouteView();
     private MapTypePanel mapTypePanel = new MapTypePanel(this);
    // private IconPanel iconPanel = new IconPanel();
-    private SearchResultMouseHandler searchResultMH = new SearchResultMouseHandler(this, model);
+    private SearchResultMouseHandler searchResultMH;
     private JScrollPane resultPane = new JScrollPane();
     private JList<Address> addressSearchResults;
+
+    private List<Path2D> currentStreetLocations;
+    private Point2D currentAddressLocation;
 
     private boolean isFullscreen = false;
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -69,6 +72,7 @@ public class View extends JFrame implements Observer {
     public View(Model m) {
         super("This is our map");
         model = m;
+        searchResultMH = new SearchResultMouseHandler(this, model);
 
         /*Two helper functions to set up the AfflineTransform object and
         make the buttons and layout for the frame*/
@@ -198,7 +202,7 @@ public class View extends JFrame implements Observer {
     }
 
     private void makeComponents() {
-        Font font = new Font("Arial", Font.PLAIN, 16);
+        Font font = new Font("Open Sans", Font.PLAIN, 14);
 
         //Create The buttons and configure their visual design.
         searchArea.setFont(font);
@@ -367,6 +371,23 @@ public class View extends JFrame implements Observer {
     public void showMapTypePanel(){
         mapTypePanel.showMapTypePanel();
         canvas.repaint();
+    }
+
+    public void searchResultChosen(){
+        //TODO: Something with affinetransform and panning to the chosen location
+    }
+
+    public void setCurrentStreet(List<Path2D> streetLocation){
+        currentAddressLocation = null;
+        currentStreetLocations = streetLocation;
+        canvas.repaint();
+    }
+
+    public void setCurrentAddress(Point2D addrLocation){
+        currentStreetLocations = null;
+        currentAddressLocation = addrLocation;
+        canvas.repaint();
+
     }
 
     @Override
@@ -750,6 +771,22 @@ public class View extends JFrame implements Observer {
                 g.draw(nearestNeighbor.getShape());
             }
 
+            //Draws chosen searchResult (either street or address)
+            //Current address:
+            if(currentAddressLocation != null){
+                MapIcon currentAddrTag = new MapIcon(currentAddressLocation,MapIcon.chosenAddressIcon);
+                currentAddrTag.draw(g,transform);
+            }
+            //Current street:
+            if(currentStreetLocations != null){
+                for(Path2D streetLocation : currentStreetLocations) {
+                    g.setStroke(new BasicStroke(0.000035f)); //TODO: Varying stroke and color according to drawattribute
+                    g.setColor(DrawAttribute.cl_red);
+                    g.draw(streetLocation);
+                }
+            }
+
+            //Transparent GUI elements
             g.setTransform(new AffineTransform());
             g.setColor(new Color(0,0,0,180));
             RoundRectangle2D optionsButtonArea = new RoundRectangle2D.Double(getContentPane().getWidth()-50,(int)(getContentPane().getHeight()-getContentPane().getHeight()*0.98),60,40,15,15);
@@ -760,7 +797,6 @@ public class View extends JFrame implements Observer {
             g.fill(zoomInOutArea);
             g.fill(fullscreenArea);
             g.fill(mapTypeButtonArea);
-
 
                         // }
 /*
