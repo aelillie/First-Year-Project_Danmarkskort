@@ -21,6 +21,8 @@ public class OSMHandler extends DefaultHandler {
     private Map<Long, Path2D> wayId_map; //Map of ways and their id's
     //Contains relevant places parsed as address objects linked to their coordinate.
     private Map<Address,Point2D> addressMap;
+    private Map<Address, List<Path2D>> streetMap;
+
     private QuadTree quadTree;
     private List<Address> addressList; //list of all the addresses in the .osm file
     private List<MapIcon> mapIcons; //contains all the icons to be drawn
@@ -37,7 +39,6 @@ public class OSMHandler extends DefaultHandler {
     private Rectangle2D bbox = new Rectangle2D.Double();
 
 
-
     public void initializeCollections(){
         coastlines = new ArrayList<>();
         memberReferences = new ArrayList<>();
@@ -48,10 +49,8 @@ public class OSMHandler extends DefaultHandler {
         keyValue_map = new HashMap<>();
         wayId_map = new HashMap<>();
         addressMap = new HashMap<>();
-
+        streetMap = new HashMap<>();
     }
-
-
 
     /**
      * Reads start elements and handles what to be done from the data associated with the element.
@@ -101,7 +100,7 @@ public class OSMHandler extends DefaultHandler {
             }
             case "way": //A way containing references to other ways and possible tags
                 keyValue_map.clear();
-                wayCoords.clear(); //clears list of references coordinates within a way
+                wayCoords.clear(); //clears list of referenced coordinates within a way
                 isArea = false;
                 hasName = false;
                 isStart = true;
@@ -154,8 +153,6 @@ public class OSMHandler extends DefaultHandler {
     }
 
 
-
-
     /**
      * Reads end elements and handles what to be done from the data associated with the element.
      * @param uri the namespace URI
@@ -179,7 +176,7 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("landuse"))  quadTree.insert(new Landuse(way, fetchOSMLayer(), keyValue_map.get("landuse"), isArea));
                 else if (keyValue_map.containsKey("geological")) quadTree.insert(new Geological(way, fetchOSMLayer(), keyValue_map.get("geological")));
                 else if (keyValue_map.containsKey("building")) quadTree.insert(new Building(way, fetchOSMLayer(), keyValue_map.get("building")));
-                else if (keyValue_map.containsKey("shop"))  quadTree.insert(new Shop(way, fetchOSMLayer(), keyValue_map.get("shop")));
+                else if (keyValue_map.containsKey("shop"))  quadTree.insert(new Shop(way, fetchOSMLayer(), keyValue_map.get("shop"))); //This seems to only appear under <node
                 else if (keyValue_map.containsKey("tourism")) quadTree.insert(new Tourism(way, fetchOSMLayer(), keyValue_map.get("tourism")));
                 else if (keyValue_map.containsKey("man_made")) quadTree.insert(new ManMade(way, fetchOSMLayer(), keyValue_map.get("man_made")));
                 else if (keyValue_map.containsKey("historic")) quadTree.insert(new Historic(way, fetchOSMLayer(), keyValue_map.get("historic")));
@@ -195,11 +192,17 @@ public class OSMHandler extends DefaultHandler {
                       //  mapIcons.add(new MapIcon(way, MapIcon.atmIcon));}
                 }
                 else if (keyValue_map.containsKey("barrier")) quadTree.insert(new Barrier(way, fetchOSMLayer(), keyValue_map.get("barrier"), isArea));
-                else if (keyValue_map.containsKey("boundary")) quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary")));
+                else if (keyValue_map.containsKey("boundary")) quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary"))); //Appears in <relation
                 else if (keyValue_map.containsKey("highway")) quadTree.insert(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea));
                 else if (keyValue_map.containsKey("railway")) quadTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  quadTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
-
+                if (keyValue_map.containsKey("name")) {
+                    if(keyValue_map.containsKey("highway")||keyValue_map.containsKey("cycleway")||keyValue_map.containsKey("motorroad")) {
+                        String street = keyValue_map.get("name").toLowerCase().trim();
+                        Address addr = Address.newStreet(street);
+                        addStreetToMap(way, addr);
+                    }
+                }
                 wayId_map.put(wayId, way);
                 break;
 
@@ -212,12 +215,13 @@ public class OSMHandler extends DefaultHandler {
                         if (keyValue_map.containsKey("building"))
                             quadTree.insert(new Multipolygon(path, fetchOSMLayer(), "building"));
 
-                        if(keyValue_map.containsKey("place")){
+                        /*if(keyValue_map.containsKey("place")){
                             //TODO islets
 
-                        }
-                        /*else if (kv_map.containsKey("natural"))
-                            drawables.add(new Model.Area(path, Model.Drawable.water, -1.5));*/
+                        }*/
+                        /*else if (keyValue_map.containsKey("natural"))
+                            if(keyValue_map.get("natural").equals("water"))
+                                quadTree.insert(new Natural(path, fetchOSMLayer(), "water"));*/
                         //TODO How do draw harbor.
                     }
 
@@ -249,46 +253,24 @@ public class OSMHandler extends DefaultHandler {
                         else if (isSTog) mapIcons.add(new MapIcon(nodeCoord, MapIcon.STogIcon));
                     }
                 } else if(keyValue_map.containsKey("name")) {
-                   /* String name = keyValue_map.get("name");
+                    String name = keyValue_map.get("name");
                     if(keyValue_map.containsKey("place")){
                         String place = keyValue_map.get("place");
                         name = name.toLowerCase();
                         Address addr = Address.newTown(name);
-                        //System.out.println(name);
-                        if(place.equals("town")){
+                        if(place.equals("town") || place.equals("village") || place.equals("suburb") || place.equals("locality")|| place.equals("neighbourhood")){
                             addressMap.put(addr, nodeCoord);
-                            addressList.add(addr);
-                        } else if (place.equals("village")){
-                            addressMap.put(addr, nodeCoord);
-                            addressList.add(addr);
-                        } else if (place.equals("suburb")){
-
-                        }/* else if (place.equals("surburb")){
-
-                            addressMap.put(addr,nodeCoord);
-                            addressList.add(addr);
-                        } else if (place.equals("locality")) {
-                            addressMap.put(addr,nodeCoord);
-                            addressList.add(addr);
-                        } else if (place.equals("neighbourhood")){
-                            addressMap.put(addr,nodeCoord);
                             addressList.add(addr);
                         }
-                    }*/
+                    }
 
                 } else if (keyValue_map.containsKey("addr:street")){    //TODO uncomment!
                     if(hasHouseNo && hasCity && hasPostcode){
-                       /* Address addr = Address.newAddress(streetName, houseNumber, postCode, cityName);
-                        //System.out.println(addressString + ", " + nodeCoord);
-                        //System.out.println(addr.toString());
+                       Address addr = Address.newAddress(streetName.toLowerCase(), houseNumber.toLowerCase(), postCode.toLowerCase(), cityName.toLowerCase());
                         addressMap.put(addr, nodeCoord);
-                        addressList.add(addr);*/
+                        addressList.add(addr);
                     }
                 }
-
-
-
-
                 //else if (keyValue_map.containsKey("addr:city")) addCityName();
                 //else if (keyValue_map.containsKey("addr:postcode")) addPostcode();
 
@@ -300,12 +282,9 @@ public class OSMHandler extends DefaultHandler {
                 Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
                 System.out.printf("sorted all addresses, time: %d ms\n", (System.nanoTime() - time) / 1000000);
                 PathCreater.connectCoastlines(bbox);
-
                 break;
 
         }
-
-
     }
 
     /**
@@ -318,7 +297,7 @@ public class OSMHandler extends DefaultHandler {
         Comparator<MapFeature> comparator = new Comparator<MapFeature>() {
             @Override
             /**
-             * Compares two Model.Drawable objects.
+             * Compares two MapFeature objects.
              * Returns a negative integer, zero, or a positive integer as the first argument
              * is less than, equal to, or greater than the second.
              */
@@ -346,9 +325,22 @@ public class OSMHandler extends DefaultHandler {
     }
 
 
-    public void searchForAddressess(Address add){
-        AddressSearcher.searchForAddresses(add, addressList, addressMap);
 
+    private void addStreetToMap(Path2D way, Address street){
+        List<Path2D> existingList = streetMap.get(street);
+        if (existingList == null) {
+            List<Path2D> list = new ArrayList<>();
+            list.add(way);
+            streetMap.put(street, list); //Make sure the street is not added again
+            addressList.add(street);
+        } else {
+            List<Path2D> list = streetMap.get(street);
+            list.add(way);
+        }
+    }
+
+    public Address[] searchForAddressess(Address add){
+        return AddressSearcher.searchForAddresses(add, addressList, addressMap);
     }
 
 
@@ -376,6 +368,9 @@ public class OSMHandler extends DefaultHandler {
     public Map<Long,Path2D> getWayIdMap(){return wayId_map;}
     public Map<Long, Point2D> getNodeMap(){return node_map;}
     public ArrayList<Rectangle2D> getNodes(){return quadTree.getNodeRects();}
+
     public void setQuadTree(QuadTree quadTree) {this.quadTree = quadTree; }
 
+    public Map<Address,Point2D> getAddressMap(){ return  addressMap;}
+    public Map<Address, List<Path2D>> getStreetMap() {return streetMap;}
 }

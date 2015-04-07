@@ -2,6 +2,7 @@ package Model;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,9 +37,16 @@ public class Address implements Comparable<Address> {
 
     }
 
+    public static Address newStreet(String street){
+        Builder b = new Builder();
+        street = street.intern(); //Using string pool
+        b.street(street);
+        return b.build();
+    }
+
     public static Address newTown(String city){
         Builder b = new Builder();
-        city = city.intern();
+        city = city.intern(); //Using string pool
         b.city(city);
         return b.build();
     }
@@ -52,6 +60,7 @@ public class Address implements Comparable<Address> {
     public String toString(){
         String s = street.trim() + " " + house.trim() + " " + floor.trim() + " " + side.trim()+" " + postcode.trim() + " " + city.trim();
         s = s.replaceAll(" +", " ");
+        s = s.trim();
         return s;
     }
 
@@ -64,9 +73,12 @@ public class Address implements Comparable<Address> {
     @Override
     public int compareTo(Address addr) {
         return this.toString().compareTo(addr.toString()); //TODO: modify according to whether things like city is null
-
     }
 
+    public int searchCompare(Address addr){
+        if(this.toString().startsWith(addr.toString())) return 0;
+        else return this.toString().compareTo(addr.toString());
+    }
 
     public static class Builder {
         private String street = "", house = "", floor = "",
@@ -282,5 +294,17 @@ public class Address implements Comparable<Address> {
 
     }
 
+    @Override
+    public boolean equals(Object obj){
+        if (!(obj instanceof Address)) return false;
+        if (obj == this) return true;
+        Address addr = (Address) obj;
+        return this.toString().equals(addr.toString());
+    }
+
+    @Override
+    public int hashCode(){
+        return Objects.hash(street,house,floor,side,postcode,city);
+    }
 
 }

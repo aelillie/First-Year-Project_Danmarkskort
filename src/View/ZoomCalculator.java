@@ -3,7 +3,7 @@ package View;
 /**
  * Created by Kevin on 18-03-2015.
  */
-public class Scaler {
+public class ZoomCalculator {
 
 
     public static double setScale(int zoom){

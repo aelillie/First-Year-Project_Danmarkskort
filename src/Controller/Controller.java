@@ -1,16 +1,23 @@
 package Controller;
 
+import MapFeatures.Highway;
 import Model.Address;
 import Model.Model;
 import View.View;
+import Model.MapFeature;
 
 import javax.swing.*;
+import javax.swing.event.DocumentEvent;
+import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
 import java.io.File;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
+import java.util.*;
 
 public class Controller extends MouseAdapter implements ActionListener {
     Model model;
@@ -26,23 +33,23 @@ public class Controller extends MouseAdapter implements ActionListener {
 
     private void setHandlers(){
         //Set up Handlers for mouse and keyboard and let controller set these for view.
+        SearchController searchController = new SearchController(model, view);
         keyHandler kH = new keyHandler();
         view.getCanvas().addKeyListener(kH);
-        view.getSearchArea().addKeyListener(kH);
         MouseHandler mH = new MouseHandler();
         view.addMouseListener(mH);
         view.addMouseMotionListener(mH);
         view.addMouseWheelListener(mH);
 
         // The controller handles what should happen if a button is pressed.
-        view.getSearchArea().addActionListener(this);
-        view.getSearchButton().addActionListener(this);
+
         view.getZoomInButton().addActionListener(this);
         view.getZoomOutButton().addActionListener(this);
         view.getLoadButton().addActionListener(this);
         view.getFullscreenButton().addActionListener(this);
         view.getShowRoutePanelButton().addActionListener(this);
         view.getOptionsButton().addActionListener(this);
+        view.getMapTypeButton().addActionListener(this);
     }
 
     @Override
@@ -55,23 +62,17 @@ public class Controller extends MouseAdapter implements ActionListener {
         else if (command.equals("zoomOut")) view.zoom(1 / 1.2);
         else if (command.equals("load")) loadSelectedFile();
         else if (command.equals("fullscreen")) view.toggleFullscreen();
-        else if (command.equals("search")) addressSearch();
         else if (command.equals("showRoutePanel")) view.showRoutePanel();
         else if (command.equals("findRoute"));
-        else if (command.equals("showOptions"))view.repaint();
+        else if (command.equals("showOptions")) view.repaint();
+        else if (command.equals("mapType")) view.showMapTypePanel();
     }
 
-    private void addressSearch(){
-        String input = view.getSearchArea().getText().trim().toLowerCase();
-        Address address = Address.parse(input);
-        //System.out.println(address.street()+" " + address.house()+" "+address.side()+ " "+address.city()+" "+address.postcode());
-        view.getCanvas().requestFocusInWindow();
-        model.searchForAddresses(address);
-    }
 
     private void loadSelectedFile(){
         int returnValue = view.openFileChooser(); //The returnvalue represents the action taken within the filechooser
         if(returnValue == JFileChooser.APPROVE_OPTION){ //Return value if yes/ok is chosen.
+
             try {
                 File file = view.getFileChooser().getSelectedFile(); //fetch file
                 URL fileURL = file.toURI().toURL(); //Convert to URL
@@ -99,7 +100,11 @@ public class Controller extends MouseAdapter implements ActionListener {
             view.mouseDragged(e);
         }
         public void mouseMoved(MouseEvent e) {}
-        public void mouseClicked(MouseEvent e) {}
+        public void mouseClicked(MouseEvent e) {
+            view.findNearest(e.getPoint());
+            System.out.println("done");
+            view.repaint();
+        }
         public void mouseEntered(MouseEvent e) {}
         public void mouseExited(MouseEvent e) {}
         public void mousePressed(MouseEvent e) {
@@ -135,7 +140,7 @@ public class Controller extends MouseAdapter implements ActionListener {
                         view.toggleAA();
                         break;
                     case 's':
-                        model.saveBin(model.getCurrentFilename() + ".bin");
+                        model.saveBin();
                         break;
                     /*case 'l': use loadSelectedFile in runtime instead
                         try {
@@ -159,9 +164,6 @@ public class Controller extends MouseAdapter implements ActionListener {
                 if (e.getKeyCode() == KeyEvent.VK_RIGHT) {
                     view.pan(-10, 0);
                 }
-            }
-            if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                addressSearch();
             }
         }
     }

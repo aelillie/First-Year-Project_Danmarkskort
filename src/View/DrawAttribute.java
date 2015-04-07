@@ -57,8 +57,34 @@ public class DrawAttribute {
     public static Stroke r16 = new BasicStroke(0.00016f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     public static Stroke r17 = new BasicStroke(0.00017f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     public static Stroke r18 = new BasicStroke(0.00018f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-    public static Stroke r19 = new BasicStroke(0.00019f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
-    public static Stroke r20 = new BasicStroke(0.00020f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r19 = new BasicStroke(0.00025f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r20 = new BasicStroke(0.0003f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r21 = new BasicStroke(0.00035f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r22 = new BasicStroke(0.0004f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r23 = new BasicStroke(0.00045f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r24 = new BasicStroke(0.0005f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r25 = new BasicStroke(0.0006f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r26 = new BasicStroke(0.0007f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r27 = new BasicStroke(0.0008f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r28 = new BasicStroke(0.0009f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r29 = new BasicStroke(0.001f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r30 = new BasicStroke(0.0012f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r31 = new BasicStroke(0.0014f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r32 = new BasicStroke(0.0016f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r33 = new BasicStroke(0.0018f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r34 = new BasicStroke(0.0020f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r35 = new BasicStroke(0.0022f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r36 = new BasicStroke(0.0024f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r37 = new BasicStroke(0.0026f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r38 = new BasicStroke(0.0028f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r39 = new BasicStroke(0.003f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r40 = new BasicStroke(0.0032f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r41 = new BasicStroke(0.0034f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r42 = new BasicStroke(0.0036f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r43 = new BasicStroke(0.0038f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r44 = new BasicStroke(0.004f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r45 = new BasicStroke(0.005f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+
 
     public static Stroke d1 = new BasicStroke(0.00001f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{0.0001f}, 0.00001f); //Metro
     public static Stroke d2 = new BasicStroke(0.00002f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,30.0f, new float[]{0.00005f},0.00000f); //Footway
@@ -69,6 +95,7 @@ public class DrawAttribute {
 
     //Predefined colors to use.
     public static Color black = new Color(0, 0, 0);
+    public static Color fadeblack = new Color(0,0,0,180);
     public static Color lightblue = new Color(70, 130, 180);
     public static Color lightgreen = new Color(34,139,34);
     public static Color darkgreen = new Color(0, 100, 0);
@@ -123,7 +150,7 @@ public class DrawAttribute {
                                                 grey, white, bloodred, red, skincolor, bluegreen, orange, pink, sand, whiteblue, greenblue, whitegreen, brown};
     public static Stroke[] basicStrokes = new Stroke[]{s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11,s12, s13, s14, s15};
     public static Stroke[] dashedStrokes = new Stroke[] {d1, d2, d3, d4, d5};
-    public static Stroke[] streetStrokes = new Stroke[] {r00, r01, r02, r03, r04, r05, r06, r07, r08, r09, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20};
+    public static Stroke[] streetStrokes = new Stroke[] {r00, r01, r02, r03, r04, r05, r06, r07, r08, r09, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31, r32, r33, r34, r35, r36, r37, r38, r39, r40, r41, r42, r43, r44, r45};
 
     public boolean isDashed() {
         return dashed;

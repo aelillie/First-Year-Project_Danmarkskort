@@ -30,7 +30,10 @@ public final class BinaryHandler {
         out.writeObject(model.getMapIcons());
 
         out.writeObject(model.getCoastlines());
-        //TODO total redo
+
+
+        out.close();
+        System.out.print(filename + " saved");
 
     }
 
@@ -56,8 +59,8 @@ public final class BinaryHandler {
 
         List<Coastline> coasts = model.getCoastlines();
         coasts.addAll((List<Coastline>)in.readObject());
+        in.close();
 
-        //TODO total redo with quadTree
 
     }
 

@@ -13,6 +13,13 @@ public class CanvasBounds {
     private Rectangle2D bounds;
     private AffineTransform transform;
 
+
+    /**
+     * stores a slightly bigger copy of the rectangle given, and a
+     * reference to the AffineTransformer used
+     * @param bounds    Rectangle2D to be stored
+     * @param transform AffineTransform used to draw
+     */
     public CanvasBounds(Rectangle2D bounds, AffineTransform transform){
         this.bounds = new Rectangle2D.Double(
                 bounds.getX()- bounds.getWidth()/4,
@@ -22,6 +29,10 @@ public class CanvasBounds {
         this.transform = transform;
     }
 
+    /**
+     * Updates the values of the Rectangle2D
+     * @param viewRect  New Rectangle.
+     */
     public void updateBounds(Rectangle2D viewRect){
         AffineTransform inverser = new AffineTransform();
         try {
@@ -30,7 +41,13 @@ public class CanvasBounds {
 
         Path2D.Double tmp = (Path2D.Double) inverser.createTransformedShape(viewRect);
 
-        bounds = tmp.getBounds2D();
+        Rectangle2D tmpRect = tmp.getBounds2D();
+
+        bounds = new Rectangle2D.Double(
+                tmpRect.getX() - tmpRect.getWidth()/4,
+                tmpRect.getY() - tmpRect.getHeight()/4,
+                tmpRect.getWidth()* 1.25,
+                tmpRect.getHeight() * 1.25);
     }
 
     public Rectangle2D getBounds(){return bounds;}

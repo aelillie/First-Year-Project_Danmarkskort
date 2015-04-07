@@ -1,6 +1,7 @@
 package Model;
 
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -9,12 +10,11 @@ import java.util.Map;
  */
 public class AddressSearcher {
 
-
     private static int binSearch(List<Address> list, Address addr, int low, int high){
         if(low > high) return -1;
         int mid = (low+high)/2;
-        if (list.get(mid).compareTo(addr) < 0) return binSearch(list, addr, mid + 1, high); //if addr is larger than mid
-        else if (list.get(mid).compareTo(addr) > 0) return binSearch(list, addr, low, mid - 1); //if addr is smaller than mid
+        if (list.get(mid).searchCompare(addr) < 0) return binSearch(list, addr, mid + 1, high); //if addr is larger than mid
+        else if (list.get(mid).searchCompare(addr) > 0) return binSearch(list, addr, low, mid - 1); //if addr is smaller than mid
         else return mid;
     }
 
@@ -48,19 +48,25 @@ public class AddressSearcher {
         return range;
     }
 
-    public static void searchForAddresses(Address addressInput, List<Address> addressList, Map<Address, Point2D> addressMap){
+    public static Address[] searchForAddresses(Address addressInput, List<Address> addressList, Map<Address, Point2D> addressMap){
         int[] range = multipleEntriesSearch(addressInput, addressList); //search for one or multiple entries
         if(range == null) { //If it is not found, the return value will be negative
             System.out.println("Too bad - didn't find!");
+            return null;
         } else {
-            System.out.println("Found something");
+            System.out.println("Congratulations! Found something!");
             int lowerBound = range[0], upperBound = range[1];
-            System.out.printf("low: "+lowerBound + ", high: "+upperBound);
+            //System.out.printf("low: "+lowerBound + ", high: "+upperBound);
+            Address[] results = new Address[upperBound-lowerBound+1];
+            int arrayIndex = 0;
             for(int i = lowerBound; i <= upperBound; i++){
                 Address foundAddr = addressList.get(i);
                 Point2D coordinate = addressMap.get(foundAddr);
-                //System.out.println("x = " + coordinate.getX() + ", y = " +coordinate.getY());
+                //System.out.println(foundAddr.toString());
+                results[arrayIndex] = addressList.get(i);
+                arrayIndex++;
             }
+            return results;
         }
     }
 }

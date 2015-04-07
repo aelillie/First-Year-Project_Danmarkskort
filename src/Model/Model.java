@@ -88,10 +88,15 @@ public class Model extends Observable implements Serializable {
         }
     }
 
-    public void saveBin(String filename) {
+
+    public void saveBin() {
+        saveBin(currentFilename);
+    }
+
+    private void saveBin(String filename) {
 
         try {
-            BinaryHandler.save(filename);
+            BinaryHandler.save(filename + ".bin");
         } catch (IOException e) {
             e.printStackTrace();
 
@@ -100,9 +105,8 @@ public class Model extends Observable implements Serializable {
 
 
 
-    public void searchForAddresses(Address address){
-        OSMReader.searchForAddressess(address);
-
+    public Address[] searchForAddresses(Address address){
+        return OSMReader.searchForAddressess(address);
     }
 
 
@@ -123,12 +127,13 @@ public class Model extends Observable implements Serializable {
         return currentFilename;
     }
 
-    public void setCurrentFilename(String currentFilename) {
-        if (currentFilename.endsWith(".osm"))
-            currentFilename = currentFilename.substring(0, currentFilename.indexOf(".osm"));
-        else if (currentFilename.endsWith(".zip"))
-            currentFilename = currentFilename.substring(0, currentFilename.indexOf(".zip"));
-        this.currentFilename = currentFilename;
+    public void setCurrentFilename(String path) {
+        String filename = path;
+        if (path.endsWith(".osm"))
+            filename = path.substring(path.lastIndexOf("/") + 1, path.indexOf(".osm"));
+        else if (path.endsWith(".zip"))
+            filename = path.substring(path.lastIndexOf("/") + 1, path.indexOf(".zip"));
+        this.currentFilename = filename;
     }
 
     public Rectangle2D getBbox(){

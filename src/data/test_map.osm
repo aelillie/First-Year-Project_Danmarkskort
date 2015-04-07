@@ -1,0 +1,239 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<osm version="0.6" generator="CGImap 0.3.3 (28211 thorn-02.openstreetmap.org)" copyright="OpenStreetMap and contributors" attribution="http://www.openstreetmap.org/copyright" license="http://opendatacommons.org/licenses/odbl/1-0/">
+ <bounds minlat="55.6630000" minlon="12.5738000" maxlat="55.6713000" maxlon="12.5913000"/>
+ <node id="7217647" visible="true" version="3" changeset="7780358" timestamp="2011-04-05T23:44:54Z" user="Jørgen Elgaard Larsen" uid="426479" lat="55.6695228" lon="12.5802146"/>
+ <node id="1234226372" visible="true" version="3" changeset="20715445" timestamp="2014-02-22T15:18:11Z" user="Emil Tin" uid="423750" lat="55.6693366" lon="12.5805524"/>
+ <node id="2445783194" visible="true" version="2" changeset="20715445" timestamp="2014-02-22T15:18:11Z" user="Emil Tin" uid="423750" lat="55.6690488" lon="12.5811529"/>
+ <node id="8079935" visible="true" version="4" changeset="20715445" timestamp="2014-02-22T15:18:11Z" user="Emil Tin" uid="423750" lat="55.6687563" lon="12.5817373"/>
+ <node id="698646" visible="true" version="7" changeset="20715445" timestamp="2014-02-22T15:18:10Z" user="Emil Tin" uid="423750" lat="55.6685247" lon="12.5823799">
+  <tag k="highway" v="traffic_signals"/>
+ </node>
+ <node id="491496561" visible="true" version="2" changeset="7813738" timestamp="2011-04-09T14:20:32Z" user="Ernst Poulsen" uid="35273" lat="55.6708033" lon="12.5862855"/>
+ <node id="491496562" visible="true" version="1" changeset="2428639" timestamp="2009-09-09T19:46:25Z" user="msiebuhr" uid="10371" lat="55.6704810" lon="12.5869723"/>
+ <node id="491496564" visible="true" version="3" changeset="7813738" timestamp="2011-04-09T14:20:32Z" user="Ernst Poulsen" uid="35273" lat="55.6702985" lon="12.5866601"/>
+ <node id="491496566" visible="true" version="2" changeset="6671185" timestamp="2010-12-15T20:54:55Z" user="tagg" uid="35028" lat="55.6703859" lon="12.5857646"/>
+ <node id="491496567" visible="true" version="3" changeset="6671185" timestamp="2010-12-15T20:54:56Z" user="tagg" uid="35028" lat="55.6704398" lon="12.5857256"/>
+ <node id="491496648" visible="true" version="4" changeset="7813738" timestamp="2011-04-09T14:20:31Z" user="Ernst Poulsen" uid="35273" lat="55.6706431" lon="12.5863193"/>
+ <node id="491496649" visible="true" version="4" changeset="7813738" timestamp="2011-04-09T14:20:32Z" user="Ernst Poulsen" uid="35273" lat="55.6704576" lon="12.5860424"/>
+ <node id="491496650" visible="true" version="3" changeset="7813738" timestamp="2011-04-09T14:20:32Z" user="Ernst Poulsen" uid="35273" lat="55.6704022" lon="12.5865964"/>
+ <node id="491496651" visible="true" version="4" changeset="7813738" timestamp="2011-04-09T14:20:32Z" user="Ernst Poulsen" uid="35273" lat="55.6704710" lon="12.5867013"/>
+ <node id="420721546" visible="true" version="4" changeset="2019227" timestamp="2009-08-02T21:06:17Z" user="sfromis" uid="49560" lat="55.6707558" lon="12.5769220">
+   <tag k="amenity" v="pub"/>
+ </node>
+ <node id="2424078825" visible="true" version="1" changeset="17410948" timestamp="2013-08-19T13:09:12Z" user="velomama" uid="1718404" lat="55.6706710" lon="12.5769759"/>
+ <node id="2703517409" visible="true" version="1" changeset="20941706" timestamp="2014-03-06T01:09:57Z" user="jhg21" uid="1744812" lat="55.6641113" lon="12.5742134"/>
+ <node id="2703517410" visible="true" version="1" changeset="20941706" timestamp="2014-03-06T01:09:57Z" user="jhg21" uid="1744812" lat="55.6640375" lon="12.5741150"/>
+ <node id="2703517411" visible="true" version="1" changeset="20941706" timestamp="2014-03-06T01:09:57Z" user="jhg21" uid="1744812" lat="55.6636496" lon="12.5750285"/>
+ <node id="2703517412" visible="true" version="1" changeset="20941706" timestamp="2014-03-06T01:09:57Z" user="jhg21" uid="1744812" lat="55.6637254" lon="12.5751401"/>
+ <node id="1874450014" visible="true" version="1" changeset="12796299" timestamp="2012-08-20T13:36:23Z" user="Gonzalo_Pires" uid="572757" lat="55.6706944" lon="12.5778617"/>
+ <node id="2421841039" visible="true" version="1" changeset="17383310" timestamp="2013-08-17T12:32:32Z" user="Kopavap" uid="665405" lat="55.6708369" lon="12.5780556"/>
+ <node id="749952699" visible="true" version="1" changeset="4816967" timestamp="2010-05-26T20:59:13Z" user="msiebuhr" uid="10371" lat="55.6708536" lon="12.5780783"/>
+ <node id="13873127" visible="true" version="5" changeset="14322342" timestamp="2012-12-18T19:07:33Z" user="Hjart" uid="207581" lat="55.6709073" lon="12.5780196">
+  <tag k="source" v="PGS_shiftedA"/>
+ </node>
+ <node id="13873124" visible="true" version="4" changeset="8191010" timestamp="2011-05-19T16:13:07Z" user="HBP" uid="46359" lat="55.6721117" lon="12.5801166"/>
+ <node id="26667828" visible="true" version="7" changeset="27072748" timestamp="2014-11-27T17:38:10Z" user="thebonnetplume" uid="2046386" lat="55.6723382" lon="12.5797619"/>
+ <node id="2773359299" visible="true" version="2" changeset="21927848" timestamp="2014-04-25T10:34:28Z" user="jhg21" uid="1744812" lat="55.6639908" lon="12.5867973"/>
+ <node id="2773359302" visible="true" version="2" changeset="21927848" timestamp="2014-04-25T10:34:28Z" user="jhg21" uid="1744812" lat="55.6640141" lon="12.5866358"/>
+ <node id="2773359304" visible="true" version="2" changeset="21927848" timestamp="2014-04-25T10:34:28Z" user="jhg21" uid="1744812" lat="55.6646564" lon="12.5868654"/>
+ <node id="2773359307" visible="true" version="2" changeset="21927848" timestamp="2014-04-25T10:34:28Z" user="jhg21" uid="1744812" lat="55.6647506" lon="12.5860370"/>
+ <node id="2773359335" visible="true" version="2" changeset="21927848" timestamp="2014-04-25T10:34:28Z" user="jhg21" uid="1744812" lat="55.6648229" lon="12.5860628"/>
+ <node id="2773359312" visible="true" version="2" changeset="21927848" timestamp="2014-04-25T10:34:28Z" user="jhg21" uid="1744812" lat="55.6648615" lon="12.5857224"/>
+ <node id="2773359314" visible="true" version="2" changeset="21927848" timestamp="2014-04-25T10:34:28Z" user="jhg21" uid="1744812" lat="55.6647707" lon="12.5856900"/>
+ <node id="2773359317" visible="true" version="2" changeset="21927848" timestamp="2014-04-25T10:34:28Z" user="jhg21" uid="1744812" lat="55.6647791" lon="12.5856155"/>
+ <node id="2773359320" visible="true" version="2" changeset="21927848" timestamp="2014-04-25T10:34:28Z" user="jhg21" uid="1744812" lat="55.6649665" lon="12.5856823"/>
+ <node id="2773359322" visible="true" version="2" changeset="21927848" timestamp="2014-04-25T10:34:28Z" user="jhg21" uid="1744812" lat="55.6649587" lon="12.5857497"/>
+ <node id="2773359325" visible="true" version="2" changeset="21927848" timestamp="2014-04-25T10:34:28Z" user="jhg21" uid="1744812" lat="55.6648820" lon="12.5857219"/>
+ <node id="2773359327" visible="true" version="2" changeset="21927848" timestamp="2014-04-25T10:34:28Z" user="jhg21" uid="1744812" lat="55.6648413" lon="12.5860750"/>
+ <node id="2773359329" visible="true" version="2" changeset="21927848" timestamp="2014-04-25T10:34:28Z" user="jhg21" uid="1744812" lat="55.6648934" lon="12.5860939"/>
+ <node id="2773359333" visible="true" version="2" changeset="21927848" timestamp="2014-04-25T10:34:29Z" user="jhg21" uid="1744812" lat="55.6647794" lon="12.5870830"/>
+ <node id="671770713" visible="true" version="3" changeset="29079718" timestamp="2015-02-24T21:51:15Z" user="jhg21" uid="1744812" lat="55.6653496" lon="12.5818120">
+   <tag k="amenity" v="bar"/>
+ </node>
+ <node id="3370991118" visible="true" version="1" changeset="29079718" timestamp="2015-02-24T21:51:11Z" user="jhg21" uid="1744812" lat="55.6653196" lon="12.5818835"/>
+ <node id="3370991119" visible="true" version="1" changeset="29079718" timestamp="2015-02-24T21:51:11Z" user="jhg21" uid="1744812" lat="55.6654239" lon="12.5820209"/>
+ <node id="3370991120" visible="true" version="1" changeset="29079718" timestamp="2015-02-24T21:51:11Z" user="jhg21" uid="1744812" lat="55.6654538" lon="12.5819494"/>
+ <node id="2815320125" visible="true" version="1" changeset="21927701" timestamp="2014-04-25T10:25:35Z" user="jhg21" uid="1744812" lat="55.6630129" lon="12.5859548"/>
+ <node id="2815320127" visible="true" version="1" changeset="21927701" timestamp="2014-04-25T10:25:35Z" user="jhg21" uid="1744812" lat="55.6627855" lon="12.5858714"/>
+ <node id="2815320128" visible="true" version="1" changeset="21927701" timestamp="2014-04-25T10:25:35Z" user="jhg21" uid="1744812" lat="55.6628448" lon="12.5853527"/>
+ <node id="2815320129" visible="true" version="1" changeset="21927701" timestamp="2014-04-25T10:25:35Z" user="jhg21" uid="1744812" lat="55.6628691" lon="12.5854174"/>
+ <node id="2815320123" visible="true" version="1" changeset="21927701" timestamp="2014-04-25T10:25:35Z" user="jhg21" uid="1744812" lat="55.6628289" lon="12.5857816"/>
+ <node id="2815320124" visible="true" version="1" changeset="21927701" timestamp="2014-04-25T10:25:35Z" user="jhg21" uid="1744812" lat="55.6629162" lon="12.5858119"/>
+ <node id="779225479" visible="true" version="4" changeset="27072919" timestamp="2014-11-27T17:47:42Z" user="thebonnetplume" uid="2046386" lat="55.6693039" lon="12.5749366">
+  <tag k="amenity" v="parking"/>
+ </node>
+ <node id="779225482" visible="true" version="3" changeset="10667137" timestamp="2012-02-12T19:36:30Z" user="Emil Tin" uid="423750" lat="55.6694204" lon="12.5747234">
+   <tag k="highway" v="bus_stop"/>
+ </node>
+ <node id="1591708111" visible="true" version="1" changeset="10404638" timestamp="2012-01-15T23:35:04Z" user="Ernst Poulsen" uid="35273" lat="55.6765590" lon="12.5830150"/>
+ <node id="1591708103" visible="true" version="1" changeset="10404638" timestamp="2012-01-15T23:35:04Z" user="Ernst Poulsen" uid="35273" lat="55.6766226" lon="12.5828889"/>
+ <node id="1591708105" visible="true" version="1" changeset="10404638" timestamp="2012-01-15T23:35:04Z" user="Ernst Poulsen" uid="35273" lat="55.6766457" lon="12.5829186"/>
+ <node id="1885338842" visible="true" version="1" changeset="12879951" timestamp="2012-08-27T14:14:44Z" user="VicVal" uid="511334" lat="55.6705577" lon="12.5813212">
+  <tag k="emergency" v="fire_hydrant"/>
+  <tag k="fire_hydrant:type" v="pillar"/>
+ </node>
+ <node id="3370991161" visible="true" version="1" changeset="29079718" timestamp="2015-02-24T21:51:12Z" user="jhg21" uid="1744812" lat="55.6677049" lon="12.5853856">
+   <tag k="amenity" v="atm"/>
+ </node>
+ <node id="3370991162" visible="true" version="1" changeset="29079718" timestamp="2015-02-24T21:51:12Z" user="jhg21" uid="1744812" lat="55.6676617" lon="12.5853626"/>
+ <node id="1619530959" visible="true" version="2" changeset="14591757" timestamp="2013-01-09T21:46:37Z" user="gormur" uid="103253" lat="55.6626930" lon="12.5850205">
+   <tag k="railway" v="station"/>
+ </node>
+ <node id="21484483" visible="true" version="7" changeset="20966156" timestamp="2014-03-07T09:54:09Z" user="Emil Tin" uid="423750" lat="55.6634044" lon="12.5852827">
+  <tag k="name" v="Islands Brygge"/>
+  <tag k="public_transport" v="stop_position"/>
+  <tag k="subway" v="yes"/>
+  </node>
+ <node id="1619530969" visible="true" version="1" changeset="10599091" timestamp="2012-02-05T22:42:57Z" user="gormur" uid="103253" lat="55.6639058" lon="12.5854629"/>
+ <node id="286573285" visible="true" version="2" changeset="10599091" timestamp="2012-02-05T22:43:38Z" user="gormur" uid="103253" lat="55.6645529" lon="12.5860297"/>
+
+ <way id="1694106" visible="true" version="22" changeset="22236732" timestamp="2014-05-09T18:22:39Z" user="ham20" uid="1269006">
+  <nd ref="7217647"/>
+  <nd ref="1234226372"/>
+  <nd ref="2445783194"/>
+  <nd ref="8079935"/>
+  <nd ref="698646"/>
+  <tag k="bicycle" v="yes"/>
+  <tag k="cycleway" v="track"/>
+  <tag k="highway" v="tertiary"/>
+  <tag k="lit" v="yes"/>
+  <tag k="maxspeed" v="50"/>
+  <tag k="name" v="Amager Boulevard"/>
+  <tag k="oneway" v="yes"/>
+  <tag k="surface" v="asphalt"/>
+ </way>
+ <way id="234106282" visible="true" version="1" changeset="17410948" timestamp="2013-08-19T13:09:12Z" user="velomama" uid="1718404">
+  <nd ref="420721546"/>
+  <nd ref="2424078825"/>
+  <tag k="highway" v="footway"/>
+  <tag k="layer" v="1"/>
+ </way>
+ <way id="62388414" visible="true" version="4" changeset="27662679" timestamp="2014-12-24T00:27:00Z" user="Niels Elgaard Larsen" uid="1288">
+  <nd ref="779225479"/>
+  <nd ref="779225482"/>
+  <tag k="highway" v="service"/>
+  <tag k="layer" v="-1"/>
+  <tag k="name" v="Kalvebod Brygge"/>
+ </way>
+ <way id="264690604" visible="true" version="1" changeset="20941706" timestamp="2014-03-06T01:09:58Z" user="jhg21" uid="1744812">
+  <nd ref="2703517409"/>
+  <nd ref="2703517410"/>
+  <nd ref="2703517411"/>
+  <nd ref="2703517412"/>
+  <nd ref="2703517409"/>
+  <tag k="amenity" v="parking"/>
+  <tag k="area" v="yes"/>
+ </way>
+ <way id="176956273" visible="true" version="4" changeset="17383310" timestamp="2013-08-17T12:32:36Z" user="Kopavap" uid="665405">
+  <nd ref="1874450014"/>
+  <nd ref="2421841039"/>
+  <nd ref="749952699"/>
+  <nd ref="13873127"/>
+  <nd ref="13873124"/>
+  <nd ref="26667828"/>
+  <tag k="natural" v="coastline"/>
+ </way>
+ <way id="272394155" visible="true" version="4" changeset="23632707" timestamp="2014-07-02T19:23:20Z" user="Aurimas Fišeras" uid="651869">
+  <nd ref="2773359299"/>
+  <nd ref="2773359302"/>
+  <nd ref="2773359304"/>
+  <nd ref="2773359307"/>
+  <nd ref="2773359335"/>
+  <nd ref="2773359312"/>
+  <nd ref="2773359314"/>
+  <nd ref="2773359317"/>
+  <nd ref="2773359320"/>
+  <nd ref="2773359322"/>
+  <nd ref="2773359325"/>
+  <nd ref="2773359327"/>
+  <nd ref="2773359329"/>
+  <nd ref="2773359333"/>
+  <nd ref="2773359299"/>
+  <tag k="natural" v="water"/>
+  <tag k="waterway" v="ditch"/>
+ </way>
+ <way id="330139223" visible="true" version="1" changeset="29079718" timestamp="2015-02-24T21:51:13Z" user="jhg21" uid="1744812">
+  <nd ref="671770713"/>
+  <nd ref="3370991118"/>
+  <nd ref="3370991119"/>
+  <nd ref="3370991120"/>
+  <nd ref="671770713"/>
+  <tag k="leisure" v="garden"/>
+ </way>
+ <way id="276980773" visible="true" version="1" changeset="21927701" timestamp="2014-04-25T10:25:35Z" user="jhg21" uid="1744812">
+  <nd ref="2815320125"/>
+  <nd ref="2815320127"/>
+  <nd ref="2815320128"/>
+  <nd ref="2815320129"/>
+  <nd ref="2815320123"/>
+  <nd ref="2815320124"/>
+  <nd ref="2815320125"/>
+  <tag k="area" v="yes"/>
+  <tag k="landuse" v="grass"/>
+  <tag k="historic" v="archaeological_site"/>
+ </way>
+ <way id="145832258" visible="true" version="1" changeset="10404638" timestamp="2012-01-15T23:35:04Z" user="Ernst Poulsen" uid="35273">
+  <nd ref="1591708111"/>
+  <nd ref="1591708103"/>
+  <nd ref="1591708105"/>
+  <tag k="man_made" v="pier"/>
+ </way>
+ <way id="330139234" visible="true" version="1" changeset="29079718" timestamp="2015-02-24T21:51:14Z" user="jhg21" uid="1744812">
+  <nd ref="3370991161"/>
+  <nd ref="3370991162"/>
+  <tag k="barrier" v="hedge"/>
+ </way>
+ <way id="4317977" visible="true" version="13" changeset="16321027" timestamp="2013-05-28T09:18:21Z" user="rasmusv" uid="48588">
+  <nd ref="1619530959"/>
+  <nd ref="21484483"/>
+  <nd ref="1619530969"/>
+  <nd ref="286573285"/>
+  <tag k="electrified" v="rail"/>
+  <tag k="gauge" v="1435"/>
+  <tag k="layer" v="-1"/>
+  <tag k="name" v="Metro M1"/>
+  <tag k="operator" v="Metroselskabet I/S"/>
+  <tag k="railway" v="subway"/>
+  <tag k="ref" v="M1"/>
+  <tag k="tunnel" v="yes"/>
+  <tag k="voltage" v="750"/>
+ </way>
+ <way id="40523391" visible="true" version="2" changeset="2428866" timestamp="2009-09-09T19:58:38Z" user="msiebuhr" uid="10371">
+  <nd ref="491496561"/>
+  <nd ref="491496562"/>
+  <nd ref="491496564"/>
+  <nd ref="491496566"/>
+  <nd ref="491496567"/>
+  <nd ref="491496561"/>
+  <tag k="building" v="yes"/>
+  <tag k="tourism" v="attraction"/>
+ </way>
+ <way id="40523397" visible="true" version="1" changeset="2428639" timestamp="2009-09-09T19:46:31Z" user="msiebuhr" uid="10371">
+  <nd ref="491496648"/>
+  <nd ref="491496649"/>
+  <nd ref="491496650"/>
+  <nd ref="491496651"/>
+  <nd ref="491496648"/>
+ </way>
+ <relation id="238228" visible="true" version="2" changeset="17834994" timestamp="2013-09-14T15:33:02Z" user="Chrisser000" uid="1744824">
+  <member type="way" ref="40523391" role="outer"/>
+  <member type="way" ref="40523397" role="inner"/>
+  <tag k="building" v="yes"/>
+  <tag k="type" v="multipolygon"/>
+ </relation>
+  <relation id="195692" visible="true" version="3" changeset="28786460" timestamp="2015-02-12T00:13:53Z" user="Niels Elgaard Larsen" uid="1288">
+  <member type="way" ref="25503556" role="forward"/>
+  <member type="way" ref="38977353" role="forward"/>
+  <member type="way" ref="151097536" role="forward"/>
+  <member type="way" ref="151097532" role="forward"/>
+  <member type="way" ref="38977350" role="forward"/>
+  <member type="way" ref="38977351" role="forward"/>
+  <member type="way" ref="38977355" role="forward"/>
+  <tag k="from" v="Nyhavn"/>
+  <tag k="name" v="Canal Tours yellow"/>
+  <tag k="operator" v="Strömma Canal Tours"/>
+  <tag k="route" v="boat"/>
+  <tag k="to" v="Nyhavn"/>
+  <tag k="type" v="route"/>
+ </relation>
+</osm>
