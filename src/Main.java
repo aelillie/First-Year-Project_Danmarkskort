@@ -10,7 +10,7 @@ public class Main {
     public static void main(String[] args) {
         Model m = Model.getModel();
         try {
-            String filename = "data/newSmall.osm"; //Is used to get filename in order to determine the file format
+            String filename = "/data/newSmall.osm"; //Is used to get filename in order to determine the file format
             InputStream inputStream = Main.class.getResourceAsStream(filename);
             m.loadFile(filename, inputStream);
             m.setCurrentFilename(filename);

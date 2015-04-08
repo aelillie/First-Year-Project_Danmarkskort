@@ -99,7 +99,7 @@ public class MapIcon implements Serializable {
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException{
 
         Object type = stream.readObject();
-        if(type.getClass() == Path2D.Double.class) shape = (Shape) type;
+        if(type.getClass() == Path2D.Float.class) shape = (Shape) type;
         else coord = (Point2D) type;
         URL imgPath = (URL) stream.readObject();
         img = ImageIO.read(imgPath);
