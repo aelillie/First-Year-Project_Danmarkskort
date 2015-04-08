@@ -1,18 +1,10 @@
 package View;
 
-import Controller.MapMenuController;
 import Controller.SearchResultMouseHandler;
-import MapFeatures.Highway;
 import MapFeatures.Bounds;
-import Model.MapFeature;
-import Model.MapIcon;
-import Model.Model;
-import Model.PathCreater;
+import MapFeatures.Highway;
+import Model.*;
 
-import java.util.*;
-
-import Model.OSMHandler;
-import Model.Address;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.MatteBorder;
@@ -20,7 +12,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import static java.lang.Math.max;
 
@@ -752,7 +747,7 @@ public class View extends JFrame implements Observer {
                 }
 
             }
-                    //Draws the icons.
+            //Draws the icons.
 
             if (zoomLevel >= 17) {
                 for (MapIcon mapIcon : model.getMapIcons()) {
