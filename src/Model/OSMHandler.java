@@ -86,6 +86,7 @@ public class OSMHandler extends DefaultHandler {
                 nodeCoord = new Point2D.Float(lon.floatValue(),lat.floatValue());
                 node_map.put(id, coord);
                 break;
+
             }
             case "nd": { //references in a way, to other ways
                 long id = Long.parseLong(atts.getValue("ref"));
@@ -110,6 +111,7 @@ public class OSMHandler extends DefaultHandler {
                 wayId = Long.parseLong(atts.getValue("id"));
                 break;
             case "bounds": //bounds for the given map
+
                 float minlat = Float.parseFloat(atts.getValue("minlat"));
                 Double double_min = MapCalculator.latToY(minlat);
                 minlat = double_min.floatValue(); //transforming according to the Mercator projection
@@ -198,7 +200,7 @@ public class OSMHandler extends DefaultHandler {
                 }
                 else if (keyValue_map.containsKey("barrier")) quadTree.insert(new Barrier(way, fetchOSMLayer(), keyValue_map.get("barrier"), isArea));
                 else if (keyValue_map.containsKey("boundary")){
-                    quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary"))); //Appears in <relation
+                    //quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary"))); //Appears in <relation
 
                 }
                 else if (keyValue_map.containsKey("highway")) quadTree.insert(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea));
@@ -240,7 +242,9 @@ public class OSMHandler extends DefaultHandler {
                     } if (val.equals("boundary")){
                         Path2D path = PathCreater.createMultipolygon(memberReferences, wayId_map);
                         if(path == null) return;
-                        String name = keyValue_map.get("name").toLowerCase().trim();
+                        String name = keyValue_map.get("name");
+                        if(name == null) return;
+                        name.toLowerCase().trim();
                         Address addr = Address.newTown(name);
                         boundaryMap.put(addr, path);
                         addressList.add(addr);
@@ -273,7 +277,7 @@ public class OSMHandler extends DefaultHandler {
                         else if (isSTog) mapIcons.add(new MapIcon(nodeCoord, MapIcon.STogIcon));
                     }
                 } else if(keyValue_map.containsKey("name")) {
-
+                    /*
                     if(keyValue_map.containsKey("place")){
                         String place = keyValue_map.get("place");
                         if(place.equals("town") || place.equals("village") || place.equals("suburb") || place.equals("locality")|| place.equals("neighbourhood")){
@@ -282,13 +286,13 @@ public class OSMHandler extends DefaultHandler {
                             addressMap.put(addr, nodeCoord);
                             addressList.add(addr);
                         }
-                    }
+                    }*/
                 } else if (keyValue_map.containsKey("addr:street")){    //TODO uncomment!
-                    if(hasHouseNo && hasCity && hasPostcode){
+                    /*if(hasHouseNo && hasCity && hasPostcode){
                        Address addr = Address.newAddress(streetName.toLowerCase(), houseNumber.toLowerCase(), postCode.toLowerCase(), cityName.toLowerCase());
                         addressMap.put(addr, nodeCoord);
                         addressList.add(addr);
-                    }
+                    }*/
                 }
                 //else if (keyValue_map.containsKey("addr:city")) addCityName();
                 //else if (keyValue_map.containsKey("addr:postcode")) addPostcode();
