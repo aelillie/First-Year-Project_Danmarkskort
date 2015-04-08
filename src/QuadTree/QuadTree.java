@@ -3,14 +3,13 @@ package QuadTree;
 import Model.MapFeature;
 
 import java.awt.*;
-import java.awt.geom.PathIterator;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuadTree implements Serializable{
+    private static final long serialVersionUID = 8;
     private Node root;
 
     // helper node data type
