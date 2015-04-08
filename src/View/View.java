@@ -788,7 +788,7 @@ public class View extends JFrame implements Observer {
 
             //Transparent GUI elements
             g.setTransform(new AffineTransform());
-            g.setColor(new Color(0,0,0,180));
+            g.setColor(DrawAttribute.fadeblack);
             RoundRectangle2D optionsButtonArea = new RoundRectangle2D.Double(getContentPane().getWidth()-50,(int)(getContentPane().getHeight()-getContentPane().getHeight()*0.98),60,40,15,15);
             RoundRectangle2D zoomInOutArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2+10, 60, 80, 15, 15);
             RoundRectangle2D fullscreenArea = new RoundRectangle2D.Double(getContentPane().getWidth()-30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2+110,60,38,15,15);
@@ -798,38 +798,6 @@ public class View extends JFrame implements Observer {
             g.fill(fullscreenArea);
             g.fill(mapTypeButtonArea);
 
-                        // }
-/*
-                //AMALIE Iterator it = model.getStreetMap().entrySet().iterator();
-            while (it.hasNext()) {
-                int count1 = 0;
-                Map.Entry pair = (Map.Entry) it.next();
-                java.util.List<Shape> list = (java.util.List<Shape>) pair.getValue();
-                String streetName = (String) pair.getKey();
-                //g.setStroke(txSt);
-                TextDraw txtDr = new TextDraw();
-                System.out.println(streetName);
-                Path2D.Double street1 = new Path2D.Double();
-                g.setColor(Color.BLACK);
-                for (Shape street : list) {
-                    //if(count == 0){
-                    //	street1 =  (Path2D.Double) street;
-                    //	count++;
-                    //} else {
-                    //	street1.append(street,true);
-                    //}
-                    txtDr.draw(g,new GeneralPath(street),streetName,70.);
-                }
-            }
-*/
-
-            /*
-			//Prints out the current center coordinates
-			Point2D center = new Point2D.Double(getWidth() / 2, getHeight() / 2);
-			try {
-				System.out.println("Center: " + transform.inverseTransform(center, null));
-			} catch (NoninvertibleTransformException e) {} */
-                    //}
         }
     }
 

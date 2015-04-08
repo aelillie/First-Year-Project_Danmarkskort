@@ -65,8 +65,8 @@ public class Scalebar {
      * @param desiredDistance the desired distance in kilometers
      */
     private void setDesiredDistance(double lineWidth, double desiredDistance){
-        Point2D.Double transformedStart = new Point2D.Double();
-        Point2D.Double transformedEnd = new Point2D.Double();
+        Point2D.Float transformedStart = new Point2D.Float();
+        Point2D.Float transformedEnd = new Point2D.Float();
 
         try {
             transform.inverseTransform(lineStart, transformedStart); //Use inverse transform to calculate the points to their corresponding lat and lon according to our transform

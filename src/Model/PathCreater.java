@@ -46,7 +46,7 @@ public class PathCreater {
      * @return Path  The path connected by the Points
      */
     public static Path2D createWay(List<Point2D> coords) {
-        Path2D way = new Path2D.Double();
+        Path2D way = new Path2D.Float();
         Point2D coord = coords.get(0);
         way.moveTo(coord.getX(), coord.getY());
         for (int i = 1; i < coords.size(); i++) {

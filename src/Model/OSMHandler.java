@@ -75,12 +75,12 @@ public class OSMHandler extends DefaultHandler {
                 isBusstop = false; isMetro = false;  isSTog = false;
                 hasName = false; hasHouseNo = false; hasPostcode = false; hasCity = false;
 
-                double lat = Double.parseDouble(atts.getValue("lat"));
+                Double lat = Double.parseDouble(atts.getValue("lat"));
                 lat = MapCalculator.latToY(lat); //transforming according to the Mercator projection
-                double lon = Double.parseDouble(atts.getValue("lon"));
+                Double lon = Double.parseDouble(atts.getValue("lon"));
                 long id = Long.parseLong(atts.getValue("id"));
-                Point2D coord = new Point2D.Double(lon, lat);
-                nodeCoord = new Point2D.Double(lon,lat);
+                Point2D coord = new Point2D.Float(lon.floatValue(), lat.floatValue());
+                nodeCoord = new Point2D.Float(lon.floatValue(),lat.floatValue());
                 node_map.put(id, coord);
                 break;
             }
@@ -107,13 +107,15 @@ public class OSMHandler extends DefaultHandler {
                 wayId = Long.parseLong(atts.getValue("id"));
                 break;
             case "bounds": //bounds for the given map
-                double minlat = Double.parseDouble(atts.getValue("minlat"));
-                minlat = MapCalculator.latToY(minlat); //transforming according to the Mercator projection
-                double minlon = Double.parseDouble(atts.getValue("minlon"));
-                double maxlat = Double.parseDouble(atts.getValue("maxlat"));
-                maxlat = MapCalculator.latToY(maxlat); //transforming according to the Mercator projection
-                double maxlon = Double.parseDouble(atts.getValue("maxlon"));
-                Rectangle2D rect =  new Rectangle2D.Double(minlon, minlat, maxlon - minlon, maxlat - minlat);
+                float minlat = Float.parseFloat(atts.getValue("minlat"));
+                Double double_min = MapCalculator.latToY(minlat);
+                minlat = double_min.floatValue(); //transforming according to the Mercator projection
+                float minlon = Float.parseFloat(atts.getValue("minlon"));
+                float maxlat = Float.parseFloat(atts.getValue("maxlat"));
+                Double double_max = MapCalculator.latToY(maxlat);
+                maxlat = double_max.floatValue(); //transforming according to the Mercator projection
+                float maxlon = Float.parseFloat(atts.getValue("maxlon"));
+                Rectangle2D rect =  new Rectangle2D.Float(minlon, minlat, maxlon - minlon, maxlat - minlat);
                 bbox.setRect(rect);
                 quadTree = new QuadTree(bbox);
 
