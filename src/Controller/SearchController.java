@@ -106,7 +106,5 @@ public class SearchController extends MouseAdapter implements ActionListener {
         }
     }
 
-
-    //TODO: Get position when clicking a element from the scrollpane - scrollpane listener also
 }
 
