@@ -51,13 +51,23 @@ public class Address implements Comparable<Address> {
         return b.build();
     }
 
+    @Override
+    public String toString(){
+        if (floor() != "" && side() != "") {
+            String s = String.format("%s %s, %s. %s, %s %s", Address.capitalize(street()), Address.capitalize(house()),floor(), side(),postcode(),Address.capitalize(city)).trim();
+            return s;
+        } else if(house() != ""){
+            return String.format("%s %s, %s %s", Address.capitalize(street()), Address.capitalize(house()), postcode(), Address.capitalize(city)).trim();
+        } else {
+            return String.format("%s", Address.capitalize(street())).trim();
+        }
+    }
 
     /**
      * Specifies the string representation of an address object.
      * @return the string representation of an address object.
      */
-    @Override
-    public String toString(){
+    public String toStringForSort(){
         String s = street.trim() + " " + house.trim() + " " + floor.trim() + " " + side.trim()+" " + postcode.trim() + " " + city.trim();
         s = s.replaceAll(" +", " ");
         s = s.trim();
@@ -72,12 +82,12 @@ public class Address implements Comparable<Address> {
      */
     @Override
     public int compareTo(Address addr) {
-        return this.toString().compareTo(addr.toString()); //TODO: modify according to whether things like city is null
+        return this.toStringForSort().compareTo(addr.toStringForSort());
     }
 
     public int searchCompare(Address addr){
-        if(this.toString().startsWith(addr.toString())) return 0;
-        else return this.toString().compareTo(addr.toString());
+        if(this.toStringForSort().startsWith(addr.toStringForSort())) return 0;
+        else return this.toStringForSort().compareTo(addr.toStringForSort());
     }
 
     public static class Builder {
@@ -294,12 +304,41 @@ public class Address implements Comparable<Address> {
 
     }
 
+    /**
+     * Capitalizes a String
+     * @param string the string to be capitalized
+     * @return the capitalized string
+     */
+    public static String capitalize(String string) {
+        char[] chars = string.toCharArray();
+        boolean capitalize = true;
+
+        for (int i = 0; i < chars.length; i++) {
+            if (Character.isLetter(chars[i])) {
+                if (capitalize) {
+                    chars[i] = Character.toUpperCase(chars[i]);
+                }
+                capitalize = false;
+            } else {
+                if(Character.isWhitespace(chars[i])){
+                    capitalize = true;
+                } else if (Character.isDigit(chars[i])){
+                    capitalize = true;
+                }
+            }
+            if(chars[i] == '.'){
+                capitalize = true;
+            }
+        }
+        return new String(chars);
+    }
+
     @Override
     public boolean equals(Object obj){
         if (!(obj instanceof Address)) return false;
         if (obj == this) return true;
         Address addr = (Address) obj;
-        return this.toString().equals(addr.toString());
+        return this.toStringForSort().equals(addr.toStringForSort());
     }
 
     @Override

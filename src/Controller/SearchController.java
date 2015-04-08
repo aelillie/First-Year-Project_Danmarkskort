@@ -54,8 +54,9 @@ public class SearchController extends MouseAdapter implements ActionListener {
     private void addressSearch(){
         String input = view.getSearchArea().getText();
         if(!input.equals("") && input != null) {
-            input.trim().toLowerCase();
+            input = input.trim().toLowerCase();
             Address address = Address.parse(input);
+            if(address == null) return;
             Address[] results = model.searchForAddresses(address);
             if(results != null) view.addToResultPane(results);
             else view.getResultPane().setVisible(false);

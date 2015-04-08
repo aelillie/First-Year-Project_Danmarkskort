@@ -28,8 +28,10 @@ public class SearchResultMouseHandler extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
         Address selectedItem = view.getAddressSearchResults().getSelectedValue();
-        System.out.println("WOW something happened! (NOT)");
+        view.getSearchArea().setText(selectedItem.toString());
+        view.getCanvas().requestFocusInWindow();
         getAddressLocation(selectedItem);
+        view.getResultPane().setVisible(false);
 
     }
 
