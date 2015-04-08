@@ -19,9 +19,11 @@ public class OSMHandler extends DefaultHandler {
     private Map<Long, Point2D> node_map; //Relation between a nodes' id and coordinates
     private Map<String, String> keyValue_map; //relation between the keys and values in the XML file
     private Map<Long, Path2D> wayId_map; //Map of ways and their id's
+
     //Contains relevant places parsed as address objects linked to their coordinate.
     private Map<Address,Point2D> addressMap;
     private Map<Address, List<Path2D>> streetMap;
+    private Map<Address, Path2D> boundaryMap;
 
     private QuadTree quadTree;
     private List<Address> addressList; //list of all the addresses in the .osm file
@@ -50,6 +52,7 @@ public class OSMHandler extends DefaultHandler {
         wayId_map = new HashMap<>();
         addressMap = new HashMap<>();
         streetMap = new HashMap<>();
+        boundaryMap = new HashMap<>();
     }
 
     /**
@@ -194,15 +197,23 @@ public class OSMHandler extends DefaultHandler {
                       //  mapIcons.add(new MapIcon(way, MapIcon.atmIcon));}
                 }
                 else if (keyValue_map.containsKey("barrier")) quadTree.insert(new Barrier(way, fetchOSMLayer(), keyValue_map.get("barrier"), isArea));
-                else if (keyValue_map.containsKey("boundary")) quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary"))); //Appears in <relation
+                else if (keyValue_map.containsKey("boundary")){
+                    quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary"))); //Appears in <relation
+
+                }
                 else if (keyValue_map.containsKey("highway")) quadTree.insert(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea));
                 else if (keyValue_map.containsKey("railway")) quadTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  quadTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
                 if (keyValue_map.containsKey("name")) {
+                    String name= keyValue_map.get("name").toLowerCase().trim();
                     if(keyValue_map.containsKey("highway")||keyValue_map.containsKey("cycleway")||keyValue_map.containsKey("motorroad")) {
-                        String street = keyValue_map.get("name").toLowerCase().trim();
-                        Address addr = Address.newStreet(street);
+                        Address addr = Address.newStreet(name);
                         addStreetToMap(way, addr);
+                    }
+                    if(keyValue_map.containsKey("boundary")){
+                        Address addr = Address.newStreet(name);
+                        boundaryMap.put(addr,way);
+                        addressList.add(addr);
                     }
                 }
                 wayId_map.put(wayId, way);
@@ -217,6 +228,7 @@ public class OSMHandler extends DefaultHandler {
                         if (keyValue_map.containsKey("building"))
                             quadTree.insert(new Multipolygon(path, fetchOSMLayer(), "building"));
 
+
                         /*if(keyValue_map.containsKey("place")){
                             //TODO islets
 
@@ -225,6 +237,13 @@ public class OSMHandler extends DefaultHandler {
                             if(keyValue_map.get("natural").equals("water"))
                                 quadTree.insert(new Natural(path, fetchOSMLayer(), "water"));*/
                         //TODO How do draw harbor.
+                    } if (val.equals("boundary")){
+                        Path2D path = PathCreater.createMultipolygon(memberReferences, wayId_map);
+                        if(path == null) return;
+                        String name = keyValue_map.get("name").toLowerCase().trim();
+                        Address addr = Address.newTown(name);
+                        boundaryMap.put(addr, path);
+                        addressList.add(addr);
                     }
 
                         //TODO look at busroute and so forth
@@ -246,8 +265,7 @@ public class OSMHandler extends DefaultHandler {
                     else if(val.equals("atm")){
                             mapIcons.add(new MapIcon(nodeCoord,MapIcon.atmIcon));
                         }
-                    }
-
+                }
                 else if (keyValue_map.containsKey("railway")) {
                     String val = keyValue_map.get("railway");
                     if (val.equals("station")) {
@@ -255,17 +273,16 @@ public class OSMHandler extends DefaultHandler {
                         else if (isSTog) mapIcons.add(new MapIcon(nodeCoord, MapIcon.STogIcon));
                     }
                 } else if(keyValue_map.containsKey("name")) {
-                    String name = keyValue_map.get("name");
+
                     if(keyValue_map.containsKey("place")){
                         String place = keyValue_map.get("place");
-                        name = name.toLowerCase();
-                        Address addr = Address.newTown(name);
                         if(place.equals("town") || place.equals("village") || place.equals("suburb") || place.equals("locality")|| place.equals("neighbourhood")){
+                            String name = keyValue_map.get("name").toLowerCase();
+                            Address addr = Address.newTown(name);
                             addressMap.put(addr, nodeCoord);
                             addressList.add(addr);
                         }
                     }
-
                 } else if (keyValue_map.containsKey("addr:street")){    //TODO uncomment!
                     if(hasHouseNo && hasCity && hasPostcode){
                        Address addr = Address.newAddress(streetName.toLowerCase(), houseNumber.toLowerCase(), postCode.toLowerCase(), cityName.toLowerCase());
@@ -341,8 +358,8 @@ public class OSMHandler extends DefaultHandler {
         }
     }
 
-    public Address[] searchForAddressess(Address add){
-        return AddressSearcher.searchForAddresses(add, addressList, addressMap);
+    public Address[] searchForAddressess(Address add, int type){
+        return AddressSearcher.searchForAddresses(add, addressList, addressMap, type);
     }
 
 
@@ -375,4 +392,5 @@ public class OSMHandler extends DefaultHandler {
 
     public Map<Address,Point2D> getAddressMap(){ return  addressMap;}
     public Map<Address, List<Path2D>> getStreetMap() {return streetMap;}
+    public Map<Address, Path2D> getBoundaryMap(){ return boundaryMap;}
 }

@@ -51,6 +51,7 @@ public class View extends JFrame implements Observer {
 
     private List<Path2D> currentStreetLocations;
     private Point2D currentAddressLocation;
+    private Path2D currentBoundaryLocation;
 
     private boolean isFullscreen = false;
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -374,15 +375,23 @@ public class View extends JFrame implements Observer {
 
     public void setCurrentStreet(List<Path2D> streetLocation){
         currentAddressLocation = null;
+        currentBoundaryLocation = null;
         currentStreetLocations = streetLocation;
         canvas.repaint();
     }
 
     public void setCurrentAddress(Point2D addrLocation){
         currentStreetLocations = null;
+        currentBoundaryLocation = null;
         currentAddressLocation = addrLocation;
         canvas.repaint();
+    }
 
+    public void setCurrentBoundaryLocation(Path2D boundaryLocation){
+        currentAddressLocation = null;
+        currentStreetLocations = null;
+        currentBoundaryLocation = boundaryLocation;
+        canvas.repaint();
     }
 
     @Override

@@ -57,9 +57,11 @@ public class Address implements Comparable<Address> {
             String s = String.format("%s %s, %s. %s, %s %s", Address.capitalize(street()), Address.capitalize(house()),floor(), side(),postcode(),Address.capitalize(city)).trim();
             return s;
         } else if(house() != ""){
-            return String.format("%s %s, %s %s", Address.capitalize(street()), Address.capitalize(house()), postcode(), Address.capitalize(city)).trim();
-        } else {
+            return String.format("%s %s, %s %s", Address.capitalize(street()), Address.capitalize(house()), postcode(), Address.capitalize(city())).trim();
+        } else if(street() != ""){
             return String.format("%s", Address.capitalize(street())).trim();
+        } else {
+            return String.format("%s", Address.capitalize(city())).trim();
         }
     }
 
@@ -85,10 +87,21 @@ public class Address implements Comparable<Address> {
         return this.toStringForSort().compareTo(addr.toStringForSort());
     }
 
-    public int searchCompare(Address addr){
-        if(this.toStringForSort().startsWith(addr.toStringForSort())) return 0;
-        else return this.toStringForSort().compareTo(addr.toStringForSort());
+
+    //Type of compare: either 1 = startsWith compare, 2 = equality compare and else contains compare
+    public int searchCompare(Address addr, int type){
+       if(type == 1) {
+           if (this.toStringForSort().startsWith(addr.toStringForSort())) return 0;
+           else return this.toStringForSort().compareTo(addr.toStringForSort());
+       } else if (type == 2){
+           if(this.toStringForSort().equals(addr.toStringForSort())) return 0;
+           else return this.toStringForSort().compareTo(addr.toStringForSort());
+       } else {
+           if(this.toStringForSort().contains(addr.toStringForSort())) return 0;
+           else return this.toStringForSort().compareTo(addr.toStringForSort());
+       }
     }
+
 
     public static class Builder {
         private String street = "", house = "", floor = "",
