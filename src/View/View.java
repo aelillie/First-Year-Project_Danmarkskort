@@ -1,18 +1,10 @@
 package View;
 
-import Controller.MapMenuController;
 import Controller.SearchResultMouseHandler;
-import MapFeatures.Highway;
 import MapFeatures.Bounds;
-import Model.MapFeature;
-import Model.MapIcon;
-import Model.Model;
-import Model.PathCreater;
+import MapFeatures.Highway;
+import Model.*;
 
-import java.util.*;
-
-import Model.OSMHandler;
-import Model.Address;
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.MatteBorder;
@@ -20,7 +12,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import static java.lang.Math.max;
 
@@ -752,7 +747,7 @@ public class View extends JFrame implements Observer {
                 }
 
             }
-                    //Draws the icons.
+            //Draws the icons.
 
             if (zoomLevel >= 17) {
                 for (MapIcon mapIcon : model.getMapIcons()) {
@@ -798,38 +793,6 @@ public class View extends JFrame implements Observer {
             g.fill(fullscreenArea);
             g.fill(mapTypeButtonArea);
 
-                        // }
-/*
-                //AMALIE Iterator it = model.getStreetMap().entrySet().iterator();
-            while (it.hasNext()) {
-                int count1 = 0;
-                Map.Entry pair = (Map.Entry) it.next();
-                java.util.List<Shape> list = (java.util.List<Shape>) pair.getValue();
-                String streetName = (String) pair.getKey();
-                //g.setStroke(txSt);
-                TextDraw txtDr = new TextDraw();
-                System.out.println(streetName);
-                Path2D.Double street1 = new Path2D.Double();
-                g.setColor(Color.BLACK);
-                for (Shape street : list) {
-                    //if(count == 0){
-                    //	street1 =  (Path2D.Double) street;
-                    //	count++;
-                    //} else {
-                    //	street1.append(street,true);
-                    //}
-                    txtDr.draw(g,new GeneralPath(street),streetName,70.);
-                }
-            }
-*/
-
-            /*
-			//Prints out the current center coordinates
-			Point2D center = new Point2D.Double(getWidth() / 2, getHeight() / 2);
-			try {
-				System.out.println("Center: " + transform.inverseTransform(center, null));
-			} catch (NoninvertibleTransformException e) {} */
-                    //}
         }
     }
 
