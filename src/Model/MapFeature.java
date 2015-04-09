@@ -48,10 +48,15 @@ public abstract class MapFeature implements Serializable, MapData {
      */
     public abstract void setValueAttributes(); //Every new map feature calls this method to set specific attributes
 
-    /**
-     * Assigns a value name from the ENUM class ValueName to map feature created
-     * @param valueName ENUM value name
-     */
+    @Override
+    public String toString() {
+        return "MapFeature{" +
+                ", layer_value=" + layer_value +
+                ", value='" + value + '\'' +
+                ", isArea=" + isArea +
+                ", valueName=" + valueName +
+                '}';
+    }
 
     //GETTERS AND SETTERS
     public void setValueName(ValueName valueName) {
