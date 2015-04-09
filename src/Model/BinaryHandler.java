@@ -27,7 +27,6 @@ public final class BinaryHandler {
         QuadTree qT = model.getQuadTree();
         out.writeObject(qT);
 
-        out.writeObject(model.getMapIcons());
 
         out.writeObject(model.getCoastlines());
 
@@ -49,13 +48,13 @@ public final class BinaryHandler {
         //get the bounds of the map
         Rectangle2D rec = (Rectangle2D) in.readObject();
 
+        long time = System.nanoTime();
         model.setBBox(rec);
         QuadTree qT = (QuadTree) in.readObject();
 
         model.setQuadTree(qT);
+        System.out.println("done in " + (System.nanoTime() - time) / 1000000);
 
-        List<MapIcon> icons = model.getMapIcons();
-        icons = (List<MapIcon>)in.readObject();
 
         List<Coastline> coasts = model.getCoastlines();
         coasts.addAll((List<Coastline>)in.readObject());

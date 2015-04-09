@@ -3,14 +3,16 @@ package Model;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
 
-public class MapIcon implements Serializable {
+public class MapIcon implements Serializable, MapData {
     public static final long serialVersionUID = 5;
     public static final URL metroIcon = MapIcon.class.getResource("/data/metroIcon.png");
     public static final URL STogIcon = MapIcon.class.getResource("/data/stogIcon.png");
@@ -36,7 +38,6 @@ public class MapIcon implements Serializable {
 
     static ArrayList<URL> icons = addIcons();
     BufferedImage img;
-    Shape shape;
     Point2D coord;
     URL imgPath;
 
@@ -47,13 +48,10 @@ public class MapIcon implements Serializable {
      * @param imgPath The path of the image file.
      */
     public MapIcon(Shape shape, URL imgPath){
-        try {
-            img = ImageIO.read(imgPath);
-            this.shape = shape;
-            this.imgPath = imgPath;
-        } catch(IOException e){
-            e.printStackTrace(); //Try to load again?
-        }
+
+        coord = new Point2D.Float((float)shape.getBounds2D().getCenterX(), (float)shape.getBounds2D().getCenterY());
+        this.imgPath = imgPath;
+
     }
 
     /**
@@ -63,13 +61,11 @@ public class MapIcon implements Serializable {
      * @param imgPath The path of the image file.
      */
     public MapIcon(Point2D coord, URL imgPath){
-        try {
-            img = ImageIO.read(imgPath);
+
+
             this.coord = coord;
             this.imgPath = imgPath;
-        } catch(IOException e){
-            e.printStackTrace(); //Try to load again?
-        }
+
     }
 
     /**
@@ -78,35 +74,44 @@ public class MapIcon implements Serializable {
      * @param transform The AffineTransform context.
      */
     public void draw(Graphics2D g, AffineTransform transform){
+        try{
+            if(img == null)
+                img = ImageIO.read(imgPath);
+        }catch(IOException e){
+            e.printStackTrace();
+        }
         double x;
         double y;
-        if(shape != null) { //If the Icon is created using a shape (e.g. a parking lot)
-            x = shape.getBounds2D().getCenterX();
-            y = shape.getBounds2D().getCenterY();
-        } else { //If the Icon is created using a coordinate (e.g. a bus station)
+
             x = coord.getX();
             y = coord.getY();
-        }
+
         AffineTransform it = AffineTransform.getTranslateInstance(x, y);
         it.scale((1 / transform.getScaleX()), (1 / transform.getScaleY())); //Sets off against the transform of the context, scaling the transform of the icon accordingly.
         g.drawImage(img, it, null);
     }
 
     private void writeObject(ObjectOutputStream stream)throws IOException{
-        if(shape != null) stream.writeObject(shape);
-        else stream.writeObject(coord);
+        stream.writeObject(coord);
         stream.writeObject(imgPath);
     }
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException{
 
         Object type = stream.readObject();
-        if(type.getClass() == Path2D.Float.class) shape = (Shape) type;
-        else coord = (Point2D) type;
+        coord = (Point2D) type;
         URL imgPath = (URL) stream.readObject();
-        img = ImageIO.read(imgPath);
         this.imgPath = imgPath;
 
+    }
+
+    public Class getType(){
+        return this.getClass();
+    }
+
+    public Point2D getPosition(){
+
+        return coord;
     }
 
     private static ArrayList<URL> addIcons(){
