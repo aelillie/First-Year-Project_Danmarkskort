@@ -400,4 +400,21 @@ public class OSMHandler extends DefaultHandler {
     public Map<Address,Point2D> getAddressMap(){ return  addressMap;}
     public Map<Address, List<Path2D>> getStreetMap() {return streetMap;}
     public Map<Address, Path2D> getBoundaryMap(){ return boundaryMap;}
+    public List<Address> getAddressList(){return addressList;}
+
+    public void setAddressMap(Map<Address, Point2D> addressMap) {
+        this.addressMap = addressMap;
+    }
+
+    public void setStreetMap(Map<Address, List<Path2D>> streetMap) {
+        this.streetMap = streetMap;
+    }
+
+    public void setBoundaryMap(Map<Address, Path2D> boundaryMap) {
+        this.boundaryMap = boundaryMap;
+    }
+
+    public void setAddressList(List<Address> addressList) {
+        this.addressList = addressList;
+    }
 }

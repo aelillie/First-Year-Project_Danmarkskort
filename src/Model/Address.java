@@ -1,12 +1,13 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Address implements Comparable<Address> {
+public class Address implements Comparable<Address>, Serializable {
     private String street, house, floor, side, postcode, city;
     static private List<Pattern> patternList = new ArrayList<>();
     private static List<Address> addressList = new ArrayList<>();
