@@ -442,7 +442,7 @@ public class View extends JFrame implements Observer {
             transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
             pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
             checkForZoomOut();
-        }System.out.println("level "+zoomLevel);
+        }System.out.println("level " +zoomLevel);
         System.out.println("factor " + zoomFactor);
     }
 
@@ -601,8 +601,6 @@ public class View extends JFrame implements Observer {
         //Rectangle2D rec = new Rectangle2D.Double(position.getX(), position.getY(),0,0);
         ArrayList<List<MapData>> node = model.getVisibleData(bounds.getBounds());
 
-
-
         MapFeature champion = null;
         Line2D championLine = null;
         for(int i = 0; i < node.size(); i++) {
@@ -684,35 +682,18 @@ public class View extends JFrame implements Observer {
     class Canvas extends JComponent {
         public static final long serialVersionUID = 4;
         Stroke min_value = new BasicStroke(Float.MIN_VALUE);
+        private ArrayList<MapFeature> mapFeatures = new ArrayList<>();
+        private ArrayList<MapIcon> mapIcons = new ArrayList<>();
 
         @Override
         public void paint(Graphics _g) {
             Graphics2D g = (Graphics2D) _g;
-
-            bounds.updateBounds(getBounds());
+            getData();
 
             //Set the Transform for Graphic2D element before drawing.
             g.setTransform(transform);
             if (antialias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            Rectangle2D windowBounds = bounds.getBounds();
-
-            ArrayList<List<MapData>> mapDatas = model.getVisibleData(windowBounds);
-            ArrayList<MapFeature> mapFeatures = new ArrayList<>();
-            ArrayList<MapIcon> mapIcons = new ArrayList<>();
-
-
-            for(int i = 0; i < mapDatas.size(); i++){
-                for(MapData mD : mapDatas.get(i)){
-                    if(mD.getType() == MapIcon.class) {
-                        if (zoomLevel > 13)
-                            mapIcons.add((MapIcon) mD);
-                    }
-                    else mapFeatures.add((MapFeature) mD);
-
-                }
-
-            }
 
 
             g.setStroke(min_value); //Just for good measure.
@@ -741,7 +722,7 @@ public class View extends JFrame implements Observer {
 
             for (MapFeature mapFeature : mapFeatures) {
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                if (zoomLevel >= drawAttribute.getZoomLevel()) { //TODO: NullPointerException when loading "København" and changing to transport map
+                if (zoomLevel >= drawAttribute.getZoomLevel()) {
                     if (mapFeature.isArea()) {
                         g.setColor(drawAttribute.getColor());
                         g.fill(mapFeature.getShape());
@@ -815,13 +796,7 @@ public class View extends JFrame implements Observer {
 
             scalebar = new Scalebar(g, zoomLevel, View.this, transform);
 
-            if(nearestNeighbor != null) {
-
-                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(nearestNeighbor.getValueName());
-                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
-                g.setColor(Color.CYAN);
-                g.draw(nearestNeighbor.getShape());
-            }
+            paintNeighbor(g);
 
             //Draws chosen searchResult (either street or address)
             //Current address:
@@ -850,6 +825,36 @@ public class View extends JFrame implements Observer {
             g.fill(fullscreenArea);
             g.fill(mapTypeButtonArea);
 
+        }
+
+        private void getData(){
+            Rectangle2D windowBounds = bounds.getBounds();
+
+            bounds.updateBounds(getBounds());
+            ArrayList<List<MapData>> mapDatas = model.getVisibleData(windowBounds);
+            mapFeatures = new ArrayList<>();
+            mapIcons = new ArrayList<>();
+
+
+            for(int i = 0; i < mapDatas.size(); i++){
+                for(MapData mD : mapDatas.get(i)){
+                    if(mD.getType() == MapIcon.class) {
+                        if (zoomLevel > 13)
+                            mapIcons.add((MapIcon) mD);
+                    }
+                    else mapFeatures.add((MapFeature) mD);
+                }
+            }
+        }
+
+        private void paintNeighbor(Graphics2D g){
+            if(nearestNeighbor != null) {
+
+                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(nearestNeighbor.getValueName());
+                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
+                g.setColor(Color.CYAN);
+                g.draw(nearestNeighbor.getShape());
+            }
         }
     }
 

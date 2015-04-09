@@ -4,6 +4,7 @@ import MapFeatures.Building;
 import MapFeatures.Highway;
 import Model.MapData;
 import Model.MapFeature;
+import Model.MapIcon;
 import Model.PathCreater;
 import QuadTree.QuadTree;
 import org.junit.Before;
@@ -14,6 +15,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -50,7 +52,7 @@ public class QuadTreeTest {
         MapFeature mf2 = new Highway(paths.get(1), 0, "trunk", false);
         MapFeature mf3 = new Building(paths.get(2), 0, "building");
         MapFeature mf4 = new Highway(paths.get(3), 0, "footway", false);
-
+        MapIcon mI1 = new MapIcon(new Point2D.Float(10,10),MapIcon.parkingIcon);
 
         quadTree.insert(mf1);
         quadTree.insert(mf2);
@@ -94,6 +96,24 @@ public class QuadTreeTest {
         assertTrue(!Data.get(1).isEmpty());
         assertTrue(!Data.get(2).isEmpty());
         assertTrue(!Data.get(3).isEmpty());
+
+    }
+
+    @Test(timeout = 800)
+    public void TestEfficiency(){
+        ArrayList<Point2D> points = new ArrayList<>();
+        Random r = new Random();
+        for(int i = 0; i < 50000; i++){
+            if(r.nextBoolean()) {
+                points.clear();
+                points.add(new Point2D.Float((i * 4 % 100) + 50, i % 100));
+                points.add(new Point2D.Float((i * 10 / 2 % 100) + 50, i / 2 % 100));
+                quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false));
+            }else{
+                quadTree.insert(new MapIcon(new Point2D.Float((i * 4 % 100) + 50, i % 100),MapIcon.busIcon));
+            }
+        }
+
 
     }
 
