@@ -22,6 +22,7 @@ public class QuadTree implements Serializable{
         Node NW, NE, SE, SW;                   // four subtrees
         ArrayList<MapData> value;
 
+
         Node(Double x, Double y, Double width, Double height) {
             this.x = x;
             this.y = y;
@@ -50,6 +51,10 @@ public class QuadTree implements Serializable{
 
         }
 
+        /**
+         * Add a new Value, check if node is full
+         * @param values - Value to be stored in node
+         */
         public void addvalue(MapData values){
             if(value.size() > 1000){
                 subDivide();
@@ -59,6 +64,10 @@ public class QuadTree implements Serializable{
 
     }
 
+    /**
+     * Create an instance from a bbox. Splitting the initial root using bbox values.
+     * @param bbox - Bounds containing all values.
+     */
     public QuadTree(Rectangle2D bbox){
 
         root = new Node(bbox.getCenterX(),bbox.getCenterY(), bbox.getWidth(), bbox.getHeight());
@@ -72,6 +81,8 @@ public class QuadTree implements Serializable{
      * @param value Value
      */
     public void insert(MapData value) {
+
+        //First check what Type it is then use its coordinates to store it in the QuadTree
         if(value.getType() == MapIcon.class) {
             MapIcon mI = (MapIcon) value;
             insert(root, mI.getPosition().getX(), mI.getPosition().getY(), value);
@@ -87,6 +98,7 @@ public class QuadTree implements Serializable{
 
     private void insert(Node h, Double x, Double y, MapData value) {
         //// if (eq(x, h.x) && eq(y, h.y)) h.value = value;  // duplicate
+
         if ( less(x, h.x) &&  less(y, h.y)) {
             if(h.NW == null) h.addvalue(value);
             else insert(h.NW, x, y, value);
@@ -113,7 +125,7 @@ public class QuadTree implements Serializable{
      */
     public ArrayList<List<MapData>> query2D(Shape rect) {
 
-        ArrayList<List<MapData>> values = new ArrayList<>();
+        ArrayList<List<MapData>> values = new ArrayList<>(); //List of list of All values in rect to be returned
         if(rect != null)
             query2D(root, rect, values);
         return values;
@@ -129,6 +141,8 @@ public class QuadTree implements Serializable{
         if (rect.intersects(h.x- h.width,h.y - h.height, h.width*2, h.height*2) || rect.contains(h.x, h.y))
             if(!h.value.isEmpty())
             values.add(h.value);
+
+        //Recursive calls. Checking what nodes to search in.
         if ( less(xmin, h.x) &&  less(ymin, h.y)) query2D(h.NW, rect, values);
         if ( less(xmin, h.x) && !less(ymax, h.y)) query2D(h.SW, rect, values);
         if (!less(xmax, h.x) &&  less(ymin, h.y)) query2D(h.NE, rect, values);

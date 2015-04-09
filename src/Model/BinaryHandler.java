@@ -3,9 +3,12 @@ package Model;
 import MapFeatures.Coastline;
 import QuadTree.QuadTree;
 
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Helper class to save and load data in binary format
@@ -23,6 +26,10 @@ public final class BinaryHandler {
         Model model = Model.getModel();
         out.writeObject(model.getBbox().getBounds2D());
 
+        out.writeObject(model.getOSMReader().getAddressMap());
+        out.writeObject(model.getOSMReader().getStreetMap());
+        out.writeObject(model.getOSMReader().getBoundaryMap());
+        out.writeObject(model.getOSMReader().getAddressList());
 
         QuadTree qT = model.getQuadTree();
         out.writeObject(qT);
@@ -47,6 +54,16 @@ public final class BinaryHandler {
         model.getOSMReader().initializeCollections();
         //get the bounds of the map
         Rectangle2D rec = (Rectangle2D) in.readObject();
+
+
+        model.getOSMReader().setAddressMap((Map<Address,Point2D>) in.readObject());
+
+        model.getOSMReader().setStreetMap((Map<Address, List<Path2D>>) in.readObject());
+
+        model.getOSMReader().setBoundaryMap((Map<Address, Path2D>) in.readObject());
+
+        model.getOSMReader().setAddressList((List<Address>) in.readObject());
+
 
         long time = System.nanoTime();
         model.setBBox(rec);
