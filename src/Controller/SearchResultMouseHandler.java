@@ -48,6 +48,7 @@ public class SearchResultMouseHandler extends MouseAdapter {
             v.setCurrentStreet(streetLocation);
         } else if(boundaryLocation == null && streetLocation == null){
             v.setCurrentAddress(addressLocation);
+            //v.searchResultChosen(addressLocation.getX(),addressLocation.getY());
         } else if(streetLocation == null && addressLocation == null){
             v.setCurrentBoundaryLocation(boundaryLocation);
         }

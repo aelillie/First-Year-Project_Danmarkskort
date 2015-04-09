@@ -235,9 +235,7 @@ public class View extends JFrame implements Observer {
 
     private void makeResultPane(){
         resultPane = new JScrollPane();
-
        //resultPane.setBounds(26,52,286,200);
-
     }
 
     public void addToResultPane(Address[] resultArray){
@@ -369,8 +367,37 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
-    public void searchResultChosen(){
-        //TODO: Something with affinetransform and panning to the chosen location
+    public void searchResultChosen(double lon, double lat){
+
+        Point2D sourcePoint = new Point2D.Double(lon,lat);
+        Point2D destinationPoint = new Point2D.Double();
+        transform.transform(sourcePoint,destinationPoint);
+        Point2D northWestSource = new Point2D.Double(destinationPoint.getX()-300, destinationPoint.getY()-300);
+        Point2D southEastSource = new Point2D.Double(destinationPoint.getX()+300, destinationPoint.getY()+300);
+        Point2D northWest = new Point2D.Double();
+        Point2D southEast = new Point2D.Double();
+
+        try {
+            transform.inverseTransform(northWestSource, northWest);
+            transform.inverseTransform(southEastSource, southEast);
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
+        System.out.println(northWest);
+        System.out.println(southEast);
+
+        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+        double scaleWidth = southEast.getX()-northWest.getX();
+        double scaleHeight = southEast.getY()- northWest.getY();
+        double width = screenSize.getWidth();
+        double height = screenSize.getHeight();
+
+        double xscale = width / scaleWidth;
+        double yscale = height / scaleHeight;
+        double scale = max(xscale, yscale);
+        transform.setToScale(scale, scale);
+        transform.setToTranslation(-northWest.getX(), -southEast.getY());
     }
 
     public void setCurrentStreet(List<Path2D> streetLocation){
