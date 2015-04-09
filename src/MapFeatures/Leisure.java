@@ -19,7 +19,6 @@ public class Leisure extends MapFeature {
 
     @Override
     public void setPreDefValues() {
-        if(value.equals("park")) layer_value = 5;
     }
 
     @Override

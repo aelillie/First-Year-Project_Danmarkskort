@@ -27,8 +27,6 @@ public class OSMHandler extends DefaultHandler {
 
     private QuadTree quadTree;
     private List<Address> addressList; //list of all the addresses in the .osm file
-    private List<MapIcon> mapIcons; //contains all the icons to be drawn
-    private List<MapIcon> transportIcons;
     private List<Long> memberReferences; //member referenced in a relation of ways
     private List<Point2D> wayCoords; //List of referenced coordinates used to make up a single way
     private static List<Coastline> coastlines; //List of all of the coastlines to be drawn
@@ -47,8 +45,6 @@ public class OSMHandler extends DefaultHandler {
         memberReferences = new ArrayList<>();
         addressList = new ArrayList<>();
         wayCoords = new ArrayList<>();
-        mapIcons = new ArrayList<>();
-        transportIcons = new ArrayList<>();
         node_map = new HashMap<>();
         keyValue_map = new HashMap<>();
         wayId_map = new HashMap<>();
@@ -113,7 +109,6 @@ public class OSMHandler extends DefaultHandler {
                 wayId = Long.parseLong(atts.getValue("id"));
                 break;
             case "bounds": //bounds for the given map
-
                 float minlat = Float.parseFloat(atts.getValue("minlat"));
                 Double double_min = MapCalculator.latToY(minlat);
                 minlat = double_min.floatValue(); //transforming according to the Mercator projection
@@ -195,10 +190,10 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("amenity")) {
                     quadTree.insert(new Amenity(way, fetchOSMLayer(), keyValue_map.get("amenity"), keyValue_map.containsKey("building")));
                     if (keyValue_map.get("amenity").equals("parking")) {
-                        mapIcons.add(new MapIcon(way, MapIcon.parkingIcon));}
+                        quadTree.insert(new MapIcon(way, MapIcon.parkingIcon));}
 
                     //if(keyValue_map.get("amenity").equals("atm")){
-                      //  mapIcons.add(new MapIcon(way, MapIcon.atmIcon));}
+                      //  quadTree.insert(new MapIcon(way, MapIcon.atmIcon));}
                 }
                 else if (keyValue_map.containsKey("barrier")) quadTree.insert(new Barrier(way, fetchOSMLayer(), keyValue_map.get("barrier"), isArea));
                 else if (keyValue_map.containsKey("boundary")){
@@ -261,26 +256,26 @@ public class OSMHandler extends DefaultHandler {
                 if (keyValue_map.containsKey("highway")) {
                     String val = keyValue_map.get("highway");
                     if (val.equals("bus_stop") && isBusstop) {
-                        transportIcons.add(new MapIcon(nodeCoord, MapIcon.busIcon));
+                        quadTree.insert(new MapIcon(nodeCoord, MapIcon.busIcon));
                     }
                 }
                 else if(keyValue_map.containsKey("amenity")) {
                     String val = keyValue_map.get("amenity");
                     if(val.equals("pub") || val.equals("bar")) {
-                            mapIcons.add(new MapIcon(nodeCoord, MapIcon.pubIcon));}
+                        quadTree.insert(new MapIcon(nodeCoord, MapIcon.pubIcon));}
                     else if(val.equals("atm")){
-                            mapIcons.add(new MapIcon(nodeCoord,MapIcon.atmIcon));
+                        quadTree.insert(new MapIcon(nodeCoord,MapIcon.atmIcon));
                         }
                 }
                 else if (keyValue_map.containsKey("railway")) {
                     String val = keyValue_map.get("railway");
                     if (val.equals("station")) {
-                        if (isMetro) transportIcons.add(new MapIcon(nodeCoord, MapIcon.metroIcon));
-                        else if (isSTog) transportIcons.add(new MapIcon(nodeCoord, MapIcon.STogIcon));
+                        if (isMetro) quadTree.insert(new MapIcon(nodeCoord, MapIcon.metroIcon));
+                        else if (isSTog) quadTree.insert(new MapIcon(nodeCoord, MapIcon.STogIcon));
                     }
                 } else if(keyValue_map.containsKey("name")) {
-                    /*
-                    if(keyValue_map.containsKey("place")){
+
+                   /* if(keyValue_map.containsKey("place")){
                         String place = keyValue_map.get("place");
                         if(place.equals("town") || place.equals("village") || place.equals("suburb") || place.equals("locality")|| place.equals("neighbourhood")){
                             String name = keyValue_map.get("name").toLowerCase();
@@ -394,17 +389,13 @@ public class OSMHandler extends DefaultHandler {
     public QuadTree getQuadTree() {
         return quadTree;
     }
-    public List<MapIcon> getMapIcons() {return mapIcons;}
+
     public List<Point2D> getWayCoords(){return wayCoords;}
     public Map<Long,Path2D> getWayIdMap(){return wayId_map;}
     public Map<Long, Point2D> getNodeMap(){return node_map;}
     public ArrayList<Rectangle2D> getNodes(){return quadTree.getNodeRects();}
 
     public void setQuadTree(QuadTree quadTree) {this.quadTree = quadTree; }
-
-    public List<MapIcon> getTransportIcons() {
-        return transportIcons;
-    }
 
     public Map<Address,Point2D> getAddressMap(){ return  addressMap;}
     public Map<Address, List<Path2D>> getStreetMap() {return streetMap;}

@@ -19,8 +19,9 @@ public class Building extends MapFeature {
 
     @Override
     public void setPreDefValues() {
-        if (value.equals("yes")) layer_value = 45;
+        if (value.equals("yes")) layer_value = 19;
     }
+
 
     @Override
     public void setValueAttributes() {

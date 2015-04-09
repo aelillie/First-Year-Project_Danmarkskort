@@ -10,9 +10,15 @@ public class Natural extends MapFeature {
     public Natural(Path2D way, int layer_value, String value) {
         super(way, layer_value, value);
         isArea = true;
+        super.setPreDefValues();
         setValueAttributes();
         setValueIcon();
 
+    }
+
+    @Override
+    public void setPreDefValues() {
+        if (value.equals("water")) layer_value = 6;
     }
 
     @Override

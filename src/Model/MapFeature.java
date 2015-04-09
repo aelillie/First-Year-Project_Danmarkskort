@@ -9,7 +9,7 @@ import java.io.Serializable;
  * the OSMHandler. When an a map feature is created, it is given an ENUM value name, and in some cases,
  * whether the map feature is an area or not.
  */
-public abstract class MapFeature implements Serializable {
+public abstract class MapFeature implements Serializable, MapData {
     protected Path2D way;
     protected int layer_value;
     protected String value;
@@ -77,5 +77,9 @@ public abstract class MapFeature implements Serializable {
 
     public int getLayer_value() {
         return layer_value;
+    }
+
+    public Class getType(){
+        return this.getClass().getSuperclass();
     }
 }

@@ -566,15 +566,18 @@ public class View extends JFrame implements Observer {
     public void findNearest(Point position){
         if(zoomLevel < 11) return;
         //Rectangle2D rec = new Rectangle2D.Double(position.getX(), position.getY(),0,0);
-        ArrayList<List<MapFeature>> node = model.getVisibleData(bounds.getBounds());
+        ArrayList<List<MapData>> node = model.getVisibleData(bounds.getBounds());
+
+
 
         MapFeature champion = null;
         Line2D championLine = null;
         for(int i = 0; i < node.size(); i++) {
-            for (MapFeature mp : node.get(i)) {
+            for (MapData mp : node.get(i)) {
                 if (mp instanceof Highway) {
+                    MapFeature highway = (MapFeature) mp;
                     double[] points = new double[6];
-                    PathIterator pI = mp.getShape().getPathIterator(transform);
+                    PathIterator pI = highway.getShape().getPathIterator(transform);
                     pI.currentSegment(points);
                     Point2D p1 = new Point2D.Double(points[0], points[1]);
                     pI.next();
@@ -587,10 +590,10 @@ public class View extends JFrame implements Observer {
                         pI.next();
                         if(championLine == null) {
                             championLine = path;
-                            champion = mp;
+                            champion = highway;
                         }
                         else if(path.ptSegDist(position) < championLine.ptSegDist(position)){
-                            champion = mp;
+                            champion = highway;
                             championLine = path;
 
                         }
@@ -661,7 +664,20 @@ public class View extends JFrame implements Observer {
 
             Rectangle2D windowBounds = bounds.getBounds();
 
-            ArrayList<List<MapFeature>> mapFeatures = model.getVisibleData(windowBounds);
+            ArrayList<List<MapData>> mapDatas = model.getVisibleData(windowBounds);
+            ArrayList<MapFeature> mapFeatures = new ArrayList<>();
+            ArrayList<MapIcon> mapIcons = new ArrayList<>();
+
+            long ms = System.currentTimeMillis();
+            for(int i = 0; i < mapDatas.size(); i++){
+                for(MapData mD : mapDatas.get(i)){
+                    if(mD.getType() == MapIcon.class)
+                        mapIcons.add((MapIcon) mD);
+                    else mapFeatures.add((MapFeature) mD);
+                }
+
+            }
+            System.out.print("Time taking splitting: " + (System.currentTimeMillis() - ms));
 
             g.setStroke(min_value); //Just for good measure.
 
@@ -677,91 +693,85 @@ public class View extends JFrame implements Observer {
             }
 
             //long time = System.currentTimeMillis();
-            for(List<MapFeature> mf : mapFeatures)
-                model.sortLayers(mf);
-            //System.out.println("Sorting : " + (System.currentTimeMillis() - time) + "ms");
+
+            ms = System.currentTimeMillis();
+            model.sortLayers(mapFeatures);
+            System.out.println("Sorting : " + (System.currentTimeMillis() - ms) + "ms");
             g.setColor(Color.BLACK);
 
 
             //Draw areas first
-            for (int i = 0; i < mapFeatures.size(); i++) {
-
-                for (MapFeature mapFeature : mapFeatures.get(i)) {
-                    DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                    if (zoomLevel >= drawAttribute.getZoomLevel()) { //TODO: NullPointerException when loading "København" and changing to transport map
-                        if (mapFeature.isArea()) {
-                            g.setColor(drawAttribute.getColor());
-                            g.fill(mapFeature.getShape());
-                        }
-                    }
-                }
-                //Then draw boundaries on top of areas
-                for (MapFeature mapFeature : mapFeatures.get(i)) {
-                    if (zoomLevel > 14) {
-                        try {
-                            g.setColor(Color.BLACK);
-                            DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                            if (drawAttribute.isDashed()) continue;
-                            else if (!mapFeature.isArea())
-                                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
-                            else g.setStroke(DrawAttribute.basicStrokes[0]);
-                            g.draw(mapFeature.getShape());
-                        } catch (NullPointerException e) {
-                            System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
-                        }
-                    }
-                }
-
-                //Then draw boundaries on top of areas
-                for (MapFeature mapFeature : mapFeatures.get(i)) {
-                    if (zoomLevel > 14) {
-                        try {
-                            g.setColor(Color.BLACK);
-                            DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                            if (drawAttribute.isDashed()) continue;
-                            else if (!mapFeature.isArea())
-                                if (mapFeature instanceof Highway) {
-                                    g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor + 1]);
-                                } else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
-                            else g.setStroke(DrawAttribute.basicStrokes[0]);
-                            g.draw(mapFeature.getShape());
-                        } catch (NullPointerException e) {
-                            System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
-                        }
-                    }
-                }
 
 
-                //Draw the fillers on top of boundaries and areas
-                for (MapFeature mapFeature : mapFeatures.get(i)) {
-                    DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                    if (zoomLevel >= drawAttribute.getZoomLevel()) {
+            for (MapFeature mapFeature : mapFeatures) {
+                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                if (zoomLevel >= drawAttribute.getZoomLevel()) { //TODO: NullPointerException when loading "København" and changing to transport map
+                    if (mapFeature.isArea()) {
                         g.setColor(drawAttribute.getColor());
-                        if (drawAttribute.isDashed())
-                            g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
-                        else {
-                            if (mapFeature instanceof Highway) {
-                                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
-                            } else {
-                                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
-                            }
-                        }
-                        g.draw(mapFeature.getShape());
+                        g.fill(mapFeature.getShape());
                     }
                 }
-
             }
+            //Then draw boundaries on top of areas
+            for (MapFeature mapFeature : mapFeatures) {
+                if (zoomLevel > 14) {
+                    try {
+                        g.setColor(Color.BLACK);
+                        DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                        if (drawAttribute.isDashed()) continue;
+                        else if (!mapFeature.isArea())
+                            g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
+                        else g.setStroke(DrawAttribute.basicStrokes[0]);
+                        g.draw(mapFeature.getShape());
+                    } catch (NullPointerException e) {
+                        System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
+                    }
+                }
+            }
+
+            //Then draw boundaries on top of areas
+            for (MapFeature mapFeature : mapFeatures) {
+                if (zoomLevel > 14) {
+                    try {
+                        g.setColor(Color.BLACK);
+                        DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                        if (drawAttribute.isDashed()) continue;
+                        else if (!mapFeature.isArea())
+                            if (mapFeature instanceof Highway) {
+                                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor + 1]);
+                            } else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
+                        else g.setStroke(DrawAttribute.basicStrokes[0]);
+                        g.draw(mapFeature.getShape());
+                    } catch (NullPointerException e) {
+                        System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
+                    }
+                }
+            }
+
+
+            //Draw the fillers on top of boundaries and areas
+            for (MapFeature mapFeature : mapFeatures) {
+                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                if (zoomLevel >= drawAttribute.getZoomLevel()) {
+                    g.setColor(drawAttribute.getColor());
+                    if (drawAttribute.isDashed())
+                        g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
+                    else {
+                        if (mapFeature instanceof Highway) {
+                            g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
+                        } else {
+                            g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
+                        }
+                    }
+                    g.draw(mapFeature.getShape());
+                }
+            }
+
+
             //Draws the icons.
 
-            if (zoomLevel >= 10 && drawAttributeManager.isTransport()) {
-                for (MapIcon mapIcon : model.getTransportIcons()) {
-                    mapIcon.draw(g, transform);
-                }
-            } else if (zoomLevel >= 15) {
-                for (MapIcon mapIcon : model.getMapIcons()) {
-                    mapIcon.draw(g, transform);
-                }
-                for (MapIcon mapIcon : model.getTransportIcons()) {
+            if (zoomLevel >= 15) {
+                for (MapIcon mapIcon : mapIcons) {
                     mapIcon.draw(g, transform);
                 }
             }

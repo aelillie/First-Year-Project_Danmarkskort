@@ -1,6 +1,8 @@
 package QuadTree;
 
+import Model.MapData;
 import Model.MapFeature;
+import Model.MapIcon;
 
 import java.awt.*;
 import java.awt.geom.Rectangle2D;
@@ -18,8 +20,7 @@ public class QuadTree implements Serializable{
         Double x, y;                                // x- and y- coordinates
         Double width, height;
         Node NW, NE, SE, SW;                   // four subtrees
-        ArrayList<MapFeature> value;           // associated data
-
+        ArrayList<MapData> value;
 
         Node(Double x, Double y, Double width, Double height) {
             this.x = x;
@@ -37,19 +38,19 @@ public class QuadTree implements Serializable{
         public void subdivide(){
             Double newWidth = width/2;
             Double newHeight = height/2;
-            ArrayList<MapFeature> tmp = value;
+            ArrayList<MapData> tmp = value;
             value = new ArrayList<>();
             NW = new Node(x - newWidth , y -  newHeight, width, height);
             NE = new Node(x + newWidth, y - newHeight, width, height);
             SE = new Node(x + newWidth, y + newHeight, width, height);
             SW = new Node(x - newWidth ,y + newHeight, width, height);
 
-            for(MapFeature path : tmp)
-                insert(path);
+            for(MapData data : tmp)
+                insert(data);
 
         }
 
-        public void addvalue(MapFeature values){
+        public void addvalue(MapData values){
             if(value.size() > 1000){
                 subdivide();
                 insert(values);
@@ -70,14 +71,21 @@ public class QuadTree implements Serializable{
      *
      * @param value Value
      */
-    public void insert(MapFeature value) {
+    public void insert(MapData value) {
+        if(value.getType() == MapIcon.class) {
+            MapIcon mI = (MapIcon) value;
+            insert(root, mI.getPosition().getX(), mI.getPosition().getY(), value);
 
-        Rectangle2D bounds = value.getShape().getBounds2D();
+        }
+        else {
+            MapFeature mF = (MapFeature) value;
+            Rectangle2D bounds = mF.getShape().getBounds2D();
 
-        insert(root, bounds.getCenterX(), bounds.getCenterY(), value);
+            insert(root, bounds.getCenterX(), bounds.getCenterY(), value);
+        }
     }
 
-    private void insert(Node h, Double x, Double y, MapFeature value) {
+    private void insert(Node h, Double x, Double y, MapData value) {
         //// if (eq(x, h.x) && eq(y, h.y)) h.value = value;  // duplicate
         if ( less(x, h.x) &&  less(y, h.y)) {
             if(h.NW == null) h.addvalue(value);
@@ -103,15 +111,15 @@ public class QuadTree implements Serializable{
      * @param rect Range needed
      * @return List of List of MapFeatures
      */
-    public ArrayList<List<MapFeature>> query2D(Shape rect) {
+    public ArrayList<List<MapData>> query2D(Shape rect) {
 
-        ArrayList<List<MapFeature>> values = new ArrayList<>();
+        ArrayList<List<MapData>> values = new ArrayList<>();
         if(rect != null)
             query2D(root, rect, values);
         return values;
     }
 
-    private void query2D(Node h, Shape query, ArrayList<List<MapFeature>> values) {
+    private void query2D(Node h, Shape query, ArrayList<List<MapData>> values) {
         if (h == null) return;
         Rectangle2D rect = query.getBounds2D();
         Double xmin = rect.getMinX();

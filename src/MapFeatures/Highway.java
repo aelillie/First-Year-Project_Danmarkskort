@@ -16,13 +16,13 @@ public class Highway extends MapFeature {
 
     @Override
     public void setPreDefValues() {
-        if (value.equals("motorway") || value.equals("motorway_link")) layer_value = 7;
-        else if (value.equals("trunk") || value.equals("trunk_link")) layer_value = 6;
-        else if (value.equals("primary") || value.equals("primay_link")) layer_value = 5;
-        else if (value.equals("secondary") || value.equals("secondary_link")) layer_value = 4;
-        else if (value.equals("tertiary") || value.equals("tertiary_link")) layer_value = 3;
-        else if (value.equals("residential")) layer_value = 2;
-        else layer_value = 1;
+        if (value.equals("motorway") || value.equals("motorway_link")) layer_value = 17;
+        else if (value.equals("trunk") || value.equals("trunk_link")) layer_value = 16;
+        else if (value.equals("primary") || value.equals("primay_link")) layer_value = 15;
+        else if (value.equals("secondary") || value.equals("secondary_link")) layer_value = 14;
+        else if (value.equals("tertiary") || value.equals("tertiary_link")) layer_value = 13;
+        else if (value.equals("residential")) layer_value = 12;
+        else if (value.equals("footway") && isArea) layer_value = 11;
     }
 
     @Override

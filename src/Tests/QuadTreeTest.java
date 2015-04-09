@@ -2,6 +2,7 @@ package Tests;
 
 import MapFeatures.Building;
 import MapFeatures.Highway;
+import Model.MapData;
 import Model.MapFeature;
 import Model.PathCreater;
 import QuadTree.QuadTree;
@@ -13,6 +14,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
@@ -63,11 +65,11 @@ public class QuadTreeTest {
 
         Rectangle2D window = new Rectangle2D.Float(60,30,60,30);
 
-        ArrayList<List<MapFeature>> visible = quadTree.query2D(window);
+        ArrayList<List<MapData>> visible = quadTree.query2D(window);
 
         assertEquals( 1,visible.size() );
 
-        List<MapFeature> list1 = visible.get(0);
+        List<MapData> list1 =visible.get(0);
         assertEquals(list1.size(), 1);
 
 
@@ -84,7 +86,7 @@ public class QuadTreeTest {
             quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false));
         }
 
-        List<List<MapFeature>> Data = quadTree.query2D(new Rectangle2D.Float(51,1,100,49));
+        List<List<MapData>> Data = quadTree.query2D(new Rectangle2D.Float(51,1,100,49));
 
         assertEquals(4, Data.size());
 

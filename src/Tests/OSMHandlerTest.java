@@ -50,7 +50,7 @@ public class OSMHandlerTest {
 
         m.getVisibleData(new Rectangle2D.Float(0, 0, 500, 500));
         ArrayList<List<MapFeature>> mapFeatures = new ArrayList<>();
-        
+
     }
 
 }
