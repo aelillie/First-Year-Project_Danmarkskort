@@ -2,6 +2,7 @@ package View;
 
 import Controller.SearchResultMouseHandler;
 import MapFeatures.Bounds;
+import MapFeatures.Coastline;
 import MapFeatures.Highway;
 import Model.*;
 
@@ -703,9 +704,12 @@ public class View extends JFrame implements Observer {
 
             for(int i = 0; i < mapDatas.size(); i++){
                 for(MapData mD : mapDatas.get(i)){
-                    if(mD.getType() == MapIcon.class)
-                        mapIcons.add((MapIcon) mD);
+                    if(mD.getType() == MapIcon.class) {
+                        if (zoomLevel > 13)
+                            mapIcons.add((MapIcon) mD);
+                    }
                     else mapFeatures.add((MapFeature) mD);
+
                 }
 
             }
@@ -726,7 +730,8 @@ public class View extends JFrame implements Observer {
 
             //long time = System.currentTimeMillis();
 
-            model.sortLayers(mapFeatures);
+            if(zoomLevel > 12)
+                model.sortLayers(mapFeatures);
 
             g.setColor(Color.BLACK);
 
