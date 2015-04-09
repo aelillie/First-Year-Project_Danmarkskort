@@ -28,21 +28,28 @@ public class SearchResultMouseHandler extends MouseAdapter {
     @Override
     public void mouseClicked(MouseEvent e) {
         Address selectedItem = view.getAddressSearchResults().getSelectedValue();
-        System.out.println("WOW something happened! (NOT)");
-        getAddressLocation(selectedItem);
+        view.getSearchArea().setText(selectedItem.toString());
+        view.getCanvas().requestFocusInWindow();
+        getAddressLocation(selectedItem, model, view);
+        view.getResultPane().setVisible(false);
 
     }
 
-    private void getAddressLocation(Address selectedAddr){
-        Map<Address, Point2D> addressMap = model.getOSMReader().getAddressMap();
-        Map<Address, List<Path2D>> streetMap = model.getOSMReader().getStreetMap();
+    public static void getAddressLocation(Address selectedAddr, Model m, View v){
+        Map<Address, Point2D> addressMap = m.getOSMReader().getAddressMap();
+        Map<Address, List<Path2D>> streetMap = m.getOSMReader().getStreetMap();
+        Map<Address, Path2D> boundaryMap = m.getOSMReader().getBoundaryMap();
 
         Point2D addressLocation = addressMap.get(selectedAddr);
-        if(addressLocation == null) {
-            List<Path2D> streetLocation = streetMap.get(selectedAddr);
-            view.setCurrentStreet(streetLocation);
-        } else {
-            view.setCurrentAddress(addressLocation);
+        List<Path2D> streetLocation = streetMap.get(selectedAddr);
+        Path2D boundaryLocation = boundaryMap.get(selectedAddr);
+
+        if(addressLocation == null && boundaryLocation == null) {
+            v.setCurrentStreet(streetLocation);
+        } else if(boundaryLocation == null && streetLocation == null){
+            v.setCurrentAddress(addressLocation);
+        } else if(streetLocation == null && addressLocation == null){
+            v.setCurrentBoundaryLocation(boundaryLocation);
         }
     }
 

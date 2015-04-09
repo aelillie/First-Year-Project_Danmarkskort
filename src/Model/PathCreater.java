@@ -21,11 +21,11 @@ public class PathCreater {
     public static Path2D createMultipolygon(List<Long> memberReferences, Map<Long, Path2D> wayId_map) {
         Long ref = memberReferences.get(0);
         if (wayId_map.containsKey(ref)) {
-            Path2D path = wayId_map.get(ref);
+            Path2D path = (Path2D) wayId_map.get(ref).clone();
             for (int i = 1; i < memberReferences.size(); i++) {
                 ref = memberReferences.get(i);
                 if (wayId_map.containsKey(ref)) {
-                    Path2D element = wayId_map.get(memberReferences.get(i));
+                    Path2D element = (Path2D) wayId_map.get(memberReferences.get(i)).clone();
                     path.append(element, false);
                 } else {}
 
@@ -46,7 +46,7 @@ public class PathCreater {
      * @return Path  The path connected by the Points
      */
     public static Path2D createWay(List<Point2D> coords) {
-        Path2D way = new Path2D.Double();
+        Path2D way = new Path2D.Float();
         Point2D coord = coords.get(0);
         way.moveTo(coord.getX(), coord.getY());
         for (int i = 1; i < coords.size(); i++) {
@@ -118,6 +118,7 @@ public class PathCreater {
     }
 
     public static void connectCoastlines(Rectangle2D bbox) {
+
         Point2D southWest = new Point2D.Double(bbox.getX(), bbox.getY());
         Point2D southEast = new Point2D.Double(bbox.getX() + bbox.getWidth(), bbox.getY());
         Point2D northWest = new Point2D.Double(bbox.getX(), bbox.getY() + bbox.getHeight());

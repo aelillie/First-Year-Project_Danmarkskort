@@ -10,11 +10,11 @@ import java.util.Map;
  */
 public class AddressSearcher {
 
-    private static int binSearch(List<Address> list, Address addr, int low, int high){
+    private static int binSearch(List<Address> list, Address addr, int low, int high, int type){
         if(low > high) return -1;
         int mid = (low+high)/2;
-        if (list.get(mid).searchCompare(addr) < 0) return binSearch(list, addr, mid + 1, high); //if addr is larger than mid
-        else if (list.get(mid).searchCompare(addr) > 0) return binSearch(list, addr, low, mid - 1); //if addr is smaller than mid
+        if (list.get(mid).searchCompare(addr,type) < 0) return binSearch(list, addr, mid + 1, high, type); //if addr is larger than mid
+        else if (list.get(mid).searchCompare(addr, type) > 0) return binSearch(list, addr, low, mid - 1, type); //if addr is smaller than mid
         else return mid;
     }
 
@@ -25,22 +25,22 @@ public class AddressSearcher {
      * @param addressInput
      * @return
      */
-    private static int[] multipleEntriesSearch(Address addressInput, List<Address> addressList){
-        int index = binSearch(addressList,addressInput,0,addressList.size()-1); //Returns the index of the first found element.
+    private static int[] multipleEntriesSearch(Address addressInput, List<Address> addressList, int type){
+        int index = binSearch(addressList,addressInput,0,addressList.size()-1,type); //Returns the index of the first found element.
         if(index < 0) return null; //Not found
 
         int lowerBound = index; //Search to the left of the found element
         int i = lowerBound;
         do {
             lowerBound = i;
-            i = binSearch(addressList, addressInput, 0, lowerBound-1);
+            i = binSearch(addressList, addressInput, 0, lowerBound-1,type);
         } while (i != -1); //As long as we find a similiar element, keep searching to determine when we don't anymore.
 
         int upperBound = index; //Search to the right of the found element
         i = upperBound;
         do {
             upperBound = i;
-            i = binSearch(addressList, addressInput, upperBound+1, addressList.size() - 1);
+            i = binSearch(addressList, addressInput, upperBound+1, addressList.size() - 1,type);
         }
         while (i != -1); //As long as we find a similiar element, keep searching to determine when we don't anymore.
 
@@ -48,8 +48,8 @@ public class AddressSearcher {
         return range;
     }
 
-    public static Address[] searchForAddresses(Address addressInput, List<Address> addressList, Map<Address, Point2D> addressMap){
-        int[] range = multipleEntriesSearch(addressInput, addressList); //search for one or multiple entries
+    public static Address[] searchForAddresses(Address addressInput, List<Address> addressList, Map<Address, Point2D> addressMap, int type){
+        int[] range = multipleEntriesSearch(addressInput, addressList,type); //search for one or multiple entries
         if(range == null) { //If it is not found, the return value will be negative
             System.out.println("Too bad - didn't find!");
             return null;

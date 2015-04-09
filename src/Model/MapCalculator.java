@@ -16,7 +16,7 @@ public class MapCalculator {
      * @return the y-coordinate on a plane
      */
     public static double latToY(double aLat) {
-        return Math.toDegrees(Math.log(Math.tan(Math.PI/4+Math.toRadians(aLat)/2)));
+        return Math.toDegrees(Math.log(Math.tan(Math.PI / 4 + Math.toRadians(aLat) / 2)));
     }
 
     /**

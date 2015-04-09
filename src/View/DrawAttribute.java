@@ -86,11 +86,13 @@ public class DrawAttribute {
     public static Stroke r45 = new BasicStroke(0.005f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 
 
-    public static Stroke d1 = new BasicStroke(0.00001f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{0.0001f}, 0.00001f); //Metro
-    public static Stroke d2 = new BasicStroke(0.00002f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,30.0f, new float[]{0.00005f},0.00000f); //Footway
-    public static Stroke d3 = new BasicStroke(0.00002f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 20.0f, new float[]{0.0001f}, 0.000001f); //Cycleway
-    public static Stroke d4 = new BasicStroke(0.00002f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 20.0f, new float[]{0.00001f}, 0.000001f); //
-    public static Stroke d5 = new BasicStroke(0.00003f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10.0f, new float[]{0.00005f}, 0.00003f); //Railways transportview
+    public static Stroke d0 = new BasicStroke(0.00001f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{0.0001f}, 0.00001f); //Metro
+    public static Stroke d1 = new BasicStroke(0.00002f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND,30.0f, new float[]{0.00005f},0.00000f); //Footway
+    public static Stroke d2 = new BasicStroke(0.00002f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 20.0f, new float[]{0.0001f}, 0.000001f); //Cycleway
+    public static Stroke d3 = new BasicStroke(0.00002f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_ROUND, 20.0f, new float[]{0.00001f}, 0.000001f); //
+    public static Stroke d4 = new BasicStroke(0.00003f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10.0f, new float[]{0.00005f}, 0.00003f); //Railways transportview
+    public static Stroke d5 = new BasicStroke(0.00004f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10.0f, new float[]{0.00005f}, 0.00003f); //Railways transportview
+    public static Stroke d6 = new BasicStroke(0.00005f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND, 10.0f, new float[]{0.00005f}, 0.00003f); //Railways transportview
 
 
     //Predefined colors to use.
@@ -149,7 +151,7 @@ public class DrawAttribute {
     public static Color[] colors = new Color[] {lightblue, lightgreen, darkgreen, lightyellow, darkblue, lightgrey, neongreen, babyred, lightred,
                                                 grey, white, bloodred, red, skincolor, bluegreen, orange, pink, sand, whiteblue, greenblue, whitegreen, brown};
     public static Stroke[] basicStrokes = new Stroke[]{s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11,s12, s13, s14, s15};
-    public static Stroke[] dashedStrokes = new Stroke[] {d1, d2, d3, d4, d5};
+    public static Stroke[] dashedStrokes = new Stroke[] {d0, d1, d2, d3, d4, d5, d6};
     public static Stroke[] streetStrokes = new Stroke[] {r00, r01, r02, r03, r04, r05, r06, r07, r08, r09, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31, r32, r33, r34, r35, r36, r37, r38, r39, r40, r41, r42, r43, r44, r45};
 
     public boolean isDashed() {

@@ -3,18 +3,18 @@ package QuadTree;
 import Model.MapFeature;
 
 import java.awt.*;
-import java.awt.geom.PathIterator;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
 public class QuadTree implements Serializable{
+    private static final long serialVersionUID = 8;
     private Node root;
 
     // helper node data type
     private class Node implements Serializable {
+        private static final long serialVersionUID = 8;
         Double x, y;                                // x- and y- coordinates
         Double width, height;
         Node NW, NE, SE, SW;                   // four subtrees
@@ -119,6 +119,7 @@ public class QuadTree implements Serializable{
         Double xmax = rect.getMaxX();
         Double ymax = rect.getMaxY();
         if (rect.intersects(h.x- h.width,h.y - h.height, h.width*2, h.height*2) || rect.contains(h.x, h.y))
+            if(!h.value.isEmpty())
             values.add(h.value);
         if ( less(xmin, h.x) &&  less(ymin, h.y)) query2D(h.NW, rect, values);
         if ( less(xmin, h.x) && !less(ymax, h.y)) query2D(h.SW, rect, values);

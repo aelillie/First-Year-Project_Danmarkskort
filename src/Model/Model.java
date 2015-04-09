@@ -105,8 +105,8 @@ public class Model extends Observable implements Serializable {
 
 
 
-    public Address[] searchForAddresses(Address address){
-        return OSMReader.searchForAddressess(address);
+    public Address[] searchForAddresses(Address address, int type){
+        return OSMReader.searchForAddressess(address, type);
     }
 
 
@@ -161,9 +161,7 @@ public class Model extends Observable implements Serializable {
         return OSMReader.getCoastlines();
     }
 
-    public OSMHandler getOSMReader(){
-        return OSMReader;
-    }
+    public OSMHandler getOSMReader(){return OSMReader;}
 
     public ArrayList<List<MapFeature>> getVisibleData(Rectangle2D visibleArea){
         return OSMReader.getQuadTree().query2D(visibleArea);
