@@ -318,7 +318,6 @@ public class OSMHandler extends DefaultHandler {
      */
 
     protected void sortLayers(List<MapFeature> mapFeatures) {
-        long time = System.nanoTime();
         Comparator<MapFeature> comparator = new Comparator<MapFeature>() {
             @Override
             /**
@@ -333,20 +332,27 @@ public class OSMHandler extends DefaultHandler {
             }
         };
         Collections.sort(mapFeatures, comparator); //iterative mergesort. ~n*lg(n) comparisons
-        //System.out.printf("sorted all layers, time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
 
-
-
+    /**
+     * Some map features have pre defined layer values, some don't
+     * If a map feature doesn't state a layer value, it gets
+     * handled in the individual map features
+     * @return integer between -5 and 5 for the layer value of a map feature
+     */
     private int fetchOSMLayer() {
         int layer_val = 0; //default layer, if no value is defined in the OSM
-        try {
-            layer_val = Integer.parseInt(keyValue_map.get("layer")); //fetch OSM-defined layer value
+        String keyValue = keyValue_map.get("layer");
+        if (keyValue == null)
+            return layer_val; //stops function immediately and returns 0
+        else try {
+            layer_val = Integer.parseInt(keyValue); //fetch OSM-defined layer value
         } catch (NumberFormatException e) {
-            //getPreDefLayer();
+            //should never happen, since keyValue isn't null
+            System.out.println("Fetching layer value for " + keyValue + " failed...");
         }
-        return layer_val;
+        return layer_val; //won't be 0
     }
 
 

@@ -23,15 +23,23 @@ public abstract class MapFeature implements Serializable {
         setPreDefValues();
     }
 
+    /**
+     * Defines a larger spectrum of layer values
+     * Predefined layer values get their values multiplied
+     * by a factor 10
+     */
     protected void setPreDefValues() {
-        if (layer_value == 0) setPreDefValues();
-        if (value.equals("motorway") || value.equals("motorway_link")) layer_value = 7; //TODO: What if there's a bridge? (Value max 5)
-        else if (value.equals("trunk") || value.equals("trunk_link")) layer_value = 6;
-        else if (value.equals("primary") || value.equals("primay_link")) layer_value = 5;
-        else if (value.equals("secondary") || value.equals("secondary_link")) layer_value = 4;
-        else if (value.equals("tertiary") || value.equals("tertiary_link")) layer_value = 3;
-        else if (value.equals("residential")) layer_value = 2;
-        else layer_value = 1;
+        if (layer_value == -5) layer_value = -50;
+        else if (layer_value == -4) layer_value = -40;
+        else if (layer_value == -3) layer_value = -30;
+        else if (layer_value == -2) layer_value = -20;
+        else if (layer_value == -1) layer_value = -10;
+        else if (layer_value == 0) layer_value = 0;
+        else if (layer_value == 1) layer_value = 10;
+        else if (layer_value == 2) layer_value = 20;
+        else if (layer_value == 3) layer_value = 30;
+        else if (layer_value == 4) layer_value = 40;
+        else if (layer_value == 5) layer_value = 50;
     }
 
     /**
