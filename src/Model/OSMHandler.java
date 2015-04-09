@@ -275,7 +275,7 @@ public class OSMHandler extends DefaultHandler {
                     }
                 } else if(keyValue_map.containsKey("name")) {
 
-                   /* if(keyValue_map.containsKey("place")){
+                    if(keyValue_map.containsKey("place")){
                         String place = keyValue_map.get("place");
                         if(place.equals("town") || place.equals("village") || place.equals("suburb") || place.equals("locality")|| place.equals("neighbourhood")){
                             String name = keyValue_map.get("name").toLowerCase();
@@ -283,13 +283,13 @@ public class OSMHandler extends DefaultHandler {
                             addressMap.put(addr, nodeCoord);
                             addressList.add(addr);
                         }
-                    }*/
+                    }
                 } else if (keyValue_map.containsKey("addr:street")){    //TODO uncomment!
-                    /*if(hasHouseNo && hasCity && hasPostcode){
+                    if(hasHouseNo && hasCity && hasPostcode){
                        Address addr = Address.newAddress(streetName.toLowerCase(), houseNumber.toLowerCase(), postCode.toLowerCase(), cityName.toLowerCase());
                         addressMap.put(addr, nodeCoord);
                         addressList.add(addr);
-                    }*/
+                    }
                 }
                 //else if (keyValue_map.containsKey("addr:city")) addCityName();
                 //else if (keyValue_map.containsKey("addr:postcode")) addPostcode();
