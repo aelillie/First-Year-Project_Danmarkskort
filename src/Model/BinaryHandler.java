@@ -61,7 +61,6 @@ public final class BinaryHandler {
         coasts.addAll((List<Coastline>)in.readObject());
         in.close();
 
-
     }
 
 

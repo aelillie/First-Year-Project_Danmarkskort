@@ -44,6 +44,7 @@ public class View extends JFrame implements Observer {
 
     private List<Path2D> currentStreetLocations;
     private Point2D currentAddressLocation;
+    private Path2D currentBoundaryLocation;
 
     private boolean isFullscreen = false;
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -367,15 +368,23 @@ public class View extends JFrame implements Observer {
 
     public void setCurrentStreet(List<Path2D> streetLocation){
         currentAddressLocation = null;
+        currentBoundaryLocation = null;
         currentStreetLocations = streetLocation;
         canvas.repaint();
     }
 
     public void setCurrentAddress(Point2D addrLocation){
         currentStreetLocations = null;
+        currentBoundaryLocation = null;
         currentAddressLocation = addrLocation;
         canvas.repaint();
+    }
 
+    public void setCurrentBoundaryLocation(Path2D boundaryLocation){
+        currentAddressLocation = null;
+        currentStreetLocations = null;
+        currentBoundaryLocation = boundaryLocation;
+        canvas.repaint();
     }
 
     @Override
@@ -566,18 +575,20 @@ public class View extends JFrame implements Observer {
                 if (mp instanceof Highway) {
                     double[] points = new double[6];
                     PathIterator pI = mp.getShape().getPathIterator(transform);
+                    pI.currentSegment(points);
+                    Point2D p1 = new Point2D.Double(points[0], points[1]);
+                    pI.next();
                     while(!pI.isDone()) {
                         pI.currentSegment(points);
-                        Point2D p1 = new Point2D.Double(points[0], points[1]);
-                        pI.next();
-
-                        if(pI.isDone()) continue;
-                        
-                        pI.currentSegment(points);
                         Point2D p2 = new Point2D.Double(points[0], points[1]);
+
                         Line2D path = new Line2D.Double(p1,p2);
-                        if(championLine == null)
+                        p1 = p2;
+                        pI.next();
+                        if(championLine == null) {
                             championLine = path;
+                            champion = mp;
+                        }
                         else if(path.ptSegDist(position) < championLine.ptSegDist(position)){
                             champion = mp;
                             championLine = path;
@@ -590,7 +601,7 @@ public class View extends JFrame implements Observer {
         }
 
         nearestNeighbor = champion;
-        //TODO First draft.... Working on a way to use vectors and trigonometri to get more precise way..
+
     }
 
     /**

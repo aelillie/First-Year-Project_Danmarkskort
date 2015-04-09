@@ -6,6 +6,10 @@ import View.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.event.*;
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
+import java.util.List;
+import java.util.Map;
 
 /**
  * Created by Nicoline on 04-04-2015.
@@ -29,20 +33,32 @@ public class SearchController extends MouseAdapter implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if (command.equals("searchAreaInput")){ addressSearch(); view.getCanvas().requestFocusInWindow(); } //might want to do something else here
-        else if (command.equals("search")) { addressSearch(); view.getCanvas().requestFocusInWindow(); }//Might want to do something else here
+        if (command.equals("search")) {
+            Address[] results = addressSearch(2);
+            if(results != null) {
+                if(results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view);
+                view.getResultPane().setVisible(false);
+                view.getCanvas().requestFocusInWindow();
+            } else {
+                addressSearch(1);
+                view.getCanvas().requestFocusInWindow();
+            }
+            /*Address[] results = addressSearch(2);
+            //if(results == null) addressSearch(1);
+            //view.getCanvas().requestFocusInWindow();*/
+        } //When the search button is clicked
     }
 
     private void setInputChangeHandler(){
         view.getSearchArea().getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                addressSearch();
+                addressSearch(1);
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                addressSearch();
+                addressSearch(1);
             }
 
             @Override
@@ -51,18 +67,20 @@ public class SearchController extends MouseAdapter implements ActionListener {
         });
     }
 
-    private void addressSearch(){
+    private Address[] addressSearch(int type){
         String input = view.getSearchArea().getText();
         if(!input.equals("") && input != null) {
             input = input.trim().toLowerCase();
             Address address = Address.parse(input);
-            if(address == null) return;
-            Address[] results = model.searchForAddresses(address);
+            if(address == null) return null;
+            Address[] results = model.searchForAddresses(address, type);
             if(results != null) view.addToResultPane(results);
             else view.getResultPane().setVisible(false);
+            return results;
         } else {
             view.getResultPane().setVisible(false);
             view.setCurrentAddress(null);
+            return null;
         }
     }
 
@@ -75,11 +93,18 @@ public class SearchController extends MouseAdapter implements ActionListener {
         public void keyPressed(KeyEvent e) {
             //Set up the keyboard handler for different keys.
             if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                addressSearch();
+                Address[] results = addressSearch(2);
+                if(results != null) {
+                    if(results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view);
+                    view.getResultPane().setVisible(false);
+                    view.getCanvas().requestFocusInWindow();
+                } else {
+                    addressSearch(1);
+                    view.getCanvas().requestFocusInWindow();
+                }
             }
         }
     }
 
-    //TODO: Get position when clicking a element from the scrollpane - scrollpane listener also
 }
 
