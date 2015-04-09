@@ -25,13 +25,6 @@ public class View extends JFrame implements Observer {
     private Canvas canvas;
     private AffineTransform transform;
     private MapFeature nearestNeighbor;
-    public boolean isAntialias() {
-        return antialias;
-    }
-
-    public AffineTransform getTransform() {
-        return transform;
-    }
     private CanvasBounds bounds;
     private boolean antialias = true;
     private Point dragEndScreen, dragStartScreen;
@@ -749,8 +742,15 @@ public class View extends JFrame implements Observer {
             }
             //Draws the icons.
 
-            if (zoomLevel >= 17) {
+            if (zoomLevel >= 10 && drawAttributeManager.isTransport()) {
+                for (MapIcon mapIcon : model.getTransportIcons()) {
+                    mapIcon.draw(g, transform);
+                }
+            } else if (zoomLevel >= 15) {
                 for (MapIcon mapIcon : model.getMapIcons()) {
+                    mapIcon.draw(g, transform);
+                }
+                for (MapIcon mapIcon : model.getTransportIcons()) {
                     mapIcon.draw(g, transform);
                 }
             }

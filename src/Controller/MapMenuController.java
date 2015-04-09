@@ -20,12 +20,16 @@ public class MapMenuController implements ActionListener {
 
     public void actionPerformed(ActionEvent e){
         String command = e.getActionCommand();
-        if (command.equals("standardMap")){
-            v.changeToStandard();
-        } else if (command.equals("colorblindMap")){
-            v.changeToColorblind();
-        } else if (command.equals("transportMap")){
-            v.changeToTransport();
+        switch (command) {
+            case "standardMap":
+                v.changeToStandard();
+                break;
+            case "colorblindMap":
+                v.changeToColorblind();
+                break;
+            case "transportMap":
+                v.changeToTransport();
+                break;
         }
     }
 

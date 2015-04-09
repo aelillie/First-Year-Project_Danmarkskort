@@ -152,6 +152,8 @@ public class Model extends Observable implements Serializable {
         return OSMReader.getMapIcons();
     }
 
+    public List<MapIcon> getTransportIcons() { return OSMReader.getTransportIcons(); }
+
     public void setBBox(Rectangle2D bBox){
 
         OSMReader.getBbox().setRect(bBox);

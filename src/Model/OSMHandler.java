@@ -26,6 +26,7 @@ public class OSMHandler extends DefaultHandler {
     private QuadTree quadTree;
     private List<Address> addressList; //list of all the addresses in the .osm file
     private List<MapIcon> mapIcons; //contains all the icons to be drawn
+    private List<MapIcon> transportIcons;
     private List<Long> memberReferences; //member referenced in a relation of ways
     private List<Point2D> wayCoords; //List of referenced coordinates used to make up a single way
     private static List<Coastline> coastlines; //List of all of the coastlines to be drawn
@@ -45,6 +46,7 @@ public class OSMHandler extends DefaultHandler {
         addressList = new ArrayList<>();
         wayCoords = new ArrayList<>();
         mapIcons = new ArrayList<>();
+        transportIcons = new ArrayList<>();
         node_map = new HashMap<>();
         keyValue_map = new HashMap<>();
         wayId_map = new HashMap<>();
@@ -236,7 +238,7 @@ public class OSMHandler extends DefaultHandler {
                 if (keyValue_map.containsKey("highway")) {
                     String val = keyValue_map.get("highway");
                     if (val.equals("bus_stop") && isBusstop) {
-                        mapIcons.add(new MapIcon(nodeCoord, MapIcon.busIcon));
+                        transportIcons.add(new MapIcon(nodeCoord, MapIcon.busIcon));
                     }
                 }
                 else if(keyValue_map.containsKey("amenity")) {
@@ -251,8 +253,8 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("railway")) {
                     String val = keyValue_map.get("railway");
                     if (val.equals("station")) {
-                        if (isMetro) mapIcons.add(new MapIcon(nodeCoord, MapIcon.metroIcon));
-                        else if (isSTog) mapIcons.add(new MapIcon(nodeCoord, MapIcon.STogIcon));
+                        if (isMetro) transportIcons.add(new MapIcon(nodeCoord, MapIcon.metroIcon));
+                        else if (isSTog) transportIcons.add(new MapIcon(nodeCoord, MapIcon.STogIcon));
                     }
                 } else if(keyValue_map.containsKey("name")) {
                     String name = keyValue_map.get("name");
@@ -372,6 +374,10 @@ public class OSMHandler extends DefaultHandler {
     public ArrayList<Rectangle2D> getNodes(){return quadTree.getNodeRects();}
 
     public void setQuadTree(QuadTree quadTree) {this.quadTree = quadTree; }
+
+    public List<MapIcon> getTransportIcons() {
+        return transportIcons;
+    }
 
     public Map<Address,Point2D> getAddressMap(){ return  addressMap;}
     public Map<Address, List<Path2D>> getStreetMap() {return streetMap;}

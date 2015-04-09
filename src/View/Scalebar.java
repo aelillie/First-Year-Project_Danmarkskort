@@ -38,20 +38,23 @@ public class Scalebar {
     public void drawScaleBar(){
         g.setTransform(new AffineTransform());
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
-        lineStart = new Point2D.Double(view.getWidth()-200,view.getContentPane().getHeight()-13); //Place the linestart at a arbitrary location to start with
-        lineEnd = new Point2D.Double(view.getWidth()-100,view.getContentPane().getHeight()-13); //The endpoint is static
+        lineStart = new Point2D.Float(view.getWidth()-200,view.getContentPane().getHeight()-13); //Place the linestart at a arbitrary location to start with
+        lineEnd = new Point2D.Float(view.getWidth()-100,view.getContentPane().getHeight()-13); //The endpoint is static
 
         double lineWidth = lineEnd.getX()-lineStart.getX();
-        g.setColor(new Color(255,255,255,200));
-        g.fill(new Rectangle2D.Double(lineStart.getX() - 95, lineStart.getY() - 13, lineWidth + 115,20));
+        g.setColor(DrawAttribute.fadewhite);
+        Double x = lineStart.getX() - 95;
+        Double y = lineStart.getY() - 13;
+        Double line = lineWidth + 115;
+        g.fill(new Rectangle2D.Float(x.floatValue(), y.floatValue(), line.floatValue() , 20));
         double desiredDistance = zoomLevelDistances.get(zoomLevel); //The distance we want to display according to the zoomlevel
         setDesiredDistance(lineWidth,desiredDistance);
 
         g.setColor(Color.BLACK);
         g.setStroke(new BasicStroke(2));
-        g.draw(new Line2D.Double(lineStart, lineEnd));
-        g.draw(new Line2D.Double(lineStart,new Point2D.Double(lineStart.getX(),lineStart.getY()-5)));
-        g.draw(new Line2D.Double(lineEnd,new Point2D.Double(lineEnd.getX(),lineStart.getY()-5)));
+        g.draw(new Line2D.Float(lineStart, lineEnd));
+        g.draw(new Line2D.Float(lineStart,new Point2D.Double(lineStart.getX(),lineStart.getY()-5)));
+        g.draw(new Line2D.Float(lineEnd,new Point2D.Double(lineEnd.getX(),lineStart.getY()-5)));
 
         displayDistanceString(desiredDistance);
 

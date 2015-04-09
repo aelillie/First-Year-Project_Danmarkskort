@@ -28,7 +28,7 @@ public class MapTypePanel extends JPanel {
         setVisible(false);
         setBounds(view.getWidth()-300, view.getHeight() - view.getHeight() / 3 * 2 - 45, 280, 200);
         setOpaque(true);
-        setBackground(new Color(0,0,0,180));
+        setBackground(DrawAttribute.fadeblack);
         setBorder(new CompoundBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK),
                         new EmptyBorder(0,20,20,20))
                 );
