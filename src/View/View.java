@@ -695,7 +695,7 @@ public class View extends JFrame implements Observer {
             ArrayList<MapFeature> mapFeatures = new ArrayList<>();
             ArrayList<MapIcon> mapIcons = new ArrayList<>();
 
-            long ms = System.currentTimeMillis();
+
             for(int i = 0; i < mapDatas.size(); i++){
                 for(MapData mD : mapDatas.get(i)){
                     if(mD.getType() == MapIcon.class)
@@ -704,7 +704,7 @@ public class View extends JFrame implements Observer {
                 }
 
             }
-            System.out.print("Time taking splitting: " + (System.currentTimeMillis() - ms));
+
 
             g.setStroke(min_value); //Just for good measure.
 
@@ -721,9 +721,8 @@ public class View extends JFrame implements Observer {
 
             //long time = System.currentTimeMillis();
 
-            ms = System.currentTimeMillis();
             model.sortLayers(mapFeatures);
-            System.out.println("Sorting : " + (System.currentTimeMillis() - ms) + "ms");
+
             g.setColor(Color.BLACK);
 
 
