@@ -148,10 +148,6 @@ public class Model extends Observable implements Serializable {
 
     public void setQuadTree(QuadTree qt){OSMReader.setQuadTree(qt);}
 
-    public List<MapIcon>  getMapIcons(){
-        return OSMReader.getMapIcons();
-    }
-
     public void setBBox(Rectangle2D bBox){
 
         OSMReader.getBbox().setRect(bBox);
@@ -163,7 +159,7 @@ public class Model extends Observable implements Serializable {
 
     public OSMHandler getOSMReader(){return OSMReader;}
 
-    public ArrayList<List<MapFeature>> getVisibleData(Rectangle2D visibleArea){
+    public ArrayList<List<MapData>> getVisibleData(Rectangle2D visibleArea){
         return OSMReader.getQuadTree().query2D(visibleArea);
 
     }
