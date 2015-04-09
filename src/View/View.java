@@ -143,6 +143,7 @@ public class View extends JFrame implements Observer {
         canvas.setBounds(0, 0, getWidth(), getHeight());
 
         searchArea = new JTextField();
+        searchArea.setForeground(Color.GRAY);
         searchArea.setText(promptText);
         //Create a FocusListener for the textField
         searchArea.addFocusListener(new FocusListener() {
@@ -152,6 +153,7 @@ public class View extends JFrame implements Observer {
              */
             public void focusGained(FocusEvent e) {
                 if (searchArea.getText().equals(promptText)) {
+                    searchArea.setForeground(Color.BLACK);
                     searchArea.setText("");
                 }
             }
@@ -162,6 +164,7 @@ public class View extends JFrame implements Observer {
              */
             public void focusLost(FocusEvent e) {
                 if (searchArea.getText().isEmpty()) {
+                    searchArea.setForeground(Color.GRAY);
                     searchArea.setText(promptText);
                 }
             }
@@ -228,7 +231,9 @@ public class View extends JFrame implements Observer {
 
     private void makeResultPane(){
         resultPane = new JScrollPane();
+
        //resultPane.setBounds(26,52,286,200);
+
     }
 
     public void addToResultPane(Address[] resultArray){

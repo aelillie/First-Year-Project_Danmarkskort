@@ -35,7 +35,7 @@ public class QuadTree implements Serializable{
         /**
          * Divide the Node into four new and spread the values.
          */
-        public void subdivide(){
+        public void subDivide(){
             Double newWidth = width/2;
             Double newHeight = height/2;
             ArrayList<MapData> tmp = value;
@@ -52,7 +52,7 @@ public class QuadTree implements Serializable{
 
         public void addvalue(MapData values){
             if(value.size() > 1000){
-                subdivide();
+                subDivide();
                 insert(values);
             }else value.add(values);
         }
@@ -62,7 +62,7 @@ public class QuadTree implements Serializable{
     public QuadTree(Rectangle2D bbox){
 
         root = new Node(bbox.getCenterX(),bbox.getCenterY(), bbox.getWidth(), bbox.getHeight());
-        root.subdivide();
+        root.subDivide();
     }
 
 
@@ -170,9 +170,6 @@ public class QuadTree implements Serializable{
             if(h.SE != null)wut.addAll(getNodeRects(h.SE));
             if(h.SW != null)wut.addAll(getNodeRects(h.SW));
         }
-
-
-
         return wut;
     }
 

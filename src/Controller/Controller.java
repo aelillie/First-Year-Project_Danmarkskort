@@ -26,6 +26,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         //Set up Handlers for mouse and keyboard and let controller set these for view.
         SearchController searchController = new SearchController(model, view);
         keyHandler kH = new keyHandler();
+
         view.getCanvas().addKeyListener(kH);
         MouseHandler mH = new MouseHandler();
         view.addMouseListener(mH);
@@ -110,6 +111,7 @@ public class Controller extends MouseAdapter implements ActionListener {
             view.repaint();
         }
     }
+
     private class keyHandler extends KeyAdapter{
 
         @Override

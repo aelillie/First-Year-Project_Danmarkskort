@@ -2,6 +2,8 @@ package Controller;
 
 import Model.Address;
 
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
@@ -15,7 +17,7 @@ import Model.*;
 /**
  * Created by Nicoline on 04-04-2015.
  */
-public class SearchResultMouseHandler extends MouseAdapter {
+public class SearchResultMouseHandler extends MouseAdapter{
 
     View view;
     Model model;
@@ -23,6 +25,7 @@ public class SearchResultMouseHandler extends MouseAdapter {
     public SearchResultMouseHandler(View view, Model model) {
         this.view = view;
         this.model = model;
+
     }
 
     @Override
@@ -32,7 +35,6 @@ public class SearchResultMouseHandler extends MouseAdapter {
         view.getCanvas().requestFocusInWindow();
         getAddressLocation(selectedItem, model, view);
         view.getResultPane().setVisible(false);
-
     }
 
     public static void getAddressLocation(Address selectedAddr, Model m, View v){
@@ -53,5 +55,8 @@ public class SearchResultMouseHandler extends MouseAdapter {
             v.setCurrentBoundaryLocation(boundaryLocation);
         }
     }
+
+
+
 
 }

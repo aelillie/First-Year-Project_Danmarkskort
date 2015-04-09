@@ -78,9 +78,7 @@ public class Model extends Observable implements Serializable {
 
 
     private void loadBin(InputStream inputStream) {
-
         try {
-
             BinaryHandler.load(inputStream);
 
         } catch (ClassNotFoundException | IOException e) {
@@ -94,12 +92,10 @@ public class Model extends Observable implements Serializable {
     }
 
     private void saveBin(String filename) {
-
         try {
             BinaryHandler.save(filename + ".bin");
         } catch (IOException e) {
             e.printStackTrace();
-
         }
     }
 
@@ -108,9 +104,8 @@ public class Model extends Observable implements Serializable {
     public Address[] searchForAddresses(Address address, int type){
         return OSMReader.searchForAddressess(address, type);
     }
-
-
-   /* public void searchForAddresses1(Model.Address addressInput){
+    /*
+    public void searchForAddresses1(Model.Address addressInput){
         int index = Collections.binarySearch(addressList,addressInput,new AddressComparator());
         if(index < 0) { //If it is not found the return value will be negative
             System.out.println("Too bad - didn't find!");
@@ -119,7 +114,6 @@ public class Model extends Observable implements Serializable {
             Point2D coordinate = addressMap.get(foundAddr);
             System.out.println("x = " + coordinate.getX() + ", y = " +coordinate.getY());
         } //if multiple results ... suggest these
-
     }*/
 
 
