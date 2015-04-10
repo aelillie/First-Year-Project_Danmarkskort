@@ -828,33 +828,24 @@ public class View extends JFrame implements Observer {
             mapFeatures = new ArrayList<>();
             mapIcons = new ArrayList<>();
 
+            bounds.updateBounds(getBounds());
             Rectangle2D windowBounds = bounds.getBounds();
 
-            bounds.updateBounds(getBounds());
+
             ArrayList<MapData> streets = model.getVisibleStreets(windowBounds);
-
-
-            for(MapData mD : streets){
-                mapFeatures.add((MapFeature) mD);
-            }
+            mapFeatures = (ArrayList<MapFeature>)(List<?>) streets;
 
             if(zoomLevel > 8){
-                ArrayList<MapData> naturals = model.getVisibleNatural(windowBounds);
+                mapFeatures.addAll((ArrayList<MapFeature>)(List<?>)model.getVisibleNatural(windowBounds));
 
-                for(MapData mD : naturals)
-                    mapFeatures.add((MapFeature) mD);
             }
 
-            if(zoomLevel >= 12){
-                ArrayList<MapData> buildings = model.getVisibleBuildings(windowBounds);
-
-                for(MapData mD : buildings)
-                    mapFeatures.add((MapFeature) mD);
+            if(zoomLevel >= 13){
+                mapFeatures.addAll((ArrayList<MapFeature>)(List<?>) model.getVisibleBuildings(windowBounds));
             }
 
-            if(zoomLevel >= 14){
-                for(MapData mD : model.getVisibleIcons(windowBounds))
-                    mapIcons.add((MapIcon) mD);
+            if(zoomLevel >= 15){
+                mapIcons = (ArrayList<MapIcon>) (List<?>) model.getVisibleIcons(windowBounds);
             }
 
         }

@@ -32,7 +32,7 @@ public class QuadTreeTest {
         paths = new ArrayList<>();
         ArrayList<Point2D> points = new ArrayList<>();
         Rectangle2D testBox = new Rectangle2D.Float(0,0,100,100);
-        quadTree = new QuadTree(testBox);
+        quadTree = new QuadTree(testBox,1000);
         points.add(new Point2D.Float(0,0));
         points.add(new Point2D.Float(10,10));
         points.add(new Point2D.Float(50,60));
@@ -67,12 +67,11 @@ public class QuadTreeTest {
 
         Rectangle2D window = new Rectangle2D.Float(60,30,60,30);
 
-        ArrayList<List<MapData>> visible = quadTree.query2D(window);
+        List<MapData> visible = quadTree.query2D(window);
 
         assertEquals( 1,visible.size() );
 
-        List<MapData> list1 =visible.get(0);
-        assertEquals(list1.size(), 1);
+
 
 
     }
@@ -88,14 +87,13 @@ public class QuadTreeTest {
             quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false));
         }
 
-        List<List<MapData>> Data = quadTree.query2D(new Rectangle2D.Float(51,1,100,49));
+        List<MapData> Data = quadTree.query2D(new Rectangle2D.Float(51,1,100,49));
 
-        assertEquals(4, Data.size());
+        assertTrue(!Data.isEmpty());
+        assertEquals(1500, Data.size());
+        assertEquals(quadTree.getNodeRects().size(), 9);
 
-        assertTrue(!Data.get(0).isEmpty());
-        assertTrue(!Data.get(1).isEmpty());
-        assertTrue(!Data.get(2).isEmpty());
-        assertTrue(!Data.get(3).isEmpty());
+
 
     }
 

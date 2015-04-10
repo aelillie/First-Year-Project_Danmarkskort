@@ -134,7 +134,7 @@ public class Model extends Observable implements Serializable {
         return OSMReader.getBbox();
     }
 
-    public List<QuadTree> getQuadTree(){
+    public List<QuadTree> getQuadTrees(){
         return OSMReader.getQuadTrees();
     }
 

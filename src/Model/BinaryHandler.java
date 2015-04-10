@@ -31,7 +31,7 @@ public final class BinaryHandler {
         out.writeObject(model.getOSMReader().getBoundaryMap());
         out.writeObject(model.getOSMReader().getAddressList());
 
-        QuadTree qT = model.getQuadTree();
+        List<QuadTree> qT = model.getQuadTrees();
         out.writeObject(qT);
 
 
@@ -67,7 +67,7 @@ public final class BinaryHandler {
 
         long time = System.nanoTime();
         model.setBBox(rec);
-        QuadTree qT = (QuadTree) in.readObject();
+        List<QuadTree> qT = (List<QuadTree>) in.readObject();
 
         model.setQuadTree(qT);
         System.out.println("done in " + (System.nanoTime() - time) / 1000000);

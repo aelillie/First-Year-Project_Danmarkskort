@@ -12,6 +12,7 @@ import java.util.List;
 
 public class QuadTree implements Serializable{
     private static final long serialVersionUID = 8;
+    private int cap = 0;
     private Node root;
 
     // helper node data type
@@ -56,7 +57,7 @@ public class QuadTree implements Serializable{
          * @param values - Value to be stored in node
          */
         public void addvalue(MapData values){
-            if(value.size() > 1000){
+            if(value.size() > cap){
                 subDivide();
                 insert(values);
             }else value.add(values);
@@ -68,8 +69,8 @@ public class QuadTree implements Serializable{
      * Create an instance from a bbox. Splitting the initial root using bbox values.
      * @param bbox - Bounds containing all values.
      */
-    public QuadTree(Rectangle2D bbox){
-
+    public QuadTree(Rectangle2D bbox, int capacity){
+        cap = capacity;
         root = new Node(bbox.getCenterX(),bbox.getCenterY(), bbox.getWidth(), bbox.getHeight());
         root.subDivide();
     }
