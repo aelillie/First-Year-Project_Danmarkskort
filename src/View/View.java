@@ -727,7 +727,7 @@ public class View extends JFrame implements Observer {
                 }
             }
             //Then draw boundaries on top of areas
-            for (MapFeature mapFeature : mapFeatures) {
+           /* for (MapFeature mapFeature : mapFeatures) {
                 if (zoomLevel > 14) {
                     try {
                         g.setColor(Color.BLACK);
@@ -741,7 +741,7 @@ public class View extends JFrame implements Observer {
                         System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
                     }
                 }
-            }
+            }*/
 
             //Then draw boundaries on top of areas
             for (MapFeature mapFeature : mapFeatures) {

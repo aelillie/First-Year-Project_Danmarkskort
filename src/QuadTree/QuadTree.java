@@ -92,7 +92,6 @@ public class QuadTree implements Serializable{
         else {
             MapFeature mF = (MapFeature) value;
             Rectangle2D bounds = mF.getShape().getBounds2D();
-
             insert(root, bounds.getCenterX(), bounds.getCenterY(), value);
         }
     }
