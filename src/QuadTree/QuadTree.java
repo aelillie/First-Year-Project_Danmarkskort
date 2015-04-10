@@ -123,15 +123,15 @@ public class QuadTree implements Serializable{
      * @param rect Range needed
      * @return List of List of MapFeatures
      */
-    public ArrayList<List<MapData>> query2D(Shape rect) {
+    public ArrayList<MapData> query2D(Shape rect) {
 
-        ArrayList<List<MapData>> values = new ArrayList<>(); //List of list of All values in rect to be returned
+        ArrayList<MapData> values = new ArrayList<>(); //List of list of All values in rect to be returned
         if(rect != null)
             query2D(root, rect, values);
         return values;
     }
 
-    private void query2D(Node h, Shape query, ArrayList<List<MapData>> values) {
+    private void query2D(Node h, Shape query, ArrayList<MapData> values) {
         if (h == null) return;
         Rectangle2D rect = query.getBounds2D();
         Double xmin = rect.getMinX();
@@ -140,7 +140,7 @@ public class QuadTree implements Serializable{
         Double ymax = rect.getMaxY();
         if (rect.intersects(h.x- h.width,h.y - h.height, h.width*2, h.height*2) || rect.contains(h.x, h.y))
             if(!h.value.isEmpty())
-            values.add(h.value);
+            values.addAll(h.value);
 
         //Recursive calls. Checking what nodes to search in.
         if ( less(xmin, h.x) &&  less(ymin, h.y)) query2D(h.NW, rect, values);

@@ -599,41 +599,38 @@ public class View extends JFrame implements Observer {
     public void findNearest(Point position){
         if(zoomLevel < 11) return;
         //Rectangle2D rec = new Rectangle2D.Double(position.getX(), position.getY(),0,0);
-        ArrayList<List<MapData>> node = model.getVisibleData(bounds.getBounds());
+        ArrayList<MapData> node = model.getVisibleStreets(bounds.getBounds());
 
         MapFeature champion = null;
         Line2D championLine = null;
-        for(int i = 0; i < node.size(); i++) {
-            for (MapData mp : node.get(i)) {
-                if (mp instanceof Highway) {
-                    MapFeature highway = (MapFeature) mp;
-                    double[] points = new double[6];
-                    PathIterator pI = highway.getShape().getPathIterator(transform);
+
+        for (MapData mp : node) {
+            if (mp instanceof Highway) {
+                MapFeature highway = (MapFeature) mp;
+                double[] points = new double[6];
+                PathIterator pI = highway.getShape().getPathIterator(transform);
+                pI.currentSegment(points);
+                Point2D p1 = new Point2D.Double(points[0], points[1]);
+                pI.next();
+                while(!pI.isDone()) {
                     pI.currentSegment(points);
-                    Point2D p1 = new Point2D.Double(points[0], points[1]);
+                    Point2D p2 = new Point2D.Double(points[0], points[1]);
+
+                    Line2D path = new Line2D.Double(p1,p2);
+                    p1 = p2;
                     pI.next();
-                    while(!pI.isDone()) {
-                        pI.currentSegment(points);
-                        Point2D p2 = new Point2D.Double(points[0], points[1]);
+                    if(championLine == null) {
+                        championLine = path;
+                        champion = highway;
+                    }
+                    else if(path.ptSegDist(position) < championLine.ptSegDist(position)){
+                        champion = highway;
+                        championLine = path;
 
-                        Line2D path = new Line2D.Double(p1,p2);
-                        p1 = p2;
-                        pI.next();
-                        if(championLine == null) {
-                            championLine = path;
-                            champion = highway;
-                        }
-                        else if(path.ptSegDist(position) < championLine.ptSegDist(position)){
-                            champion = highway;
-                            championLine = path;
-
-                        }
                     }
                 }
-
             }
         }
-
         nearestNeighbor = champion;
 
     }
@@ -828,23 +825,38 @@ public class View extends JFrame implements Observer {
         }
 
         private void getData(){
-            Rectangle2D windowBounds = bounds.getBounds();
-
-            bounds.updateBounds(getBounds());
-            ArrayList<List<MapData>> mapDatas = model.getVisibleData(windowBounds);
             mapFeatures = new ArrayList<>();
             mapIcons = new ArrayList<>();
 
+            Rectangle2D windowBounds = bounds.getBounds();
 
-            for(int i = 0; i < mapDatas.size(); i++){
-                for(MapData mD : mapDatas.get(i)){
-                    if(mD.getType() == MapIcon.class) {
-                        if (zoomLevel > 13)
-                            mapIcons.add((MapIcon) mD);
-                    }
-                    else mapFeatures.add((MapFeature) mD);
-                }
+            bounds.updateBounds(getBounds());
+            ArrayList<MapData> streets = model.getVisibleStreets(windowBounds);
+
+
+            for(MapData mD : streets){
+                mapFeatures.add((MapFeature) mD);
             }
+
+            if(zoomLevel > 8){
+                ArrayList<MapData> naturals = model.getVisibleNatural(windowBounds);
+
+                for(MapData mD : naturals)
+                    mapFeatures.add((MapFeature) mD);
+            }
+
+            if(zoomLevel >= 12){
+                ArrayList<MapData> buildings = model.getVisibleBuildings(windowBounds);
+
+                for(MapData mD : buildings)
+                    mapFeatures.add((MapFeature) mD);
+            }
+
+            if(zoomLevel >= 14){
+                for(MapData mD : model.getVisibleIcons(windowBounds))
+                    mapIcons.add((MapIcon) mD);
+            }
+
         }
 
         private void paintNeighbor(Graphics2D g){
