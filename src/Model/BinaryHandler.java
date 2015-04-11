@@ -53,11 +53,12 @@ public final class BinaryHandler {
         Model model = Model.getModel();
         ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(inputStream));
         model.getOSMReader().initializeCollections();
+        MapIcon.setIconResources();
         //get the bounds of the map
         Rectangle2D rec = (Rectangle2D) in.readObject();
 
 
-        model.getOSMReader().setAddressMap((Map<Address,Point2D>) in.readObject());
+        model.getOSMReader().setAddressMap((Map<Address, Point2D>) in.readObject());
 
         model.getOSMReader().setStreetMap((Map<Address, List<Path2D>>) in.readObject());
 
@@ -69,7 +70,6 @@ public final class BinaryHandler {
         long time = System.nanoTime();
         model.setBBox(rec);
         List<QuadTree> qT = (List<QuadTree>) in.readObject();
-
         model.setQuadTree(qT);
         System.out.println("done in " + (System.nanoTime() - time) / 1000000);
 

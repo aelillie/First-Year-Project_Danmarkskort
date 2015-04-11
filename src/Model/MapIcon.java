@@ -12,32 +12,14 @@ import java.io.Serializable;
 import java.net.URL;
 
 public class MapIcon implements Serializable, MapData {
-    public static final long serialVersionUID = 5;
-    public static final URL metroIcon = MapIcon.class.getResource("/data/metroIcon.png");
-    public static final URL STogIcon = MapIcon.class.getResource("/data/stogIcon.png");
-    public static final URL parkingIcon = MapIcon.class.getResource("/data/parkingIcon.jpg");
-    public static final URL busIcon = MapIcon.class.getResource("/data/busIcon.png");
-    public static final URL pubIcon = MapIcon.class.getResource("/data/pubIcon.png");
-    public static final URL atmIcon = MapIcon.class.getResource("/data/atmIcon.png");
+    public static long serialVersionUID = 5;
 
-    public static final URL standard = MapIcon.class.getResource("/data/standardMapImage.png");
-    public static final URL colorblind = MapIcon.class.getResource("/data/colorblindMapImage.png");
-    public static final URL transport = MapIcon.class.getResource("/data/transportMapImage.png");
+    public static URL metroIcon, STogIcon, parkingIcon, busIcon, pubIcon, atmIcon, standard, colorblind, transport, layerIcon;
+    public static URL startPointIcon, endPointIcon, fullscreenIcon, minusIcon, plusIcon, searchIcon, optionsIcon, chosenAddressIcon;
 
-    public static final URL startPointIcon = MapIcon.class.getResource("/data/startPointIcon.png");
-    public static final URL endPointIcon = MapIcon.class.getResource("/data/endPointIcon.png");
-
-    public static final URL fullscreenIcon = MapIcon.class.getResource("/data/fullscreenIcon.png");
-    public static final URL minusIcon = MapIcon.class.getResource("/data/minusIcon.png");
-    public static final URL plusIcon = MapIcon.class.getResource("/data/plusIcon.png");
-    public static final URL searchIcon = MapIcon.class.getResource("/data/searchIcon.png");
-    public static final URL optionsIcon = MapIcon.class.getResource("/data/optionsIcon.png");
-    public static final URL layerIcon = MapIcon.class.getResource("/data/layerIcon.png");
-    public static final URL chosenAddressIcon = MapIcon.class.getResource("/data/chosenAddressIcon.png");
-
-    BufferedImage img;
-    Point2D coord;
-    URL imgPath;
+    private BufferedImage img;
+    private Point2D coord;
+    private URL imgPath;
 
     /**
      * Creates a new Icon instance.
@@ -64,6 +46,30 @@ public class MapIcon implements Serializable, MapData {
             this.coord = coord;
             this.imgPath = imgPath;
 
+    }
+
+    public static void setIconResources() {
+        metroIcon = MapIcon.class.getResource("/data/metroIcon.png");
+        STogIcon = MapIcon.class.getResource("/data/stogIcon.png");
+        parkingIcon = MapIcon.class.getResource("/data/parkingIcon.jpg");
+        busIcon = MapIcon.class.getResource("/data/busIcon.png");
+        pubIcon = MapIcon.class.getResource("/data/pubIcon.png");
+        atmIcon = MapIcon.class.getResource("/data/atmIcon.png");
+
+        standard = MapIcon.class.getResource("/data/standardMapImage.png");
+        colorblind = MapIcon.class.getResource("/data/colorblindMapImage.png");
+        transport = MapIcon.class.getResource("/data/transportMapImage.png");
+
+        startPointIcon = MapIcon.class.getResource("/data/startPointIcon.png");
+        endPointIcon = MapIcon.class.getResource("/data/endPointIcon.png");
+
+        fullscreenIcon = MapIcon.class.getResource("/data/fullscreenIcon.png");
+        minusIcon = MapIcon.class.getResource("/data/minusIcon.png");
+        plusIcon = MapIcon.class.getResource("/data/plusIcon.png");
+        searchIcon = MapIcon.class.getResource("/data/searchIcon.png");
+        optionsIcon = MapIcon.class.getResource("/data/optionsIcon.png");
+        layerIcon = MapIcon.class.getResource("/data/layerIcon.png");
+        chosenAddressIcon = MapIcon.class.getResource("/data/chosenAddressIcon.png");
     }
 
     /**

@@ -5,7 +5,9 @@ import MapFeatures.Highway;
 import MapFeatures.Leisure;
 import Model.Model;
 import Model.MapData;
+import Model.MapFeature;
 import Model.MapCalculator;
+import Model.MapIcon;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -26,6 +28,9 @@ public class OSMHandlerTest {
     Model m = Model.getModel();
     InputStream inputStream;
     List<MapData> streetList;
+    List<MapData> buildingList;
+    List<MapData> iconList;
+    List<MapData> naturalList;
 
     /**
      * Sets up an osm test file, which enables us to cover all the functions the OSMHandler invokes
@@ -39,6 +44,9 @@ public class OSMHandlerTest {
             e.printStackTrace();
         }
         streetList = m.getVisibleStreets(new Rectangle2D.Float(0, 0, 500, 500));
+        buildingList = m.getVisibleBuildings(new Rectangle2D.Float(0, 0, 500, 500));
+        iconList = m.getVisibleIcons(new Rectangle2D.Float(0, 0, 500, 500));
+        naturalList = m.getVisibleNatural(new Rectangle2D.Float(0, 0, 500, 500));
     }
 
     @Test
@@ -58,25 +66,28 @@ public class OSMHandlerTest {
         Barrier barrier = null;
         Leisure leisure = null;
 
-
-        assert streetList != null;
         for (MapData mapData : streetList) {
-            if (mapData instanceof Highway && highway.getValue().equals("tertiary"))
-                highway = (Highway) mapData;
-            else if (mapData instanceof Barrier && barrier.getValue().equals("hedge"))
+            highway = (Highway) mapData;
+            if (highway.getValue().equals("tertiary"))
+                break;
+        }
+
+        for (MapData mapData : buildingList) {
+            barrier = (Barrier) mapData;
+            leisure = (Leisure) mapData;
+            if (mapData instanceof Barrier && barrier.getValue().equals("hedge"))
                 barrier = (Barrier) mapData;
             else if (mapData instanceof Leisure && leisure.getValue().equals("garden"))
                 leisure = (Leisure) mapData;
         }
 
-        if(highway != null && barrier != null && leisure != null) {
-            PathIterator highwayPath = highway.getShape().getPathIterator(new AffineTransform()); //object that iterates along a shape
-            PathIterator barrierPath = barrier.getShape().getPathIterator(new AffineTransform());
-            PathIterator leisurePath = leisure.getShape().getPathIterator(new AffineTransform());
-            pathIterate(highwayPath, highwayCoords);
-            pathIterate(barrierPath, barrierCoords);
-            pathIterate(leisurePath, leisureCoords);
-        }
+        PathIterator highwayPath = highway.getShape().getPathIterator(new AffineTransform()); //object that iterates along a shape
+        PathIterator barrierPath = barrier.getShape().getPathIterator(new AffineTransform());
+        PathIterator leisurePath = leisure.getShape().getPathIterator(new AffineTransform());
+        pathIterate(highwayPath, highwayCoords);
+        pathIterate(barrierPath, barrierCoords);
+        pathIterate(leisurePath, leisureCoords);
+
     }
 
     private void pathIterate(PathIterator path, List<Point2D> wayCoords) {
