@@ -45,14 +45,6 @@ public class Model extends Observable implements Serializable {
         System.out.printf("Complete model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
-    /*
-    public void loadFile(String shapeFile, String iconFile){
-        long time = System.nanoTime();
-        if(shapeFile.endsWith(".bin") && iconFile.endsWith(".bin"))
-            loadAll(shapeFile, iconFile);
-        else System.err.println("File not recognized");
-        System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
-    }*/
 
     private void parseOSM(InputStream inputStream) {
         try {
@@ -140,11 +132,7 @@ public class Model extends Observable implements Serializable {
         return OSMReader.getQuadTrees();
     }
 
-
-
     public void setQuadTree(List<QuadTree> qt){OSMReader.setQuadTrees(qt);}
-
-
 
     public void setBBox(Rectangle2D bBox){
 

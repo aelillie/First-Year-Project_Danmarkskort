@@ -789,7 +789,7 @@ public class View extends JFrame implements Observer {
                     mapIcon.draw(g, transform);
                 }
             }
-
+            g.draw(bounds.getBounds());
 
             scalebar = new Scalebar(g, zoomLevel, View.this, transform);
 
@@ -828,7 +828,7 @@ public class View extends JFrame implements Observer {
             mapFeatures = new ArrayList<>();
             mapIcons = new ArrayList<>();
 
-            bounds.updateBounds(getBounds());
+            bounds.updateBounds(getVisibleRect());
             Rectangle2D windowBounds = bounds.getBounds();
 
 

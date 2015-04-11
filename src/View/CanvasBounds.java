@@ -22,10 +22,10 @@ public class CanvasBounds {
      */
     public CanvasBounds(Rectangle2D bounds, AffineTransform transform){
         this.bounds = new Rectangle2D.Double(
-                bounds.getX()- bounds.getWidth()/4,
-                bounds.getY()- bounds.getHeight()/4,
-                bounds.getWidth()* 1.5,
-                bounds.getHeight() * 1.5);
+                bounds.getX() - bounds.getWidth()/4,
+                bounds.getY() - bounds.getHeight()/4,
+                bounds.getWidth()* 1.25,
+                bounds.getHeight() *1.25);
         this.transform = transform;
     }
 

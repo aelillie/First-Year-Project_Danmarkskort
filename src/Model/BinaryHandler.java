@@ -60,7 +60,7 @@ public final class BinaryHandler {
 
         LoadingScreen loadingScreen = new LoadingScreen();
 
-        model.getOSMReader().setAddressMap((Map<Address,Point2D>) in.readObject());
+        model.getOSMReader().setAddressMap((Map<Address, Point2D>) in.readObject());
 
         loadingScreen.updateLoadBar(15);
         model.getOSMReader().setStreetMap((Map<Address, List<Path2D>>) in.readObject());
@@ -80,12 +80,11 @@ public final class BinaryHandler {
         model.setQuadTree(qT);
         System.out.println("done in " + (System.nanoTime() - time) / 1000000);
 
-
         List<Coastline> coasts = model.getCoastlines();
         coasts.addAll((List<Coastline>)in.readObject());
-        loadingScreen.updateLoadBar(100);
+        loadingScreen.updateLoadBar(99);
         in.close();
-
+        loadingScreen.updateLoadBar(100);
     }
 
 
