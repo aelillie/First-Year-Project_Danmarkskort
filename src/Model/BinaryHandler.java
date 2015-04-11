@@ -7,6 +7,7 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -62,7 +63,7 @@ public final class BinaryHandler {
 
         model.getOSMReader().setBoundaryMap((Map<Address, Path2D>) in.readObject());
 
-        model.getOSMReader().setAddressList((List<Address>) in.readObject());
+        model.getOSMReader().setAddressList((ArrayList<Address>) in.readObject());
 
 
         long time = System.nanoTime();
