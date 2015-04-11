@@ -23,9 +23,9 @@ public class CanvasBounds {
     public CanvasBounds(Rectangle2D bounds, AffineTransform transform){
         this.bounds = new Rectangle2D.Double(
                 bounds.getX() - bounds.getWidth()/4,
-                bounds.getY() - bounds.getHeight()/4,
-                bounds.getWidth()* 1.25,
-                bounds.getHeight() *1.25);
+                bounds.getY() + bounds.getHeight()/4,
+                bounds.getWidth()* 1.40,
+                bounds.getHeight() *1.40);
         this.transform = transform;
     }
 
@@ -46,8 +46,8 @@ public class CanvasBounds {
         bounds = new Rectangle2D.Double(
                 tmpRect.getX() - tmpRect.getWidth()/4,
                 tmpRect.getY() - tmpRect.getHeight()/4,
-                tmpRect.getWidth()* 1.25,
-                tmpRect.getHeight() * 1.25);
+                tmpRect.getWidth()* 1.40,
+                tmpRect.getHeight() * 1.40);
     }
 
     public Rectangle2D getBounds(){return bounds;}

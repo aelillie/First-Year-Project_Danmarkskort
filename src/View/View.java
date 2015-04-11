@@ -706,7 +706,6 @@ public class View extends JFrame implements Observer {
                 g.fill(coastLine.getShape());
             }
 
-            //long time = System.currentTimeMillis();
 
             if(zoomLevel > 12)
                 model.sortLayers(mapFeatures);

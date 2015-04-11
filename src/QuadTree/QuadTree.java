@@ -1,5 +1,6 @@
 package QuadTree;
 
+import MapFeatures.Highway;
 import Model.MapData;
 import Model.MapFeature;
 import Model.MapIcon;
@@ -93,6 +94,7 @@ public class QuadTree implements Serializable{
             MapFeature mF = (MapFeature) value;
             Rectangle2D bounds = mF.getShape().getBounds2D();
             insert(root, bounds.getCenterX(), bounds.getCenterY(), value);
+
         }
     }
 
