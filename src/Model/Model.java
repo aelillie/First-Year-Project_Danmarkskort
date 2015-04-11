@@ -8,6 +8,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class Model extends Observable implements Serializable {
     }
 
     public void loadFile(String filename, InputStream inputStream) throws IOException {
+
         long time = System.nanoTime();
         if (filename.endsWith(".osm")) parseOSM(inputStream);
         else if (filename.endsWith(".zip")) parseZIP(inputStream);

@@ -5,10 +5,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.io.Serializable;
+import java.io.*;
 import java.net.URL;
 
 public class MapIcon implements Serializable, MapData {
@@ -46,7 +43,6 @@ public class MapIcon implements Serializable, MapData {
      * @param imgPath The path of the image file.
      */
     public MapIcon(Shape shape, URL imgPath){
-
         coord = new Point2D.Float((float)shape.getBounds2D().getCenterX(), (float)shape.getBounds2D().getCenterY());
         this.imgPath = imgPath;
 
