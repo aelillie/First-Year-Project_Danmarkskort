@@ -53,7 +53,6 @@ public final class BinaryHandler {
         Model model = Model.getModel();
         ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(inputStream));
         model.getOSMReader().initializeCollections();
-        MapIcon.setIconResources();
         //get the bounds of the map
         Rectangle2D rec = (Rectangle2D) in.readObject();
 

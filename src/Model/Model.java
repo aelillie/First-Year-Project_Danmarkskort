@@ -35,7 +35,6 @@ public class Model extends Observable implements Serializable {
 
     public void loadFile(String filename, InputStream inputStream) throws IOException {
         long time = System.nanoTime();
-        MapIcon.setIconResources();
         if (filename.endsWith(".osm")) parseOSM(inputStream);
         else if (filename.endsWith(".zip")) parseZIP(inputStream);
         else if (filename.endsWith(".bin")) loadBin(inputStream);

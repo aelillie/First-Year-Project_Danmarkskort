@@ -48,30 +48,6 @@ public class MapIcon implements Serializable, MapData {
 
     }
 
-    public static void setIconResources() {
-        metroIcon = MapIcon.class.getResource("/data/metroIcon.png");
-        STogIcon = MapIcon.class.getResource("/data/stogIcon.png");
-        parkingIcon = MapIcon.class.getResource("/data/parkingIcon.jpg");
-        busIcon = MapIcon.class.getResource("/data/busIcon.png");
-        pubIcon = MapIcon.class.getResource("/data/pubIcon.png");
-        atmIcon = MapIcon.class.getResource("/data/atmIcon.png");
-
-        standard = MapIcon.class.getResource("/data/standardMapImage.png");
-        colorblind = MapIcon.class.getResource("/data/colorblindMapImage.png");
-        transport = MapIcon.class.getResource("/data/transportMapImage.png");
-
-        startPointIcon = MapIcon.class.getResource("/data/startPointIcon.png");
-        endPointIcon = MapIcon.class.getResource("/data/endPointIcon.png");
-
-        fullscreenIcon = MapIcon.class.getResource("/data/fullscreenIcon.png");
-        minusIcon = MapIcon.class.getResource("/data/minusIcon.png");
-        plusIcon = MapIcon.class.getResource("/data/plusIcon.png");
-        searchIcon = MapIcon.class.getResource("/data/searchIcon.png");
-        optionsIcon = MapIcon.class.getResource("/data/optionsIcon.png");
-        layerIcon = MapIcon.class.getResource("/data/layerIcon.png");
-        chosenAddressIcon = MapIcon.class.getResource("/data/chosenAddressIcon.png");
-    }
-
     /**
      * Draws the Icon taking the AffineTransform into account.
      * @param g The graphics context.
