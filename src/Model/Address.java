@@ -74,6 +74,7 @@ public class Address implements Comparable<Address>, Serializable {
         String s = street.trim() + " " + house.trim() + " " + floor.trim() + " " + side.trim()+" " + postcode.trim() + " " + city.trim();
         s = s.replaceAll(" +", " ");
         s = s.trim();
+        s = s.toLowerCase();
         return s;
     }
 
@@ -94,11 +95,8 @@ public class Address implements Comparable<Address>, Serializable {
        if(type == 1) {
            if (this.toStringForSort().startsWith(addr.toStringForSort())) return 0;
            else return this.toStringForSort().compareTo(addr.toStringForSort());
-       } else if (type == 2){
-           if(this.toStringForSort().equals(addr.toStringForSort())) return 0;
-           else return this.toStringForSort().compareTo(addr.toStringForSort());
        } else {
-           if(this.toStringForSort().contains(addr.toStringForSort())) return 0;
+           if(this.toStringForSort().equals(addr.toStringForSort())) return 0;
            else return this.toStringForSort().compareTo(addr.toStringForSort());
        }
     }
