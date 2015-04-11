@@ -10,7 +10,8 @@ import java.util.Map;
  */
 public class AddressSearcher {
 
-    private static int binSearch(List<Address> list, Address addr, int low, int high, int type){
+    //Type of compare: either 1 = startsWith compare, 2 = equality compare and else contains compare
+    private static int binSearch(ArrayList<Address> list, Address addr, int low, int high, int type){
         if(low > high) return -1;
         int mid = (low+high)/2;
         if (list.get(mid).searchCompare(addr,type) < 0) return binSearch(list, addr, mid + 1, high, type); //if addr is larger than mid
@@ -25,7 +26,7 @@ public class AddressSearcher {
      * @param addressInput
      * @return
      */
-    private static int[] multipleEntriesSearch(Address addressInput, List<Address> addressList, int type){
+    private static int[] multipleEntriesSearch(Address addressInput, ArrayList<Address> addressList, int type){
         int index = binSearch(addressList,addressInput,0,addressList.size()-1,type); //Returns the index of the first found element.
         if(index < 0) return null; //Not found
 
@@ -48,7 +49,7 @@ public class AddressSearcher {
         return range;
     }
 
-    public static Address[] searchForAddresses(Address addressInput, List<Address> addressList, Map<Address, Point2D> addressMap, int type){
+    public static Address[] searchForAddresses(Address addressInput, ArrayList<Address> addressList, Map<Address, Point2D> addressMap, int type){
         int[] range = multipleEntriesSearch(addressInput, addressList,type); //search for one or multiple entries
         if(range == null) { //If it is not found, the return value will be negative
             System.out.println("Too bad - didn't find!");

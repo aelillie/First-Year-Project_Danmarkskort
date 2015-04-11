@@ -26,7 +26,7 @@ public class OSMHandler extends DefaultHandler {
     private Map<Address, Path2D> boundaryMap;
 
     private QuadTree streetTree, buildingTree, iconTree, naturalTree;
-    private List<Address> addressList; //list of all the addresses in the .osm file
+    private ArrayList<Address> addressList; //list of all the addresses in the .osm file
     private List<Long> memberReferences; //member referenced in a relation of ways
     private List<Point2D> wayCoords; //List of referenced coordinates used to make up a single way
     private static List<Coastline> coastlines; //List of all of the coastlines to be drawn
@@ -427,7 +427,7 @@ public class OSMHandler extends DefaultHandler {
         this.boundaryMap = boundaryMap;
     }
 
-    public void setAddressList(List<Address> addressList) {
+    public void setAddressList(ArrayList<Address> addressList) {
         this.addressList = addressList;
     }
 
