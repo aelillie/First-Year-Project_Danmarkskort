@@ -25,7 +25,7 @@ public class Amenity extends MapFeature {
             isArea = false;
             setValueName(ValueName.AMENITY);
         }
-        //TODO: Does not work. in newSmall the university is not drawn because it is not said to be building
+
     }
 
 }

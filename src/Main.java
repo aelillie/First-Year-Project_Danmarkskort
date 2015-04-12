@@ -3,12 +3,14 @@ import Model.Model;
 import Model.MapIcon;
 import View.View;
 
+import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
 
 public class Main {
     public static void main(String[] args) {
+
         Model m = Model.getModel();
         try {
             String filename = "data/newSmall.osm"; //Is used to get filename in order to determine the file format

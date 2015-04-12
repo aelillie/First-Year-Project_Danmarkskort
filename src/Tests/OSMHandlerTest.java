@@ -1,10 +1,12 @@
 package Tests;
 
 import MapFeatures.Barrier;
+import MapFeatures.Amenity;
 import MapFeatures.Highway;
 import MapFeatures.Leisure;
 import Model.Model;
 import Model.MapData;
+import Model.MapIcon;
 import Model.MapFeature;
 import Model.MapCalculator;
 import Model.MapIcon;
@@ -81,7 +83,7 @@ public class OSMHandlerTest {
         }
         for (MapData mapData : buildingList) {
             barrier = (MapFeature) mapData;
-            if (mapData instanceof Barrier && barrier.getValue().equals("hedge"))
+            if (barrier.getValue().equals("hedge"))
                 break;
         }
         for (MapData mapData : buildingList) {
@@ -109,6 +111,45 @@ public class OSMHandlerTest {
             path.next();
             i++;
         }
+    }
+
+    @Test
+    public void addingIconsTest(){
+        List<MapData> icons = m.getVisibleIcons(new Rectangle2D.Float(0, 0, 500, 500));
+
+        Assert.assertEquals(5, icons.size());
+        MapIcon icon = (MapIcon) icons.get(0);
+        Assert.assertEquals(new Point2D.Float(12.5818120f , (float) MapCalculator.latToY(55.6653496)), icon.getPosition());
+
+    }
+
+    @Test
+    public void addingBuildingsTest(){
+        List<MapData> buildings = m.getVisibleBuildings(new Rectangle2D.Float(0, 0, 500, 500));
+
+        Assert.assertTrue(!buildings.isEmpty());
+
+        Assert.assertNotNull(buildings.get(0));
+
+        Assert.assertEquals(5, buildings.size());
+
+        Assert.assertTrue(buildings.get(0) instanceof Amenity);
+
+
+
+    }
+
+
+    @Test
+    public void addingNaturalsTest(){
+        List<MapData> naturals = m.getVisibleNatural(new Rectangle2D.Float(0, 0, 500, 500));
+
+        Assert.assertTrue(!naturals.isEmpty());
+        Assert.assertEquals(3, naturals.size());
+        Assert.assertNotNull(naturals.get(1));
+
+
+
     }
 
 }

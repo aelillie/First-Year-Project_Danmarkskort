@@ -51,6 +51,7 @@ public class OSMHandler extends DefaultHandler {
         addressMap = new HashMap<>();
         streetMap = new HashMap<>();
         boundaryMap = new HashMap<>();
+
     }
 
     /**
@@ -119,8 +120,8 @@ public class OSMHandler extends DefaultHandler {
                 float maxlon = Float.parseFloat(atts.getValue("maxlon"));
                 Rectangle2D rect =  new Rectangle2D.Float(minlon, minlat, maxlon - minlon, maxlat - minlat);
                 bbox.setRect(rect);
-                streetTree = new QuadTree(bbox, 400);
-                buildingTree = new QuadTree(bbox, 400);
+                streetTree = new QuadTree(bbox, 250);
+                buildingTree = new QuadTree(bbox, 300);
                 iconTree = new QuadTree(bbox, 30);
                 naturalTree = new QuadTree(bbox, 200);
 
@@ -302,10 +303,12 @@ public class OSMHandler extends DefaultHandler {
                 break;
 
             case "osm": //The end of the osm file
+
                 long time = System.nanoTime();
                 Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
                 System.out.printf("sorted all addresses, time: %d ms\n", (System.nanoTime() - time) / 1000000);
                 PathCreater.connectCoastlines(bbox);
+                wayId_map.clear();
                 break;
 
         }

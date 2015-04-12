@@ -97,11 +97,11 @@ public class QuadTreeTest {
 
     }
 
-    @Test(timeout = 800)
+    @Test(timeout = 600)
     public void TestEfficiency(){
         ArrayList<Point2D> points = new ArrayList<>();
         Random r = new Random();
-        for(int i = 0; i < 50000; i++){
+        for(int i = 0; i < 75000; i++){
             if(r.nextBoolean()) {
                 points.clear();
                 points.add(new Point2D.Float((i * 4 % 100) + 50, i % 100));
