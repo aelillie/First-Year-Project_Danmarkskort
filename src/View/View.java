@@ -2,6 +2,7 @@ package View;
 
 import Controller.SearchResultMouseHandler;
 import MapFeatures.Bounds;
+import MapFeatures.Coastline;
 import MapFeatures.Highway;
 import Model.*;
 
@@ -441,7 +442,7 @@ public class View extends JFrame implements Observer {
             transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
             pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
             checkForZoomOut();
-        }System.out.println("level "+zoomLevel);
+        }System.out.println("level " +zoomLevel);
         System.out.println("factor " + zoomFactor);
     }
 
@@ -598,43 +599,38 @@ public class View extends JFrame implements Observer {
     public void findNearest(Point position){
         if(zoomLevel < 11) return;
         //Rectangle2D rec = new Rectangle2D.Double(position.getX(), position.getY(),0,0);
-        ArrayList<List<MapData>> node = model.getVisibleData(bounds.getBounds());
-
-
+        ArrayList<MapData> node = model.getVisibleStreets(bounds.getBounds());
 
         MapFeature champion = null;
         Line2D championLine = null;
-        for(int i = 0; i < node.size(); i++) {
-            for (MapData mp : node.get(i)) {
-                if (mp instanceof Highway) {
-                    MapFeature highway = (MapFeature) mp;
-                    double[] points = new double[6];
-                    PathIterator pI = highway.getShape().getPathIterator(transform);
+
+        for (MapData mp : node) {
+            if (mp instanceof Highway) {
+                MapFeature highway = (MapFeature) mp;
+                double[] points = new double[6];
+                PathIterator pI = highway.getShape().getPathIterator(transform);
+                pI.currentSegment(points);
+                Point2D p1 = new Point2D.Double(points[0], points[1]);
+                pI.next();
+                while(!pI.isDone()) {
                     pI.currentSegment(points);
-                    Point2D p1 = new Point2D.Double(points[0], points[1]);
+                    Point2D p2 = new Point2D.Double(points[0], points[1]);
+
+                    Line2D path = new Line2D.Double(p1,p2);
+                    p1 = p2;
                     pI.next();
-                    while(!pI.isDone()) {
-                        pI.currentSegment(points);
-                        Point2D p2 = new Point2D.Double(points[0], points[1]);
+                    if(championLine == null) {
+                        championLine = path;
+                        champion = highway;
+                    }
+                    else if(path.ptSegDist(position) < championLine.ptSegDist(position)){
+                        champion = highway;
+                        championLine = path;
 
-                        Line2D path = new Line2D.Double(p1,p2);
-                        p1 = p2;
-                        pI.next();
-                        if(championLine == null) {
-                            championLine = path;
-                            champion = highway;
-                        }
-                        else if(path.ptSegDist(position) < championLine.ptSegDist(position)){
-                            champion = highway;
-                            championLine = path;
-
-                        }
                     }
                 }
-
             }
         }
-
         nearestNeighbor = champion;
 
     }
@@ -683,32 +679,18 @@ public class View extends JFrame implements Observer {
     class Canvas extends JComponent {
         public static final long serialVersionUID = 4;
         Stroke min_value = new BasicStroke(Float.MIN_VALUE);
+        private ArrayList<MapFeature> mapFeatures = new ArrayList<>();
+        private ArrayList<MapIcon> mapIcons = new ArrayList<>();
 
         @Override
         public void paint(Graphics _g) {
             Graphics2D g = (Graphics2D) _g;
-
-            bounds.updateBounds(getBounds());
+            getData();
 
             //Set the Transform for Graphic2D element before drawing.
             g.setTransform(transform);
             if (antialias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            Rectangle2D windowBounds = bounds.getBounds();
-
-            ArrayList<List<MapData>> mapDatas = model.getVisibleData(windowBounds);
-            ArrayList<MapFeature> mapFeatures = new ArrayList<>();
-            ArrayList<MapIcon> mapIcons = new ArrayList<>();
-
-
-            for(int i = 0; i < mapDatas.size(); i++){
-                for(MapData mD : mapDatas.get(i)){
-                    if(mD.getType() == MapIcon.class)
-                        mapIcons.add((MapIcon) mD);
-                    else mapFeatures.add((MapFeature) mD);
-                }
-
-            }
 
 
             g.setStroke(min_value); //Just for good measure.
@@ -724,9 +706,9 @@ public class View extends JFrame implements Observer {
                 g.fill(coastLine.getShape());
             }
 
-            //long time = System.currentTimeMillis();
 
-            model.sortLayers(mapFeatures);
+            if(zoomLevel > 12)
+                model.sortLayers(mapFeatures);
 
             g.setColor(Color.BLACK);
 
@@ -736,7 +718,7 @@ public class View extends JFrame implements Observer {
 
             for (MapFeature mapFeature : mapFeatures) {
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                if (zoomLevel >= drawAttribute.getZoomLevel()) { //TODO: NullPointerException when loading "København" and changing to transport map
+                if (zoomLevel >= drawAttribute.getZoomLevel()) {
                     if (mapFeature.isArea()) {
                         g.setColor(drawAttribute.getColor());
                         g.fill(mapFeature.getShape());
@@ -744,7 +726,7 @@ public class View extends JFrame implements Observer {
                 }
             }
             //Then draw boundaries on top of areas
-            for (MapFeature mapFeature : mapFeatures) {
+           /* for (MapFeature mapFeature : mapFeatures) {
                 if (zoomLevel > 14) {
                     try {
                         g.setColor(Color.BLACK);
@@ -758,7 +740,7 @@ public class View extends JFrame implements Observer {
                         System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
                     }
                 }
-            }
+            }*/
 
             //Then draw boundaries on top of areas
             for (MapFeature mapFeature : mapFeatures) {
@@ -806,17 +788,11 @@ public class View extends JFrame implements Observer {
                     mapIcon.draw(g, transform);
                 }
             }
-
+            g.draw(bounds.getBounds());
 
             scalebar = new Scalebar(g, zoomLevel, View.this, transform);
 
-            if(nearestNeighbor != null) {
-
-                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(nearestNeighbor.getValueName());
-                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
-                g.setColor(Color.CYAN);
-                g.draw(nearestNeighbor.getShape());
-            }
+            paintNeighbor(g);
 
             //Draws chosen searchResult (either street or address)
             //Current address:
@@ -845,6 +821,42 @@ public class View extends JFrame implements Observer {
             g.fill(fullscreenArea);
             g.fill(mapTypeButtonArea);
 
+        }
+
+        private void getData(){
+            mapFeatures = new ArrayList<>();
+            mapIcons = new ArrayList<>();
+
+            bounds.updateBounds(getVisibleRect());
+            Rectangle2D windowBounds = bounds.getBounds();
+
+
+            ArrayList<MapData> streets = model.getVisibleStreets(windowBounds);
+            mapFeatures = (ArrayList<MapFeature>)(List<?>) streets;
+
+            if(zoomLevel > 8){
+                mapFeatures.addAll((ArrayList<MapFeature>)(List<?>)model.getVisibleNatural(windowBounds));
+
+            }
+
+            if(zoomLevel >= 13){
+                mapFeatures.addAll((ArrayList<MapFeature>)(List<?>) model.getVisibleBuildings(windowBounds));
+            }
+
+            if(zoomLevel >= 15){
+                mapIcons = (ArrayList<MapIcon>) (List<?>) model.getVisibleIcons(windowBounds);
+            }
+
+        }
+
+        private void paintNeighbor(Graphics2D g){
+            if(nearestNeighbor != null) {
+
+                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(nearestNeighbor.getValueName());
+                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
+                g.setColor(Color.CYAN);
+                g.draw(nearestNeighbor.getShape());
+            }
         }
     }
 
@@ -885,4 +897,6 @@ public class View extends JFrame implements Observer {
     public JScrollPane getResultPane() { return resultPane; }
 
     public JList<Address> getAddressSearchResults() { return addressSearchResults; }
+
+    public Scalebar getScaleBar(){ return scalebar;}
 }

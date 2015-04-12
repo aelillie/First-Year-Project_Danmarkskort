@@ -167,7 +167,7 @@ public class DrawAttribute {
         return color;
     }
 
-    public double getZoomLevel() {
+    public int getZoomLevel() {
         return zoomLevel;
     }
 }

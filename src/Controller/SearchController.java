@@ -81,7 +81,13 @@ public class SearchController extends MouseAdapter implements ActionListener {
 
     private Address[] addressSearch(int type){
         String input = view.getSearchArea().getText();
-        if(!input.equals("") && input != null) {
+        if(input.length() < 3){
+            if(input.equals("") && input != null) {
+                view.getResultPane().setVisible(false);
+                view.setCurrentAddress(null);
+            }
+            return null;
+        } else {
             input = input.trim().toLowerCase();
             Address address = Address.parse(input);
             if(address == null) return null;
@@ -89,10 +95,6 @@ public class SearchController extends MouseAdapter implements ActionListener {
             if(results != null) view.addToResultPane(results);
             else view.getResultPane().setVisible(false);
             return results;
-        } else {
-            view.getResultPane().setVisible(false);
-            view.setCurrentAddress(null);
-            return null;
         }
     }
 

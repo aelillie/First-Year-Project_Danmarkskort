@@ -48,7 +48,7 @@ public class Scalebar {
         Double line = lineWidth + 115;
         g.fill(new Rectangle2D.Float(x.floatValue(), y.floatValue(), line.floatValue() , 20));
         double desiredDistance = zoomLevelDistances.get(zoomLevel); //The distance we want to display according to the zoomlevel
-        setDesiredDistance(lineWidth,desiredDistance);
+        lineStart.setLocation(getDesiredDistance(lineWidth,desiredDistance));
 
         g.setColor(Color.BLACK);
         g.setStroke(new BasicStroke(2));
@@ -67,7 +67,7 @@ public class Scalebar {
      * @param lineWidth the default linewidth
      * @param desiredDistance the desired distance in kilometers
      */
-    private void setDesiredDistance(double lineWidth, double desiredDistance){
+    private Point2D getDesiredDistance(double lineWidth, double desiredDistance){
         Point2D.Float transformedStart = new Point2D.Float();
         Point2D.Float transformedEnd = new Point2D.Float();
 
@@ -83,7 +83,7 @@ public class Scalebar {
 
 
         double lineWidthPerKm = lineWidth/distance; //Used to calculate the desired distance in pixels
-        lineStart.setLocation(lineEnd.getX()-desiredDistance*lineWidthPerKm,lineStart.getY()); //Change the x coordinate to form the desired distance.
+        return new Point2D.Float((float) (lineEnd.getX()-desiredDistance*lineWidthPerKm),(float)lineStart.getY()); //Change the x coordinate to form the desired distance.
     }
 
     /**
@@ -138,4 +138,7 @@ public class Scalebar {
         zoomLevelDistances.put(0,25.0);
 
     }
+
+    public Point2D getLineEnd() { return lineEnd;}
+    public AffineTransform getTransform() { return transform;}
 }

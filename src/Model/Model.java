@@ -8,6 +8,7 @@ import org.xml.sax.SAXException;
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
+import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class Model extends Observable implements Serializable {
     }
 
     public void loadFile(String filename, InputStream inputStream) throws IOException {
+
         long time = System.nanoTime();
         if (filename.endsWith(".osm")) parseOSM(inputStream);
         else if (filename.endsWith(".zip")) parseZIP(inputStream);
@@ -43,14 +45,6 @@ public class Model extends Observable implements Serializable {
         System.out.printf("Complete model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
-    /*
-    public void loadFile(String shapeFile, String iconFile){
-        long time = System.nanoTime();
-        if(shapeFile.endsWith(".bin") && iconFile.endsWith(".bin"))
-            loadAll(shapeFile, iconFile);
-        else System.err.println("File not recognized");
-        System.out.printf("Model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
-    }*/
 
     private void parseOSM(InputStream inputStream) {
         try {
@@ -134,15 +128,11 @@ public class Model extends Observable implements Serializable {
         return OSMReader.getBbox();
     }
 
-    public QuadTree getQuadTree(){
-        return OSMReader.getQuadTree();
+    public List<QuadTree> getQuadTrees(){
+        return OSMReader.getQuadTrees();
     }
 
-    public ArrayList<Rectangle2D> getNodes(){return OSMReader.getNodes();}
-
-    public void setQuadTree(QuadTree qt){OSMReader.setQuadTree(qt);}
-
-
+    public void setQuadTree(List<QuadTree> qt){OSMReader.setQuadTrees(qt);}
 
     public void setBBox(Rectangle2D bBox){
 
@@ -155,9 +145,20 @@ public class Model extends Observable implements Serializable {
 
     public OSMHandler getOSMReader(){return OSMReader;}
 
-    public ArrayList<List<MapData>> getVisibleData(Rectangle2D visibleArea){
-        return OSMReader.getQuadTree().query2D(visibleArea);
+    public ArrayList<MapData> getVisibleStreets(Rectangle2D visibleArea){
+        return OSMReader.getStreetTree().query2D(visibleArea);
+    }
 
+    public ArrayList<MapData> getVisibleNatural(Rectangle2D visibleArea){
+        return OSMReader.getNaturalTree().query2D(visibleArea);
+    }
+
+    public ArrayList<MapData> getVisibleBuildings(Rectangle2D visibleArea){
+        return OSMReader.getBuildingTree().query2D(visibleArea);
+    }
+
+    public ArrayList<MapData> getVisibleIcons(Rectangle2D visibleArea){
+        return OSMReader.getIconTree().query2D(visibleArea);
     }
 
     public void sortLayers(List<MapFeature> mapFeatures){

@@ -1,5 +1,6 @@
 package QuadTree;
 
+import MapFeatures.Highway;
 import Model.MapData;
 import Model.MapFeature;
 import Model.MapIcon;
@@ -12,6 +13,7 @@ import java.util.List;
 
 public class QuadTree implements Serializable{
     private static final long serialVersionUID = 8;
+    private int cap = 0;
     private Node root;
 
     // helper node data type
@@ -56,7 +58,7 @@ public class QuadTree implements Serializable{
          * @param values - Value to be stored in node
          */
         public void addvalue(MapData values){
-            if(value.size() > 1000){
+            if(value.size() > cap){
                 subDivide();
                 insert(values);
             }else value.add(values);
@@ -68,8 +70,8 @@ public class QuadTree implements Serializable{
      * Create an instance from a bbox. Splitting the initial root using bbox values.
      * @param bbox - Bounds containing all values.
      */
-    public QuadTree(Rectangle2D bbox){
-
+    public QuadTree(Rectangle2D bbox, int capacity){
+        cap = capacity;
         root = new Node(bbox.getCenterX(),bbox.getCenterY(), bbox.getWidth(), bbox.getHeight());
         root.subDivide();
     }
@@ -91,8 +93,8 @@ public class QuadTree implements Serializable{
         else {
             MapFeature mF = (MapFeature) value;
             Rectangle2D bounds = mF.getShape().getBounds2D();
-
             insert(root, bounds.getCenterX(), bounds.getCenterY(), value);
+
         }
     }
 
@@ -123,15 +125,15 @@ public class QuadTree implements Serializable{
      * @param rect Range needed
      * @return List of List of MapFeatures
      */
-    public ArrayList<List<MapData>> query2D(Shape rect) {
+    public ArrayList<MapData> query2D(Shape rect) {
 
-        ArrayList<List<MapData>> values = new ArrayList<>(); //List of list of All values in rect to be returned
+        ArrayList<MapData> values = new ArrayList<>(); //List of list of All values in rect to be returned
         if(rect != null)
             query2D(root, rect, values);
         return values;
     }
 
-    private void query2D(Node h, Shape query, ArrayList<List<MapData>> values) {
+    private void query2D(Node h, Shape query, ArrayList<MapData> values) {
         if (h == null) return;
         Rectangle2D rect = query.getBounds2D();
         Double xmin = rect.getMinX();
@@ -140,7 +142,7 @@ public class QuadTree implements Serializable{
         Double ymax = rect.getMaxY();
         if (rect.intersects(h.x- h.width,h.y - h.height, h.width*2, h.height*2) || rect.contains(h.x, h.y))
             if(!h.value.isEmpty())
-            values.add(h.value);
+            values.addAll(h.value);
 
         //Recursive calls. Checking what nodes to search in.
         if ( less(xmin, h.x) &&  less(ymin, h.y)) query2D(h.NW, rect, values);

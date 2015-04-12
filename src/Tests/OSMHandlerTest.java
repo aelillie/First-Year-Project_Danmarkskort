@@ -41,36 +41,36 @@ public class OSMHandlerTest {
     }
 
     @Test
-    public void testMapFeatures() {
+    public void MapFeatureWayTest() {
         List<Point2D> wayCoords = new ArrayList<>();
         wayCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6695228), 12.5802146f));
         wayCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6693366), 12.5805524f));
         wayCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6690488), 12.5811529f));
         wayCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6687563), 12.5817373f));
         wayCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6685247), 12.5823799f));
-        Path2D way1 = PathCreater.createWay(wayCoords);
-        MapFeature highway = new Highway(way1, 13, "tertiary", false);
-        highway.setValueName(ValueName.TERTIARY);
+        Path2D way1 = PathCreater.createWay(wayCoords); //first way
 
-        ArrayList<List<MapData>> queryList = m.getVisibleData(new Rectangle2D.Float(0, 0, 500, 500));
-        List<MapData> mapFeatures = null;
-        MapData mapData = null;
-        MapFeature mapFeature = null;
-        outerloop:
-        for (int s = 0; s < queryList.size() ; s++) {
-            mapFeatures = queryList.get(s);
-            for (int i = 0 ; i < mapFeatures.size() ; i++) {
-                mapData = mapFeatures.get(i);
-                if (mapData instanceof Highway) {
-                    mapFeature = (MapFeature) mapData;
-                    if (mapFeature.getValue().equals("tertiary")) break outerloop;
-                }
+        List<MapData> queryList = m.getVisibleStreets(new Rectangle2D.Float(0, 0, 500, 500));
+
+        List<MapData> mapDataList = null;
+        mapDataList = queryList; //throw all map features and icons into one list
+
+
+        Highway highway_tertiary = null; //The map feature we want
+
+        assert mapDataList != null;
+        for (int i = 0 ; i < mapDataList.size() ; i++) {
+            MapData mapData = mapDataList.get(i);
+            if (mapData instanceof Highway && ((Highway) mapData).getValue().equals("tertiary")) {
+                highway_tertiary = (Highway) mapData;
+                
             }
-
         }
 
-        if (mapFeature != null) {
-            PathIterator pI = mapFeature.getShape().getPathIterator(new AffineTransform());
+
+
+        if (highway_tertiary != null) {
+            PathIterator pI = highway_tertiary.getShape().getPathIterator(new AffineTransform());
             int i = 0;
             while(!pI.isDone()){
                 float[] points = new float[6];
@@ -78,7 +78,7 @@ public class OSMHandlerTest {
                 pI.currentSegment(points);
 
 
-                Assert.assertEquals(points[0], wayCoords.get(i).getY(),DELTA);
+                Assert.assertEquals(points[0], wayCoords.get(i).getY(), DELTA);
                 Assert.assertEquals(points[1], wayCoords.get(i).getX(), DELTA);
 
                 pI.next();
@@ -88,9 +88,6 @@ public class OSMHandlerTest {
 
         }
 
-        if (mapFeature != null) {
-            Assert.assertEquals(highway.toString(), mapFeature.toString());
-        }
     }
 
 }
