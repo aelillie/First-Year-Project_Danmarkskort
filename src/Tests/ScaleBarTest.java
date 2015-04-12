@@ -40,15 +40,15 @@ public class ScaleBarTest {
 
     @Test
     public void TestStartPoint() {
-        assertEquals(new Point2D.Float(150,10), getDesiredDistance(lineWidth, 1.0));
-        assertEquals(new Point2D.Float(125,10), getDesiredDistance(lineWidth, 0.5));
+        assertEquals(new Point2D.Float(150,10), getDesiredPoint(lineWidth, 1.0));
+        assertEquals(new Point2D.Float(125,10), getDesiredPoint(lineWidth, 0.5));
 
     }
 
 
 
 
-    private Point2D getDesiredDistance(double lineWidth, double desiredDistance){
+    private Point2D getDesiredPoint(double lineWidth, double desiredDistance){
         Point2D.Float transformedStart = new Point2D.Float();
         Point2D.Float transformedEnd = new Point2D.Float();
 
@@ -60,7 +60,7 @@ public class ScaleBarTest {
         }
 
 
-        double distance = 2.0; //Testing of Calculation of real distance is done in MapCalculator test
+        double distance = 2.0; //HaverSineDistance tested in MapCalculatorTest.
 
 
         double lineWidthPerKm = lineWidth/distance; //Used to calculate the desired distance in pixels
