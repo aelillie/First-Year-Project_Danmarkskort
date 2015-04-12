@@ -54,31 +54,40 @@ public class OSMHandlerTest {
         List<Point2D> highwayCoords = new ArrayList<>();
         highwayCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6695228), 12.5802146f));
         highwayCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6693366), 12.5805524f));
+        highwayCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6690488), 12.5811529f));
+        highwayCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6687563), 12.5817373f));
+        highwayCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6685247), 12.5823799f));
         List<Point2D> barrierCoords = new ArrayList<>();
         barrierCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6677049), 12.5853856f));
         barrierCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6676617), 12.5853626f));
         List<Point2D> leisureCoords = new ArrayList<>();
+        leisureCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6653496), 12.5818120f));
         leisureCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6653196), 12.5818835f));
         leisureCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6654239), 12.5820209f));
+        leisureCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6654538), 12.5819494f));
+        leisureCoords.add(new Point2D.Float((float) MapCalculator.latToY(55.6653496), 12.5818120f));
+
 
         //The map features we want
-        Highway highway = null;
-        Barrier barrier = null;
-        Leisure leisure = null;
+        MapFeature highway = null;
+        MapFeature barrier = null;
+        MapFeature leisure = null;
+
 
         for (MapData mapData : streetList) {
-            highway = (Highway) mapData;
+            highway = (MapFeature) mapData;
             if (highway.getValue().equals("tertiary"))
                 break;
         }
-
         for (MapData mapData : buildingList) {
-            barrier = (Barrier) mapData;
-            leisure = (Leisure) mapData;
+            barrier = (MapFeature) mapData;
             if (mapData instanceof Barrier && barrier.getValue().equals("hedge"))
-                barrier = (Barrier) mapData;
-            else if (mapData instanceof Leisure && leisure.getValue().equals("garden"))
-                leisure = (Leisure) mapData;
+                break;
+        }
+        for (MapData mapData : buildingList) {
+            leisure = (MapFeature) mapData;
+            if (leisure.getValue().equals("garden"))
+                break;
         }
 
         PathIterator highwayPath = highway.getShape().getPathIterator(new AffineTransform()); //object that iterates along a shape
