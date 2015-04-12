@@ -52,7 +52,7 @@ public class QuadTreeTest {
         MapFeature mf2 = new Highway(paths.get(1), 0, "trunk", false);
         MapFeature mf3 = new Building(paths.get(2), 0, "building");
         MapFeature mf4 = new Highway(paths.get(3), 0, "footway", false);
-        MapIcon mI1 = new MapIcon(new Point2D.Float(10,10),MapIcon.parkingIcon);
+        MapIcon mI1 = new MapIcon(new Point2D.Float(10,10),"parkingIcon");
 
         quadTree.insert(mf1);
         quadTree.insert(mf2);
@@ -108,7 +108,7 @@ public class QuadTreeTest {
                 points.add(new Point2D.Float((i * 10 / 2 % 100) + 50, i / 2 % 100));
                 quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false));
             }else{
-                quadTree.insert(new MapIcon(new Point2D.Float((i * 4 % 100) + 50, i % 100),MapIcon.busIcon));
+                quadTree.insert(new MapIcon(new Point2D.Float((i * 4 % 100) + 50, i % 100),"busIcon"));
             }
         }
 
