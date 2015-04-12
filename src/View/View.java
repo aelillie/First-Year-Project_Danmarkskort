@@ -897,4 +897,6 @@ public class View extends JFrame implements Observer {
     public JScrollPane getResultPane() { return resultPane; }
 
     public JList<Address> getAddressSearchResults() { return addressSearchResults; }
+
+    public Scalebar getScaleBar(){ return scalebar;}
 }

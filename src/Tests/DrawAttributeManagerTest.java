@@ -32,8 +32,6 @@ public class DrawAttributeManagerTest {
         mapFeatures.add(new Building(createRandomPath(), 0, "building"));
         mapFeatures.add(new Natural(createRandomPath(), 0, "wood"));
         mapFeatures.add(new Leisure(createRandomPath(), -1, "park"));
-
-
     }
 
 

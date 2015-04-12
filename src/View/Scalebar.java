@@ -138,4 +138,7 @@ public class Scalebar {
         zoomLevelDistances.put(0,25.0);
 
     }
+
+    public Point2D getLineEnd() { return lineEnd;}
+    public AffineTransform getTransform() { return transform;}
 }
