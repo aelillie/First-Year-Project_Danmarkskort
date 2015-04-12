@@ -41,7 +41,6 @@ public class MapIcon implements Serializable, MapData {
     public static final URL layerIcon = MapIcon.class.getResource("/data/layerIcon.png");
     public static final URL chosenAddressIcon = MapIcon.class.getResource("/data/chosenAddressIcon.png");
 
-    public static ArrayList<MapIcon> mapIcons;
     static ArrayList<URL> icons = addIcons();
     static HashMap<URL, Boolean> hashIcon = addIcon();
     BufferedImage img;
@@ -113,6 +112,21 @@ public class MapIcon implements Serializable, MapData {
         this.imgPath = imgPath;
 
     }
+    public URL getURL()
+    {
+        return this.imgPath;
+    }
+
+    public static void setIconState(URL url, boolean state)
+    {
+        hashIcon.put(url, state);
+    }
+    public static boolean getIconState(URL url)
+    {
+        return hashIcon.get(url);
+    }
+
+
 
     public Class getType(){
         return this.getClass();
@@ -155,8 +169,8 @@ public class MapIcon implements Serializable, MapData {
 
     }
 
-    public static Boolean isVisible() {
-        return visible;
+    public Boolean isVisible() {
+        return getIconState(this.imgPath);
     }
 
     public static void setVisible(Boolean visible) {
@@ -165,6 +179,11 @@ public class MapIcon implements Serializable, MapData {
 
     public void setController(IconController con){
         this.con = con;
+    }
+
+    public static boolean isIconVisible(URL url)
+    {
+        return hashIcon.get(url) == true;
     }
 
 

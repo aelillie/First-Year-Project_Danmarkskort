@@ -52,7 +52,7 @@ public class OSMHandler extends DefaultHandler {
         addressMap = new HashMap<>();
         streetMap = new HashMap<>();
         boundaryMap = new HashMap<>();
-        //MapIcon.mapIcons = this.mapIcons;
+
     }
 
     /**

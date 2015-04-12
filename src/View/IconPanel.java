@@ -32,15 +32,16 @@ import java.util.ArrayList;
             panel.setLayout(gridLayout);
             panel.setVisible(true);
             ArrayList<URL> icons = MapIcon.getIcons();
-            ArrayList<MapIcon> mapIkoner = new ArrayList<>();
+
 
             for (int i= 0; i < icons.size(); i++)
             {
                 String ikoner = icons.get(i).getFile();
                 JLabel l1 = new JLabel(new ImageIcon(ikoner));
                 panel.add(l1);
-                JCheckBox checkbox = new JCheckBox("", false);
+                JCheckBox checkbox = new JCheckBox("",true);
                 IconController controller = new IconController(icons.get(i),true);
+                MapIcon.setIconState(icons.get(i), true);
                 //icons.get(i).setController(controller);
                 checkbox.addItemListener(controller);
                 checkbox.addComponentListener(controller);
@@ -57,7 +58,7 @@ import java.util.ArrayList;
 
     public void addObserverToIcons(View v){
         for(IconController con : controllers){
-            con.addObserver(v);
+            con.setView(v);
         }
 
     }

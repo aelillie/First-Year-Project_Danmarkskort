@@ -13,6 +13,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
+import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Observable;
@@ -397,9 +398,7 @@ public class View extends JFrame implements Observer {
 
     @Override
     public void update(Observable obs, Object obj) {
-        if(obs instanceof IconController){
-            IconController con = (IconController) obs;
-        }
+
         canvas.repaint();
     }
 
@@ -665,9 +664,8 @@ public class View extends JFrame implements Observer {
 
 
         @Override
-        public void paint(Graphics _g) {
+        public void paintComponent(Graphics _g) {
             Graphics2D g = (Graphics2D) _g;
-
             bounds.updateBounds(getBounds());
 
             //Set the Transform for Graphic2D element before drawing.
@@ -783,14 +781,17 @@ public class View extends JFrame implements Observer {
 
             //Draws the icons.
 
-            if (zoomLevel >= 17) {
+            if (zoomLevel <= 17)
+            {
                 for (MapIcon mapIcon : mapIcons) {
                     if(mapIcon.isVisible())
                     {
                         mapIcon.draw(g, transform);
                     }
+                    }
                 }
-            }
+
+
 
 
             scalebar = new Scalebar(g, zoomLevel, View.this, transform);
