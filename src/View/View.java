@@ -5,6 +5,7 @@ import MapFeatures.Bounds;
 import MapFeatures.Coastline;
 import MapFeatures.Highway;
 import Model.*;
+import javafx.scene.transform.NonInvertibleTransformException;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -367,37 +368,36 @@ public class View extends JFrame implements Observer {
     }
 
     public void searchResultChosen(double lon, double lat){
-
-        Point2D sourcePoint = new Point2D.Double(lon,lat);
-        Point2D destinationPoint = new Point2D.Double();
-        transform.transform(sourcePoint,destinationPoint);
-        Point2D northWestSource = new Point2D.Double(destinationPoint.getX()-300, destinationPoint.getY()-300);
-        Point2D southEastSource = new Point2D.Double(destinationPoint.getX()+300, destinationPoint.getY()+300);
-        Point2D northWest = new Point2D.Double();
-        Point2D southEast = new Point2D.Double();
-
-        try {
-            transform.inverseTransform(northWestSource, northWest);
-            transform.inverseTransform(southEastSource, southEast);
-        } catch (Exception e){
-            e.printStackTrace();
-        }
-
-        System.out.println(northWest);
-        System.out.println(southEast);
-
-        Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-        double scaleWidth = southEast.getX()-northWest.getX();
-        double scaleHeight = southEast.getY()- northWest.getY();
-        double width = screenSize.getWidth();
-        double height = screenSize.getHeight();
-
-        double xscale = width / scaleWidth;
-        double yscale = height / scaleHeight;
-        double scale = max(xscale, yscale);
-        transform.setToScale(scale, scale);
-        transform.setToTranslation(-northWest.getX(), -southEast.getY());
+        centerOnLatLon(new Point2D.Double(lon,lat));
     }
+
+    //Get the center of the current size of the contentpane in lat and longtitude points
+    public Point2D getCenterLatLon(){
+        Point2D.Double result = new Point2D.Double();
+        Point2D.Double screenCenter = new Point2D.Double();
+        screenCenter.x = getWidth()/2; //contentpane width/height
+        screenCenter.y = getHeight()/2;
+        try{
+            transform.inverseTransform(screenCenter,result); //transform to lat/lon using the current transform
+        } catch (NoninvertibleTransformException e) {
+            throw new RuntimeException(e);
+        }
+        return result;
+    }
+
+    //Center map on the following map coordinates
+    public void centerOnLatLon(Point2D newCenter){
+        Point2D currentCenter = getCenterLatLon();
+        double dx = currentCenter.getX() - newCenter.getX();
+        double dy = currentCenter.getY() - newCenter.getY();
+        panMapCoords(dx,dy);
+    }
+    //Pan map with lat/lon, translate rather than preconcatenate
+    public void panMapCoords(double dx, double dy){
+        transform.translate(dx,dy);
+        repaint();
+    }
+
 
     public void setCurrentStreet(List<Path2D> streetLocation){
         currentAddressLocation = null;
