@@ -58,13 +58,18 @@ public class SearchController extends MouseAdapter implements ActionListener {
         view.getSearchArea().getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                addressSearch(1);
+                if(!(view.getSearchArea().getText().length()<3)) {
+                    addressSearch(1);
+                }
                 selectedNr=-1;
+                System.out.println(view.getSearchArea().getText().length());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                addressSearch(1);
+                if(!(view.getSearchArea().getText().length()<3)) {
+                    addressSearch(1);
+                }
                 selectedNr=-1;
             }
 
