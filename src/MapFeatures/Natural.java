@@ -33,10 +33,7 @@ public class Natural extends MapFeature {
         else if (value.equals("water")) setValueName(ValueName.WATER);
         else if (value.equals("wetland")) setValueName(ValueName.WETLAND);
         else if (value.equals("beach")) setValueName(ValueName.BEACH);
-       /* else if (value.equals("coastline")){
-            isArea = false;
-            setValueName(ValueName.COASTLINE);
-        }*/
+
         else setValueName(ValueName.NATURAL);
     }
 

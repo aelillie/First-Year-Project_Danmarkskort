@@ -45,7 +45,6 @@ public class MapIcon implements Serializable, MapData {
     public MapIcon(Shape shape, URL imgPath){
         coord = new Point2D.Float((float)shape.getBounds2D().getCenterX(), (float)shape.getBounds2D().getCenterY());
         this.imgPath = imgPath;
-
     }
 
     /**
@@ -55,7 +54,6 @@ public class MapIcon implements Serializable, MapData {
      * @param imgPath The path of the image file.
      */
     public MapIcon(Point2D coord, URL imgPath){
-
 
             this.coord = coord;
             this.imgPath = imgPath;
@@ -96,7 +94,6 @@ public class MapIcon implements Serializable, MapData {
         coord = (Point2D) type;
         URL imgPath = (URL) stream.readObject();
         this.imgPath = imgPath;
-
     }
 
     public Class getType(){

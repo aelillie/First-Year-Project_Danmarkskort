@@ -303,10 +303,12 @@ public class OSMHandler extends DefaultHandler {
                 break;
 
             case "osm": //The end of the osm file
+
                 long time = System.nanoTime();
                 Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
                 System.out.printf("sorted all addresses, time: %d ms\n", (System.nanoTime() - time) / 1000000);
                 PathCreater.connectCoastlines(bbox);
+                wayId_map.clear();
                 break;
 
         }

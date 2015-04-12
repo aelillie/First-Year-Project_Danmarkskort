@@ -2,16 +2,15 @@ package Tests;
 
 
 
-import Model.MapCalculator;
-import View.Scalebar;
 import org.junit.Before;
 import org.junit.Test;
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+
 
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+
 
 /**
  * Created by i5-4670K on 12-04-2015.
