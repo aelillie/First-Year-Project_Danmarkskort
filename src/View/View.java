@@ -1,5 +1,6 @@
 package View;
 
+import Controller.IconController;
 import Controller.SearchResultMouseHandler;
 import MapFeatures.Bounds;
 import MapFeatures.Highway;
@@ -44,11 +45,10 @@ public class View extends JFrame implements Observer {
     private MapMenu mapMenu;
     private RouteView routePanel = new RouteView();
     private MapTypePanel mapTypePanel = new MapTypePanel(this);
-   // private IconPanel iconPanel = new IconPanel();
+    private IconPanel iconPanel = new IconPanel();
     private SearchResultMouseHandler searchResultMH;
     private JScrollPane resultPane = new JScrollPane();
     private JList<Address> addressSearchResults;
-
     private List<Path2D> currentStreetLocations;
     private Point2D currentAddressLocation;
     private Path2D currentBoundaryLocation;
@@ -69,6 +69,7 @@ public class View extends JFrame implements Observer {
         super("This is our map");
         model = m;
         searchResultMH = new SearchResultMouseHandler(this, model);
+        iconPanel.addObserverToIcons(this);
 
         /*Two helper functions to set up the AfflineTransform object and
         make the buttons and layout for the frame*/
@@ -193,7 +194,7 @@ public class View extends JFrame implements Observer {
         layer.add(mapTypeButton, new Integer(2));
         layer.add(mapTypePanel, new Integer(2));
         layer.add(resultPane, new Integer(3));
-      //  layer.add(iconPanel, new Integer(2));
+        layer.add(iconPanel, new Integer(2));
 
     }
 
@@ -396,6 +397,9 @@ public class View extends JFrame implements Observer {
 
     @Override
     public void update(Observable obs, Object obj) {
+        if(obs instanceof IconController){
+            IconController con = (IconController) obs;
+        }
         canvas.repaint();
     }
 
@@ -659,6 +663,7 @@ public class View extends JFrame implements Observer {
         public static final long serialVersionUID = 4;
         Stroke min_value = new BasicStroke(Float.MIN_VALUE);
 
+
         @Override
         public void paint(Graphics _g) {
             Graphics2D g = (Graphics2D) _g;
@@ -677,13 +682,14 @@ public class View extends JFrame implements Observer {
 
             long ms = System.currentTimeMillis();
             for(int i = 0; i < mapDatas.size(); i++){
-                for(MapData mD : mapDatas.get(i)){
+                for(MapData mD : mapDatas.get(i)) {
                     if(mD.getType() == MapIcon.class)
                         mapIcons.add((MapIcon) mD);
                     else mapFeatures.add((MapFeature) mD);
                 }
 
             }
+
             System.out.print("Time taking splitting: " + (System.currentTimeMillis() - ms));
 
             g.setStroke(min_value); //Just for good measure.
@@ -779,7 +785,10 @@ public class View extends JFrame implements Observer {
 
             if (zoomLevel >= 17) {
                 for (MapIcon mapIcon : mapIcons) {
-                    mapIcon.draw(g, transform);
+                    if(mapIcon.isVisible())
+                    {
+                        mapIcon.draw(g, transform);
+                    }
                 }
             }
 

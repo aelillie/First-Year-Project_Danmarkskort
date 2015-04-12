@@ -1,6 +1,9 @@
 package Model;
 
+import Controller.IconController;
+
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
@@ -11,6 +14,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Observable;
 
 public class MapIcon implements Serializable, MapData {
     public static final long serialVersionUID = 5;
@@ -36,10 +41,14 @@ public class MapIcon implements Serializable, MapData {
     public static final URL layerIcon = MapIcon.class.getResource("/data/layerIcon.png");
     public static final URL chosenAddressIcon = MapIcon.class.getResource("/data/chosenAddressIcon.png");
 
+    public static ArrayList<MapIcon> mapIcons;
     static ArrayList<URL> icons = addIcons();
+    static HashMap<URL, Boolean> hashIcon = addIcon();
     BufferedImage img;
     Point2D coord;
     URL imgPath;
+    public static Boolean visible = true;
+    private IconController con;
 
     /**
      * Creates a new Icon instance.
@@ -74,10 +83,10 @@ public class MapIcon implements Serializable, MapData {
      * @param transform The AffineTransform context.
      */
     public void draw(Graphics2D g, AffineTransform transform){
-        try{
+        try {
             if(img == null)
                 img = ImageIO.read(imgPath);
-        }catch(IOException e){
+        } catch(IOException e){
             e.printStackTrace();
         }
         double x;
@@ -118,12 +127,46 @@ public class MapIcon implements Serializable, MapData {
         ArrayList iconsOne = new ArrayList<>();
         iconsOne.add(metroIcon);
         iconsOne.add(busIcon);
+        iconsOne.add(STogIcon);
+        iconsOne.add(parkingIcon);
+        iconsOne.add(atmIcon);
+        iconsOne.add(pubIcon);
         return iconsOne;
     }
     public static ArrayList<URL> getIcons(){
-        addIcons();
         return icons;
     }
+    private static HashMap<URL,Boolean> addIcon(){
+        HashMap<URL, Boolean> hashIcon = new HashMap<>();
+        hashIcon.put(metroIcon,false);
+        hashIcon.put(busIcon,false);
+        hashIcon.put(STogIcon,false);
+        hashIcon.put(parkingIcon,false);
+        hashIcon.put(atmIcon,false);
+        hashIcon.put(pubIcon,false);
+        return hashIcon;
+    }
+
+    public static HashMap<URL, Boolean> getIcon(){
+        return hashIcon;
+    }
+
+    public void getMapIcons(){
+
+    }
+
+    public static Boolean isVisible() {
+        return visible;
+    }
+
+    public static void setVisible(Boolean visible) {
+        MapIcon.visible = visible;
+    }
+
+    public void setController(IconController con){
+        this.con = con;
+    }
+
 
 
 

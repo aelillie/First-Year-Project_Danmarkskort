@@ -2,6 +2,7 @@ package Model;
 
 import MapFeatures.Coastline;
 import QuadTree.QuadTree;
+import View.View;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -108,6 +109,7 @@ public class Model extends Observable implements Serializable {
     public Address[] searchForAddresses(Address address, int type){
         return OSMReader.searchForAddressess(address, type);
     }
+
 
 
    /* public void searchForAddresses1(Model.Address addressInput){

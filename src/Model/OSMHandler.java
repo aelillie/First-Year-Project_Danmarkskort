@@ -2,6 +2,7 @@ package Model;
 
 import MapFeatures.*;
 import QuadTree.QuadTree;
+import View.View;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -51,6 +52,7 @@ public class OSMHandler extends DefaultHandler {
         addressMap = new HashMap<>();
         streetMap = new HashMap<>();
         boundaryMap = new HashMap<>();
+        //MapIcon.mapIcons = this.mapIcons;
     }
 
     /**
@@ -362,6 +364,8 @@ public class OSMHandler extends DefaultHandler {
     public Address[] searchForAddressess(Address add, int type){
         return AddressSearcher.searchForAddresses(add, addressList, addressMap, type);
     }
+
+
 
 
     /**
