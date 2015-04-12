@@ -40,7 +40,8 @@ public class ScaleBarTest {
 
     @Test
     public void TestStartPoint() {
-        assertEquals(new Point2D.Double(150,10), getDesiredDistance(lineWidth, 1.0));
+        assertEquals(new Point2D.Float(150,10), getDesiredDistance(lineWidth, 1.0));
+        assertEquals(new Point2D.Float(125,10), getDesiredDistance(lineWidth, 0.5));
 
     }
 
