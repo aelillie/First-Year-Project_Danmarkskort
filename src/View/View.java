@@ -368,7 +368,42 @@ public class View extends JFrame implements Observer {
     }
 
     public void searchResultChosen(double lon, double lat){
-        centerOnLatLon(new Point2D.Double(lon,lat));
+        centerOnLatLon(new Point2D.Double(lon, lat));
+        //scalesomething();
+    }
+
+    public void scalesomething(){
+        Point2D startPoint = new Point2D.Double(0,0);
+        Point2D endPoint = new Point2D.Double(300,300);
+        Point2D transformedStart = new Point2D.Double();
+        Point2D transformedEnd= new Point2D.Double();
+
+        Point2D currentStart = new Point2D.Double(getX(),getY());
+        Point2D transformedCurrentStart = new Point2D.Double();
+        Point2D currentEnd = new Point2D.Double(getX()+getWidth(),getY()+getHeight());
+        Point2D transformedCurrentEnd = new Point2D.Double();
+
+
+        try{
+            transform.inverseTransform(startPoint,transformedStart);
+            transform.inverseTransform(endPoint,transformedEnd);
+            transform.inverseTransform(currentStart,transformedCurrentStart);
+            transform.inverseTransform(currentEnd,transformedCurrentEnd);
+        } catch (NoninvertibleTransformException e){
+            e.printStackTrace();
+        }
+
+        double desiredWidth = transformedEnd.getX()-transformedStart.getX();
+        double desiredHeight = transformedEnd.getY()-transformedEnd.getY();
+        double currentWidth = transformedCurrentEnd.getX()-transformedCurrentStart.getX();
+        double currentHeight = transformedCurrentEnd.getY() - transformedCurrentStart.getY();
+
+        double xscale = desiredWidth/currentWidth;
+        double yscale =  desiredHeight/currentHeight;
+        double scale = max(xscale, yscale);
+        zoomLevel = ZoomCalculator.calculateZoom(scale);
+        scale = ZoomCalculator.setScale(zoomLevel);
+        transform.setToScale(scale, -scale);
     }
 
     //Get the center of the current size of the contentpane in lat and longtitude points
