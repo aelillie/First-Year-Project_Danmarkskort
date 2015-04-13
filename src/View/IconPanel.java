@@ -40,7 +40,7 @@ import java.util.ArrayList;
                 JLabel l1 = new JLabel(new ImageIcon(ikoner));
                 panel.add(l1);
                 JCheckBox checkbox = new JCheckBox("",true);
-                IconController controller = new IconController(icons.get(i),true);
+                IconController controller = new IconController(icons.get(i));
                 MapIcon.setIconState(icons.get(i), true);
                 //icons.get(i).setController(controller);
                 checkbox.addItemListener(controller);
@@ -56,6 +56,7 @@ import java.util.ArrayList;
         return controllers;
     }
 
+    //for all IconControllers adjust the view
     public void addObserverToIcons(View v){
         for(IconController con : controllers){
             con.setView(v);

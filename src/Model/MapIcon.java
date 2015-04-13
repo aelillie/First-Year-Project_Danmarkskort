@@ -46,7 +46,6 @@ public class MapIcon implements Serializable, MapData {
     BufferedImage img;
     Point2D coord;
     URL imgPath;
-    public static Boolean visible = true;
     private IconController con;
 
     /**
@@ -121,6 +120,7 @@ public class MapIcon implements Serializable, MapData {
     {
         hashIcon.put(url, state);
     }
+
     public static boolean getIconState(URL url)
     {
         return hashIcon.get(url);
@@ -161,30 +161,15 @@ public class MapIcon implements Serializable, MapData {
         return hashIcon;
     }
 
-    public static HashMap<URL, Boolean> getIcon(){
-        return hashIcon;
-    }
 
-    public void getMapIcons(){
-
-    }
-
+    //Returns true or false, wether the icon is currently visible or not
     public Boolean isVisible() {
         return getIconState(this.imgPath);
     }
 
-    public static void setVisible(Boolean visible) {
-        MapIcon.visible = visible;
-    }
-
-    public void setController(IconController con){
+   /* public void setController(IconController con){
         this.con = con;
-    }
-
-    public static boolean isIconVisible(URL url)
-    {
-        return hashIcon.get(url) == true;
-    }
+    }*/
 
 
 

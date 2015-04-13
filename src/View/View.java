@@ -70,6 +70,7 @@ public class View extends JFrame implements Observer {
         super("This is our map");
         model = m;
         searchResultMH = new SearchResultMouseHandler(this, model);
+        //adding the iconControllers to view
         iconPanel.addObserverToIcons(this);
 
         /*Two helper functions to set up the AfflineTransform object and
