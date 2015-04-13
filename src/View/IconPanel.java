@@ -14,43 +14,43 @@ import java.util.ArrayList;
 /**
  * Created by AmaliePalmund on 25/03/15.
  */
-    public class IconPanel extends JScrollPane {
+public class IconPanel extends JScrollPane {
     private JPanel panel;
     private static ArrayList<IconController> controllers;
 
-        public IconPanel() {
-            super();
-            controllers = new ArrayList<>();
+    public IconPanel() {
+        super();
+        controllers = new ArrayList<>();
 
-            GridLayout gridLayout = new GridLayout(0,2);
-            setBounds(50, 100, 150, 180);
-            //  setOpaque(true);
-            //setBorder(new MatteBorder(100, 100, 10, 10, new Color(161, 161, 161)));
-            this.setBackground(Color.WHITE);
-            panel = new JPanel();
-            panel.setBackground(Color.WHITE);
-            panel.setLayout(gridLayout);
-            panel.setVisible(true);
-            ArrayList<URL> icons = MapIcon.getIcons();
+        GridLayout gridLayout = new GridLayout(0,2);
+        setBounds(50, 100, 150, 180);
+        //  setOpaque(true);
+        //setBorder(new MatteBorder(100, 100, 10, 10, new Color(161, 161, 161)));
+        this.setBackground(Color.WHITE);
+        panel = new JPanel();
+        panel.setBackground(Color.WHITE);
+        panel.setLayout(gridLayout);
+        panel.setVisible(true);
+        ArrayList<URL> icons = MapIcon.getIcons();
 
 
-            for (int i= 0; i < icons.size(); i++)
-            {
-                String ikoner = icons.get(i).getFile();
-                JLabel l1 = new JLabel(new ImageIcon(ikoner));
-                panel.add(l1);
-                JCheckBox checkbox = new JCheckBox("",true);
-                IconController controller = new IconController(icons.get(i));
-                MapIcon.setIconState(icons.get(i), true);
-                //icons.get(i).setController(controller);
-                checkbox.addItemListener(controller);
-                checkbox.addComponentListener(controller);
-                panel.add(checkbox);
-                panel.addComponentListener(controller);
-                controllers.add(controller);
-            }
-            this.setViewportView(panel);
+        for (int i= 0; i < icons.size(); i++)
+        {
+            String ikoner = icons.get(i).getFile();
+            JLabel l1 = new JLabel(new ImageIcon(ikoner));
+            panel.add(l1);
+            JCheckBox checkbox = new JCheckBox("",true);
+            IconController controller = new IconController(icons.get(i));
+            MapIcon.setIconState(icons.get(i), true);
+            //icons.get(i).setController(controller);
+            checkbox.addItemListener(controller);
+            checkbox.addComponentListener(controller);
+            panel.add(checkbox);
+            panel.addComponentListener(controller);
+            controllers.add(controller);
         }
+        this.setViewportView(panel);
+    }
 
     public static ArrayList<IconController> getControllers() {
         return controllers;
@@ -65,3 +65,4 @@ import java.util.ArrayList;
     }
 
 }
+

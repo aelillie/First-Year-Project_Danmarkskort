@@ -41,6 +41,9 @@ public class MapIcon implements Serializable, MapData {
     public static final URL layerIcon = MapIcon.class.getResource("/data/layerIcon.png");
     public static final URL chosenAddressIcon = MapIcon.class.getResource("/data/chosenAddressIcon.png");
 
+    /* public static URL metroIcon, STogIcon, parkingIcon, busIcon, pubIcon, atmIcon, standard, colorblind, transport, layerIcon;
+     public static URL startPointIcon, endPointIcon, fullscreenIcon, minusIcon, plusIcon, searchIcon, optionsIcon, chosenAddressIcon;
+  */
     static ArrayList<URL> icons = addIcons();
     static HashMap<URL, Boolean> hashIcon = addIcon();
     BufferedImage img;
@@ -70,8 +73,8 @@ public class MapIcon implements Serializable, MapData {
     public MapIcon(Point2D coord, URL imgPath){
 
 
-            this.coord = coord;
-            this.imgPath = imgPath;
+        this.coord = coord;
+        this.imgPath = imgPath;
 
     }
 
@@ -90,8 +93,8 @@ public class MapIcon implements Serializable, MapData {
         double x;
         double y;
 
-            x = coord.getX();
-            y = coord.getY();
+        x = coord.getX();
+        y = coord.getY();
 
         AffineTransform it = AffineTransform.getTranslateInstance(x, y);
         it.scale((1 / transform.getScaleX()), (1 / transform.getScaleY())); //Sets off against the transform of the context, scaling the transform of the icon accordingly.
@@ -162,16 +165,14 @@ public class MapIcon implements Serializable, MapData {
     }
 
 
-    //Returns true or false, wether the icon is currently visible or not
+    //Returns true or false, whether the icon is currently visible or not
     public Boolean isVisible() {
         return getIconState(this.imgPath);
     }
 
-   /* public void setController(IconController con){
-        this.con = con;
-    }*/
-
-
-
+  /* public void setController(IconController con){
+       this.con = con;
+   }*/
 
 }
+
