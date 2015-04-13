@@ -1,5 +1,6 @@
 package QuadTree;
 
+import MapFeatures.Highway;
 import Model.MapData;
 import Model.MapFeature;
 import Model.MapIcon;
@@ -12,6 +13,7 @@ import java.util.List;
 
 public class QuadTree implements Serializable{
     private static final long serialVersionUID = 8;
+    private int cap = 0;
     private Node root;
 
     // helper node data type
@@ -21,6 +23,7 @@ public class QuadTree implements Serializable{
         Double width, height;
         Node NW, NE, SE, SW;                   // four subtrees
         ArrayList<MapData> value;
+
 
         Node(Double x, Double y, Double width, Double height) {
             this.x = x;
@@ -35,7 +38,7 @@ public class QuadTree implements Serializable{
         /**
          * Divide the Node into four new and spread the values.
          */
-        public void subdivide(){
+        public void subDivide(){
             Double newWidth = width/2;
             Double newHeight = height/2;
             ArrayList<MapData> tmp = value;
@@ -50,19 +53,27 @@ public class QuadTree implements Serializable{
 
         }
 
+        /**
+         * Add a new Value, check if node is full
+         * @param values - Value to be stored in node
+         */
         public void addvalue(MapData values){
-            if(value.size() > 1000){
-                subdivide();
+            if(value.size() > cap){
+                subDivide();
                 insert(values);
             }else value.add(values);
         }
 
     }
 
-    public QuadTree(Rectangle2D bbox){
-
+    /**
+     * Create an instance from a bbox. Splitting the initial root using bbox values.
+     * @param bbox - Bounds containing all values.
+     */
+    public QuadTree(Rectangle2D bbox, int capacity){
+        cap = capacity;
         root = new Node(bbox.getCenterX(),bbox.getCenterY(), bbox.getWidth(), bbox.getHeight());
-        root.subdivide();
+        root.subDivide();
     }
 
 
@@ -72,6 +83,8 @@ public class QuadTree implements Serializable{
      * @param value Value
      */
     public void insert(MapData value) {
+
+        //First check what Type it is then use its coordinates to store it in the QuadTree
         if(value.getType() == MapIcon.class) {
             MapIcon mI = (MapIcon) value;
             insert(root, mI.getPosition().getX(), mI.getPosition().getY(), value);
@@ -80,13 +93,14 @@ public class QuadTree implements Serializable{
         else {
             MapFeature mF = (MapFeature) value;
             Rectangle2D bounds = mF.getShape().getBounds2D();
-
             insert(root, bounds.getCenterX(), bounds.getCenterY(), value);
+
         }
     }
 
     private void insert(Node h, Double x, Double y, MapData value) {
         //// if (eq(x, h.x) && eq(y, h.y)) h.value = value;  // duplicate
+
         if ( less(x, h.x) &&  less(y, h.y)) {
             if(h.NW == null) h.addvalue(value);
             else insert(h.NW, x, y, value);
@@ -111,15 +125,15 @@ public class QuadTree implements Serializable{
      * @param rect Range needed
      * @return List of List of MapFeatures
      */
-    public ArrayList<List<MapData>> query2D(Shape rect) {
+    public ArrayList<MapData> query2D(Shape rect) {
 
-        ArrayList<List<MapData>> values = new ArrayList<>();
+        ArrayList<MapData> values = new ArrayList<>(); //List of list of All values in rect to be returned
         if(rect != null)
             query2D(root, rect, values);
         return values;
     }
 
-    private void query2D(Node h, Shape query, ArrayList<List<MapData>> values) {
+    private void query2D(Node h, Shape query, ArrayList<MapData> values) {
         if (h == null) return;
         Rectangle2D rect = query.getBounds2D();
         Double xmin = rect.getMinX();
@@ -128,7 +142,9 @@ public class QuadTree implements Serializable{
         Double ymax = rect.getMaxY();
         if (rect.intersects(h.x- h.width,h.y - h.height, h.width*2, h.height*2) || rect.contains(h.x, h.y))
             if(!h.value.isEmpty())
-            values.add(h.value);
+            values.addAll(h.value);
+
+        //Recursive calls. Checking what nodes to search in.
         if ( less(xmin, h.x) &&  less(ymin, h.y)) query2D(h.NW, rect, values);
         if ( less(xmin, h.x) && !less(ymax, h.y)) query2D(h.SW, rect, values);
         if (!less(xmax, h.x) &&  less(ymin, h.y)) query2D(h.NE, rect, values);
@@ -170,9 +186,6 @@ public class QuadTree implements Serializable{
             if(h.SE != null)wut.addAll(getNodeRects(h.SE));
             if(h.SW != null)wut.addAll(getNodeRects(h.SW));
         }
-
-
-
         return wut;
     }
 

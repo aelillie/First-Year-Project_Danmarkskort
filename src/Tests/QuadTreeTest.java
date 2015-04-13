@@ -4,6 +4,7 @@ import MapFeatures.Building;
 import MapFeatures.Highway;
 import Model.MapData;
 import Model.MapFeature;
+import Model.MapIcon;
 import Model.PathCreater;
 import QuadTree.QuadTree;
 import org.junit.Before;
@@ -14,6 +15,7 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
@@ -30,7 +32,7 @@ public class QuadTreeTest {
         paths = new ArrayList<>();
         ArrayList<Point2D> points = new ArrayList<>();
         Rectangle2D testBox = new Rectangle2D.Float(0,0,100,100);
-        quadTree = new QuadTree(testBox);
+        quadTree = new QuadTree(testBox,1000);
         points.add(new Point2D.Float(0,0));
         points.add(new Point2D.Float(10,10));
         points.add(new Point2D.Float(50,60));
@@ -50,7 +52,7 @@ public class QuadTreeTest {
         MapFeature mf2 = new Highway(paths.get(1), 0, "trunk", false);
         MapFeature mf3 = new Building(paths.get(2), 0, "building");
         MapFeature mf4 = new Highway(paths.get(3), 0, "footway", false);
-
+        MapIcon mI1 = new MapIcon(new Point2D.Float(10,10),MapIcon.parkingIcon);
 
         quadTree.insert(mf1);
         quadTree.insert(mf2);
@@ -65,12 +67,11 @@ public class QuadTreeTest {
 
         Rectangle2D window = new Rectangle2D.Float(60,30,60,30);
 
-        ArrayList<List<MapData>> visible = quadTree.query2D(window);
+        List<MapData> visible = quadTree.query2D(window);
 
         assertEquals( 1,visible.size() );
 
-        List<MapData> list1 =visible.get(0);
-        assertEquals(list1.size(), 1);
+
 
 
     }
@@ -86,14 +87,31 @@ public class QuadTreeTest {
             quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false));
         }
 
-        List<List<MapData>> Data = quadTree.query2D(new Rectangle2D.Float(51,1,100,49));
+        List<MapData> Data = quadTree.query2D(new Rectangle2D.Float(51,1,100,49));
 
-        assertEquals(4, Data.size());
+        assertTrue(!Data.isEmpty());
+        assertEquals(1500, Data.size());
+        assertEquals(quadTree.getNodeRects().size(), 9);
 
-        assertTrue(!Data.get(0).isEmpty());
-        assertTrue(!Data.get(1).isEmpty());
-        assertTrue(!Data.get(2).isEmpty());
-        assertTrue(!Data.get(3).isEmpty());
+
+
+    }
+
+    @Test(timeout = 600)
+    public void TestEfficiency(){
+        ArrayList<Point2D> points = new ArrayList<>();
+        Random r = new Random();
+        for(int i = 0; i < 75000; i++){
+            if(r.nextBoolean()) {
+                points.clear();
+                points.add(new Point2D.Float((i * 4 % 100) + 50, i % 100));
+                points.add(new Point2D.Float((i * 10 / 2 % 100) + 50, i / 2 % 100));
+                quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false));
+            }else{
+                quadTree.insert(new MapIcon(new Point2D.Float((i * 4 % 100) + 50, i % 100),MapIcon.busIcon));
+            }
+        }
+
 
     }
 

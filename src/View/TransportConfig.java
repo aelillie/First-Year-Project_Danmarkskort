@@ -45,9 +45,9 @@ public class TransportConfig {
         transportView[ValueName.GEOLOGICAL.ordinal()] =      new DrawAttribute(false, 0, DrawAttribute.lightgrey, 18);
         //HIGHWAY
         transportView[ValueName.HIGHWAY.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.cl_grey, 10);
-        transportView[ValueName.MOTORWAY.ordinal()] =        new DrawAttribute(false, 3, DrawAttribute.black, 0);
-        transportView[ValueName.TRUNK.ordinal()] =           new DrawAttribute(false, 3, DrawAttribute.black, 0);
-        transportView[ValueName.PRIMARY.ordinal()] =         new DrawAttribute(false, 3, DrawAttribute.black, 2);
+        transportView[ValueName.MOTORWAY.ordinal()] =        new DrawAttribute(false, 3, DrawAttribute.fadeblack, 0);
+        transportView[ValueName.TRUNK.ordinal()] =           new DrawAttribute(false, 3, DrawAttribute.fadeblack, 0);
+        transportView[ValueName.PRIMARY.ordinal()] =         new DrawAttribute(false, 3, DrawAttribute.fadeblack, 2);
         transportView[ValueName.SECONDARY.ordinal()] =       new DrawAttribute(false, 3, DrawAttribute.lightergrey, 4);
         transportView[ValueName.TERTIARY.ordinal()] =        new DrawAttribute(false, 3, DrawAttribute.lightergrey, 5);
         transportView[ValueName.UNCLASSIFIED.ordinal()] =    new DrawAttribute(false, 1, DrawAttribute.lightergrey, 8);
@@ -100,10 +100,10 @@ public class TransportConfig {
         transportView[ValueName.BEACH.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.sand, 9);
         transportView[ValueName.COASTLINE.ordinal()] =       new DrawAttribute(false, 0, DrawAttribute.ground, 0);
         //RAILWAY
-        transportView[ValueName.RAILWAY.ordinal()] =         new DrawAttribute(true, 6, DrawAttribute.cl_red2, 0);
-        transportView[ValueName.LIGHT_RAIL.ordinal()] =      new DrawAttribute(true, 6, DrawAttribute.cl_red3, 0);
-        transportView[ValueName.RAIL.ordinal()] =            new DrawAttribute(true, 6, DrawAttribute.cl_red1, 0);
-        transportView[ValueName.TRAM.ordinal()] =           new DrawAttribute(true, 6, DrawAttribute.cl_red, 0);
+        transportView[ValueName.RAILWAY.ordinal()] =         new DrawAttribute(true, 6, DrawAttribute.lightred, 0);
+        transportView[ValueName.LIGHT_RAIL.ordinal()] =      new DrawAttribute(true, 6, DrawAttribute.lightred, 0);
+        transportView[ValueName.RAIL.ordinal()] =            new DrawAttribute(true, 6, DrawAttribute.lightred, 0);
+        transportView[ValueName.TRAM.ordinal()] =           new DrawAttribute(true, 6, DrawAttribute.lightgreen, 0);
         transportView[ValueName.SUBWAY.ordinal()] =         new DrawAttribute(true, 6, DrawAttribute.cl_red, 0);
         //ROUTE
         transportView[ValueName.ROUTE.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.grey, 12);

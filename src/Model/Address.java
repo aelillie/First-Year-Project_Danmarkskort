@@ -1,12 +1,13 @@
 package Model;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class Address implements Comparable<Address> {
+public class Address implements Comparable<Address>, Serializable {
     private String street, house, floor, side, postcode, city;
     static private List<Pattern> patternList = new ArrayList<>();
     private static List<Address> addressList = new ArrayList<>();
@@ -73,6 +74,7 @@ public class Address implements Comparable<Address> {
         String s = street.trim() + " " + house.trim() + " " + floor.trim() + " " + side.trim()+" " + postcode.trim() + " " + city.trim();
         s = s.replaceAll(" +", " ");
         s = s.trim();
+        s = s.toLowerCase();
         return s;
     }
 
@@ -93,11 +95,8 @@ public class Address implements Comparable<Address> {
        if(type == 1) {
            if (this.toStringForSort().startsWith(addr.toStringForSort())) return 0;
            else return this.toStringForSort().compareTo(addr.toStringForSort());
-       } else if (type == 2){
-           if(this.toStringForSort().equals(addr.toStringForSort())) return 0;
-           else return this.toStringForSort().compareTo(addr.toStringForSort());
        } else {
-           if(this.toStringForSort().contains(addr.toStringForSort())) return 0;
+           if(this.toStringForSort().equals(addr.toStringForSort())) return 0;
            else return this.toStringForSort().compareTo(addr.toStringForSort());
        }
     }

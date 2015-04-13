@@ -3,8 +3,11 @@ package Controller;
 import Model.*;
 import View.*;
 
+import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import javax.swing.event.ListSelectionEvent;
+import javax.swing.event.ListSelectionListener;
 import java.awt.event.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -17,6 +20,7 @@ import java.util.Map;
 public class SearchController extends MouseAdapter implements ActionListener {
     Model model;
     View view;
+    private int selectedNr = -1;
 
     public SearchController(Model m, View v) {
         model = m;
@@ -49,16 +53,19 @@ public class SearchController extends MouseAdapter implements ActionListener {
         } //When the search button is clicked
     }
 
+
     private void setInputChangeHandler(){
         view.getSearchArea().getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
                 addressSearch(1);
+                selectedNr=-1;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
                 addressSearch(1);
+                selectedNr=-1;
             }
 
             @Override
@@ -69,7 +76,13 @@ public class SearchController extends MouseAdapter implements ActionListener {
 
     private Address[] addressSearch(int type){
         String input = view.getSearchArea().getText();
-        if(!input.equals("") && input != null) {
+        if(input.length() < 3){
+            if(input.equals("") && input != null) {
+                view.getResultPane().setVisible(false);
+                view.setCurrentAddress(null);
+            }
+            return null;
+        } else {
             input = input.trim().toLowerCase();
             Address address = Address.parse(input);
             if(address == null) return null;
@@ -77,34 +90,46 @@ public class SearchController extends MouseAdapter implements ActionListener {
             if(results != null) view.addToResultPane(results);
             else view.getResultPane().setVisible(false);
             return results;
-        } else {
-            view.getResultPane().setVisible(false);
-            view.setCurrentAddress(null);
-            return null;
         }
     }
 
     private class SearchAreaKeyHandler extends KeyAdapter {
+        private JList<Address> list = view.getAddressSearchResults();
+
 
         @Override
-        /**
-         * Listens for keyboard events
-         */
         public void keyPressed(KeyEvent e) {
+            list = view.getAddressSearchResults();
+
             //Set up the keyboard handler for different keys.
             if(e.getKeyCode() == KeyEvent.VK_ENTER) {
+                Address selectedItem = list.getSelectedValue();
+                if(!(selectedItem==null)) {
+                    view.getSearchArea().setText(selectedItem.toString());
+                    view.getResultPane().setVisible(false);
+                }
+
                 Address[] results = addressSearch(2);
-                if(results != null) {
-                    if(results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view);
+                if (results != null) {
+                    if (results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view);
                     view.getResultPane().setVisible(false);
                     view.getCanvas().requestFocusInWindow();
                 } else {
                     addressSearch(1);
                     view.getCanvas().requestFocusInWindow();
                 }
+
             }
+
+            if(e.getKeyCode() == KeyEvent.VK_DOWN && selectedNr < list.getModel().getSize()-1){
+                list.setSelectedIndex(++selectedNr);
+
+            }
+            if(e.getKeyCode() == KeyEvent.VK_UP && selectedNr>0){
+                list.setSelectedIndex(--selectedNr);
+            }
+
         }
     }
-
 }
 

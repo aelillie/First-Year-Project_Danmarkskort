@@ -3,9 +3,15 @@ package Model;
 import MapFeatures.Coastline;
 import QuadTree.QuadTree;
 
+import java.awt.*;
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
+
 
 /**
  * Helper class to save and load data in binary format
@@ -23,8 +29,12 @@ public final class BinaryHandler {
         Model model = Model.getModel();
         out.writeObject(model.getBbox().getBounds2D());
 
+        out.writeObject(model.getOSMReader().getAddressMap());
+        out.writeObject(model.getOSMReader().getStreetMap());
+        out.writeObject(model.getOSMReader().getBoundaryMap());
+        out.writeObject(model.getOSMReader().getAddressList());
 
-        QuadTree qT = model.getQuadTree();
+        List<QuadTree> qT = model.getQuadTrees();
         out.writeObject(qT);
 
 
@@ -48,18 +58,34 @@ public final class BinaryHandler {
         //get the bounds of the map
         Rectangle2D rec = (Rectangle2D) in.readObject();
 
+        LoadingScreen loadingScreen = new LoadingScreen();
+
+        model.getOSMReader().setAddressMap((Map<Address, Point2D>) in.readObject());
+
+        loadingScreen.updateLoadBar(15);
+        model.getOSMReader().setStreetMap((Map<Address, List<Path2D>>) in.readObject());
+
+        loadingScreen.updateLoadBar(25);
+        model.getOSMReader().setBoundaryMap((Map<Address, Path2D>) in.readObject());
+
+        loadingScreen.updateLoadBar(40);
+        model.getOSMReader().setAddressList((ArrayList<Address>) in.readObject());
+
+
         long time = System.nanoTime();
         model.setBBox(rec);
-        QuadTree qT = (QuadTree) in.readObject();
+        List<QuadTree> qT = (List<QuadTree>) in.readObject();
 
+
+        loadingScreen.updateLoadBar(80);
         model.setQuadTree(qT);
         System.out.println("done in " + (System.nanoTime() - time) / 1000000);
 
-
         List<Coastline> coasts = model.getCoastlines();
         coasts.addAll((List<Coastline>)in.readObject());
+        loadingScreen.updateLoadBar(99);
         in.close();
-
+        loadingScreen.updateLoadBar(100);
     }
 
 

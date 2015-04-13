@@ -49,4 +49,12 @@ public class DrawAttributeManager {
         isColorblind = false;
         isTransport = true;
     }
+
+    public boolean isColorblind() {
+        return isColorblind;
+    }
+
+    public boolean isTransport() {
+        return isTransport;
+    }
 }

@@ -2,6 +2,9 @@ package Controller;
 
 import Model.Address;
 
+import java.awt.*;
+import java.awt.event.KeyAdapter;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
@@ -11,11 +14,12 @@ import java.util.Map;
 
 import View.*;
 import Model.*;
+import org.w3c.dom.css.Rect;
 
 /**
  * Created by Nicoline on 04-04-2015.
  */
-public class SearchResultMouseHandler extends MouseAdapter {
+public class SearchResultMouseHandler extends MouseAdapter{
 
     View view;
     Model model;
@@ -23,6 +27,7 @@ public class SearchResultMouseHandler extends MouseAdapter {
     public SearchResultMouseHandler(View view, Model model) {
         this.view = view;
         this.model = model;
+
     }
 
     @Override
@@ -32,7 +37,6 @@ public class SearchResultMouseHandler extends MouseAdapter {
         view.getCanvas().requestFocusInWindow();
         getAddressLocation(selectedItem, model, view);
         view.getResultPane().setVisible(false);
-
     }
 
     public static void getAddressLocation(Address selectedAddr, Model m, View v){
@@ -46,11 +50,26 @@ public class SearchResultMouseHandler extends MouseAdapter {
 
         if(addressLocation == null && boundaryLocation == null) {
             v.setCurrentStreet(streetLocation);
+            /*Rectangle previousRect = new Rectangle();
+            Rectangle currentRect = new Rectangle();
+            for(Path2D path: streetLocation){
+                currentRect = path.getBounds();
+                if(previousRect.getWidth() != 0 && previousRect.getHeight() != 0) currentRect.add(previousRect);
+                previousRect = path.getBounds();
+            }
+            v.searchResultChosen(currentRect.getBounds().getCenterX(),currentRect.getBounds().getCenterY());*/
+            //v.searchResultChosen(streetLocation.get(0).getBounds().getX(),streetLocation.get(0).getBounds().getY());
+
         } else if(boundaryLocation == null && streetLocation == null){
             v.setCurrentAddress(addressLocation);
+            v.searchResultChosen(addressLocation.getX(),addressLocation.getY());
         } else if(streetLocation == null && addressLocation == null){
             v.setCurrentBoundaryLocation(boundaryLocation);
+            v.searchResultChosen(boundaryLocation.getBounds().getCenterX(),boundaryLocation.getBounds().getCenterY());
         }
     }
+
+
+
 
 }

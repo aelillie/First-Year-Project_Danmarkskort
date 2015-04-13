@@ -10,6 +10,7 @@ import java.io.Serializable;
  * whether the map feature is an area or not.
  */
 public abstract class MapFeature implements Serializable, MapData {
+    private static final long serialVersionUID = 16;
     protected Path2D way;
     protected int layer_value;
     protected String value;
@@ -20,6 +21,26 @@ public abstract class MapFeature implements Serializable, MapData {
         this.way = way;
         this.layer_value = layer_value;
         this.value = value;
+        setPreDefValues();
+    }
+
+    /**
+     * Defines a larger spectrum of layer values
+     * Predefined layer values get their values multiplied
+     * by a factor 10
+     */
+    protected void setPreDefValues() {
+        if (layer_value == -5) layer_value = -50;
+        else if (layer_value == -4) layer_value = -40;
+        else if (layer_value == -3) layer_value = -30;
+        else if (layer_value == -2) layer_value = -20;
+        else if (layer_value == -1) layer_value = -10;
+        else if (layer_value == 0) layer_value = 0;
+        else if (layer_value == 1) layer_value = 10;
+        else if (layer_value == 2) layer_value = 20;
+        else if (layer_value == 3) layer_value = 30;
+        else if (layer_value == 4) layer_value = 40;
+        else if (layer_value == 5) layer_value = 50;
     }
 
     /**
@@ -28,10 +49,15 @@ public abstract class MapFeature implements Serializable, MapData {
      */
     public abstract void setValueAttributes(); //Every new map feature calls this method to set specific attributes
 
-    /**
-     * Assigns a value name from the ENUM class ValueName to map feature created
-     * @param valueName ENUM value name
-     */
+    @Override
+    public String toString() {
+        return "MapFeature{" +
+                ", layer_value=" + layer_value +
+                ", value='" + value + '\'' +
+                ", isArea=" + isArea +
+                ", valueName=" + valueName +
+                '}';
+    }
 
     //GETTERS AND SETTERS
     public void setValueName(ValueName valueName) {
