@@ -57,7 +57,7 @@ public class View extends JFrame implements Observer {
     /**
      * Creates the window of our application.
      *
-     * @param m Reference to Model.Model class
+     * @param m Reference to Model class
      */
     public View(Model m) {
         super("This is our map");
@@ -643,11 +643,15 @@ public class View extends JFrame implements Observer {
         isFullscreen = !isFullscreen;
     }
 
+    /**
+     * Finds the Nearest Highway from the MousePosition using distance from point to lineSegment
+     * @param position Position of MousePointer
+     */
     public void findNearest(Point position){
         if(zoomLevel < 11) return;
 
-        int x = getInsets().top;
-        position.setLocation(position.getX(), position.getY()-x);
+        Insets x = getInsets();
+        position.setLocation(position.getX() + x.left - x.right, position.getY()-x.top + x.bottom );
 
         ArrayList<MapData> node = model.getVisibleStreets(bounds.getBounds());
 

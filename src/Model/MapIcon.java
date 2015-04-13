@@ -19,6 +19,7 @@ import java.util.Map;
 public class MapIcon implements Serializable, MapData {
     public static final long serialVersionUID = 5;
 
+    //Hashmap containing references of paths to resource files.
     public static Map<String, URL> iconURLs = new HashMap<>();
 
     static{
@@ -41,7 +42,7 @@ public class MapIcon implements Serializable, MapData {
         aMap.put("optionsIcon", MapIcon.class.getResource("/data/optionsIcon.png"));
         aMap.put("layerIcon", MapIcon.class.getResource("/data/layerIcon.png"));
         aMap.put("chosenAddressIcon", MapIcon.class.getResource("/data/chosenAddressIcon.png"));
-        MapIcon.iconURLs = Collections.unmodifiableMap(aMap);
+        MapIcon.iconURLs = aMap;
     }
 
 
@@ -138,7 +139,10 @@ public class MapIcon implements Serializable, MapData {
     }
 
 
-
+    /**
+     * Used to check wether MapFeature or MapIcon when static type is MapData.
+     * @return What class this is
+     */
     public Class getClassType(){
         return this.getClass();
     }
@@ -148,6 +152,10 @@ public class MapIcon implements Serializable, MapData {
         return coord;
     }
 
+    /**
+     * Returns a list of the paths to icon files needed
+     * @return List of URL to icon files
+     */
     public static ArrayList<URL> getIcons(){
         ArrayList<URL> iconsOne = new ArrayList<>();
         iconsOne.add(MapIcon.iconURLs.get("metroIcon"));
@@ -158,6 +166,7 @@ public class MapIcon implements Serializable, MapData {
         iconsOne.add(MapIcon.iconURLs.get("pubIcon"));
         return iconsOne;
     }
+
     private static HashMap<URL,Boolean> addIcon(){
         HashMap<URL, Boolean> hashIcon = new HashMap<>();
         hashIcon.put(MapIcon.iconURLs.get("metroIcon"),false);
@@ -170,7 +179,10 @@ public class MapIcon implements Serializable, MapData {
     }
 
 
-    //Returns true or false, whether the icon is currently visible or not
+    /**
+     * Returns true or false, whether the icon is currently visible or not
+     * @return boolean
+     */
     public Boolean isVisible() {
         return getIconState(this.imgPath);
     }
