@@ -56,7 +56,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         else if (command.equals("fullscreen")) view.toggleFullscreen();
         else if (command.equals("showRoutePanel")) view.showRoutePanel();
         else if (command.equals("findRoute"));
-        else if (command.equals("showOptions")) view.repaint();
+        else if (command.equals("showOptions")) { view.repaint(); }
         else if (command.equals("mapType")) view.showMapTypePanel();
     }
 
@@ -76,6 +76,7 @@ public class Controller extends MouseAdapter implements ActionListener {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            view.adjustZoomFactor();
             view.repaint();
             view.scaleAffine();
         } else { //If no file is chosen (the user pressed cancel) or if an error occured
