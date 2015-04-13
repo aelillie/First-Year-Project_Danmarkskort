@@ -79,7 +79,7 @@ public abstract class MapFeature implements Serializable, MapData {
     public String getValue(){return value;}
 
 
-    public Class getType(){
+    public Class getClassType(){
         return this.getClass().getSuperclass();
     }
 }

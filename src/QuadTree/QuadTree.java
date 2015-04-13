@@ -83,7 +83,7 @@ public class QuadTree implements Serializable{
     public void insert(MapData value) {
 
         //First check what Type it is then use its coordinates to store it in the QuadTree
-        if(value.getType() == MapIcon.class) {
+        if(value.getClassType() == MapIcon.class) {
             MapIcon mI = (MapIcon) value;
             insert(root, mI.getPosition().getX(), mI.getPosition().getY(), value);
 
