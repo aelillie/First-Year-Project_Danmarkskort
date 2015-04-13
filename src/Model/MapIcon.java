@@ -3,6 +3,7 @@ package Model;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -57,7 +58,7 @@ public class MapIcon implements Serializable, MapData {
      * @param type The path of the image file.
      */
     public MapIcon(Shape shape, String type){
-        this.type = type;
+        this.type = type.intern();
         coord = new Point2D.Float((float)shape.getBounds2D().getCenterX(), (float)shape.getBounds2D().getCenterY());
         imgPath = iconURLs.get(type);
     }
@@ -69,7 +70,7 @@ public class MapIcon implements Serializable, MapData {
      * @param type The path of the image file.
      */
     public MapIcon(Point2D coord, String type){
-        this.type = type;
+        this.type = type.intern();
         this.coord = coord;
         imgPath = iconURLs.get(type);
 
@@ -87,11 +88,20 @@ public class MapIcon implements Serializable, MapData {
         } catch(IOException e){
             e.printStackTrace();
         }
-        double x;
-        double y;
+        double x = 0;
+        double y = 0;
+        if(imgPath.getPath().equals(iconURLs.get("chosenAddressIcon").getPath())){
 
-        x = coord.getX();
-        y = coord.getY();
+            double height = (img.getHeight()/transform.getScaleY());
+            double width = (img.getWidth()/transform.getScaleX())/2;
+            x = coord.getX() - width;
+            y = coord.getY()- height;
+
+
+        }else {
+            x = coord.getX();
+            y = coord.getY();
+        }
 
         AffineTransform it = AffineTransform.getTranslateInstance(x, y);
         it.scale((1 / transform.getScaleX()), (1 / transform.getScaleY())); //Sets off against the transform of the context, scaling the transform of the icon accordingly.
@@ -107,7 +117,7 @@ public class MapIcon implements Serializable, MapData {
 
         Object co = stream.readObject();
         coord = (Point2D) co;
-        this.type = stream.readUTF();
+        this.type = stream.readUTF().intern();
 
         imgPath = iconURLs.get(type);
     }
