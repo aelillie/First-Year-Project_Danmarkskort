@@ -40,6 +40,7 @@ public class View extends JFrame implements Observer {
     private RouteView routePanel = new RouteView();
     private MapTypePanel mapTypePanel = new MapTypePanel(this);
     private IconPanel iconPanel = new IconPanel();
+    private OptionsPanel optionsPanel = new OptionsPanel(this);
     private SearchResultMouseHandler searchResultMH;
     private JScrollPane resultPane = new JScrollPane();
     private JList<Address> addressSearchResults;
@@ -84,6 +85,7 @@ public class View extends JFrame implements Observer {
                 zoomInButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2, 30, 35);
                 //mapMenu.setBounds(getWidth() - 300, getHeight() - getHeight() / 3 * 2 - 50, 130, 30);
                 mapTypePanel.setBounds(getWidth()-330, getHeight() - getHeight() / 3 * 2 - 45, 280, 200);
+                optionsPanel.setBounds(getWidth() - 220, getHeight() - (int) (getHeight() * 0.98), 150, 80);
                 loadButton.setBounds(getWidth() - 65, getHeight() - 65, 40, 20);
                 optionsButton.setBounds(getWidth() - 60, getHeight() - (int) (getHeight() * 0.98), 39, 37);
                 mapTypeButton.setBounds(getWidth() - 49, getHeight() - getHeight() / 3 * 2 - 45, 39, 37);
@@ -192,7 +194,8 @@ public class View extends JFrame implements Observer {
         layer.add(mapTypeButton, new Integer(2));
         layer.add(mapTypePanel, new Integer(2));
         layer.add(resultPane, new Integer(3));
-        layer.add(iconPanel, new Integer(2));
+        layer.add(iconPanel, new Integer(3));
+        layer.add(optionsPanel, new Integer(2));
 
     }
 
@@ -365,6 +368,16 @@ public class View extends JFrame implements Observer {
 
     public void showMapTypePanel(){
         mapTypePanel.showMapTypePanel();
+        canvas.repaint();
+    }
+
+    public void showIconPanel(){
+        iconPanel.showIconPanel();
+        canvas.repaint();
+    }
+
+    public void showOptionsPanel(){
+        optionsPanel.showOptionsPanel();
         canvas.repaint();
     }
 
