@@ -10,6 +10,7 @@ import Model.MapIcon;
 import Model.MapFeature;
 import Model.MapCalculator;
 import Model.MapIcon;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
@@ -51,6 +52,14 @@ public class OSMHandlerTest {
         naturalList = m.getVisibleNatural(new Rectangle2D.Float(0, 0, 500, 500));
     }
 
+    @After
+    public void tearDown() {
+        streetList.clear();
+        buildingList.clear();
+        iconList.clear();
+        naturalList.clear();
+    }
+
     @Test
     public void MapFeatureWayTest() {
         List<Point2D> highwayCoords = new ArrayList<>();
@@ -75,7 +84,8 @@ public class OSMHandlerTest {
         MapFeature barrier = null;
         MapFeature leisure = null;
 
-
+        //Will 100% be of type MapFeature, since it's from buildingList
+        //It is therefore safe to assume that it can be cast to MapFeature
         for (MapData mapData : streetList) {
             highway = (MapFeature) mapData;
             if (highway.getValue().equals("tertiary"))
@@ -104,36 +114,32 @@ public class OSMHandlerTest {
     private void pathIterate(PathIterator path, List<Point2D> wayCoords) {
         int i = 0;
         while(!path.isDone()) {
-            float[] points = new float[6];
-            path.currentSegment(points);
+            float[] points = new float[6]; //creates space to store coordinates
+            path.currentSegment(points); //put coordinates from path's current segment into the array
             Assert.assertEquals(points[0], wayCoords.get(i).getY(), DELTA); //point[0] is y-coordinate
             Assert.assertEquals(points[1], wayCoords.get(i).getX(), DELTA); //point[1] is x-coordinate
-            path.next();
+            path.next(); //next segment in the path
             i++;
         }
     }
 
     @Test
     public void addingIconsTest(){
-        List<MapData> icons = m.getVisibleIcons(new Rectangle2D.Float(0, 0, 500, 500));
-
-        Assert.assertEquals(5, icons.size());
-        MapIcon icon = (MapIcon) icons.get(0);
+        Assert.assertEquals(5, iconList.size());
+        MapIcon icon = (MapIcon) iconList.get(0);
         Assert.assertEquals(new Point2D.Float(12.5818120f , (float) MapCalculator.latToY(55.6653496)), icon.getPosition());
 
     }
 
     @Test
     public void addingBuildingsTest(){
-        List<MapData> buildings = m.getVisibleBuildings(new Rectangle2D.Float(0, 0, 500, 500));
+        Assert.assertTrue(!buildingList.isEmpty());
 
-        Assert.assertTrue(!buildings.isEmpty());
+        Assert.assertNotNull(buildingList.get(0));
 
-        Assert.assertNotNull(buildings.get(0));
+        Assert.assertEquals(5, buildingList.size());
 
-        Assert.assertEquals(5, buildings.size());
-
-        Assert.assertTrue(buildings.get(0) instanceof Amenity);
+        Assert.assertTrue(buildingList.get(0) instanceof Amenity);
 
 
 
@@ -142,11 +148,9 @@ public class OSMHandlerTest {
 
     @Test
     public void addingNaturalsTest(){
-        List<MapData> naturals = m.getVisibleNatural(new Rectangle2D.Float(0, 0, 500, 500));
-
-        Assert.assertTrue(!naturals.isEmpty());
-        Assert.assertEquals(3, naturals.size());
-        Assert.assertNotNull(naturals.get(1));
+        Assert.assertTrue(!naturalList.isEmpty());
+        Assert.assertEquals(3, naturalList.size());
+        Assert.assertNotNull(naturalList.get(1));
 
 
 
