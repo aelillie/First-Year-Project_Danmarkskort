@@ -166,6 +166,7 @@ public class Model extends Observable implements Serializable {
         return OSMReader.getIconTree().query2D(visibleArea);
     }
 
+
     public void sortLayers(List<MapFeature> mapFeatures){
         OSMReader.sortLayers(mapFeatures);
     }
