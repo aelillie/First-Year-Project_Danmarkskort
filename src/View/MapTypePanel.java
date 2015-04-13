@@ -43,15 +43,15 @@ public class MapTypePanel extends JPanel {
         mapTypeLabel.setForeground(Color.WHITE);
 
 
-        ImageIcon standardMapImage = new ImageIcon(this.getClass().getResource("/data/standardMapImage.png"));
+        ImageIcon standardMapImage = new ImageIcon(MapIcon.iconURLs.get("standardMapImage"));
         standardButton.setIcon(standardMapImage);
         standardButton.setBackground(Color.WHITE);
         standardButton.setActionCommand("standardMap");
 
-        ImageIcon colorblindMapImage = new ImageIcon(this.getClass().getResource("/data/colorblindMapImage.png"));
+        ImageIcon colorblindMapImage = new ImageIcon(MapIcon.iconURLs.get("colorblindMapImage"));
         colorblindButton.setIcon(colorblindMapImage);
         colorblindButton.setBackground(Color.WHITE);
-        ImageIcon transportMapImage = new ImageIcon(this.getClass().getResource("/data/transportMapImage.png"));
+        ImageIcon transportMapImage = new ImageIcon(MapIcon.iconURLs.get("transportMapImage"));
         colorblindButton.setActionCommand("colorblindMap");
 
         transportButton.setIcon(transportMapImage);

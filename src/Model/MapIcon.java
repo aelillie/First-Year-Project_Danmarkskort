@@ -1,9 +1,6 @@
 package Model;
 
-import Controller.IconController;
-
 import javax.imageio.ImageIO;
-import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
@@ -13,10 +10,10 @@ import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.ArrayList;
-import java.util.Observable;
 
 public class MapIcon implements Serializable, MapData {
     public static final long serialVersionUID = 5;
@@ -24,25 +21,30 @@ public class MapIcon implements Serializable, MapData {
     public static Map<String, URL> iconURLs = new HashMap<>();
 
     static{
-        iconURLs.put("busIcon", MapIcon.class.getResource("/data/busIcon.png"));
-        iconURLs.put("metroIcon", MapIcon.class.getResource("/data/metroIcon.png"));
-        iconURLs.put("stogIcon", MapIcon.class.getResource("/data/stogIcon.png"));
-        iconURLs.put("parkingIcon", MapIcon.class.getResource("/data/parkingIcon.jpg"));
-        iconURLs.put("pubIcon", MapIcon.class.getResource("/data/pubIcon.png"));
-        iconURLs.put("atmIcon", MapIcon.class.getResource("/data/atmIcon.png"));
-        iconURLs.put("standardMapImage", MapIcon.class.getResource("/data/standardMapImage.png"));
-        iconURLs.put("colorblindMapImage", MapIcon.class.getResource("/data/colorblindMapImage.png"));
-        iconURLs.put("transportMapImage", MapIcon.class.getResource("/data/transportMapImage.png"));
-        iconURLs.put("startPointIcon", MapIcon.class.getResource("/data/startPointIcon.png"));
-        iconURLs.put("endPointIcon", MapIcon.class.getResource("/data/endPointIcon.png"));
-        iconURLs.put("fullscreenIcon", MapIcon.class.getResource("/data/fullscreenIcon.png"));
-        iconURLs.put("minusIcon", MapIcon.class.getResource("/data/minusIcon.png"));
-        iconURLs.put("plusIcon", MapIcon.class.getResource("/data/plusIcon.png"));
-        iconURLs.put("searchIcon", MapIcon.class.getResource("/data/searchIcon.png"));
-        iconURLs.put("optionsIcon", MapIcon.class.getResource("/data/optionsIcon.png"));
-        iconURLs.put("layerIcon", MapIcon.class.getResource("/data/layerIcon.png"));
-        iconURLs.put("chosenAddressIcon", MapIcon.class.getResource("/data/chosenAddressIcon.png"));
+        Map<String, URL> aMap = new HashMap<>();
+        aMap.put("busIcon", MapIcon.class.getResource("/data/busIcon.png"));
+        aMap.put("metroIcon", MapIcon.class.getResource("/data/metroIcon.png"));
+        aMap.put("stogIcon", MapIcon.class.getResource("/data/stogIcon.png"));
+        aMap.put("parkingIcon", MapIcon.class.getResource("/data/parkingIcon.jpg"));
+        aMap.put("pubIcon", MapIcon.class.getResource("/data/pubIcon.png"));
+        aMap.put("atmIcon", MapIcon.class.getResource("/data/atmIcon.png"));
+        aMap.put("standardMapImage", MapIcon.class.getResource("/data/standardMapImage.png"));
+        aMap.put("colorblindMapImage", MapIcon.class.getResource("/data/colorblindMapImage.png"));
+        aMap.put("transportMapImage", MapIcon.class.getResource("/data/transportMapImage.png"));
+        aMap.put("startPointIcon", MapIcon.class.getResource("/data/startPointIcon.png"));
+        aMap.put("endPointIcon", MapIcon.class.getResource("/data/endPointIcon.png"));
+        aMap.put("fullscreenIcon", MapIcon.class.getResource("/data/fullscreenIcon.png"));
+        aMap.put("minusIcon", MapIcon.class.getResource("/data/minusIcon.png"));
+        aMap.put("plusIcon", MapIcon.class.getResource("/data/plusIcon.png"));
+        aMap.put("searchIcon", MapIcon.class.getResource("/data/searchIcon.png"));
+        aMap.put("optionsIcon", MapIcon.class.getResource("/data/optionsIcon.png"));
+        aMap.put("layerIcon", MapIcon.class.getResource("/data/layerIcon.png"));
+        aMap.put("chosenAddressIcon", MapIcon.class.getResource("/data/chosenAddressIcon.png"));
+        MapIcon.iconURLs = Collections.unmodifiableMap(aMap);
     }
+
+
+    static HashMap<URL, Boolean> hashIcon = addIcon();
     private BufferedImage img;
     private Point2D coord;
     private URL imgPath;
@@ -80,7 +82,7 @@ public class MapIcon implements Serializable, MapData {
      */
     public void draw(Graphics2D g, AffineTransform transform){
         try{
-            if(img == null) {
+            if(img == null)
                 img = ImageIO.read(imgPath);
         } catch(IOException e){
             e.printStackTrace();
@@ -114,7 +116,7 @@ public class MapIcon implements Serializable, MapData {
         return this.imgPath;
     }
 
-    public Class getClassType(){
+
     public static void setIconState(URL url, boolean state)
     {
         hashIcon.put(url, state);
@@ -127,7 +129,7 @@ public class MapIcon implements Serializable, MapData {
 
 
 
-    public Class getType(){
+    public Class getClassType(){
         return this.getClass();
     }
 
@@ -136,27 +138,24 @@ public class MapIcon implements Serializable, MapData {
         return coord;
     }
 
-    private static ArrayList<URL> addIcons(){
-        ArrayList iconsOne = new ArrayList<>();
-        iconsOne.add(metroIcon);
-        iconsOne.add(busIcon);
-        iconsOne.add(STogIcon);
-        iconsOne.add(parkingIcon);
-        iconsOne.add(atmIcon);
-        iconsOne.add(pubIcon);
-        return iconsOne;
-    }
     public static ArrayList<URL> getIcons(){
-        return icons;
+        ArrayList<URL> iconsOne = new ArrayList<>();
+        iconsOne.add(MapIcon.iconURLs.get("metroIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("busIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("stogIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("parkingIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("atmIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("pubIcon"));
+        return iconsOne;
     }
     private static HashMap<URL,Boolean> addIcon(){
         HashMap<URL, Boolean> hashIcon = new HashMap<>();
-        hashIcon.put(metroIcon,false);
-        hashIcon.put(busIcon,false);
-        hashIcon.put(STogIcon,false);
-        hashIcon.put(parkingIcon,false);
-        hashIcon.put(atmIcon,false);
-        hashIcon.put(pubIcon,false);
+        hashIcon.put(MapIcon.iconURLs.get("metroIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("busIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("stogIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("parkingIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("atmIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("pubIcon"),false);
         return hashIcon;
     }
 
@@ -166,9 +165,6 @@ public class MapIcon implements Serializable, MapData {
         return getIconState(this.imgPath);
     }
 
-  /* public void setController(IconController con){
-       this.con = con;
-   }*/
 
 }
 

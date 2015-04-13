@@ -2,10 +2,8 @@ package View;
 
 import Controller.SearchResultMouseHandler;
 import MapFeatures.Bounds;
-import MapFeatures.Coastline;
 import MapFeatures.Highway;
 import Model.*;
-import javafx.scene.transform.NonInvertibleTransformException;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -14,8 +12,10 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Observable;
+import java.util.Observer;
 
 import static java.lang.Math.max;
 
@@ -251,7 +251,7 @@ public class View extends JFrame implements Observer {
     private void makeMapTypeButton(){
         Dimension preferred = getPreferredSize();
         mapTypeButton = new JButton();
-        mapTypeButton.setIcon(new ImageIcon(this.getClass().getResource("/data/layerIcon.png")));
+        mapTypeButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("layerIcon")));
         mapTypeButton.setFocusable(false);
         mapTypeButton.setOpaque(false);
         mapTypeButton.setBackground(new Color(0, 0, 0, 180));
@@ -266,8 +266,8 @@ public class View extends JFrame implements Observer {
         optionsButton = new JButton();
         optionsButton.setFocusable(false);
         optionsButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() * 0.98), 39, 37);
-        optionsButton.setIcon(new ImageIcon(this.getClass().getResource("/data/optionsIcon.png")));
-        optionsButton.setOpaque(false);
+        optionsButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("optionsIcon")));
+                optionsButton.setOpaque(false);
         optionsButton.setBackground(DrawAttribute.fadeblack);
         optionsButton.setBorderPainted(false);
         optionsButton.setRolloverEnabled(false);
@@ -289,8 +289,8 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
         fullscreenButton = new JButton();
         fullscreenButton.setBackground(Color.BLACK);
-        fullscreenButton.setIcon(new ImageIcon(this.getClass().getResource("/data/fullscreenIcon.png")));
-        fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        fullscreenButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("fullscreenIcon")));
+                fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
         fullscreenButton.setFocusable(false);
         fullscreenButton.setOpaque(false);
         fullscreenButton.setActionCommand("fullscreen");
@@ -304,8 +304,8 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
         zoomOutButton = new JButton();
         zoomOutButton.setBackground(Color.BLACK);
-        zoomOutButton.setIcon(new ImageIcon(this.getClass().getResource("/data/minusIcon.png")));
-        zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        zoomOutButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("minusIcon")));
+                zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
         zoomOutButton.setFocusable(false);
         zoomOutButton.setOpaque(false);
         zoomOutButton.setBackground(DrawAttribute.fadeblack);
@@ -319,8 +319,8 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
         zoomInButton = new JButton();
         zoomInButton.setBackground(Color.BLACK);
-        zoomInButton.setIcon(new ImageIcon(this.getClass().getResource("/data/plusIcon.png")));
-        zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
+        zoomInButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("plusIcon")));
+                zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
         zoomInButton.setFocusable(false);
         zoomInButton.setOpaque(false);
         zoomInButton.setBackground(DrawAttribute.fadeblack);
@@ -349,8 +349,8 @@ public class View extends JFrame implements Observer {
                 BorderFactory.createMatteBorder(4, 0, 4, 7, DrawAttribute.lightblue),
                 BorderFactory.createRaisedBevelBorder()));
         searchButton.setBackground(new Color(36, 45, 50));
-        searchButton.setIcon(new ImageIcon(this.getClass().getResource("/data/searchIcon.png")));
-        searchButton.setFocusable(false);
+        searchButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("searchIcon")));
+                searchButton.setFocusable(false);
         searchButton.setBounds(320, 20, 43, 37);
         searchButton.setActionCommand("search");
     }
