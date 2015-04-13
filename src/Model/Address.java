@@ -1,5 +1,7 @@
 package Model;
 
+import com.sun.deploy.util.StringUtils;
+
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
@@ -54,12 +56,13 @@ public class Address implements Comparable<Address>, Serializable {
 
     @Override
     public String toString(){
-        if (floor() != "" && side() != "") {
+        if ((!floor.equals("")) && !side.equals("")) {
+            System.out.println(floor()+" og "+side());
             String s = String.format("%s %s, %s. %s, %s %s", Address.capitalize(street()), Address.capitalize(house()),floor(), side(),postcode(),Address.capitalize(city)).trim();
             return s;
-        } else if(house() != ""){
+        } else if(!house.equals("")){
             return String.format("%s %s, %s %s", Address.capitalize(street()), Address.capitalize(house()), postcode(), Address.capitalize(city())).trim();
-        } else if(street() != ""){
+        } else if(!street.equals("")){
             return String.format("%s", Address.capitalize(street())).trim();
         } else {
             return String.format("%s", Address.capitalize(city())).trim();

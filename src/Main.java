@@ -13,7 +13,7 @@ public class Main {
 
         Model m = Model.getModel();
         try {
-            String filename = "data/newSmall.osm"; //Is used to get filename in order to determine the file format
+            String filename = "newSmall.bin"; //Is used to get filename in order to determine the file format
             InputStream inputStream = Main.class.getResourceAsStream(filename);
             setIconResources();
             m.loadFile(filename, inputStream);
