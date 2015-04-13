@@ -1,22 +1,55 @@
 package Model;
 
+import Controller.IconController;
+
 import javax.imageio.ImageIO;
+import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.io.Serializable;
 import java.net.URL;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Observable;
 
 public class MapIcon implements Serializable, MapData {
-    public static long serialVersionUID = 5;
+    public static final long serialVersionUID = 5;
+    public static final URL metroIcon = MapIcon.class.getResource("/data/metroIcon.png");
+    public static final URL STogIcon = MapIcon.class.getResource("/data/stogIcon.png");
+    public static final URL parkingIcon = MapIcon.class.getResource("/data/parkingIcon.jpg");
+    public static final URL busIcon = MapIcon.class.getResource("/data/busIcon.png");
+    public static final URL pubIcon = MapIcon.class.getResource("/data/pubIcon.png");
+    public static final URL atmIcon = MapIcon.class.getResource("/data/atmIcon.png");
 
-    public static URL metroIcon, STogIcon, parkingIcon, busIcon, pubIcon, atmIcon, standard, colorblind, transport, layerIcon;
-    public static URL startPointIcon, endPointIcon, fullscreenIcon, minusIcon, plusIcon, searchIcon, optionsIcon, chosenAddressIcon;
+    public static final URL standard = MapIcon.class.getResource("/data/standardMapImage.png");
+    public static final URL colorblind = MapIcon.class.getResource("/data/colorblindMapImage.png");
+    public static final URL transport = MapIcon.class.getResource("/data/transportMapImage.png");
 
-    private BufferedImage img;
-    private Point2D coord;
-    private URL imgPath;
+    public static final URL startPointIcon = MapIcon.class.getResource("/data/startPointIcon.png");
+    public static final URL endPointIcon = MapIcon.class.getResource("/data/endPointIcon.png");
+
+    public static final URL fullscreenIcon = MapIcon.class.getResource("/data/fullscreenIcon.png");
+    public static final URL minusIcon = MapIcon.class.getResource("/data/minusIcon.png");
+    public static final URL plusIcon = MapIcon.class.getResource("/data/plusIcon.png");
+    public static final URL searchIcon = MapIcon.class.getResource("/data/searchIcon.png");
+    public static final URL optionsIcon = MapIcon.class.getResource("/data/optionsIcon.png");
+    public static final URL layerIcon = MapIcon.class.getResource("/data/layerIcon.png");
+    public static final URL chosenAddressIcon = MapIcon.class.getResource("/data/chosenAddressIcon.png");
+
+    /* public static URL metroIcon, STogIcon, parkingIcon, busIcon, pubIcon, atmIcon, standard, colorblind, transport, layerIcon;
+     public static URL startPointIcon, endPointIcon, fullscreenIcon, minusIcon, plusIcon, searchIcon, optionsIcon, chosenAddressIcon;
+  */
+    static ArrayList<URL> icons = addIcons();
+    static HashMap<URL, Boolean> hashIcon = addIcon();
+    BufferedImage img;
+    Point2D coord;
+    URL imgPath;
+    private IconController con;
 
     /**
      * Creates a new Icon instance.
@@ -25,8 +58,10 @@ public class MapIcon implements Serializable, MapData {
      * @param imgPath The path of the image file.
      */
     public MapIcon(Shape shape, URL imgPath){
+
         coord = new Point2D.Float((float)shape.getBounds2D().getCenterX(), (float)shape.getBounds2D().getCenterY());
         this.imgPath = imgPath;
+
     }
 
     /**
@@ -37,8 +72,9 @@ public class MapIcon implements Serializable, MapData {
      */
     public MapIcon(Point2D coord, URL imgPath){
 
-            this.coord = coord;
-            this.imgPath = imgPath;
+
+        this.coord = coord;
+        this.imgPath = imgPath;
 
     }
 
@@ -48,17 +84,17 @@ public class MapIcon implements Serializable, MapData {
      * @param transform The AffineTransform context.
      */
     public void draw(Graphics2D g, AffineTransform transform){
-        try{
+        try {
             if(img == null)
                 img = ImageIO.read(imgPath);
-        }catch(IOException e){
+        } catch(IOException e){
             e.printStackTrace();
         }
         double x;
         double y;
 
-            x = coord.getX();
-            y = coord.getY();
+        x = coord.getX();
+        y = coord.getY();
 
         AffineTransform it = AffineTransform.getTranslateInstance(x, y);
         it.scale((1 / transform.getScaleX()), (1 / transform.getScaleY())); //Sets off against the transform of the context, scaling the transform of the icon accordingly.
@@ -76,7 +112,24 @@ public class MapIcon implements Serializable, MapData {
         coord = (Point2D) type;
         URL imgPath = (URL) stream.readObject();
         this.imgPath = imgPath;
+
     }
+    public URL getURL()
+    {
+        return this.imgPath;
+    }
+
+    public static void setIconState(URL url, boolean state)
+    {
+        hashIcon.put(url, state);
+    }
+
+    public static boolean getIconState(URL url)
+    {
+        return hashIcon.get(url);
+    }
+
+
 
     public Class getType(){
         return this.getClass();
@@ -87,4 +140,39 @@ public class MapIcon implements Serializable, MapData {
         return coord;
     }
 
+    private static ArrayList<URL> addIcons(){
+        ArrayList iconsOne = new ArrayList<>();
+        iconsOne.add(metroIcon);
+        iconsOne.add(busIcon);
+        iconsOne.add(STogIcon);
+        iconsOne.add(parkingIcon);
+        iconsOne.add(atmIcon);
+        iconsOne.add(pubIcon);
+        return iconsOne;
+    }
+    public static ArrayList<URL> getIcons(){
+        return icons;
+    }
+    private static HashMap<URL,Boolean> addIcon(){
+        HashMap<URL, Boolean> hashIcon = new HashMap<>();
+        hashIcon.put(metroIcon,false);
+        hashIcon.put(busIcon,false);
+        hashIcon.put(STogIcon,false);
+        hashIcon.put(parkingIcon,false);
+        hashIcon.put(atmIcon,false);
+        hashIcon.put(pubIcon,false);
+        return hashIcon;
+    }
+
+
+    //Returns true or false, whether the icon is currently visible or not
+    public Boolean isVisible() {
+        return getIconState(this.imgPath);
+    }
+
+  /* public void setController(IconController con){
+       this.con = con;
+   }*/
+
 }
+

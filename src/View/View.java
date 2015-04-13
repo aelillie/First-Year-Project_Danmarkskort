@@ -39,7 +39,7 @@ public class View extends JFrame implements Observer {
     private MapMenu mapMenu;
     private RouteView routePanel = new RouteView();
     private MapTypePanel mapTypePanel = new MapTypePanel(this);
-   // private IconPanel iconPanel = new IconPanel();
+    private IconPanel iconPanel = new IconPanel();
     private SearchResultMouseHandler searchResultMH;
     private JScrollPane resultPane = new JScrollPane();
     private JList<Address> addressSearchResults;
@@ -64,6 +64,7 @@ public class View extends JFrame implements Observer {
         super("This is our map");
         model = m;
         searchResultMH = new SearchResultMouseHandler(this, model);
+        iconPanel.addObserverToIcons(this);
 
         /*Two helper functions to set up the AfflineTransform object and
         make the buttons and layout for the frame*/
@@ -191,7 +192,7 @@ public class View extends JFrame implements Observer {
         layer.add(mapTypeButton, new Integer(2));
         layer.add(mapTypePanel, new Integer(2));
         layer.add(resultPane, new Integer(3));
-      //  layer.add(iconPanel, new Integer(2));
+        layer.add(iconPanel, new Integer(2));
 
     }
 
@@ -820,7 +821,9 @@ public class View extends JFrame implements Observer {
 
             if (zoomLevel >= 15) {
                 for (MapIcon mapIcon : mapIcons) {
-                    mapIcon.draw(g, transform);
+                    if(mapIcon.isVisible()) {
+                        mapIcon.draw(g, transform);
+                    }
                 }
             }
             g.draw(bounds.getBounds());
