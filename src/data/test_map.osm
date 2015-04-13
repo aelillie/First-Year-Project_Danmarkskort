@@ -101,18 +101,18 @@
   <tag k="name" v="Amager Boulevard"/>
   <tag k="oneway" v="yes"/>
   <tag k="surface" v="asphalt"/>
+  <tag k="layer" v="1"/>
  </way>
  <way id="234106282" visible="true" version="1" changeset="17410948" timestamp="2013-08-19T13:09:12Z" user="velomama" uid="1718404">
   <nd ref="420721546"/>
   <nd ref="2424078825"/>
   <tag k="highway" v="footway"/>
-  <tag k="layer" v="1"/>
  </way>
  <way id="62388414" visible="true" version="4" changeset="27662679" timestamp="2014-12-24T00:27:00Z" user="Niels Elgaard Larsen" uid="1288">
   <nd ref="779225479"/>
   <nd ref="779225482"/>
   <tag k="highway" v="service"/>
-  <tag k="layer" v="-1"/>
+  <tag k="layer" v="1"/>
   <tag k="name" v="Kalvebod Brygge"/>
  </way>
  <way id="264690604" visible="true" version="1" changeset="20941706" timestamp="2014-03-06T01:09:58Z" user="jhg21" uid="1744812">
@@ -207,6 +207,7 @@
   <nd ref="491496561"/>
   <tag k="building" v="yes"/>
   <tag k="tourism" v="attraction"/>
+  <tag k="layer" v="1"/>
  </way>
  <way id="40523397" visible="true" version="1" changeset="2428639" timestamp="2009-09-09T19:46:31Z" user="msiebuhr" uid="10371">
   <nd ref="491496648"/>

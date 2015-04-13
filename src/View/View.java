@@ -2,10 +2,8 @@ package View;
 
 import Controller.SearchResultMouseHandler;
 import MapFeatures.Bounds;
-import MapFeatures.Coastline;
 import MapFeatures.Highway;
 import Model.*;
-import javafx.scene.transform.NonInvertibleTransformException;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -643,7 +641,7 @@ public class View extends JFrame implements Observer {
             if (mp instanceof Highway) {
                 MapFeature highway = (MapFeature) mp;
                 double[] points = new double[6];
-                PathIterator pI = highway.getShape().getPathIterator(transform);
+                PathIterator pI = highway.getWay().getPathIterator(transform);
                 pI.currentSegment(points);
                 Point2D p1 = new Point2D.Double(points[0], points[1]);
                 pI.next();
@@ -733,12 +731,12 @@ public class View extends JFrame implements Observer {
             Bounds box = PathCreater.createBounds(model.getBbox());
             DrawAttribute drawBox = drawAttributeManager.getDrawAttribute(box.getValueName());
             g.setColor(drawBox.getColor());
-            g.fill(box.getShape());
+            g.fill(box.getWay());
 
             for (MapFeature coastLine : OSMHandler.getCoastlines()) {
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(coastLine.getValueName());
                 g.setColor(drawAttribute.getColor());
-                g.fill(coastLine.getShape());
+                g.fill(coastLine.getWay());
             }
 
 
@@ -756,7 +754,7 @@ public class View extends JFrame implements Observer {
                 if (zoomLevel >= drawAttribute.getZoomLevel()) {
                     if (mapFeature.isArea()) {
                         g.setColor(drawAttribute.getColor());
-                        g.fill(mapFeature.getShape());
+                        g.fill(mapFeature.getWay());
                     }
                 }
             }
@@ -770,7 +768,7 @@ public class View extends JFrame implements Observer {
                         else if (!mapFeature.isArea())
                             g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
                         else g.setStroke(DrawAttribute.basicStrokes[0]);
-                        g.draw(mapFeature.getShape());
+                        g.draw(mapFeature.getWay());
                     } catch (NullPointerException e) {
                         System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
                     }
@@ -789,7 +787,7 @@ public class View extends JFrame implements Observer {
                                 g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor + 1]);
                             } else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
                         else g.setStroke(DrawAttribute.basicStrokes[0]);
-                        g.draw(mapFeature.getShape());
+                        g.draw(mapFeature.getWay());
                     } catch (NullPointerException e) {
                         System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
                     }
@@ -811,7 +809,7 @@ public class View extends JFrame implements Observer {
                             g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
                         }
                     }
-                    g.draw(mapFeature.getShape());
+                    g.draw(mapFeature.getWay());
                 }
             }
 
@@ -890,7 +888,7 @@ public class View extends JFrame implements Observer {
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(nearestNeighbor.getValueName());
                 g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
                 g.setColor(Color.CYAN);
-                g.draw(nearestNeighbor.getShape());
+                g.draw(nearestNeighbor.getWay());
             }
         }
     }

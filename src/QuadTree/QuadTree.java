@@ -1,6 +1,5 @@
 package QuadTree;
 
-import MapFeatures.Highway;
 import Model.MapData;
 import Model.MapFeature;
 import Model.MapIcon;
@@ -9,7 +8,6 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class QuadTree implements Serializable{
     private static final long serialVersionUID = 8;
@@ -92,7 +90,7 @@ public class QuadTree implements Serializable{
         }
         else {
             MapFeature mF = (MapFeature) value;
-            Rectangle2D bounds = mF.getShape().getBounds2D();
+            Rectangle2D bounds = mF.getWay().getBounds2D();
             insert(root, bounds.getCenterX(), bounds.getCenterY(), value);
 
         }

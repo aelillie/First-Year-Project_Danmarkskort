@@ -1,15 +1,11 @@
 package Tests;
 
-import MapFeatures.Barrier;
-import MapFeatures.Amenity;
-import MapFeatures.Highway;
-import MapFeatures.Leisure;
+import MapFeatures.*;
 import Model.Model;
 import Model.MapData;
 import Model.MapIcon;
 import Model.MapFeature;
 import Model.MapCalculator;
-import Model.MapIcon;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
@@ -34,6 +30,7 @@ public class OSMHandlerTest {
     List<MapData> buildingList;
     List<MapData> iconList;
     List<MapData> naturalList;
+    List<MapData> mapFeatureList = new ArrayList<>();
 
     /**
      * Sets up an osm test file, which enables us to cover all the functions the OSMHandler invokes
@@ -50,6 +47,9 @@ public class OSMHandlerTest {
         buildingList = m.getVisibleBuildings(new Rectangle2D.Float(0, 0, 500, 500));
         iconList = m.getVisibleIcons(new Rectangle2D.Float(0, 0, 500, 500));
         naturalList = m.getVisibleNatural(new Rectangle2D.Float(0, 0, 500, 500));
+        mapFeatureList.addAll(streetList);
+        mapFeatureList.addAll(buildingList);
+        mapFeatureList.addAll(naturalList);
     }
 
     @After
@@ -102,9 +102,9 @@ public class OSMHandlerTest {
                 break;
         }
 
-        PathIterator highwayPath = highway.getShape().getPathIterator(new AffineTransform()); //object that iterates along a shape
-        PathIterator barrierPath = barrier.getShape().getPathIterator(new AffineTransform());
-        PathIterator leisurePath = leisure.getShape().getPathIterator(new AffineTransform());
+        PathIterator highwayPath = highway.getWay().getPathIterator(new AffineTransform()); //object that iterates along a shape
+        PathIterator barrierPath = barrier.getWay().getPathIterator(new AffineTransform());
+        PathIterator leisurePath = leisure.getWay().getPathIterator(new AffineTransform());
         pathIterate(highwayPath, highwayCoords);
         pathIterate(barrierPath, barrierCoords);
         pathIterate(leisurePath, leisureCoords);
@@ -128,21 +128,14 @@ public class OSMHandlerTest {
         Assert.assertEquals(5, iconList.size());
         MapIcon icon = (MapIcon) iconList.get(0);
         Assert.assertEquals(new Point2D.Float(12.5818120f , (float) MapCalculator.latToY(55.6653496)), icon.getPosition());
-
     }
 
     @Test
     public void addingBuildingsTest(){
         Assert.assertTrue(!buildingList.isEmpty());
-
         Assert.assertNotNull(buildingList.get(0));
-
         Assert.assertEquals(5, buildingList.size());
-
         Assert.assertTrue(buildingList.get(0) instanceof Amenity);
-
-
-
     }
 
 
@@ -151,9 +144,49 @@ public class OSMHandlerTest {
         Assert.assertTrue(!naturalList.isEmpty());
         Assert.assertEquals(3, naturalList.size());
         Assert.assertNotNull(naturalList.get(1));
+        Assert.assertTrue(naturalList.get(0) instanceof Natural);
+    }
 
+    @Test
+    public void addingStreetTest(){
+        Assert.assertTrue(!streetList.isEmpty());
+        Assert.assertEquals(4, streetList.size());
+        Assert.assertNotNull(streetList.get(1));
+        Assert.assertTrue(streetList.get(0) instanceof Highway);
+    }
 
-
+    @Test
+    public void fetchOSMLayerTest() {
+        int tertiary_layerVal = 0;
+        int service_layerVal = 0;
+        int subway_layerVal = 0;
+        int building_layerVal = 0;
+        int amenity_layerVal = 0;
+        for (MapData feature : mapFeatureList) {
+            MapFeature mapFeature = (MapFeature) feature;
+            switch (mapFeature.getValue()) {
+                case "tertiary":
+                    tertiary_layerVal = mapFeature.getLayerVal();
+                    break;
+                case "service":
+                    service_layerVal = mapFeature.getLayerVal();
+                    break;
+                case "subway":
+                    subway_layerVal = mapFeature.getLayerVal();
+                    break;
+                case "yes":
+                    building_layerVal = mapFeature.getLayerVal();
+                    break;
+                case "parking":
+                    amenity_layerVal = mapFeature.getLayerVal();
+                    break;
+            }
+        }
+        Assert.assertEquals(13, tertiary_layerVal);
+        Assert.assertEquals(10, service_layerVal);
+        Assert.assertEquals(-10, subway_layerVal);
+        Assert.assertEquals(19, building_layerVal);
+        Assert.assertEquals(0, amenity_layerVal);
     }
 
 }

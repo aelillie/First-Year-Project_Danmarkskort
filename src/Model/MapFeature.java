@@ -22,6 +22,7 @@ public abstract class MapFeature implements Serializable, MapData {
         this.layer_value = layer_value;
         this.value = value;
         setPreDefValues();
+        setValueAttributes();
     }
 
     /**
@@ -29,7 +30,7 @@ public abstract class MapFeature implements Serializable, MapData {
      * Predefined layer values get their values multiplied
      * by a factor 10
      */
-    protected void setPreDefValues() {
+    public void setPreDefValues() {
         if (layer_value == -5) layer_value = -50;
         else if (layer_value == -4) layer_value = -40;
         else if (layer_value == -3) layer_value = -30;
@@ -72,18 +73,11 @@ public abstract class MapFeature implements Serializable, MapData {
     public boolean isArea(){
         return isArea;
     }
-    public Path2D getShape(){
+    public Path2D getWay(){
         return way;
     }
     public String getValue(){return value;}
 
-    public Path2D getWay() {
-        return way;
-    }
-
-    public int getLayer_value() {
-        return layer_value;
-    }
 
     public Class getType(){
         return this.getClass().getSuperclass();

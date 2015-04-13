@@ -13,7 +13,11 @@ public class Aeroway extends MapFeature {
     public Aeroway(Path2D way, int layer_value, String value) {
         super(way, layer_value, value);
         isArea = true;
-        setValueAttributes();
+    }
+
+    @Override
+    public void setPreDefValues() {
+        super.setPreDefValues();
     }
 
     @Override

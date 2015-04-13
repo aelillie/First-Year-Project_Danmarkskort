@@ -9,13 +9,12 @@ public class Highway extends MapFeature {
     public Highway(Path2D way, int layer_value, String value, boolean isArea) {
         super(way, layer_value, value);
         this.isArea = isArea;
-        setPreDefValues();
-        setValueAttributes();
     }
 
 
     @Override
     public void setPreDefValues() {
+        super.setPreDefValues();
         if (value.equals("motorway") || value.equals("motorway_link")) layer_value = 17;
         else if (value.equals("trunk") || value.equals("trunk_link")) layer_value = 16;
         else if (value.equals("primary") || value.equals("primay_link")) layer_value = 15;

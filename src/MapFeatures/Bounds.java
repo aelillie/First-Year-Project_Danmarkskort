@@ -14,7 +14,11 @@ public class Bounds extends MapFeature {
     public Bounds(Path2D way, int layer_value, String value) {
         super(way, layer_value, value);
         isArea = true;
-        setValueAttributes();
+    }
+
+    @Override
+    public void setPreDefValues() {
+        super.setPreDefValues();
     }
 
     @Override

@@ -58,7 +58,7 @@ public class FindNearestTest {
         for (MapFeature mp : mapFeatures) {
             if (mp instanceof Highway) {
                 float[] points = new float[6];
-                PathIterator pI = mp.getShape().getPathIterator(new AffineTransform());
+                PathIterator pI = mp.getWay().getPathIterator(new AffineTransform());
                 pI.currentSegment(points);
                 Point2D p1 = new Point2D.Float(points[0], points[1]);
                 pI.next();
