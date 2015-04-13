@@ -30,7 +30,7 @@ public class QuadTree implements Serializable{
             this.y = y;
             this.width = width/2;
             this.height = height/2;
-            value = new MapData[cap];
+            value = new MapData[cap/8+1];
 
 
         }
@@ -63,9 +63,17 @@ public class QuadTree implements Serializable{
                 insert(values);
 
                 N = 0;
-            }else {
+            }else if(N == value.length) {
+                MapData[] temp = new MapData[value.length*2];
+                for (int i = 0; i < N; i++) {
+                    temp[i] = value[i];
+                }
+                value = temp;
                 value[N++] = values;
-            }
+
+            }else
+                value[N++] = values;
+
         }
 
     }
