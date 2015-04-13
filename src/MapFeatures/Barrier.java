@@ -14,7 +14,10 @@ public class Barrier extends MapFeature{
     public Barrier(Path2D way, int layer_value, String value, boolean isArea) {
         super(way, layer_value, value);
         this.isArea = isArea;
-        setValueAttributes();
+    }
+    @Override
+    public void setPreDefValues() {
+        super.setPreDefValues();
     }
 
     @Override

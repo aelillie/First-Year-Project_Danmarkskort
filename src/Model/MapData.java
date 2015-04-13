@@ -5,6 +5,6 @@ package Model;
  */
 public interface MapData {
 
-    public Class getType();
+    public Class getClassType();
 
 }

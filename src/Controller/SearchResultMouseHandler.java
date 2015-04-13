@@ -9,6 +9,7 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.util.Map;
 
@@ -50,16 +51,8 @@ public class SearchResultMouseHandler extends MouseAdapter{
 
         if(addressLocation == null && boundaryLocation == null) {
             v.setCurrentStreet(streetLocation);
-            /*Rectangle previousRect = new Rectangle();
-            Rectangle currentRect = new Rectangle();
-            for(Path2D path: streetLocation){
-                currentRect = path.getBounds();
-                if(previousRect.getWidth() != 0 && previousRect.getHeight() != 0) currentRect.add(previousRect);
-                previousRect = path.getBounds();
-            }
-            v.searchResultChosen(currentRect.getBounds().getCenterX(),currentRect.getBounds().getCenterY());*/
-            //v.searchResultChosen(streetLocation.get(0).getBounds().getX(),streetLocation.get(0).getBounds().getY());
-
+            Point2D middlePoint = getMiddlePoint(streetLocation);
+            v.searchResultChosen(middlePoint.getX(),middlePoint.getY());
         } else if(boundaryLocation == null && streetLocation == null){
             v.setCurrentAddress(addressLocation);
             v.searchResultChosen(addressLocation.getX(),addressLocation.getY());
@@ -67,6 +60,22 @@ public class SearchResultMouseHandler extends MouseAdapter{
             v.setCurrentBoundaryLocation(boundaryLocation);
             v.searchResultChosen(boundaryLocation.getBounds().getCenterX(),boundaryLocation.getBounds().getCenterY());
         }
+    }
+
+    private static Point2D getMiddlePoint(List<Path2D> street){
+        int pathCount = 0;
+        double xCoordinateMean = 0;
+        double yCoordinateMean = 0;
+        for(Path2D path: street){
+            Rectangle2D rect = path.getBounds2D();
+            xCoordinateMean += rect.getX();
+            yCoordinateMean += rect.getY();
+            pathCount++;
+        }
+
+        xCoordinateMean = xCoordinateMean/pathCount;
+        yCoordinateMean = yCoordinateMean/pathCount;
+        return new Point2D.Double(xCoordinateMean,yCoordinateMean);
     }
 
 

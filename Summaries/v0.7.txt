@@ -1,0 +1,81 @@
+Group G v0.7
+==================
+
+Features added since v0.6:
+*Using multiple QuadTrees for less demanding draw at higher zoom levels
+*A startup loadingScreen with ProgressBar, when loading from bin files.
+*Progress bar when loading a bin file in the program.
+*Formatted strings of  the search results
+*Tests of QuadTree, Nearest Neighbor, AddressSearch, OSMHandler, Scalebar.
+*Layers are now drawn in the correct order again
+*Updated layer configuration, resulting in more objects to be drawn right
+*QuadTrees can now store Icons too.
+*Navigation with mouse and keyboard keys in the searchResult pane
+*Upon choosing an address, the view is centered to this address
+
+“Features” discovered/added since v0.6:
+*When loading a new File don’t close loading Frame.
+*Weird address format when searching in a binary file - it seems like a dot is added to the address
+*When creating a binary file on one computer and running the program with that file on another computer, the icons don’t load because of changed paths in the icons’ URLs
+*The program doesn’t pan to a street when this is chosen from the searchresults at the moment
+
+
+Time usage in man hours:
+Refactoring				8 hours
+Address chosen visualisation		6 hours
+Address search (format etc.)		6 hours
+Tests					15 hours
+LoadingBar				3 hours	 
+Visualisation 				1 hours
+Layers					4 hours
+Loading binary 				4 hours
+Keyboard keys in resultPane		5 hours
+
+Cumulative cost so far: (1h = DKK 625)
+Lectures:                	15.625,-
+Meetings:                	 7.187,-
+Code review:            	15.625,-
+"Homework":			15.625,-
+GUI				45.935,-
+Code trimming:			 3.125,-
+Address search	 	 	22.500,-
+OSM layers			13.125,-
+Road names 		 	 8.125,-
+Binary save/load		 6.875,- 
+Visualisation 			29.250,-
+Restructuring 			40.625,-   
+Workshop			12.500,-
+Report writing			10.625,-
+Address searching	  	 7.500,-
+Coastlines		 	26.875,-
+Mercator projection 		 2.500,-
+Load files from program 	 4.375,-
+Self-contained jar		 9.375,-
+Zoomlevel 			 3.125,-
+Group presentations		 6.250,-
+Maptypes			 1.875,-
+Scalebar			 6.250,-
+Tests 				17.500,-
+Quadtree                        16.250,-
+Strokewidth 			 5.000,-
+Nearest neighbor		 3.125,-
+LoadingScreen		 1875,-
+Keybordnavigation		 3125,-
+
+Wishlist for v0.8:
+* Load of icons working properly when running from jar file.
+* Decrease in memory usage when running Denmark
+* A larger test suite
+* More layer configurations (“debug” of .osm file)
+* Optimization of Transport map, so that it runs smoothly as with Standard map
+* Shortest path algorithm implemented
+
+
+Feedback Request:
+*How should we test graphics, e.g. the drawing of the scalebar and such things (g.drawLine(..), g.drawImage ….)?
+*How should we test methods that return void? 
+*How do we make sure that icons gets saved properly in a binary file, so that they also get loaded when the binary file is run on a different computer (and therefore have different paths for the icon URL’s)
+
+
+
+

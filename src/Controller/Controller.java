@@ -56,10 +56,14 @@ public class Controller extends MouseAdapter implements ActionListener {
         else if (command.equals("fullscreen")) view.toggleFullscreen();
         else if (command.equals("showRoutePanel")) view.showRoutePanel();
         else if (command.equals("findRoute"));
-        else if (command.equals("showOptions")) view.repaint();
+        else if (command.equals("showOptions")) showOptionsPanel();
         else if (command.equals("mapType")) view.showMapTypePanel();
     }
 
+    private void showOptionsPanel(){
+        view.showOptionsPanel();
+        view.repaint();
+    }
 
     private void loadSelectedFile(){
         int returnValue = view.openFileChooser(); //The returnvalue represents the action taken within the filechooser
@@ -76,6 +80,7 @@ public class Controller extends MouseAdapter implements ActionListener {
             } catch (IOException e) {
                 e.printStackTrace();
             }
+            view.adjustZoomFactor();
             view.repaint();
             view.scaleAffine();
         } else { //If no file is chosen (the user pressed cancel) or if an error occured
@@ -91,7 +96,10 @@ public class Controller extends MouseAdapter implements ActionListener {
             view.setAntialias(false);
             view.mouseDragged(e);
         }
-        public void mouseMoved(MouseEvent e) {}
+        public void mouseMoved(MouseEvent e) {
+            //view.findNearest(e.getPoint());
+            //view.repaint();
+        }
         public void mouseClicked(MouseEvent e) {
             view.findNearest(e.getPoint());
             System.out.println("done");

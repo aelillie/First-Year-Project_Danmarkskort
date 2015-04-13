@@ -12,7 +12,11 @@ public class Tourism extends MapFeature{
 
     public Tourism(Path2D way, int layer_value, String value) {
         super(way, layer_value, value);
-        setValueAttributes();
+    }
+
+    @Override
+    public void setPreDefValues() {
+        super.setPreDefValues();
     }
 
     @Override

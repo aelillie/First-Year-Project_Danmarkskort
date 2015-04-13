@@ -13,12 +13,11 @@ public class Building extends MapFeature {
     public Building(Path2D way, int layer_value, String value) {
         super(way, layer_value, value);
         isArea = true;
-        super.setPreDefValues();
-        setValueAttributes();
     }
 
     @Override
     public void setPreDefValues() {
+        super.setPreDefValues();
         if (value.equals("yes")) layer_value = 19;
     }
 

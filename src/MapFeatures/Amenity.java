@@ -13,8 +13,12 @@ public class Amenity extends MapFeature {
     public Amenity(Path2D way, int layer_value, String value, boolean isBuilding) {
         super(way, layer_value, value);
         isArea = true;
-        setValueAttributes();
         this.isBuilding = isBuilding;
+    }
+
+    @Override
+    public void setPreDefValues() {
+        super.setPreDefValues();
     }
 
     @Override
@@ -25,7 +29,7 @@ public class Amenity extends MapFeature {
             isArea = false;
             setValueName(ValueName.AMENITY);
         }
-        //TODO: Does not work. in newSmall the university is not drawn because it is not said to be building
+
     }
 
 }

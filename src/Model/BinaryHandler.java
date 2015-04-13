@@ -3,7 +3,6 @@ package Model;
 import MapFeatures.Coastline;
 import QuadTree.QuadTree;
 
-import java.awt.*;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
@@ -60,15 +59,19 @@ public final class BinaryHandler {
 
         LoadingScreen loadingScreen = new LoadingScreen();
 
+
         model.getOSMReader().setAddressMap((Map<Address, Point2D>) in.readObject());
 
         loadingScreen.updateLoadBar(15);
+
         model.getOSMReader().setStreetMap((Map<Address, List<Path2D>>) in.readObject());
 
         loadingScreen.updateLoadBar(25);
+
         model.getOSMReader().setBoundaryMap((Map<Address, Path2D>) in.readObject());
 
         loadingScreen.updateLoadBar(40);
+
         model.getOSMReader().setAddressList((ArrayList<Address>) in.readObject());
 
 
@@ -76,7 +79,9 @@ public final class BinaryHandler {
         model.setBBox(rec);
         List<QuadTree> qT = (List<QuadTree>) in.readObject();
 
+
         loadingScreen.updateLoadBar(80);
+
         model.setQuadTree(qT);
         System.out.println("done in " + (System.nanoTime() - time) / 1000000);
 

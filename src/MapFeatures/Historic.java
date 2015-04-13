@@ -11,8 +11,12 @@ import java.awt.geom.Path2D;
 public class Historic extends MapFeature {
     public Historic(Path2D way, int layer_value, String value) {
         super(way, layer_value, value);
-        setValueAttributes();
         isArea = true;
+    }
+
+    @Override
+    public void setPreDefValues() {
+        super.setPreDefValues();
     }
 
     @Override
