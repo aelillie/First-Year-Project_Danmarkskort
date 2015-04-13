@@ -645,7 +645,10 @@ public class View extends JFrame implements Observer {
 
     public void findNearest(Point position){
         if(zoomLevel < 11) return;
-        //Rectangle2D rec = new Rectangle2D.Double(position.getX(), position.getY(),0,0);
+
+        int x = getInsets().top;
+        position.setLocation(position.getX(), position.getY()-x);
+
         ArrayList<MapData> node = model.getVisibleStreets(bounds.getBounds());
 
         MapFeature champion = null;
