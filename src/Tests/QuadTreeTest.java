@@ -71,9 +71,6 @@ public class QuadTreeTest {
 
         assertEquals( 1,visible.size() );
 
-
-
-
     }
 
     @Test
@@ -97,7 +94,7 @@ public class QuadTreeTest {
 
     }
 
-    @Test(timeout = 600)
+    @Test(timeout = 800)
     public void TestEfficiency(){
         ArrayList<Point2D> points = new ArrayList<>();
         Random r = new Random();
@@ -112,6 +109,25 @@ public class QuadTreeTest {
             }
         }
 
+
+    }
+
+    @Test(timeout = 600)
+    public void testRangeSearch(){
+        ArrayList<Point2D> points = new ArrayList<>();
+        Random r = new Random();
+        for(int i = 0; i < 50000; i++){
+            if(r.nextBoolean()) {
+                points.clear();
+                points.add(new Point2D.Float((i * 4 % 100) + 50, i % 100));
+                points.add(new Point2D.Float((i * 10 / 2 % 100) + 50, i / 2 % 100));
+                quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false));
+            }else{
+                quadTree.insert(new MapIcon(new Point2D.Float((i * 4 % 100) + 50, i % 100),"busIcon"));
+            }
+        }
+
+        ArrayList<MapData> data = quadTree.query2D(new Rectangle2D.Float(0,0,100,100));
 
     }
 

@@ -1,9 +1,7 @@
 import Controller.Controller;
 import Model.Model;
-import Model.MapIcon;
 import View.View;
 
-import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
