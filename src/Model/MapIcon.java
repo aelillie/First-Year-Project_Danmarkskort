@@ -187,6 +187,8 @@ public class MapIcon implements Serializable, MapData {
         return getIconState(this.imgPath);
     }
 
-
+    public int getLayerVal(){
+        return 100;
+    }
 }
 

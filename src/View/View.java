@@ -4,6 +4,7 @@ import Controller.SearchResultMouseHandler;
 import MapFeatures.Bounds;
 import MapFeatures.Highway;
 import Model.*;
+import QuadTree.QuadTree;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -26,7 +27,7 @@ public class View extends JFrame implements Observer {
     private AffineTransform transform;
     private MapFeature nearestNeighbor;
     private CanvasBounds bounds;
-    private boolean antialias = true;
+    private boolean antialias = true, showGrid = false;
     private Point dragEndScreen, dragStartScreen;
     private int zoomLevel;
     private int zoomFactor;
@@ -631,6 +632,14 @@ public class View extends JFrame implements Observer {
         repaint();
     }
 
+    public void toggleTestMode(){
+        bounds.toggleTestMode();
+    }
+
+    public void toggleGrid(){
+        showGrid = !showGrid;
+    }
+
     /**
      * Makes the view Frame fullscreen with help of a graphic device.
      */
@@ -833,6 +842,17 @@ public class View extends JFrame implements Observer {
                 }
             }
 
+            g.setColor(Color.BLACK);
+            g.setStroke(new BasicStroke(0.0005f));
+
+
+            if(showGrid) {
+                List<QuadTree> trees = model.getQuadTrees();
+                g.setColor(Color.green);
+                for (Rectangle2D rec : trees.get(0).getNodeRects())
+                    g.draw(rec);
+            }
+
 
             //Draws the icons.
 
@@ -843,6 +863,7 @@ public class View extends JFrame implements Observer {
                     }
                 }
             }
+            g.setColor(Color.BLACK);
             g.draw(bounds.getBounds());
 
             scalebar = new Scalebar(g, zoomLevel, View.this, transform);

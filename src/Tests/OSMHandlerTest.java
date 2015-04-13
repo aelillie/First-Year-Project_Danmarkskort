@@ -127,7 +127,7 @@ public class OSMHandlerTest {
     public void addingIconsTest(){
         Assert.assertEquals(5, iconList.size());
         MapIcon icon = (MapIcon) iconList.get(0);
-        Assert.assertEquals(new Point2D.Float(12.5818120f , (float) MapCalculator.latToY(55.6653496)), icon.getPosition());
+        Assert.assertTrue(icon.getClassType() == MapIcon.class);
     }
 
     @Test
@@ -135,7 +135,7 @@ public class OSMHandlerTest {
         Assert.assertTrue(!buildingList.isEmpty());
         Assert.assertNotNull(buildingList.get(0));
         Assert.assertEquals(5, buildingList.size());
-        Assert.assertTrue(buildingList.get(0) instanceof Amenity);
+        Assert.assertTrue(buildingList.get(0) instanceof MapFeature);
     }
 
 
@@ -144,7 +144,7 @@ public class OSMHandlerTest {
         Assert.assertTrue(!naturalList.isEmpty());
         Assert.assertEquals(3, naturalList.size());
         Assert.assertNotNull(naturalList.get(1));
-        Assert.assertTrue(naturalList.get(0) instanceof Natural);
+        Assert.assertTrue(naturalList.get(0) instanceof MapFeature);
     }
 
     @Test
