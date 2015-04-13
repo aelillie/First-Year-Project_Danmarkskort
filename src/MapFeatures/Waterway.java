@@ -9,8 +9,12 @@ public class Waterway extends MapFeature {
 
     public Waterway(Path2D way, int layer_value, String value, boolean isArea) {
         super(way, layer_value, value);
-        setValueAttributes();
         this.isArea = isArea;
+    }
+
+    @Override
+    public void setPreDefValues() {
+        super.setPreDefValues();
     }
 
     @Override

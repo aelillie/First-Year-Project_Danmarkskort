@@ -30,8 +30,16 @@ public class LoadingScreen extends JFrame {
             Dimension dim = Toolkit.getDefaultToolkit().getScreenSize();
             this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
             progressBar = new Rectangle2D.Double(getWidth() * .1, getHeight() * .4, getWidth() * .8, 80);
+
             setAlwaysOnTop(true);
             setVisible(true);
+            Graphics2D g = (Graphics2D) getGraphics();
+            Rectangle2D rec = new Rectangle2D.Double(getWidth()*0.0001,
+                    getHeight() * 0.0001,
+                    getWidth() + 10,
+                    getHeight() + 10);
+            g.setPaint(Color.lightGray);
+            g.fill(rec);
             updateLoadBar(0);
         }
 

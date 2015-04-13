@@ -13,8 +13,12 @@ public class Amenity extends MapFeature {
     public Amenity(Path2D way, int layer_value, String value, boolean isBuilding) {
         super(way, layer_value, value);
         isArea = true;
-        setValueAttributes();
         this.isBuilding = isBuilding;
+    }
+
+    @Override
+    public void setPreDefValues() {
+        super.setPreDefValues();
     }
 
     @Override

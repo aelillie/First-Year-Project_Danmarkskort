@@ -196,7 +196,7 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("amenity")) {
                     buildingTree.insert(new Amenity(way, fetchOSMLayer(), keyValue_map.get("amenity"), keyValue_map.containsKey("building")));
                     if (keyValue_map.get("amenity").equals("parking")) {
-                        iconTree.insert(new MapIcon(way, MapIcon.parkingIcon));}
+                        iconTree.insert(new MapIcon(way, "parkingIcon"));}
 
                     //if(keyValue_map.get("amenity").equals("atm")){
                       //  quadTree.insert(new MapIcon(way, MapIcon.atmIcon));}
@@ -262,22 +262,22 @@ public class OSMHandler extends DefaultHandler {
                 if (keyValue_map.containsKey("highway")) {
                     String val = keyValue_map.get("highway");
                     if (val.equals("bus_stop") && isBusstop) {
-                        iconTree.insert(new MapIcon(nodeCoord, MapIcon.busIcon));
+                        iconTree.insert(new MapIcon(nodeCoord, "busIcon"));
                     }
                 }
                 else if(keyValue_map.containsKey("amenity")) {
                     String val = keyValue_map.get("amenity");
                     if(val.equals("pub") || val.equals("bar")) {
-                        iconTree.insert(new MapIcon(nodeCoord, MapIcon.pubIcon));}
+                        iconTree.insert(new MapIcon(nodeCoord, "pubIcon"));}
                     else if(val.equals("atm")){
-                        iconTree.insert(new MapIcon(nodeCoord, MapIcon.atmIcon));
+                        iconTree.insert(new MapIcon(nodeCoord, "atmIcon"));
                         }
                 }
                 else if (keyValue_map.containsKey("railway")) {
                     String val = keyValue_map.get("railway");
                     if (val.equals("station")) {
-                        if (isMetro) iconTree.insert(new MapIcon(nodeCoord, MapIcon.metroIcon));
-                        else if (isSTog) iconTree.insert(new MapIcon(nodeCoord, MapIcon.STogIcon));
+                        if (isMetro) iconTree.insert(new MapIcon(nodeCoord, "metroIcon"));
+                        else if (isSTog) iconTree.insert(new MapIcon(nodeCoord, "stogIcon"));
                     }
                 } else if(keyValue_map.containsKey("name")) {
 
