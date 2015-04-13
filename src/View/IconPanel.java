@@ -64,5 +64,10 @@ public class IconPanel extends JScrollPane {
 
     }
 
+    public void showIconPanel(){
+        boolean isVisible = isVisible();
+        setVisible(!isVisible);
+    }
+
 }
 
