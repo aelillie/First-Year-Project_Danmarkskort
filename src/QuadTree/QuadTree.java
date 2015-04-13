@@ -1,6 +1,5 @@
 package QuadTree;
 
-import MapFeatures.Highway;
 import Model.MapData;
 import Model.MapFeature;
 import Model.MapIcon;
@@ -9,7 +8,6 @@ import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.List;
 
 public class QuadTree implements Serializable{
     private static final long serialVersionUID = 8;
@@ -85,7 +83,7 @@ public class QuadTree implements Serializable{
     public void insert(MapData value) {
 
         //First check what Type it is then use its coordinates to store it in the QuadTree
-        if(value.getType() == MapIcon.class) {
+        if(value.getClassType() == MapIcon.class) {
             MapIcon mI = (MapIcon) value;
             insert(root, mI.getPosition().getX(), mI.getPosition().getY(), value);
 

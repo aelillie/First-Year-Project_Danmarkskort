@@ -14,10 +14,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import static java.lang.Math.max;
 
@@ -253,7 +251,7 @@ public class View extends JFrame implements Observer {
     private void makeMapTypeButton(){
         Dimension preferred = getPreferredSize();
         mapTypeButton = new JButton();
-        mapTypeButton.setIcon(new ImageIcon(MapIcon.layerIcon));
+        mapTypeButton.setIcon(new ImageIcon(this.getClass().getResource("/data/layerIcon.png")));
         mapTypeButton.setFocusable(false);
         mapTypeButton.setOpaque(false);
         mapTypeButton.setBackground(new Color(0, 0, 0, 180));
@@ -268,7 +266,7 @@ public class View extends JFrame implements Observer {
         optionsButton = new JButton();
         optionsButton.setFocusable(false);
         optionsButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() * 0.98), 39, 37);
-        optionsButton.setIcon(new ImageIcon(MapIcon.optionsIcon));
+        optionsButton.setIcon(new ImageIcon(this.getClass().getResource("/data/optionsIcon.png")));
         optionsButton.setOpaque(false);
         optionsButton.setBackground(DrawAttribute.fadeblack);
         optionsButton.setBorderPainted(false);
@@ -291,7 +289,7 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
         fullscreenButton = new JButton();
         fullscreenButton.setBackground(Color.BLACK);
-        fullscreenButton.setIcon(new ImageIcon(MapIcon.fullscreenIcon));
+        fullscreenButton.setIcon(new ImageIcon(this.getClass().getResource("/data/fullscreenIcon.png")));
         fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
         fullscreenButton.setFocusable(false);
         fullscreenButton.setOpaque(false);
@@ -306,7 +304,7 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
         zoomOutButton = new JButton();
         zoomOutButton.setBackground(Color.BLACK);
-        zoomOutButton.setIcon(new ImageIcon(MapIcon.minusIcon));
+        zoomOutButton.setIcon(new ImageIcon(this.getClass().getResource("/data/minusIcon.png")));
         zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
         zoomOutButton.setFocusable(false);
         zoomOutButton.setOpaque(false);
@@ -321,7 +319,7 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
         zoomInButton = new JButton();
         zoomInButton.setBackground(Color.BLACK);
-        zoomInButton.setIcon(new ImageIcon(MapIcon.plusIcon));
+        zoomInButton.setIcon(new ImageIcon(this.getClass().getResource("/data/plusIcon.png")));
         zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
         zoomInButton.setFocusable(false);
         zoomInButton.setOpaque(false);
@@ -351,7 +349,7 @@ public class View extends JFrame implements Observer {
                 BorderFactory.createMatteBorder(4, 0, 4, 7, DrawAttribute.lightblue),
                 BorderFactory.createRaisedBevelBorder()));
         searchButton.setBackground(new Color(36, 45, 50));
-        searchButton.setIcon(new ImageIcon(MapIcon.searchIcon));
+        searchButton.setIcon(new ImageIcon(this.getClass().getResource("/data/searchIcon.png")));
         searchButton.setFocusable(false);
         searchButton.setBounds(320, 20, 43, 37);
         searchButton.setActionCommand("search");
@@ -742,7 +740,6 @@ public class View extends JFrame implements Observer {
                 g.fill(coastLine.getShape());
             }
 
-
             if(zoomLevel > 12)
                 model.sortLayers(mapFeatures);
 
@@ -835,7 +832,7 @@ public class View extends JFrame implements Observer {
             //Draws chosen searchResult (either street or address)
             //Current address:
             if(currentAddressLocation != null){
-                MapIcon currentAddrTag = new MapIcon(currentAddressLocation,MapIcon.chosenAddressIcon);
+                MapIcon currentAddrTag = new MapIcon(currentAddressLocation,"chosenAddressIcon");
                 currentAddrTag.draw(g,transform);
             }
             //Current street:

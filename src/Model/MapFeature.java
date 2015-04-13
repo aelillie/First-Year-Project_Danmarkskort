@@ -85,7 +85,7 @@ public abstract class MapFeature implements Serializable, MapData {
         return layer_value;
     }
 
-    public Class getType(){
+    public Class getClassType(){
         return this.getClass().getSuperclass();
     }
 }

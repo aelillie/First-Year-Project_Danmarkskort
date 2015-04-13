@@ -38,9 +38,9 @@ public class MapMenu extends JComboBox<Icon> {
     }
 
     private void loadImagesAndOptions(){
-        ImageIcon standardMapImage = new ImageIcon(MapIcon.standard);
-        ImageIcon colorblindMapImage = new ImageIcon(MapIcon.colorblind);
-        ImageIcon transportMapImage = new ImageIcon(MapIcon.transport);
+        ImageIcon standardMapImage = new ImageIcon(this.getClass().getResource("/data/standardMapImage.png"));
+        ImageIcon colorblindMapImage = new ImageIcon(this.getClass().getResource("data/colorblindMapImage.png"));
+        ImageIcon transportMapImage = new ImageIcon(this.getClass().getResource("/data/transportMapImage.png"));
         mapNameMap.put(standardMapImage, "Standard");
         mapNameMap.put(colorblindMapImage, "Colorblind map");
         mapNameMap.put(transportMapImage, "Transport map");

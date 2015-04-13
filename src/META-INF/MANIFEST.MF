@@ -1,4 +1,5 @@
 Manifest-Version: 1.0
 Created-By: IntelliJ IDEA
 Main-Class: Main
+Class-Path: .
 SplashScreen-Image: Cartoon_map.jpg

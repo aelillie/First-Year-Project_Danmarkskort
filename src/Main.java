@@ -1,9 +1,7 @@
 import Controller.Controller;
 import Model.Model;
-import Model.MapIcon;
 import View.View;
 
-import java.awt.*;
 import java.io.IOException;
 import java.io.InputStream;
 
@@ -13,7 +11,7 @@ public class Main {
 
         Model m = Model.getModel();
         try {
-            String filename = "data/newSmall.osm"; //Is used to get filename in order to determine the file format
+            String filename = "newSmall.bin"; //Is used to get filename in order to determine the file format
             InputStream inputStream = Main.class.getResourceAsStream(filename);
             m.loadFile(filename, inputStream);
             m.setCurrentFilename(filename);
@@ -24,5 +22,6 @@ public class Main {
         Controller c = new Controller(m,v);
         v.setVisible(true);
     }
+
 
 }
