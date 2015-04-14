@@ -99,7 +99,7 @@ public class QuadTreeTest {
         ArrayList<Point2D> points = new ArrayList<>();
         Random r = new Random();
         Rectangle2D testBox = new Rectangle2D.Float(0,0,100,100);
-        quadTree = new QuadTree(testBox,2000);
+        quadTree = new QuadTree(testBox,2500);
         for(int i = 0; i < 200000; i++){
             if(r.nextBoolean()) {
                 points.clear();
