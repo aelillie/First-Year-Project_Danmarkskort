@@ -735,6 +735,7 @@ public class View extends JFrame implements Observer {
         Stroke min_value = new BasicStroke(Float.MIN_VALUE);
         private ArrayList<MapFeature> mapFeatures = new ArrayList<>();
         private ArrayList<MapIcon> mapIcons = new ArrayList<>();
+        private DrawAttribute drawAttribute;
 
         @Override
         public void paint(Graphics _g) {
@@ -750,12 +751,12 @@ public class View extends JFrame implements Observer {
             g.setStroke(min_value); //Just for good measure.
 
             Bounds box = PathCreater.createBounds(model.getBbox());
-            DrawAttribute drawBox = drawAttributeManager.getDrawAttribute(box.getValueName());
-            g.setColor(drawBox.getColor());
+            setDrawAttribute(box.getValueName());
+            g.setColor(drawAttribute.getColor());
             g.fill(box.getWay());
 
             for (MapFeature coastLine : OSMHandler.getCoastlines()) {
-                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(coastLine.getValueName());
+                setDrawAttribute(coastLine.getValueName());
                 g.setColor(drawAttribute.getColor());
                 g.fill(coastLine.getWay());
             }
@@ -767,10 +768,8 @@ public class View extends JFrame implements Observer {
 
 
             //Draw areas first
-
-
             for (MapFeature mapFeature : mapFeatures) {
-                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                setDrawAttribute(mapFeature.getValueName());
                 if (zoomLevel >= drawAttribute.getZoomLevel()) {
                     if (mapFeature.isArea()) {
                         g.setColor(drawAttribute.getColor());
@@ -778,29 +777,13 @@ public class View extends JFrame implements Observer {
                     }
                 }
             }
-            //Then draw boundaries on top of areas
-           /* for (MapFeature mapFeature : mapFeatures) {
-                if (zoomLevel > 14) {
-                    try {
-                        g.setColor(Color.BLACK);
-                        DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                        if (drawAttribute.isDashed()) continue;
-                        else if (!mapFeature.isArea())
-                            g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
-                        else g.setStroke(DrawAttribute.basicStrokes[0]);
-                        g.draw(mapFeature.getWay());
-                    } catch (NullPointerException e) {
-                        System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
-                    }
-                }
-            }*/
 
-            //Then draw boundaries on top of areas
+            //Draw boundaries on top of areas
             for (MapFeature mapFeature : mapFeatures) {
                 if (zoomLevel > 14) {
                     try {
                         g.setColor(Color.BLACK);
-                        DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                        setDrawAttribute(mapFeature.getValueName());
                         if (drawAttribute.isDashed()) continue;
                         else if (!mapFeature.isArea())
                             if (mapFeature instanceof Highway) {
@@ -815,9 +798,9 @@ public class View extends JFrame implements Observer {
             }
 
 
-            //Draw the fillers on top of boundaries and areas
+            //Draw filler lines on top of boundaries
             for (MapFeature mapFeature : mapFeatures) {
-                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                setDrawAttribute(mapFeature.getValueName());
                 if (zoomLevel >= drawAttribute.getZoomLevel()) {
                     g.setColor(drawAttribute.getColor());
                     if (drawAttribute.isDashed())
@@ -834,8 +817,7 @@ public class View extends JFrame implements Observer {
             }
 
 
-            //Draws the icons.
-
+            //Draw the icons
             if (zoomLevel >= 15) {
                 for (MapIcon mapIcon : mapIcons) {
                     if(mapIcon.isVisible()) {
@@ -912,6 +894,10 @@ public class View extends JFrame implements Observer {
                 g.setColor(Color.CYAN);
                 g.draw(nearestNeighbor.getWay());
             }
+        }
+
+        private void setDrawAttribute(ValueName valueName) {
+            drawAttribute = drawAttributeManager.getDrawAttribute(valueName);
         }
     }
 
