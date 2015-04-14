@@ -42,7 +42,7 @@ public class QuadTree implements Serializable{
             Double newWidth = width/2;
             Double newHeight = height/2;
             MapData[] tmp = value;
-            value = new MapData[0];
+            value = null;
             NW = new Node(x - newWidth , y -  newHeight, width, height);
             NE = new Node(x + newWidth, y - newHeight, width, height);
             SE = new Node(x + newWidth, y + newHeight, width, height);

@@ -831,9 +831,12 @@ public class View extends JFrame implements Observer {
                 setDrawAttribute(mapFeature.getValueName());
                 if (zoomLevel >= drawAttribute.getZoomLevel()) {
                     g.setColor(drawAttribute.getColor());
-                    if (drawAttribute.isDashed())
+                    if (drawAttribute.isDashed()) {
+                        if(zoomLevel > 13)
                         g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
-                        //TODO i've tested and dashed takes a LOT of power to draw.... maybe only dash it when zoom lvl i low, cant really see difference
+                        //TODO i've tested and dashed takes a LOT of power to draw.... maybe only dash it when zoom lvl i low, cant really see difference!
+                        else  g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
+                    }
                     else {
                         if (mapFeature instanceof Highway) {
                             g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
