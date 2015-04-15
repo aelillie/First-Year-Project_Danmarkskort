@@ -26,6 +26,14 @@ public class Amenity extends MapFeature {
     public void setValueAttributes() {
         if(value.equals("parking")) setValueName(ValueName.PARKING);
         else if(value.equals("university") && isBuilding ) setValueName(ValueName.UNIVERSITY);
+        else if(value.equals("school") && isBuilding ) setValueName(ValueName.SCHOOL);
+        else if(value.equals("university") || value.equals("school") && !isBuilding) setValueName(ValueName.SCHOOL_AREA);
+        else if(value.equals("pub")) setValueName(ValueName.PUB);
+        else if(value.equals("bar")) setValueName(ValueName.BAR);
+        else if(value.equals("pharmaceutical")) {
+            isArea = false;
+            setValueName(ValueName.PHARMACEUTICAL);
+        }
         else {
             isArea = false;
             setValueName(ValueName.AMENITY);

@@ -151,6 +151,14 @@ public class Controller extends MouseAdapter implements ActionListener {
                             n.printStackTrace();
                         }
                         break;*/
+                    case't':
+                        view.toggleTestMode();
+                        view.repaint();
+                        break;
+                    case 'g':
+                        view.toggleGrid();
+                        view.repaint();
+                        break;
 
                 }
                 if (e.getKeyCode() == KeyEvent.VK_UP) {
