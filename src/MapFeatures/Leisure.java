@@ -18,6 +18,9 @@ public class Leisure extends MapFeature {
     @Override
     public void setPreDefValues() {
         super.setPreDefValues();
+        if (value.equals("pitch")) layer_value = 32;
+        else if (value.equals("playground")) layer_value = 31;
+
     }
 
     @Override
