@@ -1,5 +1,8 @@
 package ShortestPath;
 
+import java.awt.geom.Path2D;
+import java.util.HashMap;
+
 /**
  * Created by woozy_000 on 13-04-2015.
  */
@@ -7,11 +10,12 @@ public class EdgeWeightedDigraph {
     private final int V;
     private int E;
     private Bag<DirectedEdge>[] adj;
+    private HashMap<Integer, Path2D> vertices;
 
     /**
      * Initializes an empty edge-weighted digraph with <tt>V</tt> vertices and 0 edges.
      * param V the number of vertices
-     * @throws java.lang.IllegalArgumentException if <tt>V</tt> < 0
+     * @throws java.lang.IllegalArgumentException if <tt>V</tt> <
      */
     public EdgeWeightedDigraph(int V) {
         if (V < 0) throw new IllegalArgumentException("Number of vertices in a Digraph must be nonnegative");
@@ -21,7 +25,9 @@ public class EdgeWeightedDigraph {
         for (int v = 0; v < V; v++)
             adj[v] = new Bag<DirectedEdge>();
     }
-
+    public HashMap<Integer, Path2D> getVertices() {
+        return vertices;
+    }
     /**
      * Initializes a random edge-weighted digraph with <tt>V</tt> vertices and <em>E</em> edges.
      * param V the number of vertices
@@ -29,16 +35,8 @@ public class EdgeWeightedDigraph {
      * @throws java.lang.IllegalArgumentException if <tt>V</tt> < 0
      * @throws java.lang.IllegalArgumentException if <tt>E</tt> < 0
      */
-    public EdgeWeightedDigraph(int V, int E) {
-        this(V);
-        if (E < 0) throw new IllegalArgumentException("Number of edges in a Digraph must be nonnegative");
-        for (int i = 0; i < E; i++) {
-            int v = (int) (Math.random() * V);
-            int w = (int) (Math.random() * V);
-            double weight = Math.round(100 * Math.random()) / 100.0;
-            DirectedEdge e = new DirectedEdge(v, w, weight);
-            addEdge(e);
-        }
+    public EdgeWeightedDigraph(){
+        vertices = new HashMap<>();
     }
 
     /**
