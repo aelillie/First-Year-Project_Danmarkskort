@@ -19,6 +19,7 @@ public class Amenity extends MapFeature {
     @Override
     public void setPreDefValues() {
         super.setPreDefValues();
+        if (value.equals("fountain")) layer_value = 45;
     }
 
     @Override

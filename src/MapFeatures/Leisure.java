@@ -18,6 +18,7 @@ public class Leisure extends MapFeature {
     @Override
     public void setPreDefValues() {
         super.setPreDefValues();
+        if (value.equals("pitch")) layer_value = -5;
     }
 
     @Override
