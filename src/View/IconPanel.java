@@ -22,22 +22,22 @@ public class IconPanel extends JScrollPane {
         super();
         controllers = new ArrayList<>();
 
-            GridLayout gridLayout = new GridLayout(0, 2);
-            setBounds(593, 80, 120, 180);
-            // setOpaque(false);
-            //setBorder(new MatteBorder(100, 100, 10, 10, new Color(161, 161, 161)));
-            this.setBackground(Color.BLACK);
-            panel = new JPanel();
-            panel.setBackground(Color.BLACK);
-            panel.setLayout(gridLayout);
-            addIcons();
-            this.setViewportView(panel);
-            panel.setVisible(true);
-            showIconPanel();
+        GridLayout gridLayout = new GridLayout(0, 2);
+        setBounds(593, 80, 120, 180);
+        // setOpaque(false);
+        //setBorder(new MatteBorder(100, 100, 10, 10, new Color(161, 161, 161)));
+        this.setBackground(Color.BLACK);
+        panel = new JPanel();
+        panel.setBackground(Color.LIGHT_GRAY);
+        panel.setLayout(gridLayout);
+        addIcons();
+        this.setViewportView(panel);
+        panel.setVisible(true);
+        showIconPanel();
 
     }
 
-        public void addIcons(){
+    public void addIcons(){
         icons = MapIcon.getIcons();
         for (int i= 0; i < icons.size(); i++)
         {
@@ -71,4 +71,5 @@ public class IconPanel extends JScrollPane {
     }
 
 }
+
 

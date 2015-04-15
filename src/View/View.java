@@ -37,13 +37,17 @@ public class View extends JFrame implements Observer {
     private JTextField searchArea;
     private JButton searchButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton, optionsButton, mapTypeButton;
     private MapMenu mapMenu;
-    private RouteView routePanel = new RouteView();
+    private RouteView routePanel;
     private MapTypePanel mapTypePanel = new MapTypePanel(this);
     private IconPanel iconPanel = new IconPanel();
     private OptionsPanel optionsPanel = new OptionsPanel(this);
-    private SearchResultMouseHandler searchResultMH;
     private JScrollPane resultPane = new JScrollPane();
+    private JScrollPane resultStartPane = new JScrollPane();
+    private JScrollPane resultEndPane = new JScrollPane();
     private JList<Address> addressSearchResults;
+    private JList<Address> addressSearchStartResults;
+    private JList<Address> addressSearchEndResults;
+
     private List<Path2D> currentStreetLocations;
     private Point2D currentAddressLocation;
     private Path2D currentBoundaryLocation;
@@ -63,9 +67,8 @@ public class View extends JFrame implements Observer {
     public View(Model m) {
         super("This is our map");
         model = m;
-        searchResultMH = new SearchResultMouseHandler(this, model);
         iconPanel.addObserverToIcons(this);
-
+        routePanel = new RouteView(this, model);
         /*Two helper functions to set up the AfflineTransform object and
         make the buttons and layout for the frame*/
         setScale();
@@ -199,7 +202,9 @@ public class View extends JFrame implements Observer {
         layer.add(mapTypeButton, new Integer(2));
         layer.add(mapTypePanel, new Integer(2));
         layer.add(resultPane, new Integer(3));
-        layer.add(iconPanel, new Integer(2));
+        layer.add(resultStartPane, new Integer(3));
+        layer.add(resultEndPane, new Integer(3));
+        layer.add(iconPanel, new Integer(3));
         layer.add(optionsPanel, new Integer(2));
 
     }
@@ -255,8 +260,32 @@ public class View extends JFrame implements Observer {
         resultPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
         resultPane.getViewport().setBackground(Color.WHITE);
         resultPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        resultPane.getViewport().getView().addMouseListener(searchResultMH);
+        resultPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchResults));
     }
+
+    public void addToResultStartPane(Address[] resultArray){
+        addressSearchStartResults = new JList<>(resultArray);
+        resultStartPane.setVisible(true);
+        resultStartPane.setViewportView(addressSearchStartResults);
+        resultStartPane.setBounds(74, 162, 261, 100);
+        resultStartPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
+        resultStartPane.getViewport().setBackground(Color.WHITE);
+        resultStartPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        resultStartPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchStartResults));
+    }
+
+    public void addToResultEndPane(Address[] resultArray){
+        addressSearchEndResults = new JList<>(resultArray);
+        resultEndPane.setVisible(true);
+        resultEndPane.setViewportView(addressSearchEndResults);
+        resultEndPane.setBounds(74, 205, 261, 100);
+        resultEndPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
+        resultEndPane.getViewport().setBackground(Color.WHITE);
+        resultEndPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        resultEndPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchEndResults));
+    }
+
+
 
     private void makeMapTypeButton(){
         Dimension preferred = getPreferredSize();
@@ -373,6 +402,7 @@ public class View extends JFrame implements Observer {
 
     public void showMapTypePanel(){
         mapTypePanel.showMapTypePanel();
+        if(mapTypePanel.isVisible() && optionsPanel.isVisible()) optionsPanel.setVisible(false);
         canvas.repaint();
     }
 
@@ -383,6 +413,7 @@ public class View extends JFrame implements Observer {
 
     public void showOptionsPanel(){
         optionsPanel.showOptionsPanel();
+        if(optionsPanel.isVisible()&& mapTypePanel.isVisible()) mapTypePanel.setVisible(false);
         canvas.repaint();
     }
 
@@ -977,7 +1008,15 @@ public class View extends JFrame implements Observer {
 
     public JScrollPane getResultPane() { return resultPane; }
 
+    public Model getModel(){return model;}
+
     public JList<Address> getAddressSearchResults() { return addressSearchResults; }
 
-    public Scalebar getScaleBar(){ return scalebar;}
+    public JList<Address> getAddressSearchStartResults() { return  addressSearchStartResults;}
+
+    public JList<Address> getAddressSearchEndResults() { return addressSearchEndResults; }
+
+    public JScrollPane getResultEndPane() {return resultEndPane;}
+
+    public JScrollPane getResultStartPane() {return resultStartPane;}
 }

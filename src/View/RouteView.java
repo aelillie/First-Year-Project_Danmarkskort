@@ -6,6 +6,7 @@ import Model.MapIcon;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import Model.Model;
 import java.net.URL;
 
 /**
@@ -17,22 +18,24 @@ public class RouteView extends JPanel{
     private JPanel startEndAddressPanel;
     private JButton findRouteButton;
     private JButton carButton, bicycleButton, footButton;
+    private View view;
 
     /**
      * Creates a panel used for getting a path from A to B in the program
      */
-    public RouteView(){
+    public RouteView(View view, Model model){
 
         setVisible(false);
         setBounds(20, 79, 342, 180);
         setOpaque(true);
         setBackground(Color.WHITE);
+        this.view = view;
         setBorder(new MatteBorder(1, 1, 1, 1, new Color(161, 161, 161)));
         setLayout(new BorderLayout());
         makeFindRoutePanel();
         add(startEndAddressPanel, BorderLayout.CENTER);
 
-        RoutePanelController rp = new RoutePanelController(this);
+        RoutePanelController rp = new RoutePanelController(this,model);
 
     }
 
@@ -90,6 +93,7 @@ public class RouteView extends JPanel{
 
 
         startAddressField = new JTextField();
+        startAddressField.setActionCommand("startAddressSearch");
         c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
@@ -110,6 +114,7 @@ public class RouteView extends JPanel{
         startEndAddressPanel.add(endIconLabel,c);
 
         endAddressField = new JTextField();
+        endAddressField.setActionCommand("endAddressSearch");
         c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
@@ -142,6 +147,9 @@ public class RouteView extends JPanel{
         setVisible(!isVisible);
     }
 
+    public JTextField getEndAddressField() {return endAddressField;}
+
+    public JTextField getStartAddressField() {return startAddressField;}
 
     public JButton getFindRouteButton() { return findRouteButton; }
 
@@ -150,4 +158,6 @@ public class RouteView extends JPanel{
     public JButton getBicycleButton() { return bicycleButton; }
 
     public JButton getFootButton() { return footButton; }
+
+    public View getView() { return view;}
 }
