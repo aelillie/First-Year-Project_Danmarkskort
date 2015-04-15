@@ -4,9 +4,9 @@ package ShortestPath;
  * Created by woozy_000 on 13-04-2015.
  */
 public class DirectedEdge {
-    private final int v;
-    private final int w;
-    private final double weight;
+    private final int v; //source
+    private final int w; //destination
+    private final double weight; //eg. distance
 
     /**
      * Initializes a directed edge from vertex <tt>v</tt> to vertex <tt>w</tt> with
