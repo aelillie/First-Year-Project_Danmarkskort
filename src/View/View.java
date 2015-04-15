@@ -902,7 +902,7 @@ public class View extends JFrame implements Observer {
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(nearestNeighbor.getValueName());
                 g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
                 g.setColor(Color.CYAN);
-                g.draw(nearestNeighbor.getShape());
+                g.draw(nearestNeighbor.getWay());
             }
         }
     }

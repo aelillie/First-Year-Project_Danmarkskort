@@ -6,17 +6,17 @@ package ShortestPath;
 public class DirectedEdge {
     private final int v;
     private final int w;
-    private final double weight;
+    private final double length;
 
     /**
      * Initializes a directed edge from vertex <tt>v</tt> to vertex <tt>w</tt> with
-     * the given <tt>weight</tt>.
+     * the given <tt>length</tt>.
      * @param v the tail vertex
      * @param w the head vertex
-     * @param weight the weight of the directed edge
+     * @param length the length of the directed edge
      * @throws java.lang.IndexOutOfBoundsException if either <tt>v</tt> or <tt>w</tt>
      *    is a negative integer
-     * @throws IllegalArgumentException if <tt>weight</tt> is <tt>NaN</tt>
+     * @throws IllegalArgumentException if <tt>length</tt> is <tt>NaN</tt>
      */
     public DirectedEdge(int v, int w, double weight) {
         if (v < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
@@ -24,7 +24,7 @@ public class DirectedEdge {
         if (Double.isNaN(weight)) throw new IllegalArgumentException("Weight is NaN");
         this.v = v;
         this.w = w;
-        this.weight = weight;
+        this.length = weight;
     }
 
     /**
@@ -44,11 +44,11 @@ public class DirectedEdge {
     }
 
     /**
-     * Returns the weight of the directed edge.
-     * @return the weight of the directed edge
+     * Returns the length of the directed edge.
+     * @return the length of the directed edge
      */
     public double weight() {
-        return weight;
+        return length;
     }
 
     /**
@@ -56,6 +56,6 @@ public class DirectedEdge {
      * @return a string representation of the directed edge
      */
     public String toString() {
-        return v + "->" + w + " " + String.format("%5.2f", weight);
+        return v + "->" + w + " " + String.format("%5.2f", length);
     }
 }
