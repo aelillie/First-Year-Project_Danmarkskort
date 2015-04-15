@@ -28,7 +28,7 @@ public class IconPanel extends JScrollPane {
             //setBorder(new MatteBorder(100, 100, 10, 10, new Color(161, 161, 161)));
             this.setBackground(Color.BLACK);
             panel = new JPanel();
-            panel.setBackground(Color.LIGHT_GRAY);
+            panel.setBackground(Color.BLACK);
             panel.setLayout(gridLayout);
             addIcons();
             this.setViewportView(panel);
