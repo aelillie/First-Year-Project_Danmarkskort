@@ -2,6 +2,7 @@ package Model;
 
 import MapFeatures.Coastline;
 import QuadTree.QuadTree;
+import View.View;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
@@ -99,6 +100,10 @@ public class Model extends Observable implements Serializable {
     }
     /*
     public void searchForAddresses1(Model.Address addressInput){
+
+
+
+   /* public void searchForAddresses1(Model.Address addressInput){
         int index = Collections.binarySearch(addressList,addressInput,new AddressComparator());
         if(index < 0) { //If it is not found the return value will be negative
             System.out.println("Too bad - didn't find!");

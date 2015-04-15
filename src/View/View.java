@@ -44,7 +44,6 @@ public class View extends JFrame implements Observer {
     private SearchResultMouseHandler searchResultMH;
     private JScrollPane resultPane = new JScrollPane();
     private JList<Address> addressSearchResults;
-
     private List<Path2D> currentStreetLocations;
     private Point2D currentAddressLocation;
     private Path2D currentBoundaryLocation;
@@ -200,7 +199,7 @@ public class View extends JFrame implements Observer {
         layer.add(mapTypeButton, new Integer(2));
         layer.add(mapTypePanel, new Integer(2));
         layer.add(resultPane, new Integer(3));
-        layer.add(iconPanel, new Integer(3));
+        layer.add(iconPanel, new Integer(2));
         layer.add(optionsPanel, new Integer(2));
 
     }
