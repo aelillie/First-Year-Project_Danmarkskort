@@ -11,7 +11,10 @@ import java.awt.geom.Path2D;
 public class Landuse extends MapFeature {
     public Landuse(Path2D way, int layer_value, String value, boolean isArea) {
         super(way, layer_value, value);
-        this.isArea = isArea;
+        if(!this.isArea){
+            this.isArea = isArea;
+        }
+
     }
 
     @Override

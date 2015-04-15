@@ -107,7 +107,7 @@ public class QuadTreeTest {
                 points.add(new Point2D.Float((i * 10 / 2 % 100) + 50, i / 2 % 100));
                 quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false));
             }else{
-                quadTree.insert(new MapIcon(new Point2D.Float((i * 4 % 100) + 50, i % 100),"busIcon"));
+                quadTree.insert(new MapIcon(new Point2D.Float((i * 4 % 100) + 50, i % 100), "busIcon"));
             }
         }
 

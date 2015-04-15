@@ -439,7 +439,7 @@ public class View extends JFrame implements Observer {
         Point2D currentCenter = getCenterLatLon();
         double dx = currentCenter.getX() - newCenter.getX();
         double dy = currentCenter.getY() - newCenter.getY();
-        panMapCoords(dx,dy);
+        panMapCoords(dx, dy);
     }
     //Pan map with lat/lon, translate rather than preconcatenate
     public void panMapCoords(double dx, double dy){
@@ -784,6 +784,7 @@ public class View extends JFrame implements Observer {
 
 
             for (MapFeature mapFeature : mapFAreas) {
+                try {
                 setDrawAttribute(mapFeature.getValueName());
                 if (zoomLevel >= drawAttribute.getZoomLevel()) {
                     if (mapFeature.isArea()) {
@@ -791,6 +792,10 @@ public class View extends JFrame implements Observer {
                         g.fill(mapFeature.getWay());
                     }
                 }
+                } catch (NullPointerException e) {
+                        System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
+                }
+
             }
 
             //Then draw boundaries on top of areas
@@ -833,7 +838,7 @@ public class View extends JFrame implements Observer {
                     g.setColor(drawAttribute.getColor());
                     if (drawAttribute.isDashed()) {
                         if(zoomLevel > 13)
-                        g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
+                            g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
                         //TODO i've tested and dashed takes a LOT of power to draw.... maybe only dash it when zoom lvl i low, cant really see difference!
                         else  g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
                     }
