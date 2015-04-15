@@ -1,5 +1,8 @@
 package ShortestPath;
 
+import java.awt.geom.Path2D;
+import java.util.HashMap;
+
 /**
  * Created by woozy_000 on 13-04-2015.
  */
@@ -7,17 +10,13 @@ public class EdgeWeightedDigraph {
     private int V;
     private int E;
     private Bag<DirectedEdge>[] adj;
+    private HashMap<Integer, Path2D> vertices;
 
-    /**
-     * Creates a new graph
-     * @param V number of vertices
-     */
     public EdgeWeightedDigraph(int V) {
         this.V = V;
         this.E = 0;
         adj = (Bag<DirectedEdge>[]) new Bag[V];
-        for (int v = 0 ; v < V ; v++) {
-            adj[v] = new Bag<DirectedEdge>();
+        for (int v = 0; v < V; v++) {
         }
     }
 

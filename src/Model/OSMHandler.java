@@ -2,6 +2,7 @@ package Model;
 
 import MapFeatures.*;
 import QuadTree.QuadTree;
+import ShortestPath.EdgeWeightedDigraph;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -19,6 +20,8 @@ public class OSMHandler extends DefaultHandler {
     private Map<Long, Point2D> node_map; //Relation between a nodes' id and coordinates
     private Map<String, String> keyValue_map; //relation between the keys and values in the XML file
     private Map<Long, Path2D> wayId_map; //Map of ways and their id's
+    private EdgeWeightedDigraph diGraph;
+    private int vertexId;
 
     //Contains relevant places parsed as address objects linked to their coordinate.
     private Map<Address,Point2D> addressMap;
@@ -51,7 +54,7 @@ public class OSMHandler extends DefaultHandler {
         addressMap = new HashMap<>();
         streetMap = new HashMap<>();
         boundaryMap = new HashMap<>();
-
+        diGraph = new EdgeWeightedDigraph();
     }
 
     /**
@@ -221,6 +224,8 @@ public class OSMHandler extends DefaultHandler {
                     }
                 }
                 wayId_map.put(wayId, way);
+                diGraph.getVertices().put(vertexId,way);
+                vertexId++;
                 break;
 
             case "relation":
