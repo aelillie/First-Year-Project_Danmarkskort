@@ -24,7 +24,7 @@ public class StandardConfig {
         standardView[ValueName.BAR.ordinal()]     =         new DrawAttribute(false, 1, DrawAttribute.cl_pink, 13);
         standardView[ValueName.UNIVERSITY.ordinal()] =      new DrawAttribute(false, 1, DrawAttribute.lightgrey, 14);
         standardView[ValueName.SCHOOL_AREA.ordinal()] =      new DrawAttribute(false, 1, DrawAttribute.lightyellow, 14);
-        standardView[ValueName.PHARMACEUTICAL.ordinal()] =  new DrawAttribute(false, 1, DrawAttribute.red, 14);
+        standardView[ValueName.PHARMACEUTICAL.ordinal()] =  new DrawAttribute(false, 1, DrawAttribute.bluegreen, 14);
         //BARRIER
         standardView[ValueName.BARRIER.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, 18);
         standardView[ValueName.HENCE.ordinal()] =           new DrawAttribute(true, 1, DrawAttribute.neongreen, 17);
