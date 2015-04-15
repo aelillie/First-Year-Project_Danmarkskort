@@ -2,7 +2,6 @@ package Controller;
 
 import Model.Model;
 import View.View;
-
 import javax.swing.*;
 import java.awt.event.*;
 import java.io.File;
