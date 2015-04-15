@@ -11,12 +11,14 @@ import java.awt.geom.Path2D;
 public class Landuse extends MapFeature {
     public Landuse(Path2D way, int layer_value, String value, boolean isArea) {
         super(way, layer_value, value);
-        this.isArea = isArea;
+        if (!this.isArea) //if area isn't declared true in setValueAttr
+            this.isArea = isArea; //set area to the the value specified in the parameter
     }
 
     @Override
     public void setPreDefValues() {
         super.setPreDefValues();
+        if (value.equals("basin")) layer_value = 42;
     }
 
     @Override
