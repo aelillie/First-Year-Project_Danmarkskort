@@ -15,9 +15,8 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Observable;
 import java.util.zip.ZipInputStream;
 
 
@@ -166,9 +165,27 @@ public class Model extends Observable implements Serializable {
         return OSMReader.getIconTree().query2D(visibleArea);
     }
 
+    /**
+     * Sorts the Model.Drawable elements in the drawables list from their layer value.
+     * Takes use of a comparator, which compares their values.
+     */
 
-    public void sortLayers(List<MapFeature> mapFeatures){
-        OSMReader.sortLayers(mapFeatures);
+    public void sortLayers(List<MapFeature> mapFeatures) {
+        Comparator<MapData> comparator = new Comparator<MapData>() {
+            @Override
+            /**
+             * Compares two MapFeature objects.
+             * Returns a negative integer, zero, or a positive integer as the first argument
+             * is less than, equal to, or greater than the second.
+             */
+            public int compare(MapData o1, MapData o2) {
+                if (o1.getLayerVal() < o2.getLayerVal()) return -1;
+                else if (o1.getLayerVal() > o2.getLayerVal()) return 1;
+                return 0;
+            }
+        };
+        Collections.sort(mapFeatures, comparator); //iterative mergesort. ~n*lg(n) comparisons
+
     }
 
 }

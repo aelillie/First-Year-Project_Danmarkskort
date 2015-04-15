@@ -5,9 +5,10 @@ import Model.MapFeature;
 import Model.MapIcon;
 
 import java.awt.*;
+import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.io.Serializable;
-import java.util.ArrayList;
+import java.util.*;
 
 public class QuadTree implements Serializable{
     private static final long serialVersionUID = 8;
@@ -20,7 +21,8 @@ public class QuadTree implements Serializable{
         Double x, y;                                // x- and y- coordinates
         Double width, height;
         Node NW, NE, SE, SW;                   // four subtrees
-        ArrayList<MapData> value;
+        MapData[] value;
+        int N = 0;
 
 
         Node(Double x, Double y, Double width, Double height) {
@@ -28,7 +30,7 @@ public class QuadTree implements Serializable{
             this.y = y;
             this.width = width/2;
             this.height = height/2;
-            value = new ArrayList<>();
+            value = new MapData[cap/8+1];
 
 
         }
@@ -39,15 +41,15 @@ public class QuadTree implements Serializable{
         public void subDivide(){
             Double newWidth = width/2;
             Double newHeight = height/2;
-            ArrayList<MapData> tmp = value;
-            value = new ArrayList<>();
+            MapData[] tmp = value;
+            value = null;
             NW = new Node(x - newWidth , y -  newHeight, width, height);
             NE = new Node(x + newWidth, y - newHeight, width, height);
             SE = new Node(x + newWidth, y + newHeight, width, height);
             SW = new Node(x - newWidth ,y + newHeight, width, height);
 
-            for(MapData data : tmp)
-                insert(data);
+            for(int i = 0; i < N; i++)
+                insert(tmp[i]);
 
         }
 
@@ -56,10 +58,22 @@ public class QuadTree implements Serializable{
          * @param values - Value to be stored in node
          */
         public void addvalue(MapData values){
-            if(value.size() > cap){
+            if(N == cap){
                 subDivide();
                 insert(values);
-            }else value.add(values);
+
+                N = 0;
+            }else if(N == value.length) {
+                MapData[] temp = new MapData[value.length*2];
+                for (int i = 0; i < N; i++) {
+                    temp[i] = value[i];
+                }
+                value = temp;
+                value[N++] = values;
+
+            }else
+                value[N++] = values;
+
         }
 
     }
@@ -90,8 +104,8 @@ public class QuadTree implements Serializable{
         }
         else {
             MapFeature mF = (MapFeature) value;
-            Rectangle2D bounds = mF.getWay().getBounds2D();
-            insert(root, bounds.getCenterX(), bounds.getCenterY(), value);
+
+            insert(root, mF.getWay().getBounds2D().getCenterX(), mF.getWay().getBounds2D().getCenterY() , mF);
 
         }
     }
@@ -124,10 +138,13 @@ public class QuadTree implements Serializable{
      * @return List of List of MapFeatures
      */
     public ArrayList<MapData> query2D(Shape rect) {
+        //List of list of All values in rect to be returned
+        ArrayList<MapData> values = new ArrayList<>();
 
-        ArrayList<MapData> values = new ArrayList<>(); //List of list of All values in rect to be returned
         if(rect != null)
             query2D(root, rect, values);
+
+
         return values;
     }
 
@@ -138,10 +155,11 @@ public class QuadTree implements Serializable{
         Double ymin = rect.getMinY();
         Double xmax = rect.getMaxX();
         Double ymax = rect.getMaxY();
-        if (rect.intersects(h.x- h.width,h.y - h.height, h.width*2, h.height*2) || rect.contains(h.x, h.y))
-            if(!h.value.isEmpty())
-            values.addAll(h.value);
-
+        if (rect.intersects(new Rectangle2D.Double(h.x- h.width,h.y - h.height, h.width*2, h.height*2)) || rect.contains(h.x, h.y))
+            if(h.N != 0) {
+                for(int i = 0; i < h.N; i++)
+                    values.add(h.value[i]);
+            }
         //Recursive calls. Checking what nodes to search in.
         if ( less(xmin, h.x) &&  less(ymin, h.y)) query2D(h.NW, rect, values);
         if ( less(xmin, h.x) && !less(ymax, h.y)) query2D(h.SW, rect, values);

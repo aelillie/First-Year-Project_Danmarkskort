@@ -23,6 +23,8 @@ public class StandardConfig {
         standardView[ValueName.PUB.ordinal()]     =         new DrawAttribute(false, 1, DrawAttribute.cl_pink, 13);
         standardView[ValueName.BAR.ordinal()]     =         new DrawAttribute(false, 1, DrawAttribute.cl_pink, 13);
         standardView[ValueName.UNIVERSITY.ordinal()] =      new DrawAttribute(false, 1, DrawAttribute.lightgrey, 14);
+        standardView[ValueName.SCHOOL_AREA.ordinal()] =      new DrawAttribute(false, 1, DrawAttribute.lightyellow, 14);
+        standardView[ValueName.PHARMACEUTICAL.ordinal()] =  new DrawAttribute(false, 1, DrawAttribute.red, 14);
         //BARRIER
         standardView[ValueName.BARRIER.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, 18);
         standardView[ValueName.HENCE.ordinal()] =           new DrawAttribute(true, 1, DrawAttribute.neongreen, 17);
@@ -72,6 +74,7 @@ public class StandardConfig {
         standardView[ValueName.CONSTRUCTION.ordinal()] =    new DrawAttribute(false, 0, DrawAttribute.pink, 15);
         standardView[ValueName.GRASS.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.whitegreen, 12);
         standardView[ValueName.GREENFIELD.ordinal()] =      new DrawAttribute(false, 0, DrawAttribute.bluegreen, 12);
+        standardView[ValueName.BROWNFIELD.ordinal()] =      new DrawAttribute(false, 0, DrawAttribute.brown, 12);
         standardView[ValueName.INDUSTRIAL.ordinal()] =      new DrawAttribute(false, 0, DrawAttribute.bluegreen, 14);
         standardView[ValueName.ORCHARD.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.bluegreen, 14);
         standardView[ValueName.RESERVOIR.ordinal()] =       new DrawAttribute(false, 0, DrawAttribute.whiteblue, 14);

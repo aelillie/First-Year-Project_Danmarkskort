@@ -3,6 +3,7 @@ package Model;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -18,6 +19,7 @@ import java.util.Map;
 public class MapIcon implements Serializable, MapData {
     public static final long serialVersionUID = 5;
 
+    //Hashmap containing references of paths to resource files.
     public static Map<String, URL> iconURLs = new HashMap<>();
 
     static{
@@ -40,7 +42,7 @@ public class MapIcon implements Serializable, MapData {
         aMap.put("optionsIcon", MapIcon.class.getResource("/data/optionsIcon.png"));
         aMap.put("layerIcon", MapIcon.class.getResource("/data/layerIcon.png"));
         aMap.put("chosenAddressIcon", MapIcon.class.getResource("/data/chosenAddressIcon.png"));
-        MapIcon.iconURLs = Collections.unmodifiableMap(aMap);
+        MapIcon.iconURLs = aMap;
     }
 
 
@@ -57,7 +59,7 @@ public class MapIcon implements Serializable, MapData {
      * @param type The path of the image file.
      */
     public MapIcon(Shape shape, String type){
-        this.type = type;
+        this.type = type.intern();
         coord = new Point2D.Float((float)shape.getBounds2D().getCenterX(), (float)shape.getBounds2D().getCenterY());
         imgPath = iconURLs.get(type);
     }
@@ -69,7 +71,7 @@ public class MapIcon implements Serializable, MapData {
      * @param type The path of the image file.
      */
     public MapIcon(Point2D coord, String type){
-        this.type = type;
+        this.type = type.intern();
         this.coord = coord;
         imgPath = iconURLs.get(type);
 
@@ -87,11 +89,20 @@ public class MapIcon implements Serializable, MapData {
         } catch(IOException e){
             e.printStackTrace();
         }
-        double x;
-        double y;
+        double x = 0;
+        double y = 0;
+        if(imgPath.getPath().equals(iconURLs.get("chosenAddressIcon").getPath())){
 
-        x = coord.getX();
-        y = coord.getY();
+            double height = (img.getHeight()/transform.getScaleY());
+            double width = (img.getWidth()/transform.getScaleX())/2;
+            x = coord.getX() - width;
+            y = coord.getY()- height;
+
+
+        }else {
+            x = coord.getX();
+            y = coord.getY();
+        }
 
         AffineTransform it = AffineTransform.getTranslateInstance(x, y);
         it.scale((1 / transform.getScaleX()), (1 / transform.getScaleY())); //Sets off against the transform of the context, scaling the transform of the icon accordingly.
@@ -107,7 +118,7 @@ public class MapIcon implements Serializable, MapData {
 
         Object co = stream.readObject();
         coord = (Point2D) co;
-        this.type = stream.readUTF();
+        this.type = stream.readUTF().intern();
 
         imgPath = iconURLs.get(type);
     }
@@ -128,7 +139,10 @@ public class MapIcon implements Serializable, MapData {
     }
 
 
-
+    /**
+     * Used to check wether MapFeature or MapIcon when static type is MapData.
+     * @return What class this is
+     */
     public Class getClassType(){
         return this.getClass();
     }
@@ -138,6 +152,10 @@ public class MapIcon implements Serializable, MapData {
         return coord;
     }
 
+    /**
+     * Returns a list of the paths to icon files needed
+     * @return List of URL to icon files
+     */
     public static ArrayList<URL> getIcons(){
         ArrayList<URL> iconsOne = new ArrayList<>();
         iconsOne.add(MapIcon.iconURLs.get("metroIcon"));
@@ -148,6 +166,7 @@ public class MapIcon implements Serializable, MapData {
         iconsOne.add(MapIcon.iconURLs.get("pubIcon"));
         return iconsOne;
     }
+
     private static HashMap<URL,Boolean> addIcon(){
         HashMap<URL, Boolean> hashIcon = new HashMap<>();
         hashIcon.put(MapIcon.iconURLs.get("metroIcon"),false);
@@ -160,11 +179,16 @@ public class MapIcon implements Serializable, MapData {
     }
 
 
-    //Returns true or false, whether the icon is currently visible or not
+    /**
+     * Returns true or false, whether the icon is currently visible or not
+     * @return boolean
+     */
     public Boolean isVisible() {
         return getIconState(this.imgPath);
     }
 
-
+    public int getLayerVal(){
+        return 100;
+    }
 }
 

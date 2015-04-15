@@ -98,7 +98,9 @@ public class QuadTreeTest {
     public void TestEfficiency(){
         ArrayList<Point2D> points = new ArrayList<>();
         Random r = new Random();
-        for(int i = 0; i < 75000; i++){
+        Rectangle2D testBox = new Rectangle2D.Float(0,0,100,100);
+        quadTree = new QuadTree(testBox,2500);
+        for(int i = 0; i < 200000; i++){
             if(r.nextBoolean()) {
                 points.clear();
                 points.add(new Point2D.Float((i * 4 % 100) + 50, i % 100));
@@ -112,22 +114,24 @@ public class QuadTreeTest {
 
     }
 
-    @Test(timeout = 600)
+    @Test(timeout = 800)
     public void testRangeSearch(){
         ArrayList<Point2D> points = new ArrayList<>();
         Random r = new Random();
-        for(int i = 0; i < 50000; i++){
+        Rectangle2D testBox = new Rectangle2D.Float(0,0,200,200);
+        quadTree = new QuadTree(testBox,1000);
+        for(int i = 0; i < 100000; i++){
             if(r.nextBoolean()) {
                 points.clear();
-                points.add(new Point2D.Float((i * 4 % 100) + 50, i % 100));
-                points.add(new Point2D.Float((i * 10 / 2 % 100) + 50, i / 2 % 100));
+                points.add(new Point2D.Float((i * 4 % 200) + 50, i % 200));
+                points.add(new Point2D.Float((i * 10 / 2 % 200) + 50, i / 2 % 200));
                 quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false));
             }else{
-                quadTree.insert(new MapIcon(new Point2D.Float((i * 4 % 100) + 50, i % 100),"busIcon"));
+                quadTree.insert(new MapIcon(new Point2D.Float((i * 4 % 200) + 50, i % 200),"busIcon"));
             }
         }
 
-        ArrayList<MapData> data = quadTree.query2D(new Rectangle2D.Float(0,0,100,100));
+        ArrayList<MapData> data = quadTree.query2D(new Rectangle2D.Float(0,0,200,200));
 
     }
 

@@ -3,7 +3,9 @@ package View;
 import Controller.SearchResultMouseHandler;
 import MapFeatures.Bounds;
 import MapFeatures.Highway;
+import MapFeatures.Route;
 import Model.*;
+import QuadTree.QuadTree;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -26,7 +28,7 @@ public class View extends JFrame implements Observer {
     private AffineTransform transform;
     private MapFeature nearestNeighbor;
     private CanvasBounds bounds;
-    private boolean antialias = true;
+    private boolean antialias = true, showGrid = false;
     private Point dragEndScreen, dragStartScreen;
     private int zoomLevel;
     private int zoomFactor;
@@ -56,7 +58,7 @@ public class View extends JFrame implements Observer {
     /**
      * Creates the window of our application.
      *
-     * @param m Reference to Model.Model class
+     * @param m Reference to Model class
      */
     public View(Model m) {
         super("This is our map");
@@ -630,6 +632,14 @@ public class View extends JFrame implements Observer {
         repaint();
     }
 
+    public void toggleTestMode(){
+        bounds.toggleTestMode();
+    }
+
+    public void toggleGrid(){
+        showGrid = !showGrid;
+    }
+
     /**
      * Makes the view Frame fullscreen with help of a graphic device.
      */
@@ -642,9 +652,16 @@ public class View extends JFrame implements Observer {
         isFullscreen = !isFullscreen;
     }
 
+    /**
+     * Finds the Nearest Highway from the MousePosition using distance from point to lineSegment
+     * @param position Position of MousePointer
+     */
     public void findNearest(Point position){
         if(zoomLevel < 11) return;
-        //Rectangle2D rec = new Rectangle2D.Double(position.getX(), position.getY(),0,0);
+
+        Insets x = getInsets();
+        position.setLocation(position.getX() + x.left - x.right, position.getY()-x.top + x.bottom );
+
         ArrayList<MapData> node = model.getVisibleStreets(bounds.getBounds());
 
         MapFeature champion = null;
@@ -725,8 +742,10 @@ public class View extends JFrame implements Observer {
     class Canvas extends JComponent {
         public static final long serialVersionUID = 4;
         Stroke min_value = new BasicStroke(Float.MIN_VALUE);
-        private ArrayList<MapFeature> mapFeatures = new ArrayList<>();
+        private ArrayList<MapFeature> mapFStreets = new ArrayList<>();
+        private ArrayList<MapFeature> mapFAreas = new ArrayList<>();
         private ArrayList<MapIcon> mapIcons = new ArrayList<>();
+        private DrawAttribute drawAttribute;
 
         @Override
         public void paint(Graphics _g) {
@@ -742,18 +761,20 @@ public class View extends JFrame implements Observer {
             g.setStroke(min_value); //Just for good measure.
 
             Bounds box = PathCreater.createBounds(model.getBbox());
-            DrawAttribute drawBox = drawAttributeManager.getDrawAttribute(box.getValueName());
-            g.setColor(drawBox.getColor());
+            setDrawAttribute(box.getValueName());
+            g.setColor(drawAttribute.getColor());
             g.fill(box.getWay());
 
             for (MapFeature coastLine : OSMHandler.getCoastlines()) {
-                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(coastLine.getValueName());
+                setDrawAttribute(coastLine.getValueName());
                 g.setColor(drawAttribute.getColor());
                 g.fill(coastLine.getWay());
             }
 
-            if(zoomLevel > 12)
-                model.sortLayers(mapFeatures);
+            if(zoomLevel > 12) {
+                model.sortLayers(mapFStreets);
+                model.sortLayers(mapFAreas);
+            }
 
             g.setColor(Color.BLACK);
 
@@ -761,8 +782,8 @@ public class View extends JFrame implements Observer {
             //Draw areas first
 
 
-            for (MapFeature mapFeature : mapFeatures) {
-                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+            for (MapFeature mapFeature : mapFAreas) {
+                setDrawAttribute(mapFeature.getValueName());
                 if (zoomLevel >= drawAttribute.getZoomLevel()) {
                     if (mapFeature.isArea()) {
                         g.setColor(drawAttribute.getColor());
@@ -770,50 +791,51 @@ public class View extends JFrame implements Observer {
                     }
                 }
             }
-            //Then draw boundaries on top of areas
-           /* for (MapFeature mapFeature : mapFeatures) {
-                if (zoomLevel > 14) {
-                    try {
-                        g.setColor(Color.BLACK);
-                        DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
-                        if (drawAttribute.isDashed()) continue;
-                        else if (!mapFeature.isArea())
-                            g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
-                        else g.setStroke(DrawAttribute.basicStrokes[0]);
-                        g.draw(mapFeature.getWay());
-                    } catch (NullPointerException e) {
-                        System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
-                    }
-                }
-            }*/
 
             //Then draw boundaries on top of areas
-            for (MapFeature mapFeature : mapFeatures) {
+            for (MapFeature Area : mapFAreas) {
                 if (zoomLevel > 14) {
                     try {
                         g.setColor(Color.BLACK);
-                        DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+                        setDrawAttribute(Area.getValueName());
                         if (drawAttribute.isDashed()) continue;
-                        else if (!mapFeature.isArea())
-                            if (mapFeature instanceof Highway) {
-                                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor + 1]);
-                            } else g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
+                        else if (!Area.isArea())
+                             g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
                         else g.setStroke(DrawAttribute.basicStrokes[0]);
-                        g.draw(mapFeature.getWay());
+                        g.draw(Area.getWay());
                     } catch (NullPointerException e) {
-                        System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
+                        System.out.println(Area.getValueName() + " " + Area.getValue());
                     }
                 }
             }
 
+            //Then draw Boundaries for Streets
+            for(MapFeature street : mapFStreets){
+                if (zoomLevel > 13) {
+                    g.setColor(Color.BLACK);
+                    setDrawAttribute(street.getValueName());
+                    if (drawAttribute.isDashed()) continue;
+                    if (street instanceof Route) continue;
+                    else if (!street.isArea()) {
+                        g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor + 1]);
+                    } else g.setStroke(DrawAttribute.basicStrokes[0]);
+                    g.draw(street.getWay());
+                }
+
+            }
+
 
             //Draw the fillers on top of boundaries and areas
-            for (MapFeature mapFeature : mapFeatures) {
-                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeature.getValueName());
+            for (MapFeature mapFeature : mapFStreets) {
+                setDrawAttribute(mapFeature.getValueName());
                 if (zoomLevel >= drawAttribute.getZoomLevel()) {
                     g.setColor(drawAttribute.getColor());
-                    if (drawAttribute.isDashed())
+                    if (drawAttribute.isDashed()) {
+                        if(zoomLevel > 13)
                         g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
+                        //TODO i've tested and dashed takes a LOT of power to draw.... maybe only dash it when zoom lvl i low, cant really see difference!
+                        else  g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
+                    }
                     else {
                         if (mapFeature instanceof Highway) {
                             g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
@@ -825,9 +847,19 @@ public class View extends JFrame implements Observer {
                 }
             }
 
+            g.setColor(Color.BLACK);
+            g.setStroke(new BasicStroke(0.0005f));
 
-            //Draws the icons.
 
+            if(showGrid) {
+                List<QuadTree> trees = model.getQuadTrees();
+                g.setColor(Color.green);
+                for (Rectangle2D rec : trees.get(0).getNodeRects())
+                    g.draw(rec);
+            }
+
+
+            //Draw the icons
             if (zoomLevel >= 15) {
                 for (MapIcon mapIcon : mapIcons) {
                     if(mapIcon.isVisible()) {
@@ -835,6 +867,7 @@ public class View extends JFrame implements Observer {
                     }
                 }
             }
+            g.setColor(Color.BLACK);
             g.draw(bounds.getBounds());
 
             scalebar = new Scalebar(g, zoomLevel, View.this, transform);
@@ -871,7 +904,8 @@ public class View extends JFrame implements Observer {
         }
 
         private void getData(){
-            mapFeatures = new ArrayList<>();
+            mapFStreets = new ArrayList<>();
+            mapFAreas = new ArrayList<>();
             mapIcons = new ArrayList<>();
 
             bounds.updateBounds(getVisibleRect());
@@ -879,15 +913,15 @@ public class View extends JFrame implements Observer {
 
 
             ArrayList<MapData> streets = model.getVisibleStreets(windowBounds);
-            mapFeatures = (ArrayList<MapFeature>)(List<?>) streets;
+            mapFStreets = (ArrayList<MapFeature>)(List<?>) streets;
 
             if(zoomLevel > 8){
-                mapFeatures.addAll((ArrayList<MapFeature>)(List<?>)model.getVisibleNatural(windowBounds));
+                mapFAreas = (ArrayList<MapFeature>)(List<?>)model.getVisibleNatural(windowBounds);
 
             }
 
             if(zoomLevel >= 13){
-                mapFeatures.addAll((ArrayList<MapFeature>)(List<?>) model.getVisibleBuildings(windowBounds));
+                mapFAreas.addAll((ArrayList<MapFeature>)(List<?>) model.getVisibleBuildings(windowBounds));
             }
 
             if(zoomLevel >= 15){
@@ -904,6 +938,10 @@ public class View extends JFrame implements Observer {
                 g.setColor(Color.CYAN);
                 g.draw(nearestNeighbor.getWay());
             }
+        }
+
+        private void setDrawAttribute(ValueName valueName) {
+            drawAttribute = drawAttributeManager.getDrawAttribute(valueName);
         }
     }
 
