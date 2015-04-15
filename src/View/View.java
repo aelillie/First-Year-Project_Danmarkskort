@@ -260,29 +260,29 @@ public class View extends JFrame implements Observer {
         resultPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
         resultPane.getViewport().setBackground(Color.WHITE);
         resultPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        resultPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchResults));
+        resultPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchResults,searchArea,resultPane));
     }
 
     public void addToResultStartPane(Address[] resultArray){
         addressSearchStartResults = new JList<>(resultArray);
         resultStartPane.setVisible(true);
         resultStartPane.setViewportView(addressSearchStartResults);
-        resultStartPane.setBounds(74, 162, 261, 100);
+        resultStartPane.setBounds(68, 162, 261, 100);
         resultStartPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
         resultStartPane.getViewport().setBackground(Color.WHITE);
         resultStartPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        resultStartPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchStartResults));
+        resultStartPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchStartResults,routePanel.getStartAddressField(),resultStartPane));
     }
 
     public void addToResultEndPane(Address[] resultArray){
         addressSearchEndResults = new JList<>(resultArray);
         resultEndPane.setVisible(true);
         resultEndPane.setViewportView(addressSearchEndResults);
-        resultEndPane.setBounds(74, 205, 261, 100);
+        resultEndPane.setBounds(68, 205, 261, 100);
         resultEndPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
         resultEndPane.getViewport().setBackground(Color.WHITE);
         resultEndPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        resultEndPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchEndResults));
+        resultEndPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchEndResults,routePanel.getEndAddressField(),resultEndPane));
     }
 
 
@@ -306,7 +306,7 @@ public class View extends JFrame implements Observer {
         optionsButton.setFocusable(false);
         optionsButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() * 0.98), 39, 37);
         optionsButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("optionsIcon")));
-                optionsButton.setOpaque(false);
+        optionsButton.setOpaque(false);
         optionsButton.setBackground(DrawAttribute.fadeblack);
         optionsButton.setBorderPainted(false);
         optionsButton.setRolloverEnabled(false);
@@ -329,7 +329,7 @@ public class View extends JFrame implements Observer {
         fullscreenButton = new JButton();
         fullscreenButton.setBackground(Color.BLACK);
         fullscreenButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("fullscreenIcon")));
-                fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
+        fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
         fullscreenButton.setFocusable(false);
         fullscreenButton.setOpaque(false);
         fullscreenButton.setActionCommand("fullscreen");

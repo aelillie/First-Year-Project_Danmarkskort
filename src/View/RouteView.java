@@ -94,6 +94,8 @@ public class RouteView extends JPanel{
 
         startAddressField = new JTextField();
         startAddressField.setActionCommand("startAddressSearch");
+        startAddressField.setText("Enter start address");
+        startAddressField.setForeground(Color.GRAY);
         c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
@@ -115,6 +117,8 @@ public class RouteView extends JPanel{
 
         endAddressField = new JTextField();
         endAddressField.setActionCommand("endAddressSearch");
+        endAddressField.setForeground(Color.GRAY);
+        endAddressField.setText("Enter start address");
         c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;

@@ -8,10 +8,8 @@ import Model.Model;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import java.awt.*;
+import java.awt.event.*;
 
 /**
  * Created by Kevin on 16-03-2015.
@@ -49,6 +47,37 @@ public class RoutePanelController implements ActionListener{
         endAddressField.addKeyListener(new SearchFieldKeyHandler(endAddressField,endAddrScrollpane));
         setInputChangeHandler(startAddressField,startAddrScrollpane);
         setInputChangeHandler(endAddressField,endAddrScrollpane);
+        addFocusListener("Enter start address",startAddressField);
+        addFocusListener("Enter end address",endAddressField);
+    }
+
+    private void addFocusListener(final String promptText, final JTextField textField){
+        textField.addFocusListener(new FocusListener() {
+
+            @Override
+            /**
+             * If selected remove prompt text
+             */
+            public void focusGained(FocusEvent e) {
+                if (textField.getText().equals(promptText)) {
+                    textField.setForeground(Color.BLACK);
+                    textField.setText("");
+                }
+            }
+
+            @Override
+            /**
+             * if unselected and search field is empty sets up promptText.
+             */
+            public void focusLost(FocusEvent e) {
+                if (textField.getText().isEmpty()) {
+                    textField.setForeground(Color.GRAY);
+                    textField.setText(promptText);
+                }
+            }
+
+        });
+
     }
 
     private void setInputChangeHandler(final JTextField textField, final JScrollPane resultPane){

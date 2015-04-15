@@ -28,20 +28,24 @@ public class SearchResultMouseHandler extends MouseAdapter{
     private View view;
     private Model model;
     private JList<Address> searchResults;
+    private JTextField textField;
+    private JScrollPane scrollPane;
 
-    public SearchResultMouseHandler(View view, Model model, JList<Address> searchResults) {
+    public SearchResultMouseHandler(View view, Model model, JList<Address> searchResults, JTextField textField, JScrollPane scrollPane) {
         this.view = view;
         this.model = model;
         this.searchResults = searchResults;
+        this.textField = textField;
+        this.scrollPane = scrollPane;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
         Address selectedItem = searchResults.getSelectedValue();
-        view.getSearchArea().setText(selectedItem.toString());
+        textField.setText(selectedItem.toString());
         view.getCanvas().requestFocusInWindow();
         getAddressLocation(selectedItem, model, view);
-        view.getResultPane().setVisible(false);
+        scrollPane.setVisible(false);
     }
 
     public static void getAddressLocation(Address selectedAddr, Model m, View v){
@@ -67,7 +71,6 @@ public class SearchResultMouseHandler extends MouseAdapter{
         } else if(streetLocation == null && addressLocation == null){
             v.setCurrentBoundaryLocation(boundaryLocation);
             v.searchResultChosen(boundaryLocation.getBounds().getCenterX(),boundaryLocation.getBounds().getCenterY());
-
         }
     }
 
