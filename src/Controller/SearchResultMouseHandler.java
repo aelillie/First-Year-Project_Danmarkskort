@@ -1,10 +1,9 @@
 package Controller;
 
 import Model.Address;
+import Model.Model;
+import View.View;
 
-import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Path2D;
@@ -12,10 +11,6 @@ import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 import java.util.Map;
-
-import View.*;
-import Model.*;
-import org.w3c.dom.css.Rect;
 
 /**
  * Created by Nicoline on 04-04-2015.
@@ -50,15 +45,20 @@ public class SearchResultMouseHandler extends MouseAdapter{
         Path2D boundaryLocation = boundaryMap.get(selectedAddr);
 
         if(addressLocation == null && boundaryLocation == null) {
+            v.zoomOnStreet(streetLocation);
             v.setCurrentStreet(streetLocation);
             Point2D middlePoint = getMiddlePoint(streetLocation);
             v.searchResultChosen(middlePoint.getX(),middlePoint.getY());
+
         } else if(boundaryLocation == null && streetLocation == null){
+            v.zoomOnAddress();
             v.setCurrentAddress(addressLocation);
-            v.searchResultChosen(addressLocation.getX(),addressLocation.getY());
+            v.searchResultChosen(addressLocation.getX(), addressLocation.getY());
+
         } else if(streetLocation == null && addressLocation == null){
             v.setCurrentBoundaryLocation(boundaryLocation);
             v.searchResultChosen(boundaryLocation.getBounds().getCenterX(),boundaryLocation.getBounds().getCenterY());
+
         }
     }
 

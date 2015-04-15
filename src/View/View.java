@@ -126,13 +126,19 @@ public class View extends JFrame implements Observer {
         //Set up the scale amount for our Afflinetransform
         double xscale = width / model.getBbox().getWidth();
         double yscale = height / model.getBbox().getHeight();
+
         double scale = max(xscale, yscale);
-        zoomLevel = ZoomCalculator.calculateZoom(scale);
-        scale = ZoomCalculator.setScale(zoomLevel);
-        transform.scale(scale, -scale);
+        System.out.println(scale);
+        adjustZoomLvl(scale);
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
 
         bounds = new CanvasBounds(getBounds(), transform);
+    }
+
+    public void adjustZoomLvl(double scale){
+        zoomLevel = ZoomCalculator.calculateZoom(scale);
+        scale = ZoomCalculator.setScale(zoomLevel);
+        transform.setToScale(scale, -scale);
     }
 
     /**
@@ -386,38 +392,23 @@ public class View extends JFrame implements Observer {
         //scalesomething();
     }
 
-    public void scalesomething(){
-        Point2D startPoint = new Point2D.Double(0,0);
-        Point2D endPoint = new Point2D.Double(300,300);
-        Point2D transformedStart = new Point2D.Double();
-        Point2D transformedEnd= new Point2D.Double();
+    public void zoomOnAddress(){
+        adjustZoomLvl(16000);
+        adjustZoomFactor();
+    }
 
-        Point2D currentStart = new Point2D.Double(getX(),getY());
-        Point2D transformedCurrentStart = new Point2D.Double();
-        Point2D currentEnd = new Point2D.Double(getX()+getWidth(),getY()+getHeight());
-        Point2D transformedCurrentEnd = new Point2D.Double();
-
-
-        try{
-            transform.inverseTransform(startPoint,transformedStart);
-            transform.inverseTransform(endPoint,transformedEnd);
-            transform.inverseTransform(currentStart,transformedCurrentStart);
-            transform.inverseTransform(currentEnd,transformedCurrentEnd);
-        } catch (NoninvertibleTransformException e){
-            e.printStackTrace();
+    public void zoomOnStreet(List<Path2D> streetSeqments){
+        Path2D pathCon = new Path2D.Double();
+        for(Path2D waySeg: streetSeqments){
+            pathCon.append(waySeg,false);
         }
+        Rectangle2D pathRec = pathCon.getBounds2D();
 
-        double desiredWidth = transformedEnd.getX()-transformedStart.getX();
-        double desiredHeight = transformedEnd.getY()-transformedEnd.getY();
-        double currentWidth = transformedCurrentEnd.getX()-transformedCurrentStart.getX();
-        double currentHeight = transformedCurrentEnd.getY() - transformedCurrentStart.getY();
+        double scaleX = getWidth()/ pathRec.getWidth();
+        double scaleY = getHeight()/ pathRec.getHeight();
 
-        double xscale = desiredWidth/currentWidth;
-        double yscale =  desiredHeight/currentHeight;
-        double scale = max(xscale, yscale);
-        zoomLevel = ZoomCalculator.calculateZoom(scale);
-        scale = ZoomCalculator.setScale(zoomLevel);
-        transform.setToScale(scale, -scale);
+        adjustZoomLvl(Math.max(scaleX, scaleY) * 0.7);
+        adjustZoomFactor();
     }
 
     //Get the center of the current size of the contentpane in lat and longtitude points
