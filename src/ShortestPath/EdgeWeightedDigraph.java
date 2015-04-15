@@ -7,9 +7,9 @@ import java.util.HashMap;
  * Created by woozy_000 on 13-04-2015.
  */
 public class EdgeWeightedDigraph {
-    private int V;
-    private int E;
-    private Bag<DirectedEdge>[] adj;
+    private int V; //Total amount of vertices
+    private int E; //Total amount of edges
+    private Bag<DirectedEdge>[] adj; //a bag for each vertex containing adjecent edges
     private HashMap<Integer, Path2D> vertices;
 
     public EdgeWeightedDigraph(int V) {
@@ -17,14 +17,15 @@ public class EdgeWeightedDigraph {
         this.E = 0;
         adj = (Bag<DirectedEdge>[]) new Bag[V];
         for (int v = 0; v < V; v++) {
+            adj[v] = new Bag<DirectedEdge>();
         }
     }
 
-    public int getVertex() {
+    public int V() {
         return V;
     }
 
-    public int getEdge() {
+    public int E() {
         return E;
     }
 

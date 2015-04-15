@@ -24,14 +24,14 @@ public class ShortestPath {
                 throw new IllegalArgumentException("edge " + e + " has negative weight");
         }
 
-        distTo = new double[G.getVertex()];
-        edgeTo = new DirectedEdge[G.getVertex()];
-        for (int v = 0; v < G.getVertex(); v++)
-            distTo[v] = Double.POSITIVE_INFINITY;
-        distTo[s] = 0.0;
+        distTo = new double[G.V()];
+        edgeTo = new DirectedEdge[G.V()];
+        for (int v = 0; v < G.V(); v++)
+            distTo[v] = Double.POSITIVE_INFINITY; //infinite distance to all vertices
+        distTo[s] = 0.0; //distance 0 to self
 
         // relax vertices in order of distance from s
-        pq = new IndexMinPQ<Double>(G.getVertex());
+        pq = new IndexMinPQ<Double>(G.V());
         pq.insert(s, distTo[s]);
         while (!pq.isEmpty()) {
             int v = pq.delMin();
@@ -108,7 +108,7 @@ public class ShortestPath {
             System.err.println("distTo[s] and edgeTo[s] inconsistent");
             return false;
         }
-        for (int v = 0; v < G.getVertex(); v++) {
+        for (int v = 0; v < G.V(); v++) {
             if (v == s) continue;
             if (edgeTo[v] == null && distTo[v] != Double.POSITIVE_INFINITY) {
                 System.err.println("distTo[] and edgeTo[] inconsistent");
@@ -117,7 +117,7 @@ public class ShortestPath {
         }
 
         // check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
-        for (int v = 0; v < G.getVertex(); v++) {
+        for (int v = 0; v < G.V(); v++) {
             for (DirectedEdge e : G.adj(v)) {
                 int w = e.to();
                 if (distTo[v] + e.weight() < distTo[w]) {
@@ -128,7 +128,7 @@ public class ShortestPath {
         }
 
         // check that all edges e = v->w on SPT satisfy distTo[w] == distTo[v] + e.weight()
-        for (int w = 0; w < G.getVertex(); w++) {
+        for (int w = 0; w < G.V(); w++) {
             if (edgeTo[w] == null) continue;
             DirectedEdge e = edgeTo[w];
             int v = e.from();

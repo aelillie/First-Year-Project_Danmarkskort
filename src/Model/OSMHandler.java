@@ -54,7 +54,7 @@ public class OSMHandler extends DefaultHandler {
         addressMap = new HashMap<>();
         streetMap = new HashMap<>();
         boundaryMap = new HashMap<>();
-        diGraph = new EdgeWeightedDigraph();
+        //diGraph = new EdgeWeightedDigraph();
     }
 
     /**
@@ -224,7 +224,7 @@ public class OSMHandler extends DefaultHandler {
                     }
                 }
                 wayId_map.put(wayId, way);
-                diGraph.getVertices().put(vertexId,way);
+                //diGraph.getVertices().put(vertexId,way);
                 vertexId++;
                 break;
 
