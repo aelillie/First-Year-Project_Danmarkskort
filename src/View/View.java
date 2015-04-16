@@ -48,9 +48,12 @@ public class View extends JFrame implements Observer {
     private JList<Address> addressSearchStartResults;
     private JList<Address> addressSearchEndResults;
 
-    private List<Path2D> currentStreetLocations;
-    private Point2D currentAddressLocation;
-    private Path2D currentBoundaryLocation;
+    private List<Path2D> currentStreetLocations = null;
+    private Point2D currentAddressLocation = null;
+    private Path2D currentBoundaryLocation = null;
+
+    private Point2D currentStartAddress = null; //TODO: Start and end address
+    private Point2D currentEndAddress = null;
 
     private boolean isFullscreen = false;
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -267,7 +270,7 @@ public class View extends JFrame implements Observer {
         addressSearchStartResults = new JList<>(resultArray);
         resultStartPane.setVisible(true);
         resultStartPane.setViewportView(addressSearchStartResults);
-        resultStartPane.setBounds(68, 162, 261, 100);
+        resultStartPane.setBounds(68, 162, 266, 100);
         resultStartPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
         resultStartPane.getViewport().setBackground(Color.WHITE);
         resultStartPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -278,7 +281,7 @@ public class View extends JFrame implements Observer {
         addressSearchEndResults = new JList<>(resultArray);
         resultEndPane.setVisible(true);
         resultEndPane.setViewportView(addressSearchEndResults);
-        resultEndPane.setBounds(68, 205, 261, 100);
+        resultEndPane.setBounds(68, 205, 266, 100);
         resultEndPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
         resultEndPane.getViewport().setBackground(Color.WHITE);
         resultEndPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -959,7 +962,6 @@ public class View extends JFrame implements Observer {
 
         private void paintNeighbor(Graphics2D g){
             if(nearestNeighbor != null) {
-
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(nearestNeighbor.getValueName());
                 g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
                 g.setColor(Color.CYAN);
