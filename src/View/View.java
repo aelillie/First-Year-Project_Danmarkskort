@@ -959,7 +959,6 @@ public class View extends JFrame implements Observer {
 
         private void paintNeighbor(Graphics2D g){
             if(nearestNeighbor != null) {
-
                 DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(nearestNeighbor.getValueName());
                 g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
                 g.setColor(Color.CYAN);

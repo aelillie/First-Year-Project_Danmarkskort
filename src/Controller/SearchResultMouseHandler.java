@@ -89,8 +89,4 @@ public class SearchResultMouseHandler extends MouseAdapter{
         yCoordinateMean = yCoordinateMean/pathCount;
         return new Point2D.Double(xCoordinateMean,yCoordinateMean);
     }
-
-
-
-
 }
