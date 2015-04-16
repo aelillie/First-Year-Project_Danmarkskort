@@ -17,11 +17,9 @@ import java.util.*;
  * Ultimately adding shapes to be drawn to lists in this class.
  */
 public class OSMHandler extends DefaultHandler {
-    //private Map<Long, Point2D> node_map; //Relation between a nodes' id and coordinates
-    private LongHashMap<Point2D> node_longMap; //Relation between a nodes' id and coordinates
     private Map<String, String> keyValue_map; //relation between the keys and values in the XML file
-    //private Map<Long, Path2D> wayId_map; //Map of ways and their id's
-    private LongHashMap<Path2D> wayId_longMap;
+    private LongHashMap<Point2D> node_longMap; //Relation between a nodes' id and coordinates
+    private LongHashMap<Path2D> wayId_longMap; //Map of ways and their id's
 
     //Contains relevant places parsed as address objects linked to their coordinate.
     private Map<Address,Point2D> addressMap;
@@ -48,10 +46,8 @@ public class OSMHandler extends DefaultHandler {
         memberReferences = new ArrayList<>();
         addressList = new ArrayList<>();
         wayCoords = new ArrayList<>();
-        //node_map = new HashMap<>();
         node_longMap = new LongHashMap<Point2D>();
         keyValue_map = new HashMap<>();
-        //wayId_map = new HashMap<>();
         wayId_longMap = new LongHashMap<Path2D>();
         addressMap = new HashMap<>();
         streetMap = new HashMap<>();
@@ -87,15 +83,13 @@ public class OSMHandler extends DefaultHandler {
                 long id = Long.parseLong(atts.getValue("id"));
                 Point2D coord = new Point2D.Float(lon.floatValue(), lat.floatValue());
                 nodeCoord = new Point2D.Float(lon.floatValue(),lat.floatValue());
-                //node_map.put(id, coord);
                 node_longMap.put(id, coord);
                 break;
 
             }
             case "nd": { //references in a way, to other ways
                 long id = Long.parseLong(atts.getValue("ref"));
-                //Point2D coord = node_map.get(id); //fetches coordinate from the referenced id
-                Point2D coord = node_longMap.get(id);
+                Point2D coord = node_longMap.get(id); //fetches coordinate from the referenced id
                 if(isStart){ //Saves startpoint (for use in coastlines)
                     startPoint = coord;
                     isStart = false;
@@ -225,7 +219,6 @@ public class OSMHandler extends DefaultHandler {
                         addressList.add(addr);
                     }
                 }
-                //wayId_map.put(wayId, way);
                 wayId_longMap.put(wayId, way);
                 break;
 
@@ -314,7 +307,7 @@ public class OSMHandler extends DefaultHandler {
                 Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
                 System.out.printf("sorted all addresses, time: %d ms\n", (System.nanoTime() - time) / 1000000);
                 PathCreater.connectCoastlines(bbox);
-                wayId_longMap.clear(); //should be garbage collected
+                wayId_longMap.clear(); //sets key and value arrays to point to null
                 break;
 
         }
