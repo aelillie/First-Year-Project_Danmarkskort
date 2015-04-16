@@ -100,17 +100,6 @@ public class RoutePanelController implements ActionListener{
         });
     }
 
-    private void derp(){
-        /*Address[] results = addressSearch(2);
-        if(results != null) {
-            if(results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view);
-            view.getResultPane().setVisible(false);
-            view.getCanvas().requestFocusInWindow();
-        } else {
-            addressSearch(1);
-            view.getCanvas().requestFocusInWindow();
-        }*/
-    }
 
     private Address[] addressSearch(int type, JTextField textField, JScrollPane scrollPane){
         String input = textField.getText();
