@@ -87,7 +87,9 @@ public class Model extends Observable implements Serializable {
 
     private void saveBin(String filename) {
         try {
+
             BinaryHandler.save(filename + ".bin");
+
         } catch (IOException e) {
             e.printStackTrace();
         }

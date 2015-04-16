@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Helper class to save and load data in binary format
  */
-public final class BinaryHandler {
+public class BinaryHandler{
 
     /**
      * Writes all the objects of Model.Drawable to a binary file for faster loading. The order of the sequence is important!
@@ -93,12 +93,15 @@ public final class BinaryHandler {
         System.out.println("done in " + (System.nanoTime() - time) / 1000000);
 
         List<Coastline> coasts = model.getCoastlines();
-        coasts.addAll((List<Coastline>)in.readObject());
+        coasts.addAll((List<Coastline>) in.readObject());
         loadingScreen.updateLoadBar(99);
         in.close();
         loadingScreen.updateLoadBar(100);
     }
 
+    public void saveFiles(String savefile)throws IOException{
 
+        save(savefile);
+    }
 
 }
