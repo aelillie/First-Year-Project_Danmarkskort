@@ -25,6 +25,10 @@ public abstract class MapFeature implements Serializable, MapData {
         setValueAttributes();
     }
 
+    public MapFeature() {
+        //default empty contructor
+    }
+
     /**
      * Defines a larger spectrum of layer values
      * Predefined layer values get their values multiplied

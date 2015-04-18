@@ -28,6 +28,14 @@ public class MapCalculator {
         return Math.toDegrees(2* Math.atan(Math.exp(Math.toRadians(aY))) - Math.PI/2);
     }
 
+    public static double haversineDist(Point2D coord1, Point2D coord2){
+        double x1 = coord1.getX();
+        double y1 = coord1.getY();
+        double x2 = coord2.getX();
+        double y2 = coord2.getY();
+        return haversineDist(x1, y1, x2, y2);
+    }
+
 
     //NOTE: The formula is only an approximation when applied to the Earth, as it is not a perfect sphere.
     // This means that the earthradius varies from 6356.752 km at the poles to 6378.137 km at the equator.

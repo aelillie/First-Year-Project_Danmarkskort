@@ -2,7 +2,9 @@ package Model;
 
 import MapFeatures.*;
 import QuadTree.QuadTree;
+import ShortestPath.DirectedEdge;
 import ShortestPath.EdgeWeightedDigraph;
+import ShortestPath.Vertices;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -21,7 +23,7 @@ public class OSMHandler extends DefaultHandler {
     private Map<String, String> keyValue_map; //relation between the keys and values in the XML file
     private Map<Long, Path2D> wayId_map; //Map of ways and their id's
     private EdgeWeightedDigraph diGraph;
-    private int vertexId;
+    private Vertices vertices;
 
     //Contains relevant places parsed as address objects linked to their coordinate.
     private Map<Address,Point2D> addressMap;
@@ -33,6 +35,7 @@ public class OSMHandler extends DefaultHandler {
     private List<Long> memberReferences; //member referenced in a relation of ways
     private List<Point2D> wayCoords; //List of referenced coordinates used to make up a single way
     private static List<Coastline> coastlines; //List of all of the coastlines to be drawn
+    private List<DirectedEdge> directedEdges;
 
     private Long wayId; //Id of the current way
     private Point2D nodeCoord; //current node's coordinates
@@ -41,6 +44,7 @@ public class OSMHandler extends DefaultHandler {
     private String streetName, houseNumber,cityName, postCode; //address info
     private Point2D startPoint, endPoint; //coastline start point and end point
     private Rectangle2D bbox = new Rectangle2D.Double();
+    private int edgeCounter;
 
 
     public void initializeCollections(){
@@ -54,6 +58,9 @@ public class OSMHandler extends DefaultHandler {
         addressMap = new HashMap<>();
         streetMap = new HashMap<>();
         boundaryMap = new HashMap<>();
+        vertices = new Vertices();
+        edgeCounter = 0;
+        directedEdges = new ArrayList<>();
         //diGraph = new EdgeWeightedDigraph();
     }
 
@@ -208,7 +215,14 @@ public class OSMHandler extends DefaultHandler {
                     //quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary"))); //Appears in <relation
 
                 }
-                else if (keyValue_map.containsKey("highway")) streetTree.insert(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea));
+                else if (keyValue_map.containsKey("highway")) {
+                    MapFeature highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea);
+                    streetTree.insert(highway);
+                    vertices.add(startPoint); //intersection in one end
+                    vertices.add(endPoint); //intersection in the other end
+                    //add edge between intersections with the distance as weight:
+                    directedEdges.add(new DirectedEdge(vertices.get(startPoint), vertices.get(endPoint), dist(startPoint, endPoint)));
+                }
                 else if (keyValue_map.containsKey("railway")) streetTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  streetTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
                 if (keyValue_map.containsKey("name")) {
@@ -224,8 +238,6 @@ public class OSMHandler extends DefaultHandler {
                     }
                 }
                 wayId_map.put(wayId, way);
-                //diGraph.getVertices().put(vertexId,way);
-                vertexId++;
                 break;
 
             case "relation":
@@ -317,6 +329,10 @@ public class OSMHandler extends DefaultHandler {
                 break;
 
         }
+    }
+
+    private double dist(Point2D startPoint, Point2D endPoint) {
+        return MapCalculator.haversineDist(startPoint, endPoint);
     }
 
     /**
@@ -453,5 +469,13 @@ public class OSMHandler extends DefaultHandler {
 
     public QuadTree getNaturalTree() {
         return naturalTree;
+    }
+
+    public Vertices getVertices() {
+        return vertices;
+    }
+
+    public List<DirectedEdge> getDirectedEdges() {
+        return directedEdges;
     }
 }

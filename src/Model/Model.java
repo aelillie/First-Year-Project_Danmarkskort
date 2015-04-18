@@ -2,13 +2,14 @@ package Model;
 
 import MapFeatures.Coastline;
 import QuadTree.QuadTree;
+import ShortestPath.DirectedEdge;
+import ShortestPath.Vertices;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -159,6 +160,14 @@ public class Model extends Observable implements Serializable {
 
     public ArrayList<MapData> getVisibleIcons(Rectangle2D visibleArea){
         return OSMReader.getIconTree().query2D(visibleArea);
+    }
+
+    public Vertices getVertices() {
+        return OSMReader.getVertices();
+    }
+
+    public List<DirectedEdge> directedEdges() {
+        return getOSMReader().getDirectedEdges();
     }
 
     public void sortLayers(List<MapFeature> mapFeatures){

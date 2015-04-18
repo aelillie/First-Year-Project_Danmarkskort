@@ -6,9 +6,33 @@ import Model.ValueName;
 import java.awt.geom.Path2D;
 
 public class Highway extends MapFeature {
+
+    private int v; //source
+    private int w; //destination
+    private double weight; //eg. distance
+
     public Highway(Path2D way, int layer_value, String value, boolean isArea) {
         super(way, layer_value, value);
         this.isArea = isArea;
+    }
+
+    /**
+     * Initializes a directed edge from vertex <tt>v</tt> to vertex <tt>w</tt> with
+     * the given <tt>weight</tt>.
+     * @param v the tail vertex
+     * @param w the head vertex
+     * @param weight the weight of the directed edge
+     * @throws java.lang.IndexOutOfBoundsException if either <tt>v</tt> or <tt>w</tt>
+     *    is a negative integer
+     * @throws IllegalArgumentException if <tt>weight</tt> is <tt>NaN</tt>
+     */
+    public Highway(int v, int w, double weight) {
+        if (v < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
+        if (w < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
+        if (Double.isNaN(weight)) throw new IllegalArgumentException("Weight is NaN");
+        this.v = v;
+        this.w = w;
+        this.weight = weight;
     }
 
 
@@ -46,5 +70,37 @@ public class Highway extends MapFeature {
         else if (value.equals("steps")) setValueName(ValueName.STEPS);
         else if (value.equals("path")) setValueName(ValueName.PATH);
         else setValueName(ValueName.HIGHWAY);
+    }
+
+    /**
+     * Returns the tail vertex of the directed edge.
+     * @return the tail vertex of the directed edge
+     */
+    public int from() {
+        return v;
+    }
+
+    /**
+     * Returns the head vertex of the directed edge.
+     * @return the head vertex of the directed edge
+     */
+    public int to() {
+        return w;
+    }
+
+    /**
+     * Returns the weight of the directed edge.
+     * @return the weight of the directed edge
+     */
+    public double weight() {
+        return weight;
+    }
+
+    /**
+     * Returns a string representation of the directed edge.
+     * @return a string representation of the directed edge
+     */
+    public String toString() {
+        return v + "->" + w + " " + String.format("%5.2f", weight);
     }
 }

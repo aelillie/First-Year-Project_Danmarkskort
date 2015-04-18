@@ -4,6 +4,8 @@ import Controller.SearchResultMouseHandler;
 import MapFeatures.Bounds;
 import MapFeatures.Highway;
 import Model.*;
+import ShortestPath.EdgeWeightedDigraph;
+import ShortestPath.ShortestPath;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -95,6 +97,11 @@ public class View extends JFrame implements Observer {
         pack();
         canvas.requestFocusInWindow();
         model.addObserver(this);
+    }
+
+    public void findPath() {
+        EdgeWeightedDigraph G = new EdgeWeightedDigraph(model.getVertices().V());
+        ShortestPath shortestPath = new ShortestPath(G, 10);
     }
 
 

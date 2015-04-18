@@ -142,14 +142,9 @@ public class Controller extends MouseAdapter implements ActionListener {
                     case 's':
                         model.saveBin();
                         break;
-                    /*case 'l': use loadSelectedFile in runtime instead
-                        try {
-                            model.loadFile("binaryModel.bin", inputStream);
-                        } catch (NullPointerException | IOException n) {
-                            System.out.println("There is no 'binaryModel.bin' to load.");
-                            n.printStackTrace();
-                        }
-                        break;*/
+                    case 'l':
+                        view.findPath();
+                        break;
 
                 }
                 if (e.getKeyCode() == KeyEvent.VK_UP) {
