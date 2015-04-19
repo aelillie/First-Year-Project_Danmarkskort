@@ -1,6 +1,8 @@
 package Controller;
 
 import Model.Address;
+import Model.Model;
+import View.View;
 
 import java.awt.*;
 import java.awt.event.KeyAdapter;
@@ -15,29 +17,35 @@ import java.util.Map;
 
 import View.*;
 import Model.*;
-import org.w3c.dom.css.Rect;
+
+import javax.swing.*;
 
 /**
  * Created by Nicoline on 04-04-2015.
  */
 public class SearchResultMouseHandler extends MouseAdapter{
 
-    View view;
-    Model model;
+    private View view;
+    private Model model;
+    private JList<Address> searchResults;
+    private JTextField textField;
+    private JScrollPane scrollPane;
 
-    public SearchResultMouseHandler(View view, Model model) {
+    public SearchResultMouseHandler(View view, Model model, JList<Address> searchResults, JTextField textField, JScrollPane scrollPane) {
         this.view = view;
         this.model = model;
-
+        this.searchResults = searchResults;
+        this.textField = textField;
+        this.scrollPane = scrollPane;
     }
 
     @Override
     public void mouseClicked(MouseEvent e) {
-        Address selectedItem = view.getAddressSearchResults().getSelectedValue();
-        view.getSearchArea().setText(selectedItem.toString());
+        Address selectedItem = searchResults.getSelectedValue();
+        textField.setText(selectedItem.toString());
         view.getCanvas().requestFocusInWindow();
         getAddressLocation(selectedItem, model, view);
-        view.getResultPane().setVisible(false);
+        scrollPane.setVisible(false);
     }
 
     public static void getAddressLocation(Address selectedAddr, Model m, View v){
@@ -50,12 +58,16 @@ public class SearchResultMouseHandler extends MouseAdapter{
         Path2D boundaryLocation = boundaryMap.get(selectedAddr);
 
         if(addressLocation == null && boundaryLocation == null) {
+            v.zoomOnStreet(streetLocation);
             v.setCurrentStreet(streetLocation);
             Point2D middlePoint = getMiddlePoint(streetLocation);
             v.searchResultChosen(middlePoint.getX(),middlePoint.getY());
+
         } else if(boundaryLocation == null && streetLocation == null){
+            v.zoomOnAddress();
             v.setCurrentAddress(addressLocation);
-            v.searchResultChosen(addressLocation.getX(),addressLocation.getY());
+            v.searchResultChosen(addressLocation.getX(), addressLocation.getY());
+
         } else if(streetLocation == null && addressLocation == null){
             v.setCurrentBoundaryLocation(boundaryLocation);
             v.searchResultChosen(boundaryLocation.getBounds().getCenterX(),boundaryLocation.getBounds().getCenterY());
@@ -77,8 +89,4 @@ public class SearchResultMouseHandler extends MouseAdapter{
         yCoordinateMean = yCoordinateMean/pathCount;
         return new Point2D.Double(xCoordinateMean,yCoordinateMean);
     }
-
-
-
-
 }

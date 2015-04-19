@@ -15,7 +15,7 @@ import java.util.Map;
 /**
  * Helper class to save and load data in binary format
  */
-public final class BinaryHandler {
+public class BinaryHandler{
 
     /**
      * Writes all the objects of Model.Drawable to a binary file for faster loading. The order of the sequence is important!
@@ -26,19 +26,26 @@ public final class BinaryHandler {
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
         //write the boundaries and the number of shapes.
         Model model = Model.getModel();
+        LoadingScreen loadingScreen = new LoadingScreen();
         out.writeObject(model.getBbox().getBounds2D());
+        loadingScreen.updateLoadBar(5);
 
         out.writeObject(model.getOSMReader().getAddressMap());
+        loadingScreen.updateLoadBar(20);
         out.writeObject(model.getOSMReader().getStreetMap());
+        loadingScreen.updateLoadBar(35);
         out.writeObject(model.getOSMReader().getBoundaryMap());
+        loadingScreen.updateLoadBar(40);
         out.writeObject(model.getOSMReader().getAddressList());
+        loadingScreen.updateLoadBar(50);
 
         List<QuadTree> qT = model.getQuadTrees();
-        out.writeObject(qT);
 
+        out.writeObject(qT);
+        loadingScreen.updateLoadBar(90);
 
         out.writeObject(model.getCoastlines());
-
+        loadingScreen.updateLoadBar(100);
 
         out.close();
         System.out.print(filename + " saved");
@@ -86,12 +93,15 @@ public final class BinaryHandler {
         System.out.println("done in " + (System.nanoTime() - time) / 1000000);
 
         List<Coastline> coasts = model.getCoastlines();
-        coasts.addAll((List<Coastline>)in.readObject());
+        coasts.addAll((List<Coastline>) in.readObject());
         loadingScreen.updateLoadBar(99);
         in.close();
         loadingScreen.updateLoadBar(100);
     }
 
+    public void saveFiles(String savefile)throws IOException{
 
+        save(savefile);
+    }
 
 }

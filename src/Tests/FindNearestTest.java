@@ -40,10 +40,10 @@ public class FindNearestTest {
 
 
 
-        mapFeatures.add(new Highway(PathCreater.createWay(points.subList(0, 2)), 0 , "H1", false));
-        mapFeatures.add(new Highway(PathCreater.createWay(points.subList(3, 5)), 0 , "H2", false));
-        mapFeatures.add(new Highway(PathCreater.createWay(points.subList(6, 8)), 0 , "H3", false));
-        mapFeatures.add(new Highway(PathCreater.createWay(points.subList(9, 10)), 0 , "H4", false));
+        mapFeatures.add(new Highway(PathCreater.createWay(points.subList(0, 2)), 0 , "H1", false, "vej1"));
+        mapFeatures.add(new Highway(PathCreater.createWay(points.subList(3, 5)), 0 , "H2", false, "vej2"));
+        mapFeatures.add(new Highway(PathCreater.createWay(points.subList(6, 8)), 0 , "H3", false, "vej3"));
+        mapFeatures.add(new Highway(PathCreater.createWay(points.subList(9, 10)), 0 , "H4", false, "vej4"));
 
 
     }

@@ -18,6 +18,7 @@ public class Barrier extends MapFeature{
     @Override
     public void setPreDefValues() {
         super.setPreDefValues();
+        if(value.equals("kerb")) layer_value = 33;
     }
 
     @Override

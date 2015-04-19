@@ -2,6 +2,7 @@ package Model;
 
 import MapFeatures.*;
 import QuadTree.QuadTree;
+import View.View;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -16,12 +17,12 @@ import java.util.*;
  * Ultimately adding shapes to be drawn to lists in this class.
  */
 public class OSMHandler extends DefaultHandler {
-    private Map<Long, Point2D> node_map; //Relation between a nodes' id and coordinates
     private Map<String, String> keyValue_map; //relation between the keys and values in the XML file
-    private Map<Long, Path2D> wayId_map; //Map of ways and their id's
+    private LongHashMap<Point2D> node_longMap; //Relation between a nodes' id and coordinates
+    private LongHashMap<Path2D> wayId_longMap; //Map of ways and their id's
 
     //Contains relevant places parsed as address objects linked to their coordinate.
-    private Map<Address,Point2D> addressMap;
+    private Map<Address, Point2D> addressMap;
     private Map<Address, List<Path2D>> streetMap;
     private Map<Address, Path2D> boundaryMap;
 
@@ -45,13 +46,12 @@ public class OSMHandler extends DefaultHandler {
         memberReferences = new ArrayList<>();
         addressList = new ArrayList<>();
         wayCoords = new ArrayList<>();
-        node_map = new HashMap<>();
+        node_longMap = new LongHashMap<Point2D>();
         keyValue_map = new HashMap<>();
-        wayId_map = new HashMap<>();
+        wayId_longMap = new LongHashMap<Path2D>();
         addressMap = new HashMap<>();
         streetMap = new HashMap<>();
         boundaryMap = new HashMap<>();
-
     }
 
     /**
@@ -83,14 +83,13 @@ public class OSMHandler extends DefaultHandler {
                 long id = Long.parseLong(atts.getValue("id"));
                 Point2D coord = new Point2D.Float(lon.floatValue(), lat.floatValue());
                 nodeCoord = new Point2D.Float(lon.floatValue(),lat.floatValue());
-                node_map.put(id, coord);
+                node_longMap.put(id, coord);
                 break;
 
             }
             case "nd": { //references in a way, to other ways
                 long id = Long.parseLong(atts.getValue("ref"));
-                Point2D coord = node_map.get(id); //fetches coordinate from the referenced id
-
+                Point2D coord = node_longMap.get(id); //fetches coordinate from the referenced id
                 if(isStart){ //Saves startpoint (for use in coastlines)
                     startPoint = coord;
                     isStart = false;
@@ -122,7 +121,7 @@ public class OSMHandler extends DefaultHandler {
                 bbox.setRect(rect);
                 streetTree = new QuadTree(bbox, 250);
                 buildingTree = new QuadTree(bbox, 300);
-                iconTree = new QuadTree(bbox, 30);
+                    iconTree = new QuadTree(bbox, 30);
                 naturalTree = new QuadTree(bbox, 200);
 
 
@@ -205,7 +204,10 @@ public class OSMHandler extends DefaultHandler {
                     //quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary"))); //Appears in <relation
 
                 }
-                else if (keyValue_map.containsKey("highway")) streetTree.insert(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea));
+                else if (keyValue_map.containsKey("highway")){
+                    streetTree.insert(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name")));
+
+                }
                 else if (keyValue_map.containsKey("railway")) streetTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  streetTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
                 if (keyValue_map.containsKey("name")) {
@@ -220,14 +222,14 @@ public class OSMHandler extends DefaultHandler {
                         addressList.add(addr);
                     }
                 }
-                wayId_map.put(wayId, way);
+                wayId_longMap.put(wayId, way);
                 break;
 
             case "relation":
                 if (keyValue_map.containsKey("type")) {
                     String val = keyValue_map.get("type");
                     if (val.equals("multipolygon")) {
-                        Path2D path = PathCreater.createMultipolygon(memberReferences, wayId_map);
+                        Path2D path = PathCreater.createMultipolygon(memberReferences, wayId_longMap);
                         if(path == null) return;
                         if (keyValue_map.containsKey("building"))
                             buildingTree.insert(new Multipolygon(path, fetchOSMLayer(), "building"));
@@ -242,7 +244,7 @@ public class OSMHandler extends DefaultHandler {
                                 quadTree.insert(new Natural(path, fetchOSMLayer(), "water"));*/
                         //TODO How do draw harbor.
                     } if (val.equals("boundary")){
-                        Path2D path = PathCreater.createMultipolygon(memberReferences, wayId_map);
+                        Path2D path = PathCreater.createMultipolygon(memberReferences, wayId_longMap);
                         if(path == null) return;
                         String name = keyValue_map.get("name");
                         if(name == null) return;
@@ -308,33 +310,13 @@ public class OSMHandler extends DefaultHandler {
                 Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
                 System.out.printf("sorted all addresses, time: %d ms\n", (System.nanoTime() - time) / 1000000);
                 PathCreater.connectCoastlines(bbox);
-                wayId_map.clear();
+                wayId_longMap.clear(); //sets key and value arrays to point to null
                 break;
 
         }
     }
 
-    /**
-     * Sorts the Model.Drawable elements in the drawables list from their layer value.
-     * Takes use of a comparator, which compares their values.
-     */
 
-    protected void sortLayers(List<MapFeature> mapFeatures) {
-        Comparator<MapFeature> comparator = new Comparator<MapFeature>() {
-            @Override
-            /**
-             * Compares two MapFeature objects.
-             * Returns a negative integer, zero, or a positive integer as the first argument
-             * is less than, equal to, or greater than the second.
-             */
-            public int compare(MapFeature o1, MapFeature o2) {
-                if (o1.getLayerVal() < o2.getLayerVal()) return -1;
-                else if (o1.getLayerVal() > o2.getLayerVal()) return 1;
-                return 0;
-            }
-        };
-        Collections.sort(mapFeatures, comparator); //iterative mergesort. ~n*lg(n) comparisons
-    }
 
 
     /**
@@ -377,6 +359,8 @@ public class OSMHandler extends DefaultHandler {
     }
 
 
+
+
     /**
      * Custom comparator that defines how to compare two addresses. Used when sorting a collection of addresses.
      */
@@ -403,8 +387,8 @@ public class OSMHandler extends DefaultHandler {
     }
 
     public List<Point2D> getWayCoords(){return wayCoords;}
-    public Map<Long,Path2D> getWayIdMap(){return wayId_map;}
-    public Map<Long, Point2D> getNodeMap(){return node_map;}
+    public LongHashMap<Path2D> getWayIdMap(){return wayId_longMap;}
+    public LongHashMap<Point2D> getNodeMap(){return node_longMap;}
 
     public void setQuadTrees(List<QuadTree> quadTrees) {
         this.streetTree = quadTrees.get(0);

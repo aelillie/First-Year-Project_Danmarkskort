@@ -14,7 +14,7 @@ public abstract class MapFeature implements Serializable, MapData {
     protected Path2D way;
     protected int layer_value;
     protected String value;
-    protected boolean isArea = false;
+    protected Boolean isArea = false;
     protected ValueName valueName;
 
     public MapFeature(Path2D way, int layer_value, String value) {

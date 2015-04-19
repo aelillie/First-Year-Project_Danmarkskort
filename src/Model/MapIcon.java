@@ -12,7 +12,6 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.net.URL;
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -187,6 +186,8 @@ public class MapIcon implements Serializable, MapData {
         return getIconState(this.imgPath);
     }
 
-
+    public int getLayerVal(){
+        return 100;
+    }
 }
 

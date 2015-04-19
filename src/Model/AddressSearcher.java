@@ -2,7 +2,6 @@ package Model;
 
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.List;
 import java.util.Map;
 
 /**
@@ -52,10 +51,10 @@ public class AddressSearcher {
     public static Address[] searchForAddresses(Address addressInput, ArrayList<Address> addressList, Map<Address, Point2D> addressMap, int type){
         int[] range = multipleEntriesSearch(addressInput, addressList,type); //search for one or multiple entries
         if(range == null) { //If it is not found, the return value will be negative
-            System.out.println("Too bad - didn't find!");
+
             return null;
         } else {
-            System.out.println("Congratulations! Found something!");
+
             int lowerBound = range[0], upperBound = range[1];
             //System.out.printf("low: "+lowerBound + ", high: "+upperBound);
             Address[] results = new Address[upperBound-lowerBound+1];

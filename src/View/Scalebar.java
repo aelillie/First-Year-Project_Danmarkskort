@@ -42,7 +42,7 @@ public class Scalebar {
         lineEnd = new Point2D.Float(view.getWidth()-100,view.getContentPane().getHeight()-13); //The endpoint is static
 
         double lineWidth = lineEnd.getX()-lineStart.getX();
-        g.setColor(DrawAttribute.fadewhite);
+            g.setColor(DrawAttribute.fadewhite);
         Double x = lineStart.getX() - 95;
         Double y = lineStart.getY() - 13;
         Double line = lineWidth + 115;
