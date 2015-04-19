@@ -1,0 +1,74 @@
+Group G v0.8
+==================
+
+Features added since v0.7:
+*Upon choosing an address, the view now zooms in on the chosen point.
+*Shows name of street closest to mouse
+*.jar file now works properly with mapIcons
+*Address search in routepanel in beta-version (not working entirely as intended yet, and the code contains some duplication)
+*Implemented a more efficient data structure for a mapping from Long to a Value, saving memory and some load time
+
+“Features” discovered/added since v0.7:
+*First time selecting the endpoint in Route Panel the prompt text won’t go away.
+*Icon menu doesn’t reposition properly.
+
+
+Time usage in man hours:
+Address search in Routepanel			18 hours
+Address Search navigation		 	 3   hours
+QuadTree				 	 3   hours
+Restructuring how MapIcons works 	 	 7   hours
+Tests					 	 2   hours
+Improving nearest Neighbor.		 	 2   hours
+Started working on Shortest Path feature	20   hours
+Implemented LongHashMap				 1 hour
+Lecture						10 hours
+Group presentations				10 hours
+
+
+Cumulative cost so far: (1h = DKK 625)
+Lectures:                	21.875,-
+Meetings:                	 7.187,-
+Code review:            	15.625,-
+"Homework":			15.625,-
+GUI				45.935,-
+Code trimming:			 3.125,-
+Address search	 	 	35.625,-
+OSM layers			13.125,-
+Road names 		 	 8.125,-
+Binary save/load		 6.875,- 
+Visualisation 			29.250,-
+Restructuring 			45.625,-
+Workshop			12.500,-
+Report writing			10.625,-
+Address searching	  	 7.500,-
+Coastlines		 	26.875,-
+Mercator projection 		 2.500,-
+Load files from program 	 4.375,-
+Self-contained jar		 9.375,-
+Zoomlevel 			 3.125,-
+Group presentations		12.500,-
+Maptypes			 1.875,-
+Scalebar			 6.250,-
+Tests 				18.750,-
+Quadtree                        18.125,-
+Strokewidth 			 5.000,-
+Nearest neighbor		 4.375,-
+LoadingScreen		 	 1.875,-
+Keybordnavigation		 3.125,-
+Shortest path			12.500,-
+
+
+
+Wishlist for v0.9:
+*Working dijkstra Shortest Path
+
+
+Feedback Request:
+*Dijkstra’s shortest path algorithm requires a graph as input. So it’s right to assume that the entire graph structure must already be constructed, built up by vertices and edges, before running the algorithm, right?
+
+
+
+
+
+
