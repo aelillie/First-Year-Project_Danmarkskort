@@ -657,6 +657,10 @@ public class View extends JFrame implements Observer {
         repaint();
     }
 
+    public void updateStreet(){
+        canvas.updateStreetName();
+    }
+
     public void toggleTestMode(){
         bounds.toggleTestMode();
     }
@@ -694,6 +698,11 @@ public class View extends JFrame implements Observer {
 
         for (MapData mp : node) {
             if (mp instanceof Highway) {
+                if(((Highway) mp).getValue().equals("footway") || ((Highway) mp).getValue().equals("cycleway") ||
+                        ((Highway) mp).getValue().equals("steps") ||
+                        ((Highway) mp).getValue().equals("path") ||
+                        ((Highway) mp).getValue().equals("bridleway"))
+                    continue;
                 MapFeature highway = (MapFeature) mp;
                 double[] points = new double[6];
                 PathIterator pI = highway.getWay().getPathIterator(transform);
@@ -770,10 +779,11 @@ public class View extends JFrame implements Observer {
         private ArrayList<MapFeature> mapFAreas = new ArrayList<>();
         private ArrayList<MapIcon> mapIcons = new ArrayList<>();
         private DrawAttribute drawAttribute;
+        private Graphics2D g;
 
         @Override
         public void paint(Graphics _g) {
-            Graphics2D g = (Graphics2D) _g;
+            g = (Graphics2D) _g;
             getData();
 
             //Set the Transform for Graphic2D element before drawing.
@@ -929,18 +939,7 @@ public class View extends JFrame implements Observer {
             g.fill(zoomInOutArea);
             g.fill(fullscreenArea);
             g.fill(mapTypeButtonArea);
-            g.setColor(DrawAttribute.fadewhite);
-            Rectangle2D streetArea = new Rectangle2D.Double(getRootPane().getContentPane().getWidth() * 0.01,
-                    getRootPane().getContentPane().getHeight() - 26,
-                    150,
-                    20);
-            g.fill(streetArea);
-            if(nearestNeighbor != null && nearestNeighbor.getStreetName() != null) {
-
-                g.setColor(Color.black);
-                g.drawString(nearestNeighbor.getStreetName(), (int) (getRootPane().getContentPane().getWidth() * 0.01),
-                        getRootPane().getContentPane().getHeight() - 10);
-            }
+            updateStreetName();
 
         }
 
@@ -982,6 +981,21 @@ public class View extends JFrame implements Observer {
 
         private void setDrawAttribute(ValueName valueName) {
             drawAttribute = drawAttributeManager.getDrawAttribute(valueName);
+        }
+
+        private void updateStreetName(){
+            g.setColor(DrawAttribute.fadewhite);
+            Rectangle2D streetArea = new Rectangle2D.Double(getRootPane().getContentPane().getWidth() * 0.01,
+                    getRootPane().getContentPane().getHeight() - 26,
+                    150,
+                    20);
+            g.fill(streetArea);
+            if(nearestNeighbor != null && nearestNeighbor.getStreetName() != null) {
+
+                g.setColor(Color.black);
+                g.drawString(nearestNeighbor.getStreetName(), (int) (getRootPane().getContentPane().getWidth() * 0.01),
+                        getRootPane().getContentPane().getHeight() - 10);
+            }
         }
     }
 
