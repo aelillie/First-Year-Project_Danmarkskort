@@ -43,16 +43,8 @@ public class View extends JFrame implements Observer {
     private JScrollPane resultStartPane = new JScrollPane();
     private JScrollPane resultEndPane = new JScrollPane();
     private JList<Address> addressSearchResults;
-    private JList<Address> addressSearchStartResults;
-    private JList<Address> addressSearchEndResults;
-
-    private List<Path2D> currentStreetLocations = null;
-    private Point2D currentAddressLocation = null;
-    private Path2D currentBoundaryLocation = null;
 
     private Map<String,MapPointer> addressPointerMap = new HashMap<>();
-    private Point2D currentStartAddress = null; //TODO: Start and end address
-    private Point2D currentEndAddress = null;
 
     private boolean isFullscreen = false;
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -996,10 +988,6 @@ public class View extends JFrame implements Observer {
     public Model getModel(){return model;}
 
     public JList<Address> getAddressSearchResults() { return addressSearchResults; }
-
-    public JList<Address> getAddressSearchStartResults() { return  addressSearchStartResults;}
-
-    public JList<Address> getAddressSearchEndResults() { return addressSearchEndResults; }
 
     public JScrollPane getResultEndPane() {return resultEndPane;}
 
