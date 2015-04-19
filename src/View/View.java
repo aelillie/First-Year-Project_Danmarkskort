@@ -133,7 +133,7 @@ public class View extends JFrame implements Observer {
         double yscale = height / model.getBbox().getHeight();
 
         double scale = max(xscale, yscale);
-        System.out.println(scale);
+
         adjustZoomLvl(scale);
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
 
@@ -685,7 +685,7 @@ public class View extends JFrame implements Observer {
         if(zoomLevel < 11) return;
 
         Insets x = getInsets();
-        position.setLocation(position.getX() + x.left - x.right, position.getY()-x.top + x.bottom);
+        position.setLocation(position.getX(), position.getY()-x.top + x.bottom);
 
         ArrayList<MapData> node = model.getVisibleStreets(bounds.getBounds());
 
