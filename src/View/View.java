@@ -285,7 +285,7 @@ public class View extends JFrame implements Observer {
         resultEndPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
         resultEndPane.getViewport().setBackground(Color.WHITE);
         resultEndPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        resultEndPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchEndResults,routePanel.getEndAddressField(),resultEndPane));
+        resultEndPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this, model, addressSearchEndResults, routePanel.getEndAddressField(), resultEndPane));
     }
 
 
@@ -657,10 +657,6 @@ public class View extends JFrame implements Observer {
         repaint();
     }
 
-    public void updateStreet(){
-        canvas.updateStreetName();
-    }
-
     public void toggleTestMode(){
         bounds.toggleTestMode();
     }
@@ -689,7 +685,7 @@ public class View extends JFrame implements Observer {
         if(zoomLevel < 11) return;
 
         Insets x = getInsets();
-        position.setLocation(position.getX() + x.left - x.right, position.getY()-x.top + x.bottom );
+        position.setLocation(position.getX() + x.left - x.right, position.getY()-x.top + x.bottom);
 
         ArrayList<MapData> node = model.getVisibleStreets(bounds.getBounds());
 
@@ -729,6 +725,7 @@ public class View extends JFrame implements Observer {
             }
         }
         nearestNeighbor = (Highway) champion;
+        repaint();
     }
 
     /**
