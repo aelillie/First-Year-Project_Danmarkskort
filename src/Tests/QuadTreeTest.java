@@ -48,10 +48,10 @@ public class QuadTreeTest {
         paths.add(PathCreater.createWay(points.subList(4,6)));
         paths.add(PathCreater.createWay(points.subList(7,8)));
 
-        MapFeature mf1 = new Highway(paths.get(0), 0, "road", false);
-        MapFeature mf2 = new Highway(paths.get(1), 0, "trunk", false);
+        MapFeature mf1 = new Highway(paths.get(0), 0, "road", false, "vej1");
+        MapFeature mf2 = new Highway(paths.get(1), 0, "trunk", false, "vej2");
         MapFeature mf3 = new Building(paths.get(2), 0, "building");
-        MapFeature mf4 = new Highway(paths.get(3), 0, "footway", false);
+        MapFeature mf4 = new Highway(paths.get(3), 0, "footway", false, "vej3");
         MapIcon mI1 = new MapIcon(new Point2D.Float(10,10),"parkingIcon");
 
         quadTree.insert(mf1);
@@ -81,7 +81,7 @@ public class QuadTreeTest {
             points.clear();
             points.add(new Point2D.Float((i*4%50) + 50, i%50));
             points.add(new Point2D.Float((i*10/2%50) + 50, i/2%50));
-            quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false));
+            quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false, "vej5"));
         }
 
         List<MapData> Data = quadTree.query2D(new Rectangle2D.Float(51,1,100,49));
@@ -105,7 +105,7 @@ public class QuadTreeTest {
                 points.clear();
                 points.add(new Point2D.Float((i * 4 % 100) + 50, i % 100));
                 points.add(new Point2D.Float((i * 10 / 2 % 100) + 50, i / 2 % 100));
-                quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false));
+                quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false, "vej6"));
             }else{
                 quadTree.insert(new MapIcon(new Point2D.Float((i * 4 % 100) + 50, i % 100), "busIcon"));
             }
@@ -125,7 +125,7 @@ public class QuadTreeTest {
                 points.clear();
                 points.add(new Point2D.Float((i * 4 % 200) + 50, i % 200));
                 points.add(new Point2D.Float((i * 10 / 2 % 200) + 50, i / 2 % 200));
-                quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false));
+                quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false, "vej8"));
             }else{
                 quadTree.insert(new MapIcon(new Point2D.Float((i * 4 % 200) + 50, i % 200),"busIcon"));
             }

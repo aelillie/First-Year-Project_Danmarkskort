@@ -6,9 +6,12 @@ import Model.ValueName;
 import java.awt.geom.Path2D;
 
 public class Highway extends MapFeature {
-    public Highway(Path2D way, int layer_value, String value, boolean isArea) {
+    private String streetName;
+    public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName) {
         super(way, layer_value, value);
         this.isArea = isArea;
+        if(streetName != null)
+            this.streetName = streetName.intern();
     }
 
 
@@ -46,5 +49,9 @@ public class Highway extends MapFeature {
         else if (value.equals("steps")) setValueName(ValueName.STEPS);
         else if (value.equals("path")) setValueName(ValueName.PATH);
         else setValueName(ValueName.HIGHWAY);
+    }
+
+    public String getStreetName(){
+        return streetName;
     }
 }

@@ -22,7 +22,7 @@ public class OSMHandler extends DefaultHandler {
     private LongHashMap<Path2D> wayId_longMap; //Map of ways and their id's
 
     //Contains relevant places parsed as address objects linked to their coordinate.
-    private Map<Address,Point2D> addressMap;
+    private Map<Address, Point2D> addressMap;
     private Map<Address, List<Path2D>> streetMap;
     private Map<Address, Path2D> boundaryMap;
 
@@ -204,7 +204,10 @@ public class OSMHandler extends DefaultHandler {
                     //quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary"))); //Appears in <relation
 
                 }
-                else if (keyValue_map.containsKey("highway")) streetTree.insert(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea));
+                else if (keyValue_map.containsKey("highway")){
+                    streetTree.insert(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name")));
+
+                }
                 else if (keyValue_map.containsKey("railway")) streetTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  streetTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
                 if (keyValue_map.containsKey("name")) {

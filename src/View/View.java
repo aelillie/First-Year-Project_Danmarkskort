@@ -26,7 +26,7 @@ public class View extends JFrame implements Observer {
     private Model model;
     private Canvas canvas;
     private AffineTransform transform;
-    private MapFeature nearestNeighbor;
+    private Highway nearestNeighbor;
     private CanvasBounds bounds;
     private boolean antialias = true, showGrid = false;
     private Point dragEndScreen, dragStartScreen;
@@ -719,8 +719,7 @@ public class View extends JFrame implements Observer {
                 }
             }
         }
-        nearestNeighbor = champion;
-
+        nearestNeighbor = (Highway) champion;
     }
 
     /**
@@ -930,6 +929,18 @@ public class View extends JFrame implements Observer {
             g.fill(zoomInOutArea);
             g.fill(fullscreenArea);
             g.fill(mapTypeButtonArea);
+            g.setColor(DrawAttribute.fadewhite);
+            Rectangle2D streetArea = new Rectangle2D.Double(getRootPane().getContentPane().getWidth() * 0.01,
+                    getRootPane().getContentPane().getHeight() - 26,
+                    150,
+                    20);
+            g.fill(streetArea);
+            if(nearestNeighbor != null && nearestNeighbor.getStreetName() != null) {
+
+                g.setColor(Color.black);
+                g.drawString(nearestNeighbor.getStreetName(), (int) (getRootPane().getContentPane().getWidth() * 0.01),
+                        getRootPane().getContentPane().getHeight() - 10);
+            }
 
         }
 

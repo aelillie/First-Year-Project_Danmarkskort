@@ -101,7 +101,6 @@ public class Controller extends MouseAdapter implements ActionListener {
         }
         public void mouseClicked(MouseEvent e) {
             view.findNearest(e.getPoint());
-            System.out.println("done");
             view.repaint();
         }
         public void mouseEntered(MouseEvent e) {}
