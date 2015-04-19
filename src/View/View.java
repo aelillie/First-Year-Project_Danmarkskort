@@ -266,29 +266,16 @@ public class View extends JFrame implements Observer {
         resultPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchResults,searchArea,resultPane));
     }
 
-    public void addToResultStartPane(Address[] resultArray){
-        addressSearchStartResults = new JList<>(resultArray);
-        resultStartPane.setVisible(true);
-        resultStartPane.setViewportView(addressSearchStartResults);
-        resultStartPane.setBounds(68, 162, 266, 100);
-        resultStartPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
-        resultStartPane.getViewport().setBackground(Color.WHITE);
-        resultStartPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        resultStartPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchStartResults,routePanel.getStartAddressField(),resultStartPane));
+    public void addToResultPane(Address[] resultsArray, JTextField textfield, JScrollPane scrollPane, Rectangle bounds){
+        addressSearchResults = new JList<>(resultsArray);
+        scrollPane.setVisible(true);
+        scrollPane.setViewportView(addressSearchResults);
+        scrollPane.setBounds(bounds);
+        scrollPane.setBorder(new MatteBorder(0,1,1,1,Color.DARK_GRAY));
+        scrollPane.getViewport().setBackground(Color.WHITE);
+        scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchResults,textfield,scrollPane));
     }
-
-    public void addToResultEndPane(Address[] resultArray){
-        addressSearchEndResults = new JList<>(resultArray);
-        resultEndPane.setVisible(true);
-        resultEndPane.setViewportView(addressSearchEndResults);
-        resultEndPane.setBounds(68, 205, 266, 100);
-        resultEndPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
-        resultEndPane.getViewport().setBackground(Color.WHITE);
-        resultEndPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        resultEndPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this, model, addressSearchEndResults, routePanel.getEndAddressField(), resultEndPane));
-    }
-
-
 
     private void makeMapTypeButton(){
         Dimension preferred = getPreferredSize();

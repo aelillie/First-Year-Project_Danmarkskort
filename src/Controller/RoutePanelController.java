@@ -10,16 +10,17 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.util.HashMap;
+import java.util.Map;
 
-/**
- * Created by Kevin on 16-03-2015.
- */
+
 public class RoutePanelController implements ActionListener{
     private RouteView routeView;
     private JTextField endAddressField;
     private JTextField startAddressField;
     private JScrollPane startAddrScrollpane;
     private JScrollPane endAddrScrollpane;
+    private Map<JTextField, Rectangle> textfieldToBounds;
 
     private View view;
     private int selectedNr = -1;
@@ -33,7 +34,15 @@ public class RoutePanelController implements ActionListener{
         startAddrScrollpane = view.getResultStartPane();
         endAddrScrollpane = view.getResultEndPane();
         this.routeView = routeView;
+        setScrollpaneBounds();
         setHandlers();
+
+    }
+
+    private void setScrollpaneBounds(){
+        textfieldToBounds = new HashMap<>();
+        textfieldToBounds.put(startAddressField,new Rectangle(68,162,266,100));
+        textfieldToBounds.put(endAddressField, new Rectangle(68,205,266,100));
     }
 
     private void setHandlers(){
@@ -115,8 +124,7 @@ public class RoutePanelController implements ActionListener{
             if(address == null) return null;
             Address[] results = model.searchForAddresses(address, type);
             if(results != null) {
-                if(textField.equals(startAddressField)) view.addToResultStartPane(results);
-                else if (textField.equals(endAddressField)) view.addToResultEndPane(results);
+                view.addToResultPane(results,textField,scrollPane,textfieldToBounds.get(textField));
             }
             else view.getResultPane().setVisible(false);
             return results;
