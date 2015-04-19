@@ -56,6 +56,13 @@ public class PathCreater {
         return way;
     }
 
+    public static Path2D createWay(Point2D point1, Point2D point2) {
+        Path2D way = new Path2D.Float();
+        way.moveTo(point1.getX(), point1.getY());
+        way.lineTo(point2.getX(), point2.getY());
+        return way;
+    }
+
     public static void processCoastlines(Path2D coastPath, Point2D startPoint, Point2D endPoint) {
         Coastline currentCoastline = new Coastline(coastPath, startPoint, endPoint, -2, "coastline");
 

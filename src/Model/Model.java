@@ -3,6 +3,7 @@ package Model;
 import MapFeatures.Coastline;
 import QuadTree.QuadTree;
 import ShortestPath.DirectedEdge;
+import ShortestPath.EdgeWeightedDigraph;
 import ShortestPath.Vertices;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
@@ -105,8 +106,8 @@ public class Model extends Observable implements Serializable {
         if(index < 0) { //If it is not found the return value will be negative
             System.out.println("Too bad - didn't find!");
         } else {
-            Model.Address foundAddr = addressList.get(index);
-            Point2D coordinate = addressMap.get(foundAddr);
+            Model.Address foundAddr = addressList.getIndex(index);
+            Point2D coordinate = addressMap.getIndex(foundAddr);
             System.out.println("x = " + coordinate.getX() + ", y = " +coordinate.getY());
         } //if multiple results ... suggest these
     }*/
@@ -174,4 +175,7 @@ public class Model extends Observable implements Serializable {
         OSMReader.sortLayers(mapFeatures);
     }
 
+    public EdgeWeightedDigraph getDiGraph() {
+        return OSMReader.getDiGraph();
+    }
 }

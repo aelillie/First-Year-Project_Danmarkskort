@@ -4,7 +4,7 @@ import Controller.SearchResultMouseHandler;
 import MapFeatures.Bounds;
 import MapFeatures.Highway;
 import Model.*;
-import ShortestPath.EdgeWeightedDigraph;
+import ShortestPath.DirectedEdge;
 import ShortestPath.ShortestPath;
 
 import javax.swing.*;
@@ -48,6 +48,8 @@ public class View extends JFrame implements Observer {
     private List<Path2D> currentStreetLocations;
     private Point2D currentAddressLocation;
     private Path2D currentBoundaryLocation;
+
+    private Iterable<DirectedEdge> shortestPath;
 
     private boolean isFullscreen = false;
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -100,8 +102,10 @@ public class View extends JFrame implements Observer {
     }
 
     public void findPath() {
-        EdgeWeightedDigraph G = new EdgeWeightedDigraph(model.getVertices().V());
-        ShortestPath shortestPath = new ShortestPath(G, 10);
+        //TODO Is not done. Functions as a test when pressed "l"
+        ShortestPath pathTree = new ShortestPath(model.getDiGraph(), 0);
+        shortestPath = pathTree.pathTo(1);
+        repaint();
     }
 
 
@@ -833,9 +837,18 @@ public class View extends JFrame implements Observer {
                 }
             }
 
+            //TODO: Test of shortest path
+            if (shortestPath != null) {
+                g.setColor(DrawAttribute.cl_darkorange);
+                g.setStroke(new BasicStroke(0.00015f));
+                for (DirectedEdge e : shortestPath) {
+                    Path2D path = PathCreater.createWay(e.getVPoint(), e.getWPoint());
+                    g.draw(path);
+                }
+            }
+
 
             //Draws the icons.
-
             if (zoomLevel >= 15) {
                 for (MapIcon mapIcon : mapIcons) {
                     if(mapIcon.isVisible()) {

@@ -1,5 +1,9 @@
 package ShortestPath;
 
+import Model.Model;
+
+import java.awt.geom.Point2D;
+
 /**
  * Created by woozy_000 on 13-04-2015.
  */
@@ -7,6 +11,7 @@ public class DirectedEdge {
     private final int v; //source
     private final int w; //destination
     private final double weight; //eg. distance
+    private Vertices vertices =  Model.getModel().getVertices();
 
     /**
      * Initializes a directed edge from vertex <tt>v</tt> to vertex <tt>w</tt> with
@@ -57,5 +62,13 @@ public class DirectedEdge {
      */
     public String toString() {
         return v + "->" + w + " " + String.format("%5.2f", weight);
+    }
+
+    public Point2D getVPoint() {
+        return vertices.getVertex(v);
+    }
+
+    public Point2D getWPoint() {
+        return vertices.getVertex(w);
     }
 }

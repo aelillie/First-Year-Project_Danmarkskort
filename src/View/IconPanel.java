@@ -42,7 +42,7 @@ public class IconPanel extends JScrollPane {
             JCheckBox checkbox = new JCheckBox("",true);
             IconController controller = new IconController(icons.get(i));
             MapIcon.setIconState(icons.get(i), true);
-            //icons.get(i).setController(controller);
+            //icons.getIndex(i).setController(controller);
             checkbox.addItemListener(controller);
             checkbox.addComponentListener(controller);
             panel.add(checkbox);

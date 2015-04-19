@@ -1,6 +1,10 @@
 package ShortestPath;
 
 
+import MapFeatures.Highway;
+
+import java.util.List;
+
 /**
  * Created by woozy_000 on 13-04-2015.
  */
@@ -9,7 +13,10 @@ public class EdgeWeightedDigraph {
     private int E; //Total amount of edges
     private Bag<DirectedEdge>[] adj; //a bag for each vertex containing adjecent edges
 
-    public EdgeWeightedDigraph(int V) {
+    public EdgeWeightedDigraph() {
+    }
+
+    public void initialize(int V) {
         this.V = V;
         this.E = 0;
         adj = (Bag<DirectedEdge>[]) new Bag[V];
@@ -32,7 +39,14 @@ public class EdgeWeightedDigraph {
             throw new IndexOutOfBoundsException("vertex " + v + " is not between 0 and " + (V-1));
     }
 
-    public void addEdge(DirectedEdge e) {
+    public void addEdges(List<DirectedEdge> directedEdges) {
+        for (DirectedEdge e : directedEdges) {
+            addEdge(e);
+        }
+    }
+
+
+    private void addEdge(DirectedEdge e) {
         int v = e.from();
         int w = e.to();
         validateVertex(v);

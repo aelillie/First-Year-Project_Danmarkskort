@@ -44,7 +44,6 @@ public class OSMHandler extends DefaultHandler {
     private String streetName, houseNumber,cityName, postCode; //address info
     private Point2D startPoint, endPoint; //coastline start point and end point
     private Rectangle2D bbox = new Rectangle2D.Double();
-    private int edgeCounter;
 
 
     public void initializeCollections(){
@@ -59,9 +58,8 @@ public class OSMHandler extends DefaultHandler {
         streetMap = new HashMap<>();
         boundaryMap = new HashMap<>();
         vertices = new Vertices();
-        edgeCounter = 0;
         directedEdges = new ArrayList<>();
-        //diGraph = new EdgeWeightedDigraph();
+        diGraph = new EdgeWeightedDigraph();
     }
 
     /**
@@ -207,21 +205,24 @@ public class OSMHandler extends DefaultHandler {
                     if (keyValue_map.get("amenity").equals("parking")) {
                         iconTree.insert(new MapIcon(way, "parkingIcon"));}
 
-                    //if(keyValue_map.get("amenity").equals("atm")){
+                    //if(keyValue_map.getIndex("amenity").equals("atm")){
                       //  quadTree.insert(new MapIcon(way, MapIcon.atmIcon));}
                 }
                 else if (keyValue_map.containsKey("barrier")) buildingTree.insert(new Barrier(way, fetchOSMLayer(), keyValue_map.get("barrier"), isArea));
                 else if (keyValue_map.containsKey("boundary")){
-                    //quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary"))); //Appears in <relation
+                    //quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.getIndex("boundary"))); //Appears in <relation
 
                 }
                 else if (keyValue_map.containsKey("highway")) {
-                    MapFeature highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea);
+                    Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea);
                     streetTree.insert(highway);
                     vertices.add(startPoint); //intersection in one end
                     vertices.add(endPoint); //intersection in the other end
+                    //highway.setV(vertices.getIndex(startPoint));
+                    //highway.setW(vertices.getIndex(endPoint));
+                    //highway.setWeight(dist(startPoint, endPoint));
                     //add edge between intersections with the distance as weight:
-                    directedEdges.add(new DirectedEdge(vertices.get(startPoint), vertices.get(endPoint), dist(startPoint, endPoint)));
+                    directedEdges.add(new DirectedEdge(vertices.getIndex(startPoint), vertices.getIndex(endPoint), dist(startPoint, endPoint)));
                 }
                 else if (keyValue_map.containsKey("railway")) streetTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  streetTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
@@ -255,7 +256,7 @@ public class OSMHandler extends DefaultHandler {
 
                         }*/
                         /*else if (keyValue_map.containsKey("natural"))
-                            if(keyValue_map.get("natural").equals("water"))
+                            if(keyValue_map.getIndex("natural").equals("water"))
                                 quadTree.insert(new Natural(path, fetchOSMLayer(), "water"));*/
                         //TODO How do draw harbor.
                     } if (val.equals("boundary")){
@@ -325,10 +326,19 @@ public class OSMHandler extends DefaultHandler {
                 Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
                 System.out.printf("sorted all addresses, time: %d ms\n", (System.nanoTime() - time) / 1000000);
                 PathCreater.connectCoastlines(bbox);
+                vertices.createVertexIndex();
+                diGraph.initialize(vertices.V());
+                //diGraph.addEdges(streetEdges());
+                diGraph.addEdges(directedEdges);
                 wayId_map.clear();
+                node_map.clear();
                 break;
 
         }
+    }
+
+    private List<MapData> streetEdges() {
+        return streetTree.query2D(bbox);
     }
 
     private double dist(Point2D startPoint, Point2D endPoint) {
@@ -477,5 +487,9 @@ public class OSMHandler extends DefaultHandler {
 
     public List<DirectedEdge> getDirectedEdges() {
         return directedEdges;
+    }
+
+    public EdgeWeightedDigraph getDiGraph() {
+        return diGraph;
     }
 }
