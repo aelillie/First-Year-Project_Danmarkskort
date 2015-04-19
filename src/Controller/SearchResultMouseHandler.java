@@ -30,13 +30,15 @@ public class SearchResultMouseHandler extends MouseAdapter{
     private JList<Address> searchResults;
     private JTextField textField;
     private JScrollPane scrollPane;
+    private String iconType;
 
-    public SearchResultMouseHandler(View view, Model model, JList<Address> searchResults, JTextField textField, JScrollPane scrollPane) {
+    public SearchResultMouseHandler(View view, Model model, JList<Address> searchResults, JTextField textField, JScrollPane scrollPane, String iconType) {
         this.view = view;
         this.model = model;
         this.searchResults = searchResults;
         this.textField = textField;
         this.scrollPane = scrollPane;
+        this.iconType = iconType;
     }
 
     @Override
@@ -44,11 +46,11 @@ public class SearchResultMouseHandler extends MouseAdapter{
         Address selectedItem = searchResults.getSelectedValue();
         textField.setText(selectedItem.toString());
         view.getCanvas().requestFocusInWindow();
-        getAddressLocation(selectedItem, model, view);
+        getAddressLocation(selectedItem, model, view,iconType);
         scrollPane.setVisible(false);
     }
 
-    public static void getAddressLocation(Address selectedAddr, Model m, View v){
+    public static void getAddressLocation(Address selectedAddr, Model m, View v, String iconType){
         Map<Address, Point2D> addressMap = m.getOSMReader().getAddressMap();
         Map<Address, List<Path2D>> streetMap = m.getOSMReader().getStreetMap();
         Map<Address, Path2D> boundaryMap = m.getOSMReader().getBoundaryMap();
@@ -59,17 +61,17 @@ public class SearchResultMouseHandler extends MouseAdapter{
 
         if(addressLocation == null && boundaryLocation == null) {
             v.zoomOnStreet(streetLocation);
-            v.setCurrentStreet(streetLocation);
             Point2D middlePoint = getMiddlePoint(streetLocation);
+            v.addPointer(new MapPointer(streetLocation,iconType));
             v.searchResultChosen(middlePoint.getX(),middlePoint.getY());
 
         } else if(boundaryLocation == null && streetLocation == null){
             v.zoomOnAddress();
-            v.setCurrentAddress(addressLocation);
+            v.addPointer(new MapPointer(addressLocation,iconType));
             v.searchResultChosen(addressLocation.getX(), addressLocation.getY());
 
         } else if(streetLocation == null && addressLocation == null){
-            v.setCurrentBoundaryLocation(boundaryLocation);
+            v.addPointer(new MapPointer(boundaryLocation,iconType));
             v.searchResultChosen(boundaryLocation.getBounds().getCenterX(),boundaryLocation.getBounds().getCenterY());
         }
     }

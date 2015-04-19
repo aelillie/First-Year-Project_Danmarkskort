@@ -23,6 +23,7 @@ public class MapPointer {
     private Point2D addressLocation;
     private Path2D boundaryLocation;
     private BufferedImage img;
+    private String type;
 
     private Point2D pointerLocation;
 
@@ -41,18 +42,20 @@ public class MapPointer {
         this.streetLocation = streetLocation;
         imgPath = pointerIconURLs.get(type);
         pointerLocation = getMiddlePoint(streetLocation);
+        this.type = type;
     }
 
     public MapPointer(Point2D addressLocation, String type){
         this.addressLocation = addressLocation;
         imgPath = pointerIconURLs.get(type);
         pointerLocation = addressLocation;
-
+        this.type = type;
     }
 
     public MapPointer(Path2D boundaryLocation, String type){
         this.boundaryLocation = boundaryLocation;
         imgPath = pointerIconURLs.get(type);
+        this.type = type;
     }
 
     private static Point2D getMiddlePoint(List<Path2D> street){
@@ -72,25 +75,40 @@ public class MapPointer {
     }
 
     public void draw(Graphics2D g, AffineTransform transform){
+        if(streetLocation != null) drawStreetLocation(g);
+        else drawPointer(g,transform);
+    }
+
+
+    private void drawStreetLocation(Graphics2D g){
+        for(Path2D street : streetLocation) {
+            g.setStroke(new BasicStroke(0.000035f)); //TODO: Varying stroke and color according to drawattribute
+            g.setColor(DrawAttribute.cl_red);
+            g.draw(street);
+        }
+    }
+
+    private void drawPointer(Graphics2D g, AffineTransform transform){
         try{
             if(img == null)
                 img = ImageIO.read(imgPath);
         } catch(IOException e){
             e.printStackTrace();
         }
-        double x = 0;
-        double y = 0;
 
         double height = (img.getHeight()/transform.getScaleY());
         double width = (img.getWidth()/transform.getScaleX())/2;
-        x = pointerLocation.getX() - width;
-        y = pointerLocation.getY()- height;
+        double x = pointerLocation.getX() - width;
+        double y = pointerLocation.getY()- height;
 
         AffineTransform it = AffineTransform.getTranslateInstance(x, y);
         it.scale((1 / transform.getScaleX()), (1 / transform.getScaleY())); //Sets off against the transform of the context, scaling the transform of the icon accordingly.
         g.drawImage(img, it, null);
     }
 
+    public String getType(){
+        return type;
+    }
 
 
 }

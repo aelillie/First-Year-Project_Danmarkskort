@@ -21,6 +21,7 @@ public class RoutePanelController implements ActionListener{
     private JScrollPane startAddrScrollpane;
     private JScrollPane endAddrScrollpane;
     private Map<JTextField, Rectangle> textfieldToBounds;
+    private static Map<JTextField, String> textFieldToIconType;
 
     private View view;
     private int selectedNr = -1;
@@ -34,15 +35,19 @@ public class RoutePanelController implements ActionListener{
         startAddrScrollpane = view.getResultStartPane();
         endAddrScrollpane = view.getResultEndPane();
         this.routeView = routeView;
-        setScrollpaneBounds();
+        setScrollpaneBoundsAndIcon();
         setHandlers();
 
     }
 
-    private void setScrollpaneBounds(){
+
+    private void setScrollpaneBoundsAndIcon(){
         textfieldToBounds = new HashMap<>();
         textfieldToBounds.put(startAddressField,new Rectangle(68,162,266,100));
         textfieldToBounds.put(endAddressField, new Rectangle(68,205,266,100));
+        textFieldToIconType = new HashMap<>();
+        textFieldToIconType.put(startAddressField, "startPointIcon".intern());
+        textFieldToIconType.put(endAddressField, "endPointIcon".intern());
     }
 
     private void setHandlers(){
@@ -115,7 +120,7 @@ public class RoutePanelController implements ActionListener{
         if(input.length() < 3){
             if(input.equals("") && input != null) {
                 scrollPane.setVisible(false);
-                view.setCurrentAddress(null);
+                view.removePointer(textFieldToIconType.get(textField));
             }
             return null;
         } else {
@@ -124,7 +129,7 @@ public class RoutePanelController implements ActionListener{
             if(address == null) return null;
             Address[] results = model.searchForAddresses(address, type);
             if(results != null) {
-                view.addToResultPane(results,textField,scrollPane,textfieldToBounds.get(textField));
+                view.addToResultPane(results,textField,scrollPane,textfieldToBounds.get(textField),textFieldToIconType.get(textField));
             }
             else view.getResultPane().setVisible(false);
             return results;
@@ -163,7 +168,7 @@ public class RoutePanelController implements ActionListener{
 
                 Address[] results = addressSearch(2,textField,resultPane);
                 if (results != null) {
-                    if (results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view);
+                    if (results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view,textFieldToIconType.get(textField));
                     resultPane.setVisible(false);
                     view.getCanvas().requestFocusInWindow();
                 } else {

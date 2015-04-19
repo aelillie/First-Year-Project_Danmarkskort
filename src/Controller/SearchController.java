@@ -37,20 +37,17 @@ public class SearchController extends MouseAdapter implements ActionListener {
 
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if (command.equals("search")) {
+        if (command.equals("search")) { //When the search button is clicked
             Address[] results = addressSearch(2);
             if(results != null) {
-                if(results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view);
+                if(results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view,"chosenAddressIcon");
                 view.getResultPane().setVisible(false);
                 view.getCanvas().requestFocusInWindow();
             } else {
                 addressSearch(1);
                 view.getCanvas().requestFocusInWindow();
             }
-            /*Address[] results = addressSearch(2);
-            //if(results == null) addressSearch(1);
-            //view.getCanvas().requestFocusInWindow();*/
-        } //When the search button is clicked
+        }
     }
 
 
@@ -79,7 +76,7 @@ public class SearchController extends MouseAdapter implements ActionListener {
         if(input.length() < 3){
             if(input.equals("") && input != null) {
                 view.getResultPane().setVisible(false);
-                view.setCurrentAddress(null);
+                view.removePointer("chosenAddressIcon");
             }
             return null;
         } else {
@@ -111,7 +108,7 @@ public class SearchController extends MouseAdapter implements ActionListener {
 
                 Address[] results = addressSearch(2);
                 if (results != null) {
-                    if (results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view);
+                    if (results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view, "chosenAddressIcon");
                     view.getResultPane().setVisible(false);
                     view.getCanvas().requestFocusInWindow();
                 } else {

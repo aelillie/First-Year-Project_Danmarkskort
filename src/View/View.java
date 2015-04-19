@@ -14,10 +14,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
-import java.util.ArrayList;
+import java.util.*;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import static java.lang.Math.max;
 
@@ -52,6 +50,7 @@ public class View extends JFrame implements Observer {
     private Point2D currentAddressLocation = null;
     private Path2D currentBoundaryLocation = null;
 
+    private Map<String,MapPointer> addressPointerMap = new HashMap<>();
     private Point2D currentStartAddress = null; //TODO: Start and end address
     private Point2D currentEndAddress = null;
 
@@ -248,12 +247,6 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
-    private void makeResultPane(){
-        resultPane = new JScrollPane();
-
-       //resultPane.setBounds(26,52,286,200);
-
-    }
 
     public void addToResultPane(Address[] resultArray){
         addressSearchResults = new JList<>(resultArray);
@@ -263,10 +256,10 @@ public class View extends JFrame implements Observer {
         resultPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
         resultPane.getViewport().setBackground(Color.WHITE);
         resultPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        resultPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchResults,searchArea,resultPane));
+        resultPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchResults,searchArea,resultPane,"chosenAddressIcon"));
     }
 
-    public void addToResultPane(Address[] resultsArray, JTextField textfield, JScrollPane scrollPane, Rectangle bounds){
+    public void addToResultPane(Address[] resultsArray, JTextField textfield, JScrollPane scrollPane, Rectangle bounds, String iconType){
         addressSearchResults = new JList<>(resultsArray);
         scrollPane.setVisible(true);
         scrollPane.setViewportView(addressSearchResults);
@@ -274,7 +267,7 @@ public class View extends JFrame implements Observer {
         scrollPane.setBorder(new MatteBorder(0,1,1,1,Color.DARK_GRAY));
         scrollPane.getViewport().setBackground(Color.WHITE);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchResults,textfield,scrollPane));
+        scrollPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchResults,textfield,scrollPane,iconType));
     }
 
     private void makeMapTypeButton(){
@@ -312,6 +305,17 @@ public class View extends JFrame implements Observer {
         showRoutePanelButton.setActionCommand("showRoutePanel");
 
     }
+
+    public void addPointer(MapPointer mapPointer){
+        addressPointerMap.put(mapPointer.getType(),mapPointer);
+        canvas.repaint();
+    }
+
+    public void removePointer(String iconType){
+        addressPointerMap.remove(iconType);
+        canvas.repaint();
+    }
+
 
 
     private void makeFullscreenButton() {
@@ -456,28 +460,6 @@ public class View extends JFrame implements Observer {
     public void panMapCoords(double dx, double dy){
         transform.translate(dx,dy);
         repaint();
-    }
-
-
-    public void setCurrentStreet(List<Path2D> streetLocation){
-        currentAddressLocation = null;
-        currentBoundaryLocation = null;
-        currentStreetLocations = streetLocation;
-        canvas.repaint();
-    }
-
-    public void setCurrentAddress(Point2D addrLocation){
-        currentStreetLocations = null;
-        currentBoundaryLocation = null;
-        currentAddressLocation = addrLocation;
-        canvas.repaint();
-    }
-
-    public void setCurrentBoundaryLocation(Path2D boundaryLocation){
-        currentAddressLocation = null;
-        currentStreetLocations = null;
-        currentBoundaryLocation = boundaryLocation;
-        canvas.repaint();
     }
 
     @Override
@@ -897,20 +879,12 @@ public class View extends JFrame implements Observer {
 
             paintNeighbor(g);
 
-            //Draws chosen searchResult (either street or address)
-            //Current address:
-            if(currentAddressLocation != null){
-                MapIcon currentAddrTag = new MapIcon(currentAddressLocation,"chosenAddressIcon");
-                currentAddrTag.draw(g,transform);
+            //Draws chosen searchResult (either street or address) as well as start or endpoint address
+            for(Map.Entry<String, MapPointer> entry : addressPointerMap.entrySet()) {
+                MapPointer mp = entry.getValue();
+                mp.draw(g,transform);
             }
-            //Current street:
-            if(currentStreetLocations != null){
-                for(Path2D streetLocation : currentStreetLocations) {
-                    g.setStroke(new BasicStroke(0.000035f)); //TODO: Varying stroke and color according to drawattribute
-                    g.setColor(DrawAttribute.cl_red);
-                    g.draw(streetLocation);
-                }
-            }
+
 
             //Transparent GUI elements
             g.setTransform(new AffineTransform());
