@@ -2,6 +2,7 @@ package ShortestPath;
 
 
 import MapFeatures.Highway;
+import Model.MapFeature;
 
 import java.util.List;
 
@@ -11,7 +12,7 @@ import java.util.List;
 public class EdgeWeightedDigraph {
     private int V; //Total amount of vertices
     private int E; //Total amount of edges
-    private Bag<DirectedEdge>[] adj; //a bag for each vertex containing adjecent edges
+    private Bag<Highway>[] adj; //a bag for each vertex containing adjecent edges
 
     public EdgeWeightedDigraph() {
     }
@@ -19,9 +20,9 @@ public class EdgeWeightedDigraph {
     public void initialize(int V) {
         this.V = V;
         this.E = 0;
-        adj = (Bag<DirectedEdge>[]) new Bag[V];
+        adj = (Bag<Highway>[]) new Bag[V];
         for (int v = 0; v < V; v++) {
-            adj[v] = new Bag<DirectedEdge>();
+            adj[v] = new Bag<Highway>();
         }
     }
 
@@ -39,14 +40,14 @@ public class EdgeWeightedDigraph {
             throw new IndexOutOfBoundsException("vertex " + v + " is not between 0 and " + (V-1));
     }
 
-    public void addEdges(List<DirectedEdge> directedEdges) {
-        for (DirectedEdge e : directedEdges) {
+    public void addEdges(List<Highway> directedEdges) {
+        for (Highway e : directedEdges) {
             addEdge(e);
         }
     }
 
 
-    private void addEdge(DirectedEdge e) {
+    private void addEdge(Highway e) {
         int v = e.from();
         int w = e.to();
         validateVertex(v);
@@ -61,7 +62,7 @@ public class EdgeWeightedDigraph {
      * @param v the vertex
      * @throws java.lang.IndexOutOfBoundsException unless 0 <= v < V
      */
-    public Iterable<DirectedEdge> adj(int v) {
+    public Iterable<Highway> adj(int v) {
         validateVertex(v);
         return adj[v];
     }
@@ -84,10 +85,10 @@ public class EdgeWeightedDigraph {
      * <tt>for (DirectedEdge e : G.edges())</tt>.
      * @return all edges in the edge-weighted graph as an Iterable.
      */
-    public Iterable<DirectedEdge> edges() {
-        Bag<DirectedEdge> list = new Bag<DirectedEdge>();
+    public Iterable<Highway> edges() {
+        Bag<Highway> list = new Bag<Highway>();
         for (int v = 0; v < V; v++) {
-            for (DirectedEdge e : adj(v)) {
+            for (Highway e : adj(v)) {
                 list.add(e);
             }
         }
@@ -106,7 +107,7 @@ public class EdgeWeightedDigraph {
         s.append(V + " " + E + NEWLINE);
         for (int v = 0; v < V; v++) {
             s.append(v + ": ");
-            for (DirectedEdge e : adj[v]) {
+            for (Highway e : adj[v]) {
                 s.append(e + "  ");
             }
             s.append(NEWLINE);

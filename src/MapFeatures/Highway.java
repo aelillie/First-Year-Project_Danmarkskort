@@ -1,15 +1,19 @@
 package MapFeatures;
 
 import Model.MapFeature;
+import Model.Model;
 import Model.ValueName;
+import ShortestPath.Vertices;
 
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 
 public class Highway extends MapFeature {
     private int v; //source
     private int w; //destination
     private double weight; //eg. distance
     private String streetName;
+    private Vertices vertices =  Model.getModel().getVertices();
 
     public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName) {
         super(way, layer_value, value);
@@ -69,5 +73,45 @@ public class Highway extends MapFeature {
 
     public String getStreetName(){
         return streetName;
+    }
+
+    /**
+     * Returns the tail vertex of the directed edge.
+     * @return the tail vertex of the directed edge
+     */
+    public int from() {
+        return v;
+    }
+
+    /**
+     * Returns the head vertex of the directed edge.
+     * @return the head vertex of the directed edge
+     */
+    public int to() {
+        return w;
+    }
+
+    /**
+     * Returns the weight of the directed edge.
+     * @return the weight of the directed edge
+     */
+    public double weight() {
+        return weight;
+    }
+
+    /**
+     * Returns a string representation of the directed edge.
+     * @return a string representation of the directed edge
+     */
+    public String toString() {
+        return v + "->" + w + " " + String.format("%5.2f", weight);
+    }
+
+    public Point2D getVPoint() {
+        return vertices.getVertex(v);
+    }
+
+    public Point2D getWPoint() {
+        return vertices.getVertex(w);
     }
 }

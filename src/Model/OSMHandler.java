@@ -2,7 +2,6 @@ package Model;
 
 import MapFeatures.*;
 import QuadTree.QuadTree;
-import ShortestPath.DirectedEdge;
 import ShortestPath.EdgeWeightedDigraph;
 import ShortestPath.Vertices;
 import org.xml.sax.Attributes;
@@ -35,7 +34,6 @@ public class OSMHandler extends DefaultHandler {
     private List<Long> memberReferences; //member referenced in a relation of ways
     private List<Point2D> wayCoords; //List of referenced coordinates used to make up a single way
     private static List<Coastline> coastlines; //List of all of the coastlines to be drawn
-    private List<DirectedEdge> directedEdges;
 
     private Long wayId; //Id of the current way
     private Point2D nodeCoord; //current node's coordinates
@@ -58,7 +56,6 @@ public class OSMHandler extends DefaultHandler {
         streetMap = new HashMap<>();
         boundaryMap = new HashMap<>();
         vertices = new Vertices();
-        directedEdges = new ArrayList<>();
         diGraph = new EdgeWeightedDigraph();
     }
 
@@ -218,12 +215,10 @@ public class OSMHandler extends DefaultHandler {
                     streetTree.insert(highway);
                     vertices.add(startPoint); //intersection in one end
                     vertices.add(endPoint); //intersection in the other end
-                    //vertices.
-                    //highway.setV(vertices.getIndex(startPoint));
-                    //highway.setW(vertices.getIndex(endPoint));
-                    //highway.setWeight(dist(startPoint, endPoint));
                     //add edge between intersections with the distance as weight:
-                    directedEdges.add(new DirectedEdge(vertices.getIndex(startPoint), vertices.getIndex(endPoint), dist(startPoint, endPoint)));
+                    highway.setV(vertices.getIndex(startPoint));
+                    highway.setW(vertices.getIndex(endPoint));
+                    highway.setWeight(dist(startPoint, endPoint));
                 }
                 else if (keyValue_map.containsKey("railway")) railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  railwayTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
@@ -330,16 +325,16 @@ public class OSMHandler extends DefaultHandler {
                 wayId_longMap.clear(); //sets key and value arrays to point to null
                 vertices.createVertexIndex();
                 diGraph.initialize(vertices.V());
-                //diGraph.addEdges(streetEdges());
-                diGraph.addEdges(directedEdges);
+                diGraph.addEdges(streetEdges());
                 node_longMap.clear();
                 break;
 
         }
     }
 
-    private List<MapData> streetEdges() {
-        return streetTree.query2D(bbox);
+    private List<Highway> streetEdges() {
+        List<MapData> mapData = streetTree.query2D(bbox);
+        return (ArrayList<Highway>)(List<?>) mapData;
     }
 
     private double dist(Point2D startPoint, Point2D endPoint) {
@@ -469,9 +464,6 @@ public class OSMHandler extends DefaultHandler {
         return vertices;
     }
 
-    public List<DirectedEdge> getDirectedEdges() {
-        return directedEdges;
-    }
 
     public EdgeWeightedDigraph getDiGraph() {
         return diGraph;

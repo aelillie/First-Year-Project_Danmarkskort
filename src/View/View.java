@@ -5,7 +5,6 @@ import MapFeatures.Bounds;
 import MapFeatures.Highway;
 import MapFeatures.Route;
 import Model.*;
-import ShortestPath.DirectedEdge;
 import ShortestPath.ShortestPath;
 import QuadTree.QuadTree;
 
@@ -48,7 +47,7 @@ public class View extends JFrame implements Observer {
 
     private Map<String,MapPointer> addressPointerMap = new HashMap<>();
 
-    private Iterable<DirectedEdge> shortestPath;
+    private Iterable<Highway> shortestPath;
 
     private boolean isFullscreen = false;
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -279,7 +278,7 @@ public class View extends JFrame implements Observer {
         mapTypeButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("layerIcon")));
         mapTypeButton.setFocusable(false);
         mapTypeButton.setOpaque(false);
-        mapTypeButton.setBackground(new Color(0, 0, 0, 180));
+        mapTypeButton.setBackground(DrawAttribute.fadeblack);
         mapTypeButton.setBorderPainted(false);
         mapTypeButton.setRolloverEnabled(false);
         mapTypeButton.setActionCommand("mapType");
@@ -487,7 +486,7 @@ public class View extends JFrame implements Observer {
             transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
             pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
             checkForZoomOut();
-        }System.out.println("level " +zoomLevel);
+        }System.out.println("level " + zoomLevel);
         System.out.println("factor " + zoomFactor);
     }
 
@@ -859,9 +858,9 @@ public class View extends JFrame implements Observer {
             if (shortestPath != null) {
                 g.setColor(DrawAttribute.cl_darkorange);
                 g.setStroke(new BasicStroke(0.00010f));
-                for (DirectedEdge e : shortestPath) {
-                    Path2D path = PathCreater.createWay(e.getVPoint(), e.getWPoint());
-                    g.draw(path);
+                for (Highway e : shortestPath) {
+                    //Path2D path = PathCreater.createWay(e.getVPoint(), e.getWPoint());
+                    g.draw(e.getWay());
                 }
             }
             g.setColor(Color.BLACK);

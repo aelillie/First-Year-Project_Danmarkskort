@@ -2,7 +2,6 @@ package Model;
 
 import MapFeatures.Coastline;
 import QuadTree.QuadTree;
-import ShortestPath.DirectedEdge;
 import ShortestPath.EdgeWeightedDigraph;
 import ShortestPath.Vertices;
 import org.xml.sax.InputSource;
@@ -173,9 +172,6 @@ public class Model extends Observable implements Serializable {
         return OSMReader.getVertices();
     }
 
-    public List<DirectedEdge> directedEdges() {
-        return getOSMReader().getDirectedEdges();
-    }
 
 
     public EdgeWeightedDigraph getDiGraph() {

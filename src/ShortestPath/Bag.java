@@ -1,14 +1,16 @@
 package ShortestPath;
 
+import MapFeatures.Highway;
+
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
  * Created by woozy_000 on 15-04-2015.
  */
-public class Bag<Item> implements Iterable<Item> {
+public class Bag<Highway> implements Iterable<Highway> {
     private int N;               // number of elements in bag
-    private Node<Item> first;    // beginning of bag
+    private Node<Highway> first;    // beginning of bag
 
     // helper linked list class
     private static class Node<Item> {
@@ -44,9 +46,9 @@ public class Bag<Item> implements Iterable<Item> {
      * Adds the item to this bag.
      * @param item the item to add to this bag
      */
-    public void add(Item item) {
-        Node<Item> oldfirst = first;
-        first = new Node<Item>();
+    public void add(Highway item) {
+        Node<Highway> oldfirst = first;
+        first = new Node<Highway>();
         first.item = item;
         first.next = oldfirst;
         N++;
@@ -57,8 +59,8 @@ public class Bag<Item> implements Iterable<Item> {
      * Returns an iterator that iterates over the items in the bag in arbitrary order.
      * @return an iterator that iterates over the items in the bag in arbitrary order
      */
-    public Iterator<Item> iterator()  {
-        return new ListIterator<Item>(first);
+    public Iterator<Highway> iterator()  {
+        return new ListIterator<Highway>(first);
     }
 
     // an iterator, doesn't implement remove() since it's optional
