@@ -100,9 +100,12 @@ public class View extends JFrame implements Observer {
 
     public void findPath() {
         //TODO Is not done. Functions as a test when pressed "l"
-        int source = 2;
-        int destination = 10;
+        int source = 226;
+        int destination = 532;
         ShortestPath pathTree = new ShortestPath(model.getDiGraph(), source);
+        model.getDiGraph().adj(226).forEach((highway -> {
+            System.out.println(highway.getStreetName());
+        }));
         shortestPath = pathTree.pathTo(destination);
         System.out.println("Distance in km: " + pathTree.distTo(destination));
         repaint();
@@ -860,7 +863,7 @@ public class View extends JFrame implements Observer {
 
             //TODO: Test of shortest path
             if (shortestPath != null) {
-                g.setColor(DrawAttribute.cl_darkorange);
+                g.setColor(DrawAttribute.black);
                 g.setStroke(new BasicStroke(0.00010f));
                 for (Highway e : shortestPath) {
                     //Path2D path = PathCreater.createWay(e.getVPoint(), e.getWPoint());
