@@ -12,7 +12,7 @@ import java.util.List;
 public class EdgeWeightedDigraph {
     private int V; //Total amount of vertices
     private int E; //Total amount of edges
-    private Bag<Highway>[] adj; //a bag for each vertex containing adjecent edges
+    private Bag<Highway>[] adj; //a bag for each vertex containing adjacent edges
 
     public EdgeWeightedDigraph() {
     }
@@ -40,8 +40,8 @@ public class EdgeWeightedDigraph {
             throw new IndexOutOfBoundsException("vertex " + v + " is not between 0 and " + (V-1));
     }
 
-    public void addEdges(List<Highway> directedEdges) {
-        for (Highway e : directedEdges) {
+    public void addEdges(List<Highway> edges) {
+        for (Highway e : edges) {
             addEdge(e);
         }
     }

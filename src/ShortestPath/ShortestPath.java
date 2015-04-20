@@ -4,9 +4,6 @@ import MapFeatures.Highway;
 
 import java.util.Stack;
 
-/**
- * Created by woozy_000 on 13-04-2015.
- */
 public class ShortestPath {
     private double[] distTo;          // distTo[v] = distance  of shortest s->v path
     private Highway[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
@@ -37,8 +34,10 @@ public class ShortestPath {
         pq.insert(s, distTo[s]);
         while (!pq.isEmpty()) {
             int v = pq.delMin();
-            for (Highway e : G.adj(v))
+            for (Highway e : G.adj(v)) {
                 relax(e);
+                //System.out.println("Street: " + e.getStreetName());
+            }
         }
 
         // check optimality conditions
@@ -86,6 +85,7 @@ public class ShortestPath {
         if (!hasPathTo(v)) return null;
         Stack<Highway> path = new Stack<>();
         for (Highway e = edgeTo[v]; e != null; e = edgeTo[e.from()]) {
+            //System.out.println("Street: " + e.getStreetName());
             path.push(e);
         }
         return path;

@@ -91,6 +91,25 @@ public class Highway extends MapFeature {
         return w;
     }
 
+    public int either() {
+        return v;
+    }
+
+    /**
+     * Returns the endpoint of the edge that is different from the given vertex
+     * (unless the edge represents a self-loop in which case it returns the same vertex).
+     * @param vertex one endpoint of the edge
+     * @return the endpoint of the edge that is different from the given vertex
+     *   (unless the edge represents a self-loop in which case it returns the same vertex)
+     * @throws java.lang.IllegalArgumentException if the vertex is not one of the endpoints
+     *   of the edge
+     */
+    public int other(int vertex) {
+        if      (vertex == v) return w;
+        else if (vertex == w) return v;
+        else throw new IllegalArgumentException("Illegal endpoint");
+    }
+
     /**
      * Returns the weight of the directed edge.
      * @return the weight of the directed edge
@@ -113,5 +132,17 @@ public class Highway extends MapFeature {
 
     public Point2D getWPoint() {
         return vertices.getVertex(w);
+    }
+
+    public int getV() {
+        return v;
+    }
+
+    public int getW() {
+        return w;
+    }
+
+    public double getWeight() {
+        return weight;
     }
 }

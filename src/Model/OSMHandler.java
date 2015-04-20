@@ -215,10 +215,11 @@ public class OSMHandler extends DefaultHandler {
                     streetTree.insert(highway);
                     vertices.add(startPoint); //intersection in one end
                     vertices.add(endPoint); //intersection in the other end
-                    //add edge between intersections with the distance as weight:
+                    //
                     highway.setV(vertices.getIndex(startPoint));
                     highway.setW(vertices.getIndex(endPoint));
                     highway.setWeight(dist(startPoint, endPoint));
+                    //System.out.println("Street: " + highway.getStreetName() + " v: " + highway.getV() + " w: " + highway.getW() + " weight: " + highway.getWeight());
                 }
                 else if (keyValue_map.containsKey("railway")) railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  railwayTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
@@ -322,10 +323,10 @@ public class OSMHandler extends DefaultHandler {
                 Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
                 System.out.printf("sorted all addresses, time: %d ms\n", (System.nanoTime() - time) / 1000000);
                 PathCreater.connectCoastlines(bbox);
-                wayId_longMap.clear(); //sets key and value arrays to point to null
                 vertices.createVertexIndex();
                 diGraph.initialize(vertices.V());
                 diGraph.addEdges(streetEdges());
+                wayId_longMap.clear(); //sets key and value arrays to point to null
                 node_longMap.clear();
                 break;
 
@@ -334,7 +335,26 @@ public class OSMHandler extends DefaultHandler {
 
     private List<Highway> streetEdges() {
         List<MapData> mapData = streetTree.query2D(bbox);
-        return (ArrayList<Highway>)(List<?>) mapData;
+        List<Highway> highways = (ArrayList<Highway>)(List<?>) mapData;
+        List<Highway> car_highways = new ArrayList<>();
+        for (Highway highway : highways) {
+            if (highway.value.equals("motorway")) car_highways.add(highway);
+            else if (highway.value.equals("motorway_link")) car_highways.add(highway);
+            else if (highway.value.equals("trunk_link")) car_highways.add(highway);
+            else if (highway.value.equals("primary_link")) car_highways.add(highway);
+            else if (highway.value.equals("secondary_link")) car_highways.add(highway);
+            else if (highway.value.equals("tertiary_link")) car_highways.add(highway);
+            else if (highway.value.equals("trunk")) car_highways.add(highway);
+            else if (highway.value.equals("primary")) car_highways.add(highway);
+            else if (highway.value.equals("secondary")) car_highways.add(highway);
+            else if (highway.value.equals("tertiary")) car_highways.add(highway);
+            else if (highway.value.equals("unclassified")) car_highways.add(highway);
+            else if (highway.value.equals("residential")) car_highways.add(highway);
+            else if (highway.value.equals("service")) car_highways.add(highway);
+            else if (highway.value.equals("living_street")) car_highways.add(highway);
+            else if (highway.value.equals("road")) car_highways.add(highway);
+        }
+        return car_highways;
     }
 
     private double dist(Point2D startPoint, Point2D endPoint) {

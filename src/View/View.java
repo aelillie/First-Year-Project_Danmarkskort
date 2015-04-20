@@ -100,8 +100,11 @@ public class View extends JFrame implements Observer {
 
     public void findPath() {
         //TODO Is not done. Functions as a test when pressed "l"
-        ShortestPath pathTree = new ShortestPath(model.getDiGraph(), 0);
-        shortestPath = pathTree.pathTo(5);
+        int source = 2;
+        int destination = 10;
+        ShortestPath pathTree = new ShortestPath(model.getDiGraph(), source);
+        shortestPath = pathTree.pathTo(destination);
+        System.out.println("Distance in km: " + pathTree.distTo(destination));
         repaint();
     }
 
@@ -696,6 +699,7 @@ public class View extends JFrame implements Observer {
             }
         }
         nearestNeighbor = (Highway) champion;
+        System.out.println("Street: " + nearestNeighbor.getStreetName() + " v: " + nearestNeighbor.getV() + " w: " + nearestNeighbor.getW() + " weight: " + nearestNeighbor.getWeight());
         repaint();
     }
 
