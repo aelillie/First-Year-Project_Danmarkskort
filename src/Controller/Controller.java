@@ -36,7 +36,6 @@ public class Controller extends MouseAdapter implements ActionListener {
 
         view.getZoomInButton().addActionListener(this);
         view.getZoomOutButton().addActionListener(this);
-        view.getLoadButton().addActionListener(this);
         view.getFullscreenButton().addActionListener(this);
         view.getShowRoutePanelButton().addActionListener(this);
         view.getOptionsButton().addActionListener(this);
@@ -51,7 +50,6 @@ public class Controller extends MouseAdapter implements ActionListener {
         String command = e.getActionCommand();
         if (command.equals("zoomIn")) view.zoom(1.2);
         else if (command.equals("zoomOut")) view.zoom(1 / 1.2);
-        else if (command.equals("load")) loadSelectedFile();
         else if (command.equals("fullscreen")) view.toggleFullscreen();
         else if (command.equals("showRoutePanel")) view.showRoutePanel();
         else if (command.equals("findRoute"));
@@ -63,30 +61,6 @@ public class Controller extends MouseAdapter implements ActionListener {
         view.showOptionsPanel();
         view.repaint();
     }
-
-    private void loadSelectedFile(){
-        int returnValue = view.openFileChooser(); //The return value represents the action taken within the filechooser
-        if(returnValue == JFileChooser.APPROVE_OPTION){ //Return value if yes/ok is chosen.
-
-            try {
-                File file = view.getFileChooser().getSelectedFile(); //fetch file
-                URL fileURL = file.toURI().toURL(); //Convert to URL
-                InputStream inputStream = fileURL.openStream();
-                String filename = fileURL.getFile();
-                model.setCurrentFilename(filename);
-                model.loadFile(filename, inputStream);
-                inputStream.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            view.adjustZoomFactor();
-            view.repaint();
-            view.scaleAffine();
-        } else { //If no file is chosen (the user pressed cancel) or if an error occured
-            view.repaint();
-        }
-    }
-
 
     // sets up events for mouse and calls the methods in view.
     private class MouseHandler extends MouseAdapter {

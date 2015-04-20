@@ -38,7 +38,7 @@ public class View extends JFrame implements Observer {
     private RouteView routePanel;
     private MapTypePanel mapTypePanel = new MapTypePanel(this);
     private IconPanel iconPanel = new IconPanel();
-    private OptionsPanel optionsPanel = new OptionsPanel(this);
+    private OptionsPanel optionsPanel;
     private JScrollPane resultPane = new JScrollPane();
     private JScrollPane resultStartPane = new JScrollPane();
     private JScrollPane resultEndPane = new JScrollPane();
@@ -63,6 +63,7 @@ public class View extends JFrame implements Observer {
         model = m;
         iconPanel.addObserverToIcons(this);
         routePanel = new RouteView(this, model);
+        optionsPanel = new OptionsPanel(this,model);
         /*Two helper functions to set up the AfflineTransform object and
         make the buttons and layout for the frame*/
         setScale();
@@ -82,7 +83,6 @@ public class View extends JFrame implements Observer {
                 //mapMenu.setBounds(getWidth() - 300, getHeight() - getHeight() / 3 * 2 - 50, 130, 30);
                 mapTypePanel.setBounds(getWidth()-330, getHeight() - getHeight() / 3 * 2 - 45, 280, 200);
                 optionsPanel.setBounds(getWidth() - 220, getHeight() - (int) (getHeight() * 0.98), 150, 80);
-                loadButton.setBounds(getWidth() - 65, getHeight() - 65, 40, 20);
                 optionsButton.setBounds(getWidth() - 60, getHeight() - (int) (getHeight() * 0.98), 39, 37);
                 mapTypeButton.setBounds(getWidth() - 49, getHeight() - getHeight() / 3 * 2 - 45, 39, 37);
                 iconPanel.setBounds(getWidth()- 214, (int)(getHeight()-getHeight()*0.98+70), 120, 180);
@@ -189,7 +189,6 @@ public class View extends JFrame implements Observer {
         layer.add(searchButton, new Integer(2));
         layer.add(zoomInButton, new Integer(2));
         layer.add(zoomOutButton, new Integer(2));
-        layer.add(loadButton, new Integer(2));
         layer.add(fullscreenButton, new Integer(2));
         layer.add(showRoutePanelButton, new Integer(2));
         layer.add(routePanel, new Integer(2));
@@ -217,7 +216,6 @@ public class View extends JFrame implements Observer {
         makeSearchButton();
         makeZoomInButton();
         makeZoomOutButton();
-        makeLoadButton();
         makeShowRoutePanelButton();
         makeFullscreenButton();
         makeMapTypeButton();
@@ -345,7 +343,7 @@ public class View extends JFrame implements Observer {
         zoomInButton = new JButton();
         zoomInButton.setBackground(Color.BLACK);
         zoomInButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("plusIcon")));
-                zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
+        zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder());
         zoomInButton.setFocusable(false);
         zoomInButton.setOpaque(false);
         zoomInButton.setBackground(DrawAttribute.fadeblack);
@@ -355,27 +353,14 @@ public class View extends JFrame implements Observer {
         zoomInButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37);
     }
 
-    private void makeLoadButton(){
-        Dimension preferred = getPreferredSize();
-        loadButton = new JButton("LOAD");
-        loadButton.setBackground(new Color(36, 45, 50));
-        loadButton.setForeground(Color.WHITE);
-        loadButton.setFont(new Font("Arial", Font.BOLD, 10));
-        loadButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        loadButton.setFocusable(false);
-        loadButton.setActionCommand("load");
-        loadButton.setBounds((int) preferred.getWidth() - 65, (int) preferred.getHeight() - 65, 40, 20);
-    }
-
     private void makeSearchButton() {
-
         searchButton = new JButton();
         searchButton.setBorder(new CompoundBorder(
                 BorderFactory.createMatteBorder(4, 0, 4, 7, DrawAttribute.lightblue),
                 BorderFactory.createRaisedBevelBorder()));
         searchButton.setBackground(new Color(36, 45, 50));
         searchButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("searchIcon")));
-                searchButton.setFocusable(false);
+        searchButton.setFocusable(false);
         searchButton.setBounds(320, 20, 43, 37);
         searchButton.setActionCommand("search");
     }
@@ -383,6 +368,11 @@ public class View extends JFrame implements Observer {
 
     public void showRoutePanel() {
         routePanel.showRoutePanel();
+        if(mapTypePanel.isVisible()) mapTypePanel.setVisible(false);
+        if(optionsPanel.isVisible()) {
+            optionsPanel.setVisible(false);
+            if(iconPanel.isVisible()) iconPanel.setVisible(false);
+        }
         canvas.repaint();
     }
 
@@ -392,6 +382,7 @@ public class View extends JFrame implements Observer {
             optionsPanel.setVisible(false);
             if(iconPanel.isVisible()) iconPanel.setVisible(false);
         }
+        if(routePanel.isVisible()) routePanel.setVisible(false);
         canvas.repaint();
     }
 
@@ -402,7 +393,9 @@ public class View extends JFrame implements Observer {
 
     public void showOptionsPanel(){
         optionsPanel.showOptionsPanel();
+        if(!optionsPanel.isVisible() && iconPanel.isVisible()) iconPanel.setVisible(false);
         if(optionsPanel.isVisible()&& mapTypePanel.isVisible()) mapTypePanel.setVisible(false);
+        if(routePanel.isVisible()) routePanel.setVisible(false);
         canvas.repaint();
     }
 

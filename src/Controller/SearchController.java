@@ -100,22 +100,7 @@ public class SearchController extends MouseAdapter implements ActionListener {
 
             //Set up the keyboard handler for different keys.
             if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                Address selectedItem = list.getSelectedValue();
-                if(!(selectedItem==null)) {
-                    view.getSearchArea().setText(selectedItem.toString());
-                    view.getResultPane().setVisible(false);
-                }
-
-                Address[] results = addressSearch(2);
-                if (results != null) {
-                    if (results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view, "chosenAddressIcon");
-                    view.getResultPane().setVisible(false);
-                    view.getCanvas().requestFocusInWindow();
-                } else {
-                    addressSearch(1);
-                    view.getCanvas().requestFocusInWindow();
-                }
-
+                enterPressed();
             }
 
             if(e.getKeyCode() == KeyEvent.VK_DOWN && selectedNr < list.getModel().getSize()-1){
@@ -124,6 +109,31 @@ public class SearchController extends MouseAdapter implements ActionListener {
             }
             if(e.getKeyCode() == KeyEvent.VK_UP && selectedNr>0){
                 list.setSelectedIndex(--selectedNr);
+            }
+
+        }
+
+        public void enterPressed(){
+            Address selectedItem = null;
+            try{
+                selectedItem = list.getSelectedValue();
+            } catch (NullPointerException ex){
+                System.out.println("No address chosen");
+            }
+
+            if(!(selectedItem==null)) {
+                view.getSearchArea().setText(selectedItem.toString());
+                view.getResultPane().setVisible(false);
+            }
+
+            Address[] results = addressSearch(2);
+            if (results != null) {
+                if (results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view, "chosenAddressIcon");
+                view.getResultPane().setVisible(false);
+                view.getCanvas().requestFocusInWindow();
+            } else {
+                addressSearch(1);
+                view.getCanvas().requestFocusInWindow();
             }
 
         }
