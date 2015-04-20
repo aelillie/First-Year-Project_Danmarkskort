@@ -2,7 +2,6 @@ package Model;
 
 import MapFeatures.*;
 import QuadTree.QuadTree;
-import View.View;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
@@ -26,7 +25,7 @@ public class OSMHandler extends DefaultHandler {
     private Map<Address, List<Path2D>> streetMap;
     private Map<Address, Path2D> boundaryMap;
 
-    private QuadTree streetTree, buildingTree, iconTree, naturalTree;
+    private QuadTree streetTree, buildingTree, iconTree, naturalTree, railwayTree;
     private ArrayList<Address> addressList; //list of all the addresses in the .osm file
     private List<Long> memberReferences; //member referenced in a relation of ways
     private List<Point2D> wayCoords; //List of referenced coordinates used to make up a single way
@@ -119,10 +118,11 @@ public class OSMHandler extends DefaultHandler {
                 float maxlon = Float.parseFloat(atts.getValue("maxlon"));
                 Rectangle2D rect =  new Rectangle2D.Float(minlon, minlat, maxlon - minlon, maxlat - minlat);
                 bbox.setRect(rect);
-                streetTree = new QuadTree(bbox, 250);
+                streetTree = new QuadTree(bbox, 225);
                 buildingTree = new QuadTree(bbox, 300);
-                    iconTree = new QuadTree(bbox, 30);
+                iconTree = new QuadTree(bbox, 30);
                 naturalTree = new QuadTree(bbox, 200);
+                railwayTree = new QuadTree(bbox, 100);
 
 
 
@@ -208,7 +208,7 @@ public class OSMHandler extends DefaultHandler {
                     streetTree.insert(new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name")));
 
                 }
-                else if (keyValue_map.containsKey("railway")) streetTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
+                else if (keyValue_map.containsKey("railway")) railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  streetTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
                 if (keyValue_map.containsKey("name")) {
                     String name= keyValue_map.get("name").toLowerCase().trim();
@@ -383,6 +383,7 @@ public class OSMHandler extends DefaultHandler {
         quadTrees.add(naturalTree);
         quadTrees.add(buildingTree);
         quadTrees.add(iconTree);
+        quadTrees.add(railwayTree);
         return quadTrees;
     }
 
@@ -395,6 +396,7 @@ public class OSMHandler extends DefaultHandler {
         this.naturalTree = quadTrees.get(1);
         this.buildingTree = quadTrees.get(2);
         this.iconTree = quadTrees.get(3);
+        this.railwayTree = quadTrees.get(4);
     }
 
     public Map<Address,Point2D> getAddressMap(){ return  addressMap;}
@@ -433,4 +435,6 @@ public class OSMHandler extends DefaultHandler {
     public QuadTree getNaturalTree() {
         return naturalTree;
     }
+
+    public QuadTree getRailwayTree() {return railwayTree; }
 }

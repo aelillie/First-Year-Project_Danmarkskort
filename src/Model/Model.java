@@ -2,21 +2,18 @@ package Model;
 
 import MapFeatures.Coastline;
 import QuadTree.QuadTree;
-import View.View;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
 import java.util.*;
-import java.util.List;
 import java.util.zip.ZipInputStream;
 
 
@@ -165,6 +162,10 @@ public class Model extends Observable implements Serializable {
 
     public ArrayList<MapData> getVisibleIcons(Rectangle2D visibleArea){
         return OSMReader.getIconTree().query2D(visibleArea);
+    }
+
+    public ArrayList<MapData> getVisibleRailways(Rectangle2D visibleArea){
+        return OSMReader.getRailwayTree().query2D(visibleArea);
     }
 
     /**
