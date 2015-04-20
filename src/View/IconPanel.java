@@ -34,7 +34,6 @@ public class IconPanel extends JScrollPane {
         this.setViewportView(panel);
         panel.setVisible(true);
         showIconPanel();
-
     }
 
     public void addIcons(){

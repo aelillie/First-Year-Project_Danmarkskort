@@ -196,6 +196,7 @@ public class OSMHandler extends DefaultHandler {
                     if (keyValue_map.get("amenity").equals("parking")) {
                         iconTree.insert(new MapIcon(way, "parkingIcon"));}
 
+
                     //if(keyValue_map.get("amenity").equals("atm")){
                       //  quadTree.insert(new MapIcon(way, MapIcon.atmIcon));}
                 }
@@ -266,13 +267,23 @@ public class OSMHandler extends DefaultHandler {
                         iconTree.insert(new MapIcon(nodeCoord, "busIcon"));
                     }
                 }
+                else if(keyValue_map.containsKey("tourism")){
+                    String val = keyValue_map.get("tourism");
+                    if(val.equals("hotel")){
+                        iconTree.insert(new MapIcon(nodeCoord,"hotelIcon"));
+                    }
+                }
                 else if(keyValue_map.containsKey("amenity")) {
                     String val = keyValue_map.get("amenity");
                     if(val.equals("pub") || val.equals("bar")) {
                         iconTree.insert(new MapIcon(nodeCoord, "pubIcon"));}
                     else if(val.equals("atm")){
-                        iconTree.insert(new MapIcon(nodeCoord, "atmIcon"));
-                        }
+                        iconTree.insert(new MapIcon(nodeCoord, "atmIcon"));}
+                    else if(val.equals("restaurant")){
+                        iconTree.insert(new MapIcon(nodeCoord,"restaurantIcon"));}
+                    else if(val.equals("hospital")){
+                        iconTree.insert(new MapIcon(nodeCoord,"hospitalIcon"));
+                    }
                 }
                 else if (keyValue_map.containsKey("railway")) {
                     String val = keyValue_map.get("railway");
@@ -281,8 +292,11 @@ public class OSMHandler extends DefaultHandler {
                         else if (isSTog) iconTree.insert(new MapIcon(nodeCoord, "stogIcon"));
                     }
                 } else if(keyValue_map.containsKey("name")) {
-
-                    if(keyValue_map.containsKey("place")){
+                        String val = keyValue_map.get("name");
+                        if(val.equals("7-Eleven")){
+                        iconTree.insert(new MapIcon(nodeCoord,"7elevenIcon"));
+                    }
+                    else if(keyValue_map.containsKey("place")){
                         String place = keyValue_map.get("place");
                         if(place.equals("town") || place.equals("village") || place.equals("suburb") || place.equals("locality")|| place.equals("neighbourhood")){
                             String name = keyValue_map.get("name").toLowerCase();

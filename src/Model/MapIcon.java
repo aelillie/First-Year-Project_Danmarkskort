@@ -41,6 +41,10 @@ public class MapIcon implements Serializable, MapData {
         aMap.put("optionsIcon", MapIcon.class.getResource("/data/optionsIcon.png"));
         aMap.put("layerIcon", MapIcon.class.getResource("/data/layerIcon.png"));
         aMap.put("chosenAddressIcon", MapIcon.class.getResource("/data/chosenAddressIcon.png"));
+        aMap.put("restaurantIcon", MapIcon.class.getResource("/data/restaurantIcon.png"));
+        aMap.put("7elevenIcon", MapIcon.class.getResource("/data/7elevenIcon.jpg"));
+        aMap.put("hotelIcon", MapIcon.class.getResource("/data/hotelIcon.png"));
+        aMap.put("hospitalIcon", MapIcon.class.getResource("/data/hospitalIcon.png"));
         MapIcon.iconURLs = aMap;
     }
 
@@ -163,6 +167,10 @@ public class MapIcon implements Serializable, MapData {
         iconsOne.add(MapIcon.iconURLs.get("parkingIcon"));
         iconsOne.add(MapIcon.iconURLs.get("atmIcon"));
         iconsOne.add(MapIcon.iconURLs.get("pubIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("restaurantIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("7elevenIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("hotelIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("hospitalIcon"));
         return iconsOne;
     }
 
@@ -174,6 +182,10 @@ public class MapIcon implements Serializable, MapData {
         hashIcon.put(MapIcon.iconURLs.get("parkingIcon"),false);
         hashIcon.put(MapIcon.iconURLs.get("atmIcon"),false);
         hashIcon.put(MapIcon.iconURLs.get("pubIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("restaurantIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("7elevenIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("hotelIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("hospitalIcon"), false);
         return hashIcon;
     }
 

@@ -213,7 +213,6 @@ public class View extends JFrame implements Observer {
         searchArea.setActionCommand("searchAreaInput");
 
         makeOptionsButton();
-
         makeSearchButton();
         makeZoomInButton();
         makeZoomOutButton();
