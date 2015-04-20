@@ -21,11 +21,11 @@ public class IconPanel extends JScrollPane {
     public IconPanel() {
         super();
         controllers = new ArrayList<>();
+        Dimension preferred = getPreferredSize();
 
         GridLayout gridLayout = new GridLayout(0, 2);
+        setBounds((int) (preferred.getWidth()- 214), (int)(preferred.getHeight()-preferred.getHeight()*0.98+70), 120, 180);
         setBounds(593, 80, 120, 180);
-        // setOpaque(false);
-        //setBorder(new MatteBorder(100, 100, 10, 10, new Color(161, 161, 161)));
         this.setBackground(Color.BLACK);
         panel = new JPanel();
         panel.setBackground(Color.LIGHT_GRAY);
