@@ -418,16 +418,16 @@ public class View extends JFrame implements Observer {
     }
 
     public void zoomOnStreet(List<Path2D> streetSeqments){
-        Path2D pathCon = new Path2D.Double();
+        Path2D pathConnected = new Path2D.Double();
         for(Path2D waySeg: streetSeqments){
-            pathCon.append(waySeg,false);
+            pathConnected.append(waySeg,false);
         }
-        Rectangle2D pathRec = pathCon.getBounds2D();
+        Rectangle2D pathRec = pathConnected.getBounds2D();
 
         double scaleX = getWidth()/ pathRec.getWidth();
         double scaleY = getHeight()/ pathRec.getHeight();
 
-        adjustZoomLvl(Math.max(scaleX, scaleY) * 0.7);
+        adjustZoomLvl(Math.max(scaleX, scaleY) * 0.5);
         adjustZoomFactor();
     }
 
