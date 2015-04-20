@@ -153,6 +153,10 @@ public class Model extends Observable implements Serializable {
         return OSMReader.getStreetTree().query2D(visibleArea);
     }
 
+    public ArrayList<MapData> getVisibleRailways(Rectangle2D visibleArea){
+        return OSMReader.getRailwayTree().query2D(visibleArea);
+    }
+
     public ArrayList<MapData> getVisibleNatural(Rectangle2D visibleArea){
         return OSMReader.getNaturalTree().query2D(visibleArea);
     }
@@ -173,9 +177,6 @@ public class Model extends Observable implements Serializable {
         return getOSMReader().getDirectedEdges();
     }
 
-    public void sortLayers(List<MapFeature> mapFeatures){
-        OSMReader.sortLayers(mapFeatures);
-    }
 
     public EdgeWeightedDigraph getDiGraph() {
         return OSMReader.getDiGraph();

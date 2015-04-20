@@ -9,6 +9,7 @@ public class Highway extends MapFeature {
     private int v; //source
     private int w; //destination
     private double weight; //eg. distance
+    private String streetName;
 
     public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName) {
         super(way, layer_value, value);
