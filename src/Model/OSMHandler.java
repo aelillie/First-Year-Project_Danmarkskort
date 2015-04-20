@@ -288,6 +288,12 @@ public class OSMHandler extends DefaultHandler {
                     else if(val.equals("hospital")){
                         iconTree.insert(new MapIcon(nodeCoord,"hospitalIcon"));
                     }
+                    else if(val.equals("cafe")){
+                        iconTree.insert(new MapIcon(nodeCoord,"cafeIcon"));
+                    }
+                    else if(val.equals("toilets")){
+                        iconTree.insert(new MapIcon(nodeCoord,"toiletIcon"));
+                    }
                 }
                 else if (keyValue_map.containsKey("railway")) {
                     String val = keyValue_map.get("railway");

@@ -751,8 +751,6 @@ public class View extends JFrame implements Observer {
             g.setTransform(transform);
             if (antialias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-
-
             g.setStroke(min_value); //Just for good measure.
 
             Bounds box = PathCreater.createBounds(model.getBbox());
@@ -826,7 +824,7 @@ public class View extends JFrame implements Observer {
 
 
             //Draw the fillers on top of boundaries and areas
-            for (MapFeature mapFeature : mapFStreets) {
+               for (MapFeature mapFeature : mapFStreets) {
                 setDrawAttribute(mapFeature.getValueName());
                 if (zoomLevel >= drawAttribute.getZoomLevel()) {
                     g.setColor(drawAttribute.getColor());
