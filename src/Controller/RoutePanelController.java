@@ -159,22 +159,7 @@ public class RoutePanelController implements ActionListener{
 
             //Set up the keyboard handler for different keys.
             if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                Address selectedItem = list.getSelectedValue();
-                if(!(selectedItem==null)) {
-                    textField.setText(selectedItem.toString());
-                    textField.setVisible(true);
-                }
-
-                Address[] results = addressSearch(2,textField,resultPane);
-                if (results != null) {
-                    if (results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view,textFieldToIconType.get(textField));
-                    resultPane.setVisible(false);
-                    view.getCanvas().requestFocusInWindow();
-                } else {
-                    addressSearch(1,textField,resultPane);
-                    view.getCanvas().requestFocusInWindow();
-                }
-
+                enterPressed();
             }
 
             if(e.getKeyCode() == KeyEvent.VK_DOWN && selectedNr < list.getModel().getSize()-1){
@@ -185,6 +170,29 @@ public class RoutePanelController implements ActionListener{
                 list.setSelectedIndex(--selectedNr);
             }
 
+        }
+
+        public void enterPressed(){
+            Address selectedItem = null;
+            try{
+                selectedItem = list.getSelectedValue();
+            } catch (NullPointerException ex){
+                System.out.println("No address chosen");
+            }
+            if(!(selectedItem==null)) {
+                textField.setText(selectedItem.toString());
+                textField.setVisible(true);
+            }
+
+            Address[] results = addressSearch(2,textField,resultPane);
+            if (results != null) {
+                if (results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view,textFieldToIconType.get(textField));
+                resultPane.setVisible(false);
+                view.getCanvas().requestFocusInWindow();
+            } else {
+                addressSearch(1,textField,resultPane);
+                view.getCanvas().requestFocusInWindow();
+            }
         }
     }
 
