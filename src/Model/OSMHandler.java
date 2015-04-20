@@ -218,6 +218,7 @@ public class OSMHandler extends DefaultHandler {
                     streetTree.insert(highway);
                     vertices.add(startPoint); //intersection in one end
                     vertices.add(endPoint); //intersection in the other end
+                    //vertices.
                     //highway.setV(vertices.getIndex(startPoint));
                     //highway.setW(vertices.getIndex(endPoint));
                     //highway.setWeight(dist(startPoint, endPoint));

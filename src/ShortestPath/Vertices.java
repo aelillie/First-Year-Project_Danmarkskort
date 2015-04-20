@@ -18,7 +18,7 @@ public class Vertices {
         if(vertex_map.containsKey(vertex)) return; //Vertex already added
         vertex_map.put(vertex, counter); //Put vertex in map with an index
         counter++; //next index
-        if (counter == Integer.MAX_VALUE) //will never happen
+        if (counter == Integer.MAX_VALUE) //Won't happen in this lifetime
             throw new NumberFormatException("Integer limit reached");
     }
 
@@ -31,6 +31,13 @@ public class Vertices {
 
     public int V() {
         return vertex_map.size();
+    }
+
+    public void insertIndex(Point2D vertex) {
+        vertex_index[counter] = vertex;
+        counter++;
+        if (counter == Integer.MAX_VALUE) //Won't happen in this lifetime
+            throw new NumberFormatException("Integer limit reached");
     }
 
     public int getIndex(Point2D vertex) {
