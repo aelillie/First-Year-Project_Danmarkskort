@@ -85,6 +85,7 @@ public class View extends JFrame implements Observer {
                 loadButton.setBounds(getWidth() - 65, getHeight() - 65, 40, 20);
                 optionsButton.setBounds(getWidth() - 60, getHeight() - (int) (getHeight() * 0.98), 39, 37);
                 mapTypeButton.setBounds(getWidth() - 49, getHeight() - getHeight() / 3 * 2 - 45, 39, 37);
+                iconPanel.setBounds(getWidth()- 214, (int)(getHeight()-getHeight()*0.98+70), 120, 180);
 
                 repaint();
             }
@@ -387,7 +388,10 @@ public class View extends JFrame implements Observer {
 
     public void showMapTypePanel(){
         mapTypePanel.showMapTypePanel();
-        if(mapTypePanel.isVisible() && optionsPanel.isVisible()) optionsPanel.setVisible(false);
+        if(mapTypePanel.isVisible() && optionsPanel.isVisible()){
+            optionsPanel.setVisible(false);
+            if(iconPanel.isVisible()) iconPanel.setVisible(false);
+        }
         canvas.repaint();
     }
 
