@@ -6,6 +6,8 @@ import Model.Model;
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Kevin on 16-03-2015.
@@ -17,6 +19,9 @@ public class RouteView extends JPanel{
     private JButton findRouteButton;
     private JButton carButton, bicycleButton, footButton;
     private View view;
+    private Map<JButton,ImageIcon> iconWhiteEquivalenceMap;
+    private Map<JButton, ImageIcon> iconBlackEquivalenceMap;
+    private ImageIcon carOptionIcon, walkingOptionIcon,bicycleOptionIcon;
 
     /**
      * Creates a panel used for getting a path from A to B in the program
@@ -44,24 +49,26 @@ public class RouteView extends JPanel{
         transportTypePanel.setLayout(new FlowLayout(FlowLayout.LEADING));
         transportTypePanel.setBorder(new MatteBorder(0,0,1,0, new Color(161, 161, 161)));
 
-        ImageIcon carOptionIcon = new ImageIcon(this.getClass().getResource("/data/carOptionIcon.png"));
+        carOptionIcon = new ImageIcon(this.getClass().getResource("/data/carOptionIcon.png"));
         carButton = new JButton("Car",carOptionIcon);
         carButton.setFocusable(false);
         carButton.setForeground(new Color(114, 114, 114));
         carButton.setBackground(Color.WHITE);
+        carButton.setActionCommand("car");
 
-        ImageIcon bicycleOptionIcon = new ImageIcon(this.getClass().getResource("/data/bicycleOptionIcon.png"));
+        bicycleOptionIcon = new ImageIcon(this.getClass().getResource("/data/bicycleOptionIcon.png"));
         bicycleButton = new JButton("Bicycle",bicycleOptionIcon);
         bicycleButton.setFocusable(false);
         bicycleButton.setForeground(new Color(114, 114, 114));
         bicycleButton.setBackground(Color.WHITE);
+        bicycleButton.setActionCommand("bicycle");
 
-        ImageIcon walkingOptionIcon = new ImageIcon(this.getClass().getResource("/data/walkingOptionIcon.png"));
+        walkingOptionIcon = new ImageIcon(this.getClass().getResource("/data/walkingOptionIcon.png"));
         footButton = new JButton("By foot",walkingOptionIcon);
         footButton.setFocusable(false);
         footButton.setForeground(new Color(114, 114, 114));
         footButton.setBackground(Color.WHITE);
-
+        footButton.setActionCommand("walking");
 
         transportTypePanel.add(carButton);
         transportTypePanel.add(bicycleButton);
@@ -70,6 +77,7 @@ public class RouteView extends JPanel{
 
 
         makeStartEndAddressPanel();
+        createIconEquivalenceMap();
 
         add(transportTypePanel, BorderLayout.NORTH);
 
@@ -139,6 +147,33 @@ public class RouteView extends JPanel{
         c.gridy = 2;
         c.insets = new Insets(0,0,10,10);
         startEndAddressPanel.add(findRouteButton,c);
+    }
+
+    public void createIconEquivalenceMap(){
+        iconWhiteEquivalenceMap = new HashMap<>();
+        iconWhiteEquivalenceMap.put(carButton,new ImageIcon(this.getClass().getResource("/data/carOptionIconWhite.png")));
+        iconWhiteEquivalenceMap.put(bicycleButton, new ImageIcon(this.getClass().getResource("/data/bicycleOptionIconWhite.png")));
+        iconWhiteEquivalenceMap.put(footButton,new ImageIcon(this.getClass().getResource("/data/walkingOptionIconWhite.png")));
+
+        iconBlackEquivalenceMap = new HashMap<>();
+        iconBlackEquivalenceMap.put(carButton,carOptionIcon);
+        iconBlackEquivalenceMap.put(bicycleButton,bicycleOptionIcon);
+        iconBlackEquivalenceMap.put(footButton,walkingOptionIcon);
+    }
+
+    public void changeButtonAppearence(JButton button, boolean buttonDown){
+        ImageIcon newIcon;
+        if(buttonDown){
+            newIcon = iconBlackEquivalenceMap.get(button);
+            button.setBackground(Color.WHITE);
+            button.setForeground(Color.GRAY);
+            button.setIcon(newIcon);
+        } else {
+            newIcon = iconWhiteEquivalenceMap.get(button);
+            button.setBackground(Color.GRAY);
+            button.setForeground(Color.WHITE);
+            button.setIcon(newIcon);
+        }
     }
 
     /**

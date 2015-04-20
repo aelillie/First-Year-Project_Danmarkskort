@@ -26,6 +26,8 @@ public class RoutePanelController implements ActionListener{
     private int selectedNr = -1;
     private Model model;
 
+    private HashMap<JButton, Boolean> buttonDownMap;
+
     public RoutePanelController(RouteView routeView, Model model){
         view = routeView.getView();
         this.model = model;
@@ -36,6 +38,7 @@ public class RoutePanelController implements ActionListener{
         this.routeView = routeView;
         setScrollpaneBoundsAndIcon();
         setHandlers();
+        setMouseDownMap();
 
     }
 
@@ -64,6 +67,13 @@ public class RoutePanelController implements ActionListener{
         addFocusListener("Enter end address",endAddressField);
     }
 
+    private void setMouseDownMap(){
+        buttonDownMap = new HashMap<>();
+        buttonDownMap.put(routeView.getCarButton(),false);
+        buttonDownMap.put(routeView.getBicycleButton(),false);
+        buttonDownMap.put(routeView.getFootButton(),false);
+    }
+
     private void addFocusListener(final String promptText, final JTextField textField){
         textField.addFocusListener(new FocusListener() {
 
@@ -88,9 +98,7 @@ public class RoutePanelController implements ActionListener{
                     textField.setText(promptText);
                 }
             }
-
         });
-
     }
 
     private void setInputChangeHandler(final JTextField textField, final JScrollPane resultPane){
@@ -139,8 +147,18 @@ public class RoutePanelController implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command == "findRoute");
+        else if (command == "car") buttonDown(routeView.getCarButton());
+        else if (command == "bicycle") buttonDown(routeView.getBicycleButton());
+        else if (command == "walking") buttonDown(routeView.getFootButton());
         else if (command == "startAddressSearch") ;
         else if (command == "endAddressSearch") ;
+    }
+
+    public void buttonDown(JButton button){
+        //TODO: what to do on button down?
+        boolean isButtonDown = buttonDownMap.get(button);
+        routeView.changeButtonAppearence(button,isButtonDown);
+        buttonDownMap.put(button,!isButtonDown);
     }
 
     private class SearchFieldKeyHandler extends KeyAdapter {
