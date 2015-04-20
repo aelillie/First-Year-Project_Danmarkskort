@@ -65,7 +65,7 @@ public class Controller extends MouseAdapter implements ActionListener {
     }
 
     private void loadSelectedFile(){
-        int returnValue = view.openFileChooser(); //The returnvalue represents the action taken within the filechooser
+        int returnValue = view.openFileChooser(); //The return value represents the action taken within the filechooser
         if(returnValue == JFileChooser.APPROVE_OPTION){ //Return value if yes/ok is chosen.
 
             try {
@@ -96,13 +96,11 @@ public class Controller extends MouseAdapter implements ActionListener {
             view.mouseDragged(e);
         }
         public void mouseMoved(MouseEvent e) {
-            //view.findNearest(e.getPoint());
-            //view.repaint();
+            view.findNearest(e.getPoint());
         }
         public void mouseClicked(MouseEvent e) {
-            view.findNearest(e.getPoint());
-            System.out.println("done");
-            view.repaint();
+            //view.findNearest(e.getPoint());
+            //view.repaint();
         }
         public void mouseEntered(MouseEvent e) {}
         public void mouseExited(MouseEvent e) {}
@@ -144,6 +142,14 @@ public class Controller extends MouseAdapter implements ActionListener {
                         break;
                     case 'l':
                         view.findPath();
+                        break;
+                    case't':
+                        view.toggleTestMode();
+                        view.repaint();
+                        break;
+                    case 'g':
+                        view.toggleGrid();
+                        view.repaint();
                         break;
 
                 }

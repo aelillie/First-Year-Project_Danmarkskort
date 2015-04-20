@@ -7,4 +7,6 @@ public interface MapData {
 
     public Class getClassType();
 
+    public int getLayerVal();
+
 }

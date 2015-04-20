@@ -6,14 +6,15 @@ import Model.ValueName;
 import java.awt.geom.Path2D;
 
 public class Highway extends MapFeature {
-
     private int v; //source
     private int w; //destination
     private double weight; //eg. distance
 
-    public Highway(Path2D way, int layer_value, String value, boolean isArea) {
+    public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName) {
         super(way, layer_value, value);
         this.isArea = isArea;
+        if(streetName != null)
+            this.streetName = streetName.intern();
     }
 
 
@@ -65,35 +66,7 @@ public class Highway extends MapFeature {
         this.weight = weight;
     }
 
-    /**
-     * Returns the tail vertex of the directed edge.
-     * @return the tail vertex of the directed edge
-     */
-    public int from() {
-        return v;
-    }
-
-    /**
-     * Returns the head vertex of the directed edge.
-     * @return the head vertex of the directed edge
-     */
-    public int to() {
-        return w;
-    }
-
-    /**
-     * Returns the weight of the directed edge.
-     * @return the weight of the directed edge
-     */
-    public double weight() {
-        return weight;
-    }
-
-    /**
-     * Returns a string representation of the directed edge.
-     * @return a string representation of the directed edge
-     */
-    public String toString() {
-        return v + "->" + w + " " + String.format("%5.2f", weight);
+    public String getStreetName(){
+        return streetName;
     }
 }

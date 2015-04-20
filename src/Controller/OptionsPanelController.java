@@ -21,7 +21,7 @@ public class OptionsPanelController implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e){
         String command = e.getActionCommand();
-        if(command.equals("toggleIconPanel")) System.out.println("HEY"); v.showIconPanel();
+        if(command.equals("toggleIconPanel")) v.showIconPanel();
     }
 
 

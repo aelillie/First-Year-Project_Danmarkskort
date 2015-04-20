@@ -11,29 +11,34 @@ import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ArrayList;
 
-/**
- * Created by AmaliePalmund on 25/03/15.
- */
+
 public class IconPanel extends JScrollPane {
     private JPanel panel;
     private static ArrayList<IconController> controllers;
+    private ArrayList<URL> icons;
+
 
     public IconPanel() {
         super();
         controllers = new ArrayList<>();
 
-        GridLayout gridLayout = new GridLayout(0,2);
-        setBounds(50, 100, 150, 180);
-        //  setOpaque(true);
+        GridLayout gridLayout = new GridLayout(0, 2);
+        setBounds(593, 80, 120, 180);
+        // setOpaque(false);
         //setBorder(new MatteBorder(100, 100, 10, 10, new Color(161, 161, 161)));
-        this.setBackground(Color.WHITE);
+        this.setBackground(Color.BLACK);
         panel = new JPanel();
-        panel.setBackground(Color.WHITE);
+        panel.setBackground(Color.LIGHT_GRAY);
         panel.setLayout(gridLayout);
+        addIcons();
+        this.setViewportView(panel);
         panel.setVisible(true);
-        ArrayList<URL> icons = MapIcon.getIcons();
+        showIconPanel();
 
+    }
 
+    public void addIcons(){
+        icons = MapIcon.getIcons();
         for (int i= 0; i < icons.size(); i++)
         {
             String ikoner = icons.get(i).getFile();
@@ -42,18 +47,15 @@ public class IconPanel extends JScrollPane {
             JCheckBox checkbox = new JCheckBox("",true);
             IconController controller = new IconController(icons.get(i));
             MapIcon.setIconState(icons.get(i), true);
-            //icons.getIndex(i).setController(controller);
+            //icons.get(i).setController(controller);
             checkbox.addItemListener(controller);
             checkbox.addComponentListener(controller);
             panel.add(checkbox);
             panel.addComponentListener(controller);
             controllers.add(controller);
-        }
-        this.setViewportView(panel);
-    }
 
-    public static ArrayList<IconController> getControllers() {
-        return controllers;
+        }
+
     }
 
     //for all IconControllers adjust the view
@@ -70,4 +72,5 @@ public class IconPanel extends JScrollPane {
     }
 
 }
+
 

@@ -1,8 +1,5 @@
 package ShortestPath;
 
-import java.util.Iterator;
-import java.util.NoSuchElementException;
-
 /**
  * Created by woozy_000 on 15-04-2015.
  */
@@ -79,4 +76,5 @@ public class Bag<Item> implements Iterable<Item> {
             return item;
         }
     }
+    
 }

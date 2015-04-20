@@ -18,13 +18,13 @@ public class PathCreater {
      * @param wayId_map Map of references to Paths
      * @return Path2D
      */
-    public static Path2D createMultipolygon(List<Long> memberReferences, Map<Long, Path2D> wayId_map) {
+    public static Path2D createMultipolygon(List<Long> memberReferences, LongHashMap<Path2D> wayId_map) {
         Long ref = memberReferences.get(0);
-        if (wayId_map.containsKey(ref)) {
+        if (wayId_map.contains(ref)) {
             Path2D path = (Path2D) wayId_map.get(ref).clone();
             for (int i = 1; i < memberReferences.size(); i++) {
                 ref = memberReferences.get(i);
-                if (wayId_map.containsKey(ref)) {
+                if (wayId_map.contains(ref)) {
                     Path2D element = (Path2D) wayId_map.get(memberReferences.get(i)).clone();
                     path.append(element, false);
                 } else {}

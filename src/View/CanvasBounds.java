@@ -12,6 +12,7 @@ public class CanvasBounds {
 
     private Rectangle2D bounds;
     private AffineTransform transform;
+    private Boolean testmode = false;
 
 
     /**
@@ -22,10 +23,10 @@ public class CanvasBounds {
      */
     public CanvasBounds(Rectangle2D bounds, AffineTransform transform){
         this.bounds = new Rectangle2D.Double(
-                bounds.getX() - bounds.getWidth()/4,
-                bounds.getY() + bounds.getHeight()/4,
-                bounds.getWidth()* 1.40,
-                bounds.getHeight() *1.40);
+                bounds.getX(),
+                bounds.getY(),
+                bounds.getWidth(),
+                bounds.getHeight());
         this.transform = transform;
     }
 
@@ -42,15 +43,28 @@ public class CanvasBounds {
         Path2D.Double tmp = (Path2D.Double) inverser.createTransformedShape(viewRect);
 
         Rectangle2D tmpRect = tmp.getBounds2D();
+        if(testmode){
+            bounds = new Rectangle2D.Double(
+                    tmpRect.getX() + tmpRect.getWidth()/4 ,
+                    tmpRect.getY() + tmpRect.getHeight()/4,
+                    tmpRect.getWidth() * 0.5,
+                    tmpRect.getHeight() * 0.5);
+        }else {
+            bounds = new Rectangle2D.Double(
+                    tmpRect.getX() - tmpRect.getWidth()/8,
+                    tmpRect.getY() - tmpRect.getHeight()/8,
+                    tmpRect.getWidth()* 1.25,
+                    tmpRect.getHeight() * 1.25);
 
-        bounds = new Rectangle2D.Double(
-                tmpRect.getX() - tmpRect.getWidth()/4,
-                tmpRect.getY() - tmpRect.getHeight()/4,
-                tmpRect.getWidth()* 1.40,
-                tmpRect.getHeight() * 1.40);
+        }
     }
 
     public Rectangle2D getBounds(){return bounds;}
+
+
+    public void toggleTestMode(){
+        testmode = !testmode;
+    }
 
 
 }
