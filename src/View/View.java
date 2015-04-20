@@ -343,7 +343,7 @@ public class View extends JFrame implements Observer {
         zoomInButton = new JButton();
         zoomInButton.setBackground(Color.BLACK);
         zoomInButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("plusIcon")));
-                zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder()); //Temp border
+        zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder());
         zoomInButton.setFocusable(false);
         zoomInButton.setOpaque(false);
         zoomInButton.setBackground(DrawAttribute.fadeblack);
@@ -354,14 +354,13 @@ public class View extends JFrame implements Observer {
     }
 
     private void makeSearchButton() {
-
         searchButton = new JButton();
         searchButton.setBorder(new CompoundBorder(
                 BorderFactory.createMatteBorder(4, 0, 4, 7, DrawAttribute.lightblue),
                 BorderFactory.createRaisedBevelBorder()));
         searchButton.setBackground(new Color(36, 45, 50));
         searchButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("searchIcon")));
-                searchButton.setFocusable(false);
+        searchButton.setFocusable(false);
         searchButton.setBounds(320, 20, 43, 37);
         searchButton.setActionCommand("search");
     }
@@ -369,6 +368,11 @@ public class View extends JFrame implements Observer {
 
     public void showRoutePanel() {
         routePanel.showRoutePanel();
+        if(mapTypePanel.isVisible()) mapTypePanel.setVisible(false);
+        if(optionsPanel.isVisible()) {
+            optionsPanel.setVisible(false);
+            if(iconPanel.isVisible()) iconPanel.setVisible(false);
+        }
         canvas.repaint();
     }
 
@@ -378,6 +382,7 @@ public class View extends JFrame implements Observer {
             optionsPanel.setVisible(false);
             if(iconPanel.isVisible()) iconPanel.setVisible(false);
         }
+        if(routePanel.isVisible()) routePanel.setVisible(false);
         canvas.repaint();
     }
 
@@ -388,7 +393,9 @@ public class View extends JFrame implements Observer {
 
     public void showOptionsPanel(){
         optionsPanel.showOptionsPanel();
+        if(!optionsPanel.isVisible() && iconPanel.isVisible()) iconPanel.setVisible(false);
         if(optionsPanel.isVisible()&& mapTypePanel.isVisible()) mapTypePanel.setVisible(false);
+        if(routePanel.isVisible()) routePanel.setVisible(false);
         canvas.repaint();
     }
 

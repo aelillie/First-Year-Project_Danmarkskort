@@ -31,7 +31,7 @@ public class OptionsPanelController implements ActionListener {
         String command = e.getActionCommand();
         if(command.equals("toggleIconPanel")) view.showIconPanel();
         else if (command.equals("load")) loadSelectedFile();
-        else if (command.equals("save")) ;
+        else if (command.equals("save")) model.saveBin(); view.repaint();
     }
 
     private void loadSelectedFile(){

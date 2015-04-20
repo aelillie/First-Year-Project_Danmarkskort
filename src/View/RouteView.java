@@ -44,20 +44,20 @@ public class RouteView extends JPanel{
         transportTypePanel.setLayout(new FlowLayout(FlowLayout.LEADING));
         transportTypePanel.setBorder(new MatteBorder(0,0,1,0, new Color(161, 161, 161)));
 
-
-        carButton = new JButton("Car");
+        ImageIcon carOptionIcon = new ImageIcon(this.getClass().getResource("/data/carOptionIcon.png"));
+        carButton = new JButton("Car",carOptionIcon);
         carButton.setFocusable(false);
         carButton.setForeground(new Color(114, 114, 114));
         carButton.setBackground(Color.WHITE);
 
-
-        bicycleButton = new JButton("Bicycle");
+        ImageIcon bicycleOptionIcon = new ImageIcon(this.getClass().getResource("/data/bicycleOptionIcon.png"));
+        bicycleButton = new JButton("Bicycle",bicycleOptionIcon);
         bicycleButton.setFocusable(false);
         bicycleButton.setForeground(new Color(114, 114, 114));
         bicycleButton.setBackground(Color.WHITE);
 
-
-        footButton = new JButton("By foot");
+        ImageIcon walkingOptionIcon = new ImageIcon(this.getClass().getResource("/data/walkingOptionIcon.png"));
+        footButton = new JButton("By foot",walkingOptionIcon);
         footButton.setFocusable(false);
         footButton.setForeground(new Color(114, 114, 114));
         footButton.setBackground(Color.WHITE);

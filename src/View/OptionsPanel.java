@@ -44,7 +44,7 @@ public class OptionsPanel extends JPanel {
         loadButton.setForeground(Color.BLACK);
         loadButton.setActionCommand("load");
         saveButton = new JButton("SAVE");
-        saveButton.setActionCommand("saveFile");
+        saveButton.setActionCommand("save");
         saveButton.setBackground(Color.WHITE);
         saveButton.setForeground(Color.BLACK);
         saveLoadPanel.add(loadButton);
