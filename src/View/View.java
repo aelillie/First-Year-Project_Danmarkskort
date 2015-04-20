@@ -248,7 +248,7 @@ public class View extends JFrame implements Observer {
         resultPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
         resultPane.getViewport().setBackground(Color.WHITE);
         resultPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        resultPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchResults,searchArea,resultPane,"chosenAddressIcon"));
+        resultPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this, model, addressSearchResults, searchArea, resultPane, "chosenAddressIcon"));
     }
 
     public void addToResultPane(Address[] resultsArray, JTextField textfield, JScrollPane scrollPane, Rectangle bounds, String iconType){
@@ -259,7 +259,7 @@ public class View extends JFrame implements Observer {
         scrollPane.setBorder(new MatteBorder(0,1,1,1,Color.DARK_GRAY));
         scrollPane.getViewport().setBackground(Color.WHITE);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
-        scrollPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this,model,addressSearchResults,textfield,scrollPane,iconType));
+        scrollPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this, model, addressSearchResults, textfield, scrollPane, iconType));
     }
 
     private void makeMapTypeButton(){
@@ -299,7 +299,7 @@ public class View extends JFrame implements Observer {
     }
 
     public void addPointer(MapPointer mapPointer){
-        addressPointerMap.put(mapPointer.getType(),mapPointer);
+        addressPointerMap.put(mapPointer.getType(), mapPointer);
         canvas.repaint();
     }
 
@@ -450,7 +450,7 @@ public class View extends JFrame implements Observer {
     }
     //Pan map with lat/lon, translate rather than preconcatenate
     public void panMapCoords(double dx, double dy){
-        transform.translate(dx,dy);
+        transform.translate(dx, dy);
         repaint();
     }
 
@@ -904,6 +904,11 @@ public class View extends JFrame implements Observer {
 
             ArrayList<MapData> streets = model.getVisibleStreets(windowBounds);
             mapFStreets = (ArrayList<MapFeature>)(List<?>) streets;
+
+            if(zoomLevel > 10){
+                mapFStreets.addAll((ArrayList<MapFeature>) (List<?>) model.getVisibleRailways(windowBounds));
+
+            }
 
             if(zoomLevel > 8){
                 mapFAreas = (ArrayList<MapFeature>)(List<?>)model.getVisibleNatural(windowBounds);
