@@ -22,7 +22,6 @@ public class RoutePanelController implements ActionListener{
     private JScrollPane endAddrScrollpane;
     private Map<JTextField, Rectangle> textfieldToBounds;
     private static Map<JTextField, String> textFieldToIconType;
-    private String prompttext2 = "Enter Address";
     private View view;
     private int selectedNr = -1;
     private Model model;
@@ -61,16 +60,21 @@ public class RoutePanelController implements ActionListener{
         endAddressField.addKeyListener(new SearchFieldKeyHandler(endAddressField,endAddrScrollpane));
         setInputChangeHandler(startAddressField,startAddrScrollpane);
         setInputChangeHandler(endAddressField,endAddrScrollpane);
-        startAddressField.addFocusListener(new FocusListener() {
+        addFocusListener("Enter start address",startAddressField);
+        addFocusListener("Enter end address",endAddressField);
+    }
+
+    private void addFocusListener(final String promptText, final JTextField textField){
+        textField.addFocusListener(new FocusListener() {
 
             @Override
             /**
              * If selected remove prompt text
              */
             public void focusGained(FocusEvent e) {
-                if (startAddressField.getText().equals("Enter Start Address")) {
-                    startAddressField.setForeground(Color.BLACK);
-                    startAddressField.setText("");
+                if (textField.getText().equals(promptText)) {
+                    textField.setForeground(Color.BLACK);
+                    textField.setText("");
                 }
             }
 
@@ -79,39 +83,14 @@ public class RoutePanelController implements ActionListener{
              * if unselected and search field is empty sets up promptText.
              */
             public void focusLost(FocusEvent e) {
-                if (startAddressField.getText().isEmpty()) {
-                    startAddressField.setForeground(Color.GRAY);
-                    startAddressField.setText("Enter Start Address");
+                if (textField.getText().isEmpty()) {
+                    textField.setForeground(Color.GRAY);
+                    textField.setText(promptText);
                 }
             }
 
         });
 
-        endAddressField.addFocusListener(new FocusListener() {
-
-            @Override
-            /**
-             * If selected remove prompt text
-             */
-            public void focusGained(FocusEvent e) {
-                if (endAddressField.getText().equals("Enter End Address")) {
-                    endAddressField.setForeground(Color.BLACK);
-                    endAddressField.setText("");
-                }
-            }
-
-            @Override
-            /**
-             * if unselected and search field is empty sets up promptText.
-             */
-            public void focusLost(FocusEvent e) {
-                if (endAddressField.getText().isEmpty()) {
-                    endAddressField.setForeground(Color.GRAY);
-                    endAddressField.setText("Enter End Address");
-                }
-            }
-
-        });
     }
 
     private void setInputChangeHandler(final JTextField textField, final JScrollPane resultPane){
