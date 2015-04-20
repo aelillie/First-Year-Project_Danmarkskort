@@ -185,7 +185,11 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("geological")) naturalTree.insert(new Geological(way, fetchOSMLayer(), keyValue_map.get("geological")));
                 else if (keyValue_map.containsKey("building")) buildingTree.insert(new Building(way, fetchOSMLayer(), keyValue_map.get("building")));
                 else if (keyValue_map.containsKey("shop"))  buildingTree.insert(new Shop(way, fetchOSMLayer(), keyValue_map.get("shop"))); //This seems to only appear under <node
-                else if (keyValue_map.containsKey("tourism")) buildingTree.insert(new Tourism(way, fetchOSMLayer(), keyValue_map.get("tourism")));
+                else if (keyValue_map.containsKey("tourism")) {
+                    buildingTree.insert(new Tourism(way, fetchOSMLayer(), keyValue_map.get("tourism")));
+                    if(keyValue_map.get("tourism").equals("attraction")){
+                        iconTree.insert(new MapIcon(way,"attractionIcon"));}
+                }
                 else if (keyValue_map.containsKey("man_made")) naturalTree.insert(new ManMade(way, fetchOSMLayer(), keyValue_map.get("man_made")));
                 else if (keyValue_map.containsKey("historic")) naturalTree.insert(new Historic(way, fetchOSMLayer(), keyValue_map.get("historic")));
                 else if (keyValue_map.containsKey("craft")) naturalTree.insert(new Craft(way, fetchOSMLayer(), keyValue_map.get("craft")));
