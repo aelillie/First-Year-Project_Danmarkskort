@@ -22,7 +22,6 @@ public class RoutePanelController implements ActionListener{
     private JScrollPane endAddrScrollpane;
     private Map<JTextField, Rectangle> textfieldToBounds;
     private static Map<JTextField, String> textFieldToIconType;
-
     private View view;
     private int selectedNr = -1;
     private Model model;
@@ -163,7 +162,7 @@ public class RoutePanelController implements ActionListener{
                 Address selectedItem = list.getSelectedValue();
                 if(!(selectedItem==null)) {
                     textField.setText(selectedItem.toString());
-                    textField.setVisible(false);
+                    textField.setVisible(true);
                 }
 
                 Address[] results = addressSearch(2,textField,resultPane);

@@ -1,13 +1,11 @@
 package View;
 
 import Controller.RoutePanelController;
-import Model.MapIcon;
+import Model.Model;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import Model.Model;
-import java.net.URL;
 
 /**
  * Created by Kevin on 16-03-2015.
@@ -118,7 +116,7 @@ public class RouteView extends JPanel{
         endAddressField = new JTextField();
         endAddressField.setActionCommand("endAddressSearch");
         endAddressField.setForeground(Color.GRAY);
-        endAddressField.setText("Enter start address");
+        endAddressField.setText("Enter end address");
         c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
