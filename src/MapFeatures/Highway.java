@@ -22,6 +22,9 @@ public class Highway extends MapFeature {
             this.streetName = streetName.intern();
     }
 
+    public Highway() {
+    }
+
 
     @Override
     public void setPreDefValues() {

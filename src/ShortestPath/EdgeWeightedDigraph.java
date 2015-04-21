@@ -4,6 +4,7 @@ package ShortestPath;
 import MapFeatures.Highway;
 import Model.MapFeature;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -13,6 +14,7 @@ public class EdgeWeightedDigraph {
     private int V; //Total amount of vertices
     private int E; //Total amount of edges
     private Bag<Highway>[] adj; //a bag for each vertex containing adjacent edges
+
 
     public EdgeWeightedDigraph() {
     }
@@ -42,7 +44,53 @@ public class EdgeWeightedDigraph {
 
     public void addEdges(List<Highway> edges) {
         for (Highway e : edges) {
-            addEdge(e);
+            switch (e.getValue()) {
+                case "motorway":
+                    addEdge(e);
+                    break;
+                case "motorway_link":
+                    addEdge(e);
+                    break;
+                case "trunk_link":
+                    addEdge(e);
+                    break;
+                case "primary_link":
+                    addEdge(e);
+                    break;
+                case "secondary_link":
+                    addEdge(e);
+                    break;
+                case "tertiary_link":
+                    addEdge(e);
+                    break;
+                case "trunk":
+                    addEdge(e);
+                    break;
+                case "primary":
+                    addEdge(e);
+                    break;
+                case "secondary":
+                    addEdge(e);
+                    break;
+                case "tertiary":
+                    addEdge(e);
+                    break;
+                case "unclassified":
+                    addEdge(e);
+                    break;
+                case "residential":
+                    addEdge(e);
+                    break;
+                case "service":
+                    addEdge(e);
+                    break;
+                case "living_street":
+                    addEdge(e);
+                    break;
+                case "road":
+                    addEdge(e);
+                    break;
+            }
         }
     }
 
@@ -53,6 +101,20 @@ public class EdgeWeightedDigraph {
         validateVertex(v);
         validateVertex(w);
         adj[v].add(e);
+        E++;
+        addOtherEdge(e);
+    }
+
+    private void addOtherEdge(Highway e) {
+        Highway u = new Highway(e.getWay(), e.getLayerVal(), e.getValue(), e.isArea(), e.getStreetName());
+        u.setV(e.getW());
+        u.setW(e.getV());
+        u.setWeight(e.getWeight());
+        int v = u.from();
+        int w = u.to();
+        validateVertex(v);
+        validateVertex(w);
+        adj[v].add(u);
         E++;
     }
 

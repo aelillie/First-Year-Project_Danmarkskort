@@ -45,6 +45,8 @@ public class View extends JFrame implements Observer {
     private JScrollPane resultEndPane = new JScrollPane();
     private JList<Address> addressSearchResults;
 
+    private int destination;
+
     private Map<String,MapPointer> addressPointerMap = new HashMap<>();
 
     private Iterable<Highway> shortestPath;
@@ -100,8 +102,7 @@ public class View extends JFrame implements Observer {
 
     public void findPath() {
         //TODO Is not done. Functions as a test when pressed "l"
-        int source = 2;
-        int destination = 10;
+        int source = 0;
         ShortestPath pathTree = new ShortestPath(model.getDiGraph(), source);
         shortestPath = pathTree.pathTo(destination);
         System.out.println("Distance in km: " + pathTree.distTo(destination));
@@ -700,6 +701,9 @@ public class View extends JFrame implements Observer {
         }
         nearestNeighbor = (Highway) champion;
         System.out.println("Street: " + nearestNeighbor.getStreetName() + " v: " + nearestNeighbor.getV() + " w: " + nearestNeighbor.getW() + " weight: " + nearestNeighbor.getWeight());
+        if (nearestNeighbor != null) {
+            destination = nearestNeighbor.getV();
+        }
         repaint();
     }
 
