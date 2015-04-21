@@ -336,25 +336,7 @@ public class OSMHandler extends DefaultHandler {
     private List<Highway> streetEdges() {
         List<MapData> mapData = streetTree.query2D(bbox);
         List<Highway> highways = (ArrayList<Highway>)(List<?>) mapData;
-        List<Highway> car_highways = new ArrayList<>();
-        for (Highway highway : highways) {
-            if (highway.value.equals("motorway")) car_highways.add(highway);
-            else if (highway.value.equals("motorway_link")) car_highways.add(highway);
-            else if (highway.value.equals("trunk_link")) car_highways.add(highway);
-            else if (highway.value.equals("primary_link")) car_highways.add(highway);
-            else if (highway.value.equals("secondary_link")) car_highways.add(highway);
-            else if (highway.value.equals("tertiary_link")) car_highways.add(highway);
-            else if (highway.value.equals("trunk")) car_highways.add(highway);
-            else if (highway.value.equals("primary")) car_highways.add(highway);
-            else if (highway.value.equals("secondary")) car_highways.add(highway);
-            else if (highway.value.equals("tertiary")) car_highways.add(highway);
-            else if (highway.value.equals("unclassified")) car_highways.add(highway);
-            else if (highway.value.equals("residential")) car_highways.add(highway);
-            else if (highway.value.equals("service")) car_highways.add(highway);
-            else if (highway.value.equals("living_street")) car_highways.add(highway);
-            else if (highway.value.equals("road")) car_highways.add(highway);
-        }
-        return car_highways;
+        return highways;
     }
 
     private double dist(Point2D startPoint, Point2D endPoint) {

@@ -45,6 +45,8 @@ public class View extends JFrame implements Observer {
     private JScrollPane resultEndPane = new JScrollPane();
     private JList<Address> addressSearchResults;
 
+    private int destination;
+
     private Map<String,MapPointer> addressPointerMap = new HashMap<>();
 
     private Iterable<Highway> shortestPath;
@@ -100,12 +102,8 @@ public class View extends JFrame implements Observer {
 
     public void findPath() {
         //TODO Is not done. Functions as a test when pressed "l"
-        int source = 226;
-        int destination = 532;
+        int source = 0;
         ShortestPath pathTree = new ShortestPath(model.getDiGraph(), source);
-        model.getDiGraph().adj(226).forEach((highway -> {
-            System.out.println(highway.getStreetName());
-        }));
         shortestPath = pathTree.pathTo(destination);
         System.out.println("Distance in km: " + pathTree.distTo(destination));
         repaint();
@@ -703,6 +701,9 @@ public class View extends JFrame implements Observer {
         }
         nearestNeighbor = (Highway) champion;
         System.out.println("Street: " + nearestNeighbor.getStreetName() + " v: " + nearestNeighbor.getV() + " w: " + nearestNeighbor.getW() + " weight: " + nearestNeighbor.getWeight());
+        if (nearestNeighbor != null) {
+            destination = nearestNeighbor.getV();
+        }
         repaint();
     }
 
@@ -863,7 +864,7 @@ public class View extends JFrame implements Observer {
 
             //TODO: Test of shortest path
             if (shortestPath != null) {
-                g.setColor(DrawAttribute.black);
+                g.setColor(DrawAttribute.cl_darkorange);
                 g.setStroke(new BasicStroke(0.00010f));
                 for (Highway e : shortestPath) {
                     //Path2D path = PathCreater.createWay(e.getVPoint(), e.getWPoint());

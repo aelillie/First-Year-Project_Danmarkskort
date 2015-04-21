@@ -26,7 +26,7 @@ public abstract class MapFeature implements Serializable, MapData {
     }
 
     public MapFeature() {
-        //default empty constructor
+
     }
 
     /**
