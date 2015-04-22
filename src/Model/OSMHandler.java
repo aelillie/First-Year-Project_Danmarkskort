@@ -214,11 +214,8 @@ public class OSMHandler extends DefaultHandler {
                     Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"));
                     streetTree.insert(highway);
                     if(keyValue_map.containsKey("oneway")){
-                        if(keyValue_map.get("oneway").equals("yes")){
-                            highway.setIsOneWay(true);
-                        }else{
-                            highway.setIsOneWay(false);
-                        }
+                        if(keyValue_map.get("oneway").equals("yes")) highway.isOneWay(true);
+                        else highway.isOneWay(false);
                     }
                     vertices.add(wayCoords); //create vertices for all points making up a way
                     highway.storePoints(wayCoords);
