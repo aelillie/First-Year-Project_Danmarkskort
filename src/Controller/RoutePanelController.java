@@ -10,6 +10,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.util.*;
 
@@ -157,7 +158,9 @@ public class RoutePanelController implements ActionListener{
 
             if (startPoint != null && endPoint != null) {
                 System.out.println("Working");
-                view.findRoute(startPoint, endPoint);
+                try {
+                    view.findRoute(startPoint, endPoint);
+                }catch (NoninvertibleTransformException ex){}
             }
         }
 

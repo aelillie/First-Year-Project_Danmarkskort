@@ -8,6 +8,7 @@ import Model.*;
 import ShortestPath.ShortestPath;
 import ShortestPath.Edge;
 import QuadTree.QuadTree;
+import ShortestPath.Vertices;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -101,17 +102,6 @@ public class View extends JFrame implements Observer {
         canvas.requestFocusInWindow();
         model.addObserver(this);
     }
-
-    public void findPath() {
-        //TODO Is not done. Functions as a test when pressed "l"
-        int source = 0;
-        ShortestPath pathTree = new ShortestPath(model.getDiGraph(), source);
-        shortestPath = pathTree.pathTo(destination);
-        System.out.println("Distance in km: " + pathTree.distTo(destination));
-        repaint();
-    }
-
-
 
     /**
      * Sets the scale for the afflineTransform object using to bounds from the osm file
@@ -727,8 +717,47 @@ public class View extends JFrame implements Observer {
         }
     }
 
-    public void findRoute(Point2D startPoint, Point2D endPoint){
+    public void findRoute(Point2D startPoint, Point2D endPoint)throws NoninvertibleTransformException{
+        Rectangle2D windowBounds = bounds.getBounds();
+        Rectangle2D startBox = new Rectangle2D.Double(startPoint.getX(),
+                startPoint.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
 
+        Rectangle2D endBox = new Rectangle2D.Double(endPoint.getX(),
+                endPoint.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
+
+        Highway startWay = findNearestHighway(startPoint, model.getVisibleStreets(startBox, false));
+        int vNr = findVertex(startPoint, startWay);
+        Highway endWay = findNearestHighway(endPoint, model.getVisibleStreets(endBox, false));
+        int vNr2 = findVertex(endPoint, endWay);
+        ShortestPath djikstra = new ShortestPath(model.getDiGraph(), vNr);
+
+        shortestPath = djikstra.pathTo(vNr2);
+
+        System.out.println("Distance in km: " + djikstra.distTo(vNr2));
+        repaint();
+    }
+
+    public void findPath() {
+        //TODO Is not done. Functions as a test when pressed "l"
+        int source = 0;
+        ShortestPath pathTree = new ShortestPath(model.getDiGraph(), source);
+        shortestPath = pathTree.pathTo(destination);
+        System.out.println("Distance in km: " + pathTree.distTo(destination));
+        repaint();
+    }
+
+    private int findVertex(Point2D loc, Highway way){
+
+        List<Edge> edges = way.getEdge();
+        Edge closest = null;
+        double distance = Integer.MAX_VALUE;
+        for(Edge e : edges){
+            Path2D p = e.getWay();
+            if(loc.distance(p.getCurrentPoint())< distance)
+                closest = e;
+        }
+
+        return closest.from();
     }
 
     /**
@@ -995,7 +1024,7 @@ public class View extends JFrame implements Observer {
             if(nearestNeighbor != null && nearestNeighbor.getStreetName() != null) {
 
                 g.setColor(Color.black);
-                g.drawString(nearestNeighbor.getStreetName(), (int) (getRootPane().getContentPane().getWidth() * 0.01),
+                g.drawString(nearestNeighbor.getStreetName(), (int) (getRootPane().getContentPane().getWidth() * 0.01 + 1),
                         getRootPane().getContentPane().getHeight() - 10);
             }
         }
