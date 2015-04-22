@@ -18,6 +18,7 @@ public class Highway extends MapFeature {
     private List<Edge> edges = new ArrayList<>();
     private List<Point2D> points = new ArrayList<>();
     private String oneWay;
+    private int maxspeed;
 
 
     public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName) {
@@ -128,5 +129,9 @@ public class Highway extends MapFeature {
     
     public void setOneWay(String oneWay) {
         this.oneWay = oneWay;
+    }
+
+    public void setMaxSpeed(int speedLimit) {
+        maxspeed = speedLimit;
     }
 }

@@ -219,6 +219,10 @@ public class OSMHandler extends DefaultHandler {
                         else highway.setOneWay("no"); //one way not present
 
                     } else highway.setOneWay("no"); //not a one way
+                    if (keyValue_map.containsKey("maxspeed")) {
+                        int maxspeed = Integer.parseInt(keyValue_map.get("maxspeed"));
+                        highway.setMaxSpeed(maxspeed);
+                    }
                     vertices.add(wayCoords); //create vertices for all points making up a way
                     highway.storePoints(wayCoords);
                     highway.assignEdges();
