@@ -100,10 +100,13 @@ public class EdgeWeightedDigraph {
             validateVertex(v);
             validateVertex(w);
             adj[v].add(edge);
-            Edge di = new Edge(w, v, edge.weight());
-            di.setWay(edge.getWay());
-            adj[w].add(di);
-            E += 2;
+            E++;
+            if (!e.isOneWay().equals("yes") || !e.isOneWay().equals("-1")) { //if it's NOT a oneway street
+                Edge di = new Edge(w, v, edge.weight());
+                di.setWay(edge.getWay());
+                adj[w].add(di);
+                E ++;
+            }
         }
     }
     
