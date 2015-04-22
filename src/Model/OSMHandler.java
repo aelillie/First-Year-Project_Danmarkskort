@@ -218,16 +218,10 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("highway")) {
                     Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"));
                     streetTree.insert(highway);
-                    if(keyValue_map.containsKey("oneway")){
-                        if(keyValue_map.get("oneway").equals("yes")) highway.setOneWay("yes"); //one way in normal direction
-                        else if(keyValue_map.get("oneway").equals("-1")) highway.setOneWay("-1"); //one way in reverse direction
-                        else highway.setOneWay("no"); //one way not present
+                    if(keyValue_map.containsKey("oneway")) highway.setOneWay(keyValue_map.get("oneway"));
+                    else highway.setOneWay("no");
+                    if (keyValue_map.containsKey("maxspeed")) highway.setMaxSpeed(keyValue_map.get("maxspeed"));
 
-                    } else highway.setOneWay("no"); //not a one way
-                    if (keyValue_map.containsKey("maxspeed")) {
-                        int maxspeed = Integer.parseInt(keyValue_map.get("maxspeed"));
-                        highway.setMaxSpeed(maxspeed);
-                    }
                     vertices.add(wayCoords); //create vertices for all points making up a way
                     highway.storePoints(wayCoords);
                     highway.assignEdges();

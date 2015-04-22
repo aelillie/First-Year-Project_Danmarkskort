@@ -123,11 +123,19 @@ public class Highway extends MapFeature {
         return oneWay;
     }
     
-    public void setOneWay(String oneWay) {
-        this.oneWay = oneWay;
+    public void setOneWay(String value) {
+        if(value.equals("yes")) oneWay = "yes"; //one way in normal direction
+        else if(value.equals("-1")) oneWay = "-1"; //one way in reverse direction
+        else oneWay = "no"; //one way not present
     }
 
-    public void setMaxSpeed(int speedLimit) {
-        maxspeed = speedLimit;
+    public void setMaxSpeed(String speedLimit) {
+        int speed = 0;
+        try {
+            speed = Integer.parseInt(speedLimit);
+        } catch (NumberFormatException e) {
+            e.printStackTrace();
+        }
+        maxspeed = speed;
     }
 }
