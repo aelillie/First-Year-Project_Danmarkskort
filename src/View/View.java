@@ -485,7 +485,7 @@ public class View extends JFrame implements Observer {
      * @return Point2D The point after inverse of the scale.
      * @throws NoninvertibleTransformException
      */
-    private Point2D.Float transformPoint(Point p1) throws NoninvertibleTransformException {
+    private Point2D.Float transformPoint(Point2D p1) throws NoninvertibleTransformException {
         Point2D.Float p2 = new Point2D.Float();
         transform.inverseTransform(p1, p2); // create a destination p2 from the Point p1
         return p2;
@@ -638,13 +638,11 @@ public class View extends JFrame implements Observer {
      * Finds the Nearest Highway from the MousePosition using distance from point to lineSegment
      * @param position Position of MousePointer
      */
-    public void findNearest(Point position)throws NoninvertibleTransformException{
-        Insets x = getInsets();
-        position.setLocation(position.getX(), position.getY()-x.top + x.bottom);
+    public Highway findNearestHighway(Point2D position)throws NoninvertibleTransformException{
+
         Rectangle2D windowBounds = bounds.getBounds();
-        Point2D coordinates = transformPoint(position);
-        Rectangle2D mouseBox = new Rectangle2D.Double(coordinates.getX(),
-                coordinates.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
+        Rectangle2D mouseBox = new Rectangle2D.Double(position.getX(),
+                position.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
         Collection<MapData> node = model.getVisibleStreets(mouseBox, false);
 
         MapFeature champion = null;
@@ -663,7 +661,7 @@ public class View extends JFrame implements Observer {
                 if(draw.getZoomLevel() > zoomLevel || highway.getStreetName() == null) continue;
 
                 double[] points = new double[6];
-                PathIterator pI = highway.getWay().getPathIterator(transform);
+                PathIterator pI = highway.getWay().getPathIterator(new AffineTransform());
                 pI.currentSegment(points);
                 Point2D p1 = new Point2D.Double(points[0], points[1]);
                 pI.next();
@@ -686,8 +684,15 @@ public class View extends JFrame implements Observer {
                 }
             }
         }
-        nearestNeighbor = (Highway) champion;
         repaint();
+        return (Highway) champion;
+    }
+
+    public void findNearest(Point2D position) throws NoninvertibleTransformException{
+        Insets x = getInsets();
+        position.setLocation(position.getX(), position.getY()-x.top + x.bottom);
+        Point2D coordinates = transformPoint(position);
+        nearestNeighbor = findNearestHighway(coordinates);
     }
 
     /**
@@ -928,7 +933,8 @@ public class View extends JFrame implements Observer {
                 g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
                 g.setColor(Color.CYAN);
                 g.draw(nearestNeighbor.getWay());
-            }
+            }else
+                System.out.println("im null");
         }
 
         private void setDrawAttribute(ValueName valueName) {
