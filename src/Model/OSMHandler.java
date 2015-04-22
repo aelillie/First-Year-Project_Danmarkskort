@@ -215,13 +215,9 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("highway")) {
                     Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"),isOneWay);
                     streetTree.insert(highway);
-                    vertices.add(startPoint); //intersection in one end
-                    vertices.add(endPoint); //intersection in the other end
-                    //
-                    highway.setV(vertices.getIndex(startPoint));
-                    highway.setW(vertices.getIndex(endPoint));
-                    highway.setWeight(dist(startPoint, endPoint));
-                    //System.out.println("Street: " + highway.getStreetName() + " v: " + highway.getV() + " w: " + highway.getW() + " weight: " + highway.getWeight());
+                    vertices.add(wayCoords); //create vertices for all points making up a way
+                    highway.storePoints(wayCoords);
+                    highway.assignEdges();
                 }
                 else if (keyValue_map.containsKey("railway")) railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  railwayTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
@@ -339,10 +335,6 @@ public class OSMHandler extends DefaultHandler {
         List<MapData> mapData = streetTree.query2D(bbox);
         List<Highway> highways = (ArrayList<Highway>)(List<?>) mapData;
         return highways;
-    }
-
-    private double dist(Point2D startPoint, Point2D endPoint) {
-        return MapCalculator.haversineDist(startPoint, endPoint);
     }
 
 

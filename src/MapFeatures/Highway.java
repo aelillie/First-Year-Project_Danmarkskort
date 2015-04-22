@@ -3,17 +3,20 @@ package MapFeatures;
 import Model.MapFeature;
 import Model.Model;
 import Model.ValueName;
+import ShortestPath.DiEdge;
 import ShortestPath.Vertices;
+import Model.MapCalculator;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Highway extends MapFeature {
-    private int v; //source
-    private int w; //destination
-    private double weight; //eg. distance
     private String streetName;
     private Vertices vertices =  Model.getModel().getVertices();
+    private List<DiEdge> edges = new ArrayList<>();
+    private List<Point2D> points = new ArrayList<>();
 
     private boolean isOneWay;
 
@@ -27,6 +30,28 @@ public class Highway extends MapFeature {
     }
 
     public Highway() {
+    }
+
+    public void storePoints(List<Point2D> points) {
+        this.points = points;
+    }
+
+
+    /**
+     * Create edges between all points in the way for the current highway
+     */
+    public void assignEdges() {
+        for (int i = 0 ; i+1 < points.size() ; i++) {
+            Point2D v = points.get(i);
+            Point2D w = points.get(i+1);
+            DiEdge diEdge = new DiEdge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
+            edges.add(diEdge);
+            diEdge.createEdge(v, w);
+        }
+    }
+
+    private double calcDist(Point2D v, Point2D w) {
+        return MapCalculator.haversineDist(v, w);
     }
 
 
@@ -66,90 +91,24 @@ public class Highway extends MapFeature {
         else setValueName(ValueName.HIGHWAY);
     }
 
-    public void setV(int v) {
-        this.v = v;
+    public Iterable<DiEdge> edges() {
+        return edges;
     }
 
-    public void setW(int w) {
-        this.w = w;
+    public List<DiEdge> getEdge() {
+        return edges;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public int getVertex(int i) {
+        return edges.get(i).getV();
     }
 
     public String getStreetName(){
         return streetName;
     }
 
-    /**
-     * Returns the tail vertex of the directed edge.
-     * @return the tail vertex of the directed edge
-     */
-    public int from() {
-        return v;
+    public List<Point2D> getPoints() {
+        return points;
     }
 
-    /**
-     * Returns the head vertex of the directed edge.
-     * @return the head vertex of the directed edge
-     */
-    public int to() {
-        return w;
-    }
-
-    public int either() {
-        return v;
-    }
-
-    /**
-     * Returns the endpoint of the edge that is different from the given vertex
-     * (unless the edge represents a self-loop in which case it returns the same vertex).
-     * @param vertex one endpoint of the edge
-     * @return the endpoint of the edge that is different from the given vertex
-     *   (unless the edge represents a self-loop in which case it returns the same vertex)
-     * @throws java.lang.IllegalArgumentException if the vertex is not one of the endpoints
-     *   of the edge
-     */
-    public int other(int vertex) {
-        if      (vertex == v) return w;
-        else if (vertex == w) return v;
-        else throw new IllegalArgumentException("Illegal endpoint");
-    }
-
-    /**
-     * Returns the weight of the directed edge.
-     * @return the weight of the directed edge
-     */
-    public double weight() {
-        return weight;
-    }
-
-    /**
-     * Returns a string representation of the directed edge.
-     * @return a string representation of the directed edge
-     */
-    public String toString() {
-        return v + "->" + w + " " + String.format("%5.2f", weight);
-    }
-
-    public Point2D getVPoint() {
-        return vertices.getVertex(v);
-    }
-
-    public Point2D getWPoint() {
-        return vertices.getVertex(w);
-    }
-
-    public int getV() {
-        return v;
-    }
-
-    public int getW() {
-        return w;
-    }
-
-    public double getWeight() {
-        return weight;
-    }
 }
