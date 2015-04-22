@@ -10,7 +10,7 @@ import java.util.List;
 public class EdgeWeightedDigraph {
     private int V; //Total amount of vertices
     private int E; //Total amount of edges
-    private Bag<DiEdge>[] adj; //a bag for each vertex containing adjacent edges
+    private Bag<Edge>[] adj; //a bag for each vertex containing adjacent edges
 
 
     public EdgeWeightedDigraph() {
@@ -19,9 +19,9 @@ public class EdgeWeightedDigraph {
     public void initialize(int V) {
         this.V = V;
         this.E = 0;
-        adj = (Bag<DiEdge>[]) new Bag[V];
+        adj = (Bag<Edge>[]) new Bag[V];
         for (int v = 0; v < V; v++) {
-            adj[v] = new Bag<DiEdge>();
+            adj[v] = new Bag<Edge>();
         }
     }
 
@@ -93,12 +93,12 @@ public class EdgeWeightedDigraph {
 
 
     private void addEdges(Highway e) {
-        for (DiEdge diEdge : e.edges()) {
-            int v = diEdge.from();
-            int w = diEdge.to();
+        for (Edge edge : e.edges()) {
+            int v = edge.from();
+            int w = edge.to();
             validateVertex(v);
             validateVertex(w);
-            adj[v].add(diEdge);
+            adj[v].add(edge);
             E++;
         }
         addOtherEdge(e);
@@ -106,11 +106,13 @@ public class EdgeWeightedDigraph {
 
     private void addOtherEdge(Highway e) {
         Highway u = new Highway(e.getWay(), e.getLayerVal(), e.getValue(), e.isArea(), e.getStreetName());
-        for (DiEdge diEdge : u.edges()) {
-            int W = diEdge.getW();
-            int V = diEdge.getV();
-            double weight = diEdge.getWeight();
-            DiEdge di = new DiEdge(W, V, weight);
+        u.storePoints(e.getPoints());
+        u.assignEdges();
+        for (Edge edge : u.edges()) {
+            int W = edge.getW();
+            int V = edge.getV();
+            double weight = edge.getWeight();
+            Edge di = new Edge(W, V, weight);
             int v = di.from();
             adj[v].add(di);
             E++;
@@ -123,7 +125,7 @@ public class EdgeWeightedDigraph {
      * @param v the vertex
      * @throws java.lang.IndexOutOfBoundsException unless 0 <= v < V
      */
-    public Iterable<DiEdge> adj(int v) {
+    public Iterable<Edge> adj(int v) {
         validateVertex(v);
         return adj[v];
     }
@@ -146,10 +148,10 @@ public class EdgeWeightedDigraph {
      * <tt>for (DirectedEdge e : G.edges())</tt>.
      * @return all edges in the edge-weighted graph as an Iterable.
      */
-    public Iterable<DiEdge> edges() {
-        Bag<DiEdge> list = new Bag<DiEdge>();
+    public Iterable<Edge> edges() {
+        Bag<Edge> list = new Bag<Edge>();
         for (int v = 0; v < V; v++) {
-            for (DiEdge e : adj(v)) {
+            for (Edge e : adj(v)) {
                 list.add(e);
             }
         }
@@ -168,7 +170,7 @@ public class EdgeWeightedDigraph {
         s.append(V + " " + E + NEWLINE);
         for (int v = 0; v < V; v++) {
             s.append(v + ": ");
-            for (DiEdge e : adj[v]) {
+            for (Edge e : adj[v]) {
                 s.append(e + "  ");
             }
             s.append(NEWLINE);

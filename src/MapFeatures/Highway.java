@@ -3,7 +3,7 @@ package MapFeatures;
 import Model.MapFeature;
 import Model.Model;
 import Model.ValueName;
-import ShortestPath.DiEdge;
+import ShortestPath.Edge;
 import ShortestPath.Vertices;
 import Model.MapCalculator;
 
@@ -15,7 +15,7 @@ import java.util.List;
 public class Highway extends MapFeature {
     private String streetName;
     private Vertices vertices =  Model.getModel().getVertices();
-    private List<DiEdge> edges = new ArrayList<>();
+    private List<Edge> edges = new ArrayList<>();
     private List<Point2D> points = new ArrayList<>();
 
     public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName) {
@@ -40,9 +40,9 @@ public class Highway extends MapFeature {
         for (int i = 0 ; i+1 < points.size() ; i++) {
             Point2D v = points.get(i);
             Point2D w = points.get(i+1);
-            DiEdge diEdge = new DiEdge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
-            edges.add(diEdge);
-            diEdge.createEdge(v, w);
+            Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
+            edges.add(edge);
+            edge.createEdge(v, w);
         }
     }
 
@@ -87,11 +87,11 @@ public class Highway extends MapFeature {
         else setValueName(ValueName.HIGHWAY);
     }
 
-    public Iterable<DiEdge> edges() {
+    public Iterable<Edge> edges() {
         return edges;
     }
 
-    public List<DiEdge> getEdge() {
+    public List<Edge> getEdge() {
         return edges;
     }
 

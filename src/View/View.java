@@ -5,8 +5,8 @@ import MapFeatures.Bounds;
 import MapFeatures.Highway;
 import MapFeatures.Route;
 import Model.*;
-import ShortestPath.DiEdge;
 import ShortestPath.ShortestPath;
+import ShortestPath.Edge;
 import QuadTree.QuadTree;
 
 import javax.swing.*;
@@ -50,7 +50,7 @@ public class View extends JFrame implements Observer {
 
     private Map<String,MapPointer> addressPointerMap = new HashMap<>();
 
-    private Iterable<DiEdge> shortestPath;
+    private Iterable<Edge> shortestPath;
 
     private boolean isFullscreen = false;
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -271,7 +271,7 @@ public class View extends JFrame implements Observer {
         scrollPane.setVisible(true);
         scrollPane.setViewportView(addressSearchResults);
         scrollPane.setBounds(bounds);
-        scrollPane.setBorder(new MatteBorder(0,1,1,1,Color.DARK_GRAY));
+        scrollPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
         scrollPane.getViewport().setBackground(Color.WHITE);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this, model, addressSearchResults, textfield, scrollPane, iconType));
@@ -867,7 +867,7 @@ public class View extends JFrame implements Observer {
             if (shortestPath != null) {
                 g.setColor(DrawAttribute.cl_darkorange);
                 g.setStroke(new BasicStroke(0.00010f));
-                for (DiEdge e : shortestPath) {
+                for (Edge e : shortestPath) {
                     //Path2D path = PathCreater.createWay(e.getVPoint(), e.getWPoint());
                     g.draw(e.getWay());
                 }
