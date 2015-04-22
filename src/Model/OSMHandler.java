@@ -111,7 +111,6 @@ public class OSMHandler extends DefaultHandler {
                 isArea = false;
                 hasName = false;
                 isStart = true;
-                isOneWay = false;
                 wayId = Long.parseLong(atts.getValue("id"));
                 break;
             case "bounds": //bounds for the given map
@@ -142,7 +141,6 @@ public class OSMHandler extends DefaultHandler {
                 if(k.equals("highway") && v.equals("bus_stop")) isBusstop = true;
                 if(k.equals("subway")&& v.equals("yes")) isMetro = true;
                 if(k.equals("network") && v.equals("S-Tog")) isSTog = true;
-                if(k.equals("oneway") && v.equals("yes")) isOneWay = true;
                 if(k.equals("name")){
                     hasName = true;
                 }
@@ -213,8 +211,15 @@ public class OSMHandler extends DefaultHandler {
 
                 }
                 else if (keyValue_map.containsKey("highway")) {
-                    Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"),isOneWay);
+                    Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"));
                     streetTree.insert(highway);
+                    if(keyValue_map.containsKey("oneway")){
+                        if(keyValue_map.get("oneway").equals("yes")){
+                            highway.setIsOneWay(true);
+                        }else{
+                            highway.setIsOneWay(false);
+                        }
+                    }
                     vertices.add(wayCoords); //create vertices for all points making up a way
                     highway.storePoints(wayCoords);
                     highway.assignEdges();

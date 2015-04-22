@@ -18,15 +18,17 @@ public class Highway extends MapFeature {
     private List<DiEdge> edges = new ArrayList<>();
     private List<Point2D> points = new ArrayList<>();
 
+
+
     private boolean isOneWay;
 
 
-    public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName, boolean isOneWay) {
+    public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName) {
         super(way, layer_value, value);
         this.isArea = isArea;
         if(streetName != null)
             this.streetName = streetName.intern();
-        this.isOneWay = isOneWay;
+
     }
 
     public Highway() {
@@ -111,4 +113,11 @@ public class Highway extends MapFeature {
         return points;
     }
 
+    public boolean isOneWay() {
+        return isOneWay;
+    }
+
+    public void setIsOneWay(boolean isOneWay) {
+        this.isOneWay = isOneWay;
+    }
 }
