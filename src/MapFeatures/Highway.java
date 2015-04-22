@@ -39,7 +39,7 @@ public class Highway extends MapFeature {
 
     /**
      * Create edges between all points in the way for the current highway
-     */
+     *//*
     public void assignEdges() {
         if(oneWay.equals("-1")) { //if it's a one way street in reverse direction
             for (int i = (points.size()-1) ; i-1 > 0 ; i--) {
@@ -60,6 +60,24 @@ public class Highway extends MapFeature {
             }
         }
 
+    }
+*/
+    public void assignEdges() {
+        for (int i = 0; i + 1 < points.size(); i++) {
+            if(oneWay.equals("yes") || oneWay.equals("no")) {
+                Point2D v = points.get(i);
+                Point2D w = points.get(i + 1);
+                Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
+                edges.add(edge);
+                edge.createEdge(v, w);
+            }else{
+                Point2D v = points.get(i+1);
+                Point2D w = points.get(i);
+                Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
+                edges.add(edge);
+                edge.createEdge(v, w);
+            }
+        }
     }
 
     private double calcDist(Point2D v, Point2D w) {
