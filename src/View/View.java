@@ -639,24 +639,34 @@ public class View extends JFrame implements Observer {
      * @param position Position of MousePointer
      */
     public void findNearest(Point position){
-        if(zoomLevel < 11) return;
-
         Insets x = getInsets();
         position.setLocation(position.getX(), position.getY()-x.top + x.bottom);
+        Rectangle2D windowBounds = bounds.getBounds();
+        Point2D coordinates = new Point2D.Float();
+        try{
+            AffineTransform inversed = transform.createInverse();
+            inversed.transform(position, coordinates);
+        }catch(NoninvertibleTransformException e){}
 
-        ArrayList<MapData> node = model.getVisibleStreets(bounds.getBounds());
+        Rectangle2D mouseBox = new Rectangle2D.Double(coordinates.getX(),
+                coordinates.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
+        ArrayList<MapData> node = model.getVisibleStreets(mouseBox);
 
         MapFeature champion = null;
         Line2D championLine = null;
 
         for (MapData mp : node) {
-            if (mp instanceof Highway) {
+            if (mp instanceof Highway ) {
                 if(((Highway) mp).getValue().equals("footway") || ((Highway) mp).getValue().equals("cycleway") ||
                         ((Highway) mp).getValue().equals("steps") ||
                         ((Highway) mp).getValue().equals("path") ||
                         ((Highway) mp).getValue().equals("bridleway"))
                     continue;
-                MapFeature highway = (MapFeature) mp;
+                Highway highway = (Highway) mp;
+
+                DrawAttribute draw = drawAttributeManager.getDrawAttribute(highway.getValueName());
+                if(draw.getZoomLevel() > zoomLevel || highway.getStreetName() == null) continue;
+
                 double[] points = new double[6];
                 PathIterator pI = highway.getWay().getPathIterator(transform);
                 pI.currentSegment(points);
