@@ -101,4 +101,6 @@ public class DiEdge {
     public Path2D getWay() {
         return edge;
     }
+
+    public void setWay(Path2D edge){this.edge = edge ;}
 }
