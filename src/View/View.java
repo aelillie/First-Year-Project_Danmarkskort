@@ -49,7 +49,7 @@ public class View extends JFrame implements Observer {
 
     private Map<String,MapPointer> addressPointerMap = new HashMap<>();
 
-    private Iterable<Highway> shortestPath;
+    private Iterable<Highway.DiEdge> shortestPath;
 
     private boolean isFullscreen = false;
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -700,10 +700,10 @@ public class View extends JFrame implements Observer {
             }
         }
         nearestNeighbor = (Highway) champion;
-        System.out.println("Street: " + nearestNeighbor.getStreetName() + " v: " + nearestNeighbor.getV() + " w: " + nearestNeighbor.getW() + " weight: " + nearestNeighbor.getWeight());
-        if (nearestNeighbor != null) {
-            destination = nearestNeighbor.getV();
-        }
+        //System.out.println("Street: " + nearestNeighbor.getStreetName() + " v: " + nearestNeighbor.getV() + " w: " + nearestNeighbor.getW() + " weight: " + nearestNeighbor.getWeight());
+        //if (nearestNeighbor != null) {
+            //destination = nearestNeighbor.
+        //}
         repaint();
     }
 
@@ -866,7 +866,7 @@ public class View extends JFrame implements Observer {
             if (shortestPath != null) {
                 g.setColor(DrawAttribute.cl_darkorange);
                 g.setStroke(new BasicStroke(0.00010f));
-                for (Highway e : shortestPath) {
+                for (Highway.DiEdge e : shortestPath) {
                     //Path2D path = PathCreater.createWay(e.getVPoint(), e.getWPoint());
                     g.draw(e.getWay());
                 }
