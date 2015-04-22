@@ -3,6 +3,7 @@ package ShortestPath;
 
 import MapFeatures.Highway;
 
+import java.util.Collection;
 import java.util.List;
 import java.util.Set;
 
@@ -41,7 +42,7 @@ public class EdgeWeightedDigraph {
             throw new IndexOutOfBoundsException("vertex " + v + " is not between 0 and " + (V-1));
     }
 
-    public void addEdges(Set<Highway> highways) {
+    public void addEdges(Collection<Highway> highways) {
         for (Highway e : highways) {
             switch (e.getValue()) {
                 case "motorway":

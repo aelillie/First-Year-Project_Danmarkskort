@@ -364,9 +364,9 @@ public class OSMHandler extends DefaultHandler {
         }
     }
 
-    private Set<Highway> streetEdges() {
+    private Collection<Highway> streetEdges() {
         Collection<MapData> mapData = streetTree.query2D(bbox, false);
-        Set<Highway> highways = (HashSet<Highway>)(Set<?>) mapData;
+        Collection<Highway> highways = (Collection<Highway>)(Collection<?>) mapData;
         return highways;
     }
 
