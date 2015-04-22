@@ -254,7 +254,7 @@ public class View extends JFrame implements Observer {
         scrollPane.setVisible(true);
         scrollPane.setViewportView(addressSearchResults);
         scrollPane.setBounds(bounds);
-        scrollPane.setBorder(new MatteBorder(0,1,1,1,Color.DARK_GRAY));
+        scrollPane.setBorder(new MatteBorder(0, 1, 1, 1, Color.DARK_GRAY));
         scrollPane.getViewport().setBackground(Color.WHITE);
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this, model, addressSearchResults, textfield, scrollPane, iconType));
@@ -638,28 +638,14 @@ public class View extends JFrame implements Observer {
      * Finds the Nearest Highway from the MousePosition using distance from point to lineSegment
      * @param position Position of MousePointer
      */
-    public Highway findNearestHighway(Point2D position)throws NoninvertibleTransformException{
-
-        Rectangle2D windowBounds = bounds.getBounds();
-        Rectangle2D mouseBox = new Rectangle2D.Double(position.getX(),
-                position.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
-        Collection<MapData> node = model.getVisibleStreets(mouseBox, false);
+    public Highway findNearestHighway(Point2D position, Collection<MapData> node)throws NoninvertibleTransformException{
 
         MapFeature champion = null;
         Line2D championLine = null;
 
         for (MapData mp : node) {
             if (mp instanceof Highway ) {
-                if(((Highway) mp).getValue().equals("footway") || ((Highway) mp).getValue().equals("cycleway") ||
-                        ((Highway) mp).getValue().equals("steps") ||
-                        ((Highway) mp).getValue().equals("path") ||
-                        ((Highway) mp).getValue().equals("bridleway"))
-                    continue;
                 Highway highway = (Highway) mp;
-
-                DrawAttribute draw = drawAttributeManager.getDrawAttribute(highway.getValueName());
-                if(draw.getZoomLevel() > zoomLevel || highway.getStreetName() == null) continue;
-
                 double[] points = new double[6];
                 PathIterator pI = highway.getWay().getPathIterator(new AffineTransform());
                 pI.currentSegment(points);
@@ -688,11 +674,38 @@ public class View extends JFrame implements Observer {
         return (Highway) champion;
     }
 
-    public void findNearest(Point2D position) throws NoninvertibleTransformException{
+    public void findNearestToMouse(Point2D position) throws NoninvertibleTransformException{
         Insets x = getInsets();
         position.setLocation(position.getX(), position.getY()-x.top + x.bottom);
         Point2D coordinates = transformPoint(position);
-        nearestNeighbor = findNearestHighway(coordinates);
+        Rectangle2D windowBounds = bounds.getBounds();
+        Rectangle2D mouseBox = new Rectangle2D.Double(coordinates.getX(),
+                coordinates.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
+        Collection<MapData> streets = model.getVisibleStreets(mouseBox, false);
+        Collection<MapData> streetsNeeded = filterRoads(streets);
+
+
+        nearestNeighbor = findNearestHighway(coordinates, streetsNeeded);
+    }
+
+    private Collection<MapData> filterRoads(Collection<MapData> before){
+        Collection<MapData> after = new ArrayList<>();
+        for(MapData  entity : before){
+            Highway highway = (Highway) entity;
+            if(highway.getValue().equals("footway") || highway.getValue().equals("cycleway") ||
+                    highway.getValue().equals("steps") ||
+                    highway.getValue().equals("path") ||
+                    highway.getValue().equals("bridleway"))
+                continue;
+            DrawAttribute draw = drawAttributeManager.getDrawAttribute(highway.getValueName());
+            if(draw.getZoomLevel() > zoomLevel || highway.getStreetName() == null) continue;
+
+            after.add(highway);
+
+        }
+
+        return after;
+
     }
 
     /**

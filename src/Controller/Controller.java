@@ -68,7 +68,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         }
         public void mouseMoved(MouseEvent e) {
             try{
-                view.findNearest(e.getPoint());
+                view.findNearestToMouse(e.getPoint());
             }catch(NoninvertibleTransformException x){
                 System.out.print("wow something went really wrong tried to transform something that wasn't a point");
             }

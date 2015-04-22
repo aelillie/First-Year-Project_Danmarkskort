@@ -214,7 +214,7 @@ public class OSMHandler extends DefaultHandler {
 
                 }
                 else if (keyValue_map.containsKey("railway")) railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
-                else if (keyValue_map.containsKey("route"))  streetTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
+                else if (keyValue_map.containsKey("route"))  railwayTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
                 if (keyValue_map.containsKey("name")) {
                     String name= keyValue_map.get("name").toLowerCase().trim();
                     if(keyValue_map.containsKey("highway")||keyValue_map.containsKey("cycleway")||keyValue_map.containsKey("motorroad")) {
