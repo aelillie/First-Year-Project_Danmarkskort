@@ -14,19 +14,6 @@ public class QuadTree implements Serializable{
     private static final long serialVersionUID = 8;
     private int cap = 0;
     private Node root;
-    private Comparator<MapData> comparator = new Comparator<MapData>() {
-        @Override
-        /**
-         * Compares two MapFeature objects.
-         * Returns a negative integer, zero, or a positive integer as the first argument
-         * is less than, equal to, or greater than the second.
-         */
-        public int compare(MapData o1, MapData o2) {
-            if (o1.getLayerVal() < o2.getLayerVal()) return -1;
-            else if (o1.getLayerVal() > o2.getLayerVal()) return 1;
-            return -1;
-        }
-    };
 
     // helper node data type
     private class Node implements Serializable {
@@ -180,7 +167,19 @@ public class QuadTree implements Serializable{
         Collection<MapData> values;
         if(sorted){
             //values = new HashSet<>();
-            values = new TreeSet<>(comparator);
+            values = new TreeSet<>(new Comparator<MapData>() {
+                @Override
+                /**
+                 * Compares two MapFeature objects.
+                 * Returns a negative integer, zero, or a positive integer as the first argument
+                 * is less than, equal to, or greater than the second.
+                 */
+                public int compare(MapData o1, MapData o2) {
+                    if (o1.getLayerVal() < o2.getLayerVal()) return -1;
+                    else if (o1.getLayerVal() > o2.getLayerVal()) return 1;
+                    return -1;
+                }
+            });
         }else {
             values = new HashSet<>();
         }
