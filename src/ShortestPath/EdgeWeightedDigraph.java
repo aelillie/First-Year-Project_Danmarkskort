@@ -3,6 +3,7 @@ package ShortestPath;
 
 import MapFeatures.Highway;
 
+import java.io.Serializable;
 import java.util.Collection;
 import java.util.List;
 import java.util.Set;
@@ -10,7 +11,7 @@ import java.util.Set;
 /**
  * Created by woozy_000 on 13-04-2015.
  */
-public class EdgeWeightedDigraph {
+public class EdgeWeightedDigraph implements Serializable{
     private int V; //Total amount of vertices
     private int E; //Total amount of edges
     private Bag<Edge>[] adj; //a bag for each vertex containing adjacent edges

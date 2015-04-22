@@ -1,11 +1,12 @@
 package ShortestPath;
 
 import java.awt.geom.Point2D;
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-public class Vertices {
+public class Vertices implements Serializable {
     private Map<Point2D, Integer> vertex_map;
     private Point2D[] vertex_index;
     private int counter;

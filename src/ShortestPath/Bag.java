@@ -1,17 +1,18 @@
 package ShortestPath;
 
+import java.io.Serializable;
 import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
  * Created by woozy_000 on 15-04-2015.
  */
-public class Bag<Item> implements Iterable<Item> {
+public class Bag<Item> implements Iterable<Item>, Serializable {
     private int N;               // number of elements in bag
     private Node<Item> first;    // beginning of bag
 
     // helper linked list class
-    private static class Node<Item> {
+    private static class Node<Item> implements Serializable {
         private Item item;
         private Node<Item> next;
     }

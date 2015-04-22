@@ -2,6 +2,8 @@ package Model;
 
 import MapFeatures.Coastline;
 import QuadTree.QuadTree;
+import ShortestPath.EdgeWeightedDigraph;
+import ShortestPath.Vertices;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -39,12 +41,18 @@ public class BinaryHandler{
         out.writeObject(model.getOSMReader().getAddressList());
         loadingScreen.updateLoadBar(50);
 
+        out.writeObject(model.getDiGraph());
+        loadingScreen.updateLoadBar(60);
+        out.writeObject(model.getVertices());
+        loadingScreen.updateLoadBar(65);
         List<QuadTree> qT = model.getQuadTrees();
 
         out.writeObject(qT);
         loadingScreen.updateLoadBar(90);
 
         out.writeObject(model.getCoastlines());
+
+
         loadingScreen.updateLoadBar(100);
 
         out.close();
@@ -81,6 +89,10 @@ public class BinaryHandler{
 
         model.getOSMReader().setAddressList((ArrayList<Address>) in.readObject());
 
+        loadingScreen.updateLoadBar(55);
+        model.getOSMReader().setDiGraph((EdgeWeightedDigraph) in.readObject());
+        loadingScreen.updateLoadBar(65);
+        model.getOSMReader().setVertices((Vertices) in.readObject());
 
         long time = System.nanoTime();
         model.setBBox(rec);

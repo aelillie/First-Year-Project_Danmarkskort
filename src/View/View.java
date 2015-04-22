@@ -747,17 +747,16 @@ public class View extends JFrame implements Observer {
     }
 
     private int findVertex(Point2D loc, Highway way){
-
-        List<Edge> edges = way.getEdge();
-        Edge closest = null;
+        Vertices vertexIndex = model.getVertices();
+        List<Point2D> vertices = way.getPoints();
+        Point2D closest = new Point2D.Double();
         double distance = Integer.MAX_VALUE;
-        for(Edge e : edges){
-            Path2D p = e.getWay();
-            if(loc.distance(p.getCurrentPoint())< distance)
-                closest = e;
+        for(Point2D p : vertices){
+            if(loc.distance(p)< distance)
+                closest = p;
         }
 
-        return closest.from();
+        return vertexIndex.getIndex(closest);
     }
 
     /**

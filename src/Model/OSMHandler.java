@@ -223,7 +223,7 @@ public class OSMHandler extends DefaultHandler {
                     if (keyValue_map.containsKey("maxspeed")) highway.setMaxSpeed(keyValue_map.get("maxspeed"));
 
                     vertices.add(wayCoords); //create vertices for all points making up a way
-                    highway.storePoints(wayCoords);
+                    highway.storePoints(new ArrayList<>(wayCoords));
                     highway.assignEdges();
                 }
                 else if (keyValue_map.containsKey("railway")) railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
@@ -353,6 +353,7 @@ public class OSMHandler extends DefaultHandler {
                 diGraph.addEdges(streetEdges());
                 wayId_longMap.clear(); //sets key and value arrays to point to null
                 node_longMap.clear();
+                keyValue_map.clear();
                 break;
 
         }
@@ -493,4 +494,12 @@ public class OSMHandler extends DefaultHandler {
     }
 
     public QuadTree getRailwayTree() {return railwayTree; }
+
+    public void setDiGraph(EdgeWeightedDigraph diGraph) {
+        this.diGraph = diGraph;
+    }
+
+    public void setVertices(Vertices vertices) {
+        this.vertices = vertices;
+    }
 }
