@@ -37,7 +37,6 @@ public class RouteView extends JPanel{
         setLayout(new BorderLayout());
         makeFindRoutePanel();
         add(startEndAddressPanel, BorderLayout.CENTER);
-
         RoutePanelController rp = new RoutePanelController(this,model);
 
     }
@@ -160,6 +159,8 @@ public class RouteView extends JPanel{
         iconBlackEquivalenceMap.put(bicycleButton,bicycleOptionIcon);
         iconBlackEquivalenceMap.put(footButton,walkingOptionIcon);
     }
+
+
 
     public void changeButtonAppearence(JButton button, boolean buttonDown){
         ImageIcon newIcon;

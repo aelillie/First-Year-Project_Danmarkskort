@@ -10,8 +10,8 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.util.HashMap;
-import java.util.Map;
+import java.awt.geom.Point2D;
+import java.util.*;
 
 
 public class RoutePanelController implements ActionListener{
@@ -25,6 +25,7 @@ public class RoutePanelController implements ActionListener{
     private View view;
     private int selectedNr = -1;
     private Model model;
+    private Point2D startPoint, endPoint;
 
     private HashMap<JButton, Boolean> buttonDownMap;
 
@@ -59,12 +60,14 @@ public class RoutePanelController implements ActionListener{
         routeView.getBicycleButton().addActionListener(this);
         routeView.getFootButton().addActionListener(this);
 
-        startAddressField.addKeyListener(new SearchFieldKeyHandler(startAddressField,startAddrScrollpane));
-        endAddressField.addKeyListener(new SearchFieldKeyHandler(endAddressField,endAddrScrollpane));
-        setInputChangeHandler(startAddressField,startAddrScrollpane);
+        startAddressField.addKeyListener(new SearchFieldKeyHandler(startAddressField, startAddrScrollpane));
+        endAddressField.addKeyListener(new SearchFieldKeyHandler(endAddressField, endAddrScrollpane));
+        startAddressField.addActionListener(this);
+        endAddressField.addActionListener(this);
+        setInputChangeHandler(startAddressField, startAddrScrollpane);
         setInputChangeHandler(endAddressField,endAddrScrollpane);
-        addFocusListener("Enter start address",startAddressField);
-        addFocusListener("Enter end address",endAddressField);
+        addFocusListener("Enter start address", startAddressField);
+        addFocusListener("Enter end address", endAddressField);
     }
 
     private void setMouseDownMap(){
@@ -105,14 +108,14 @@ public class RoutePanelController implements ActionListener{
         textField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                addressSearch(1,textField,resultPane);
-                selectedNr=-1;
+                addressSearch(1, textField, resultPane);
+                selectedNr = -1;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                addressSearch(1,textField,resultPane);
-                selectedNr=-1;
+                addressSearch(1, textField, resultPane);
+                selectedNr = -1;
             }
 
             @Override
@@ -146,12 +149,38 @@ public class RoutePanelController implements ActionListener{
 
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if (command == "findRoute");
+        if (command == "findRoute") {
+            if(startAddressField.getText().equals(""))
+                startPoint = null;
+            if(endAddressField.getText().equals(""))
+                endPoint = null;
+
+            if (startPoint != null && endPoint != null) {
+                System.out.println("Working");
+                view.findRoute(startPoint, endPoint);
+            }
+        }
+
         else if (command == "car") buttonDown(routeView.getCarButton());
         else if (command == "bicycle") buttonDown(routeView.getBicycleButton());
         else if (command == "walking") buttonDown(routeView.getFootButton());
-        else if (command == "startAddressSearch") ;
-        else if (command == "endAddressSearch") ;
+        else if (command == "startAddressSearch"){
+            Address[] results = addressSearch(2,startAddressField,startAddrScrollpane);
+            if(results != null && results.length == 1) {
+                startAddrScrollpane.setVisible(false);
+                System.out.println("search");
+                startPoint = SearchResultMouseHandler.getPoint(results[0], model);
+            }else startPoint = null;
+        }
+        else if (command == "endAddressSearch") {
+            Address[] results = addressSearch(2, endAddressField, endAddrScrollpane);
+            if (results != null && results.length == 1) {
+                endAddrScrollpane.setVisible(false);
+                System.out.println("found!");
+                endPoint = SearchResultMouseHandler.getPoint(results[0], model);
+            } else endPoint = null;
+        }
+
     }
 
     public void buttonDown(JButton button){
@@ -204,7 +233,9 @@ public class RoutePanelController implements ActionListener{
 
             Address[] results = addressSearch(2,textField,resultPane);
             if (results != null) {
-                if (results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view,textFieldToIconType.get(textField));
+                if (results.length == 1){
+                    SearchResultMouseHandler.goToAddressLocation(results[0], model, view, textFieldToIconType.get(textField));
+                }
                 resultPane.setVisible(false);
                 view.getCanvas().requestFocusInWindow();
             } else {

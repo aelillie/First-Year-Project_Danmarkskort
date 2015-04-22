@@ -38,11 +38,13 @@ public class SearchResultMouseHandler extends MouseAdapter{
         Address selectedItem = searchResults.getSelectedValue();
         textField.setText(selectedItem.toString());
         view.getCanvas().requestFocusInWindow();
-        getAddressLocation(selectedItem, model, view,iconType);
+        goToAddressLocation(selectedItem, model, view, iconType);
+
         scrollPane.setVisible(false);
+        textField.postActionEvent();
     }
 
-    public static void getAddressLocation(Address selectedAddr, Model m, View v, String iconType){
+    public static void goToAddressLocation(Address selectedAddr, Model m, View v, String iconType){
         Map<Address, Point2D> addressMap = m.getOSMReader().getAddressMap();
         Map<Address, List<Path2D>> streetMap = m.getOSMReader().getStreetMap();
         Map<Address, Path2D> boundaryMap = m.getOSMReader().getBoundaryMap();
@@ -54,18 +56,23 @@ public class SearchResultMouseHandler extends MouseAdapter{
         if(addressLocation == null && boundaryLocation == null) {
             v.zoomOnStreet(streetLocation);
             Point2D middlePoint = getMiddlePoint(streetLocation);
+
             v.addPointer(new MapPointer(streetLocation,iconType));
             v.searchResultChosen(middlePoint.getX(),middlePoint.getY());
 
         } else if(boundaryLocation == null && streetLocation == null){
             v.zoomOnAddress();
+
             v.addPointer(new MapPointer(addressLocation,iconType));
             v.searchResultChosen(addressLocation.getX(), addressLocation.getY());
 
         } else if(streetLocation == null && addressLocation == null){
-            v.addPointer(new MapPointer(boundaryLocation,iconType));
-            v.searchResultChosen(boundaryLocation.getBounds().getCenterX(),boundaryLocation.getBounds().getCenterY());
+            v.addPointer(new MapPointer(boundaryLocation, iconType));
+            v.searchResultChosen(boundaryLocation.getBounds().getCenterX(), boundaryLocation.getBounds().getCenterY());
+
         }
+
+
     }
 
     private static Point2D getMiddlePoint(List<Path2D> street){
@@ -91,5 +98,23 @@ public class SearchResultMouseHandler extends MouseAdapter{
         xCoordinateMean = xCoordinateMean/pathCount;
         yCoordinateMean = yCoordinateMean/pathCount;
         return new Point2D.Double(xCoordinateMean,yCoordinateMean);
+    }
+
+    public static Point2D getPoint(Address result, Model m){
+        Map<Address, Point2D> addressMap = m.getOSMReader().getAddressMap();
+        Map<Address, List<Path2D>> streetMap = m.getOSMReader().getStreetMap();
+        Map<Address, Path2D> boundaryMap = m.getOSMReader().getBoundaryMap();
+
+        Point2D addressLocation = addressMap.get(result);
+        List<Path2D> streetLocation = streetMap.get(result);
+        Path2D boundaryLocation = boundaryMap.get(result);
+        if(addressLocation != null)
+            return addressLocation;
+        else if(streetLocation != null)
+            return getMiddlePoint(streetLocation);
+        else if(boundaryLocation != null)
+            return null;
+        else return null;
+
     }
 }
