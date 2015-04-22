@@ -15,11 +15,15 @@ public class Highway extends MapFeature {
     private String streetName;
     private Vertices vertices =  Model.getModel().getVertices();
 
-    public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName) {
+    private boolean isOneWay;
+
+
+    public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName, boolean isOneWay) {
         super(way, layer_value, value);
         this.isArea = isArea;
         if(streetName != null)
             this.streetName = streetName.intern();
+        this.isOneWay = isOneWay;
     }
 
     public Highway() {

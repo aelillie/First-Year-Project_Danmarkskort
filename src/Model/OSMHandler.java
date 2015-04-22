@@ -38,7 +38,7 @@ public class OSMHandler extends DefaultHandler {
     private Long wayId; //Id of the current way
     private Point2D nodeCoord; //current node's coordinates
     //if a given feature is present:
-    private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity, isStart;
+    private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity, isStart, isOneWay;
     private String streetName, houseNumber,cityName, postCode; //address info
     private Point2D startPoint, endPoint; //coastline start point and end point
     private Rectangle2D bbox = new Rectangle2D.Double();
@@ -111,6 +111,7 @@ public class OSMHandler extends DefaultHandler {
                 isArea = false;
                 hasName = false;
                 isStart = true;
+                isOneWay = false;
                 wayId = Long.parseLong(atts.getValue("id"));
                 break;
             case "bounds": //bounds for the given map
@@ -141,6 +142,7 @@ public class OSMHandler extends DefaultHandler {
                 if(k.equals("highway") && v.equals("bus_stop")) isBusstop = true;
                 if(k.equals("subway")&& v.equals("yes")) isMetro = true;
                 if(k.equals("network") && v.equals("S-Tog")) isSTog = true;
+                if(k.equals("oneway") && v.equals("yes")) isOneWay = true;
                 if(k.equals("name")){
                     hasName = true;
                 }
@@ -211,7 +213,7 @@ public class OSMHandler extends DefaultHandler {
 
                 }
                 else if (keyValue_map.containsKey("highway")) {
-                    Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"));
+                    Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"),isOneWay);
                     streetTree.insert(highway);
                     vertices.add(startPoint); //intersection in one end
                     vertices.add(endPoint); //intersection in the other end
