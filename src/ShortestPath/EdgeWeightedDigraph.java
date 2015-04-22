@@ -105,7 +105,7 @@ public class EdgeWeightedDigraph {
     }
 
     private void addOtherEdge(Highway e) {
-        Highway u = new Highway(e.getWay(), e.getLayerVal(), e.getValue(), e.isArea(), e.getStreetName(), e.getPoints());
+        Highway u = new Highway(e.getWay(), e.getLayerVal(), e.getValue(), e.isArea(), e.getStreetName());
         for (DiEdge diEdge : u.edges()) {
             int W = diEdge.getW();
             int V = diEdge.getV();

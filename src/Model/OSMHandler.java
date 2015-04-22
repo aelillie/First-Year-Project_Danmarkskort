@@ -211,9 +211,11 @@ public class OSMHandler extends DefaultHandler {
 
                 }
                 else if (keyValue_map.containsKey("highway")) {
-                    Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"), wayCoords);
+                    Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"));
                     streetTree.insert(highway);
                     vertices.add(wayCoords); //create vertices for all points making up a way
+                    highway.storePoints(wayCoords);
+                    highway.assignEdges();
                 }
                 else if (keyValue_map.containsKey("railway")) railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  railwayTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));

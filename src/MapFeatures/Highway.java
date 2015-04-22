@@ -18,16 +18,18 @@ public class Highway extends MapFeature {
     private List<DiEdge> edges = new ArrayList<>();
     private List<Point2D> points = new ArrayList<>();
 
-    public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName, List<Point2D> points) {
+    public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName) {
         super(way, layer_value, value);
         this.isArea = isArea;
         if(streetName != null)
             this.streetName = streetName.intern();
-        this.points = points;
-        assignEdges();
     }
 
     public Highway() {
+    }
+
+    public void storePoints(List<Point2D> points) {
+        this.points = points;
     }
 
 
