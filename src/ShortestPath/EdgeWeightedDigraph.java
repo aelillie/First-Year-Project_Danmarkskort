@@ -2,6 +2,7 @@ package ShortestPath;
 
 
 import MapFeatures.Highway;
+
 import java.util.List;
 
 /**
@@ -99,23 +100,14 @@ public class EdgeWeightedDigraph {
             validateVertex(v);
             validateVertex(w);
             adj[v].add(diEdge);
-            E++;
+            DiEdge di = new DiEdge(w,v,diEdge.weight());
+            di.setWay(diEdge.getWay());
+            adj[w].add(di);
+            E += 2;
         }
-        addOtherEdge(e);
+
     }
 
-    private void addOtherEdge(Highway e) {
-        Highway u = new Highway(e.getWay(), e.getLayerVal(), e.getValue(), e.isArea(), e.getStreetName());
-        for (DiEdge diEdge : u.edges()) {
-            int W = diEdge.getW();
-            int V = diEdge.getV();
-            double weight = diEdge.getWeight();
-            DiEdge di = new DiEdge(W, V, weight);
-            int v = di.from();
-            adj[v].add(di);
-            E++;
-        }
-    }
 
     /**
      * Returns the directed edges incident from vertex <tt>v</tt>.
