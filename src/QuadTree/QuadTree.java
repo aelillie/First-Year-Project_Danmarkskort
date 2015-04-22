@@ -76,6 +76,10 @@ public class QuadTree implements Serializable{
 
         }
 
+        public Rectangle2D getRect(){
+            return new Rectangle2D.Double(x- width,y - height, width*2, height*2);
+        }
+
     }
 
     /**
@@ -104,8 +108,8 @@ public class QuadTree implements Serializable{
         }
         else {
             MapFeature mF = (MapFeature) value;
-
-            insert(root, mF.getWay().getBounds2D().getCenterX(), mF.getWay().getBounds2D().getCenterY() , mF);
+            Rectangle2D rec = mF.getWay().getBounds2D();
+            insert(root, rec.getCenterX(), rec.getCenterY(), mF);
 
         }
     }
@@ -131,31 +135,72 @@ public class QuadTree implements Serializable{
         }
     }
 
+    //TODO fix this.
+    private void insertPath(Node h, Path2D shape, MapData value){
+        if(h.NW != null) {
+            if (h.NW.getRect().contains(shape.getBounds2D())
+                    || shape.intersects(h.NW.getRect())) {
+                insertPath(h.NW, shape, value);
+            }
+            if (h.SW.getRect().contains(shape.getBounds2D())
+                    || shape.intersects(h.SW.getRect())) {
+                insertPath(h.SW, shape, value);
+            }
+            if (h.NE.getRect().contains(shape.getBounds2D())
+                    || shape.intersects(h.NE.getRect())) {
+                insertPath(h.NE, shape, value);
+            }
+            if (h.SE.getRect().contains(shape.getBounds2D())
+                    || shape.intersects(h.SE.getRect())) {
+                insertPath(h.SE, shape, value);
+            }
+        }else h.addvalue(value);
+    }
+
 
     /**
      * Range search in the QuadTree
      * @param rect Range needed
      * @return List of List of MapFeatures
      */
-    public ArrayList<MapData> query2D(Shape rect) {
-        //List of list of All values in rect to be returned
-        ArrayList<MapData> values = new ArrayList<>();
+    public Collection<MapData> query2D(Shape rect, boolean sorted) {
+        Collection<MapData> values;
+        if(sorted){
+            //values = new HashSet<>();
+            values = new TreeSet<>(new Comparator<MapData>() {
+                @Override
+                /**
+                 * Compares two MapFeature objects.
+                 * Returns a negative integer, zero, or a positive integer as the first argument
+                 * is less than, equal to, or greater than the second.
+                 */
+                public int compare(MapData o1, MapData o2) {
+                    if (o1.getLayerVal() < o2.getLayerVal()) return -1;
+                    else if (o1.getLayerVal() > o2.getLayerVal()) return 1;
+                    return -1;
+                }
+            });
+        }else {
+            values = new HashSet<>();
+        }
 
         if(rect != null)
             query2D(root, rect, values);
-
+        else{
+            System.out.println("View was null");
+        }
 
         return values;
     }
 
-    private void query2D(Node h, Shape query, ArrayList<MapData> values) {
+    private void query2D(Node h, Shape query, Collection<MapData> values) {
         if (h == null) return;
         Rectangle2D rect = query.getBounds2D();
         Double xmin = rect.getMinX();
         Double ymin = rect.getMinY();
         Double xmax = rect.getMaxX();
         Double ymax = rect.getMaxY();
-        if (rect.intersects(new Rectangle2D.Double(h.x- h.width,h.y - h.height, h.width*2, h.height*2)) || rect.contains(h.x, h.y))
+        if (rect.intersects(h.getRect()) || rect.contains(h.x, h.y))
             if(h.N != 0) {
                 for(int i = 0; i < h.N; i++)
                     values.add(h.value[i]);
@@ -195,7 +240,7 @@ public class QuadTree implements Serializable{
         ArrayList<Rectangle2D> wut = new ArrayList<>();
         if(h == null) return null;
         else{
-            wut.add(new Rectangle2D.Double(h.x - h.width, h.y - h.height, h.width * 2, h.height * 2));
+            wut.add(h.getRect());
 
             if(h.NW != null)wut.addAll(getNodeRects(h.NW));
             if(h.NE != null)wut.addAll(getNodeRects(h.NE));

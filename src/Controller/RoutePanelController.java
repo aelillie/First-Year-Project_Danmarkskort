@@ -26,6 +26,8 @@ public class RoutePanelController implements ActionListener{
     private int selectedNr = -1;
     private Model model;
 
+    private HashMap<JButton, Boolean> buttonDownMap;
+
     public RoutePanelController(RouteView routeView, Model model){
         view = routeView.getView();
         this.model = model;
@@ -36,6 +38,7 @@ public class RoutePanelController implements ActionListener{
         this.routeView = routeView;
         setScrollpaneBoundsAndIcon();
         setHandlers();
+        setMouseDownMap();
 
     }
 
@@ -64,6 +67,13 @@ public class RoutePanelController implements ActionListener{
         addFocusListener("Enter end address",endAddressField);
     }
 
+    private void setMouseDownMap(){
+        buttonDownMap = new HashMap<>();
+        buttonDownMap.put(routeView.getCarButton(),false);
+        buttonDownMap.put(routeView.getBicycleButton(),false);
+        buttonDownMap.put(routeView.getFootButton(),false);
+    }
+
     private void addFocusListener(final String promptText, final JTextField textField){
         textField.addFocusListener(new FocusListener() {
 
@@ -88,9 +98,7 @@ public class RoutePanelController implements ActionListener{
                     textField.setText(promptText);
                 }
             }
-
         });
-
     }
 
     private void setInputChangeHandler(final JTextField textField, final JScrollPane resultPane){
@@ -139,8 +147,18 @@ public class RoutePanelController implements ActionListener{
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command == "findRoute");
+        else if (command == "car") buttonDown(routeView.getCarButton());
+        else if (command == "bicycle") buttonDown(routeView.getBicycleButton());
+        else if (command == "walking") buttonDown(routeView.getFootButton());
         else if (command == "startAddressSearch") ;
         else if (command == "endAddressSearch") ;
+    }
+
+    public void buttonDown(JButton button){
+        //TODO: what to do on button down?
+        boolean isButtonDown = buttonDownMap.get(button);
+        routeView.changeButtonAppearence(button,isButtonDown);
+        buttonDownMap.put(button,!isButtonDown);
     }
 
     private class SearchFieldKeyHandler extends KeyAdapter {
@@ -159,22 +177,7 @@ public class RoutePanelController implements ActionListener{
 
             //Set up the keyboard handler for different keys.
             if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                Address selectedItem = list.getSelectedValue();
-                if(!(selectedItem==null)) {
-                    textField.setText(selectedItem.toString());
-                    textField.setVisible(true);
-                }
-
-                Address[] results = addressSearch(2,textField,resultPane);
-                if (results != null) {
-                    if (results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view,textFieldToIconType.get(textField));
-                    resultPane.setVisible(false);
-                    view.getCanvas().requestFocusInWindow();
-                } else {
-                    addressSearch(1,textField,resultPane);
-                    view.getCanvas().requestFocusInWindow();
-                }
-
+                enterPressed();
             }
 
             if(e.getKeyCode() == KeyEvent.VK_DOWN && selectedNr < list.getModel().getSize()-1){
@@ -185,6 +188,29 @@ public class RoutePanelController implements ActionListener{
                 list.setSelectedIndex(--selectedNr);
             }
 
+        }
+
+        public void enterPressed(){
+            Address selectedItem = null;
+            try{
+                selectedItem = list.getSelectedValue();
+            } catch (NullPointerException ex){
+                System.out.println("No address chosen");
+            }
+            if(!(selectedItem==null)) {
+                textField.setText(selectedItem.toString());
+                textField.setVisible(true);
+            }
+
+            Address[] results = addressSearch(2,textField,resultPane);
+            if (results != null) {
+                if (results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view,textFieldToIconType.get(textField));
+                resultPane.setVisible(false);
+                view.getCanvas().requestFocusInWindow();
+            } else {
+                addressSearch(1,textField,resultPane);
+                view.getCanvas().requestFocusInWindow();
+            }
         }
     }
 

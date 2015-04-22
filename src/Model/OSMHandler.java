@@ -191,7 +191,11 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("geological")) naturalTree.insert(new Geological(way, fetchOSMLayer(), keyValue_map.get("geological")));
                 else if (keyValue_map.containsKey("building")) buildingTree.insert(new Building(way, fetchOSMLayer(), keyValue_map.get("building")));
                 else if (keyValue_map.containsKey("shop"))  buildingTree.insert(new Shop(way, fetchOSMLayer(), keyValue_map.get("shop"))); //This seems to only appear under <node
-                else if (keyValue_map.containsKey("tourism")) buildingTree.insert(new Tourism(way, fetchOSMLayer(), keyValue_map.get("tourism")));
+                else if (keyValue_map.containsKey("tourism")) {
+                    buildingTree.insert(new Tourism(way, fetchOSMLayer(), keyValue_map.get("tourism")));
+                    if(keyValue_map.get("tourism").equals("attraction")){
+                        iconTree.insert(new MapIcon(way,"attractionIcon"));}
+                }
                 else if (keyValue_map.containsKey("man_made")) naturalTree.insert(new ManMade(way, fetchOSMLayer(), keyValue_map.get("man_made")));
                 else if (keyValue_map.containsKey("historic")) naturalTree.insert(new Historic(way, fetchOSMLayer(), keyValue_map.get("historic")));
                 else if (keyValue_map.containsKey("craft")) naturalTree.insert(new Craft(way, fetchOSMLayer(), keyValue_map.get("craft")));
@@ -201,6 +205,7 @@ public class OSMHandler extends DefaultHandler {
                     buildingTree.insert(new Amenity(way, fetchOSMLayer(), keyValue_map.get("amenity"), keyValue_map.containsKey("building")));
                     if (keyValue_map.get("amenity").equals("parking")) {
                         iconTree.insert(new MapIcon(way, "parkingIcon"));}
+
 
                     //if(keyValue_map.get("amenity").equals("atm")){
                       //  quadTree.insert(new MapIcon(way, MapIcon.atmIcon));}
@@ -254,13 +259,14 @@ public class OSMHandler extends DefaultHandler {
                             buildingTree.insert(new Multipolygon(path, fetchOSMLayer(), "building"));
 
 
-                        /*if(keyValue_map.containsKey("place")){
+                        if(keyValue_map.containsKey("place")){
                             //TODO islets
+                            //naturalTree.insert(new Natural(path, fetchOSMLayer(), "place"));
 
-                        }*/
-                        /*else if (keyValue_map.containsKey("natural"))
-                            if(keyValue_map.get("natural").equals("water"))
-                                quadTree.insert(new Natural(path, fetchOSMLayer(), "water"));*/
+                        }
+                        else if (keyValue_map.containsKey("natural"));
+                            //if(keyValue_map.get("natural").equals("water"))
+                               // naturalTree.insert(new Natural(path, fetchOSMLayer(), "water"));
                         //TODO How do draw harbor.
                     } if (val.equals("boundary")){
                         Path2D path = PathCreater.createMultipolygon(memberReferences, wayId_longMap);
@@ -285,13 +291,29 @@ public class OSMHandler extends DefaultHandler {
                         iconTree.insert(new MapIcon(nodeCoord, "busIcon"));
                     }
                 }
+                else if(keyValue_map.containsKey("tourism")){
+                    String val = keyValue_map.get("tourism");
+                    if(val.equals("hotel")){
+                        iconTree.insert(new MapIcon(nodeCoord,"hotelIcon"));
+                    }
+                }
                 else if(keyValue_map.containsKey("amenity")) {
                     String val = keyValue_map.get("amenity");
                     if(val.equals("pub") || val.equals("bar")) {
                         iconTree.insert(new MapIcon(nodeCoord, "pubIcon"));}
                     else if(val.equals("atm")){
-                        iconTree.insert(new MapIcon(nodeCoord, "atmIcon"));
-                        }
+                        iconTree.insert(new MapIcon(nodeCoord, "atmIcon"));}
+                    else if(val.equals("restaurant")){
+                        iconTree.insert(new MapIcon(nodeCoord,"restaurantIcon"));}
+                    else if(val.equals("hospital")){
+                        iconTree.insert(new MapIcon(nodeCoord,"hospitalIcon"));
+                    }
+                    else if(val.equals("cafe")){
+                        iconTree.insert(new MapIcon(nodeCoord,"cafeIcon"));
+                    }
+                    else if(val.equals("toilets")){
+                        iconTree.insert(new MapIcon(nodeCoord,"toiletIcon"));
+                    }
                 }
                 else if (keyValue_map.containsKey("railway")) {
                     String val = keyValue_map.get("railway");
@@ -300,8 +322,11 @@ public class OSMHandler extends DefaultHandler {
                         else if (isSTog) iconTree.insert(new MapIcon(nodeCoord, "stogIcon"));
                     }
                 } else if(keyValue_map.containsKey("name")) {
-
-                    if(keyValue_map.containsKey("place")){
+                        String val = keyValue_map.get("name");
+                        if(val.equals("7-Eleven")){
+                        iconTree.insert(new MapIcon(nodeCoord, "7elevenIcon"));
+                    }
+                    else if(keyValue_map.containsKey("place")){
                         String place = keyValue_map.get("place");
                         if(place.equals("town") || place.equals("village") || place.equals("suburb") || place.equals("locality")|| place.equals("neighbourhood")){
                             String name = keyValue_map.get("name").toLowerCase();

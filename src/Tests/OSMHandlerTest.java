@@ -1,21 +1,20 @@
 package Tests;
 
-import MapFeatures.*;
-import Model.Model;
-import Model.MapData;
-import Model.MapIcon;
-import Model.MapFeature;
-import Model.MapCalculator;
+import Model.*;
 import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import sun.tools.jar.Main;
 
-import java.awt.geom.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
+import java.awt.geom.Rectangle2D;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
 
 
@@ -26,11 +25,11 @@ public class OSMHandlerTest {
     private static final double DELTA = 1e-15;
     Model m = Model.getModel();
     InputStream inputStream;
-    List<MapData> streetList;
-    List<MapData> buildingList;
-    List<MapData> iconList;
-    List<MapData> naturalList;
-    List<MapData> mapFeatureList = new ArrayList<>();
+    Collection<MapData> streetList;
+    Collection<MapData> buildingList;
+    Collection<MapData> iconList;
+    Collection<MapData> naturalList;
+    Collection<MapData> mapFeatureList = new ArrayList<>();
 
     /**
      * Sets up an osm test file, which enables us to cover all the functions the OSMHandler invokes
@@ -43,11 +42,12 @@ public class OSMHandlerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        streetList = m.getVisibleStreets(new Rectangle2D.Float(0, 0, 500, 500));
-        buildingList = m.getVisibleBuildings(new Rectangle2D.Float(0, 0, 500, 500));
-        iconList = m.getVisibleIcons(new Rectangle2D.Float(0, 0, 500, 500));
-        naturalList = m.getVisibleNatural(new Rectangle2D.Float(0, 0, 500, 500));
+        streetList = m.getVisibleStreets(new Rectangle2D.Float(0, 0, 500, 500), false);
+        buildingList = m.getVisibleBuildings(new Rectangle2D.Float(0, 0, 500, 500), false);
+        iconList = m.getVisibleIcons(new Rectangle2D.Float(0, 0, 500, 500), false);
+        naturalList = m.getVisibleNatural(new Rectangle2D.Float(0, 0, 500, 500), false);
         mapFeatureList.addAll(streetList);
+        mapFeatureList.addAll(m.getVisibleRailways(new Rectangle2D.Float(0,0,500,500), false));
         mapFeatureList.addAll(buildingList);
         mapFeatureList.addAll(naturalList);
     }
@@ -126,16 +126,20 @@ public class OSMHandlerTest {
     @Test
     public void addingIconsTest(){
         Assert.assertEquals(5, iconList.size());
-        MapIcon icon = (MapIcon) iconList.get(0);
-        Assert.assertTrue(icon.getClassType() == MapIcon.class);
+        iconList.forEach(icon ->{
+            Assert.assertTrue(icon.getClassType() == MapIcon.class);
+        });
+
     }
 
     @Test
     public void addingBuildingsTest(){
         Assert.assertTrue(!buildingList.isEmpty());
-        Assert.assertNotNull(buildingList.get(0));
+        buildingList.forEach(mapdata -> {
+            Assert.assertNotNull(mapdata);
+        });
         Assert.assertEquals(5, buildingList.size());
-        Assert.assertTrue(buildingList.get(0) instanceof MapFeature);
+
     }
 
 
@@ -143,16 +147,19 @@ public class OSMHandlerTest {
     public void addingNaturalsTest(){
         Assert.assertTrue(!naturalList.isEmpty());
         Assert.assertEquals(3, naturalList.size());
-        Assert.assertNotNull(naturalList.get(1));
-        Assert.assertTrue(naturalList.get(0) instanceof MapFeature);
+        naturalList.forEach(natural ->{
+                    Assert.assertNotNull(natural);
+                }
+        );
     }
 
     @Test
     public void addingStreetTest(){
         Assert.assertTrue(!streetList.isEmpty());
-        Assert.assertEquals(4, streetList.size());
-        Assert.assertNotNull(streetList.get(1));
-        Assert.assertTrue(streetList.get(0) instanceof Highway);
+        Assert.assertEquals(3, streetList.size());
+        streetList.forEach(street ->{
+            Assert.assertNotNull(street);
+        });
     }
 
     @Test
