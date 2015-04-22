@@ -148,24 +148,24 @@ public class Model extends Observable implements Serializable {
 
     public OSMHandler getOSMReader(){return OSMReader;}
 
-    public ArrayList<MapData> getVisibleStreets(Rectangle2D visibleArea){
-        return OSMReader.getStreetTree().query2D(visibleArea);
+    public Collection<MapData> getVisibleStreets(Rectangle2D visibleArea, boolean sorted){
+        return OSMReader.getStreetTree().query2D(visibleArea, sorted);
     }
 
-    public ArrayList<MapData> getVisibleNatural(Rectangle2D visibleArea){
-        return OSMReader.getNaturalTree().query2D(visibleArea);
+    public Collection<MapData> getVisibleNatural(Rectangle2D visibleArea, boolean sorted){
+        return OSMReader.getNaturalTree().query2D(visibleArea, sorted);
     }
 
-    public ArrayList<MapData> getVisibleBuildings(Rectangle2D visibleArea){
-        return OSMReader.getBuildingTree().query2D(visibleArea);
+    public Collection<MapData> getVisibleBuildings(Rectangle2D visibleArea, boolean sorted){
+        return OSMReader.getBuildingTree().query2D(visibleArea, sorted);
     }
 
-    public ArrayList<MapData> getVisibleIcons(Rectangle2D visibleArea){
-        return OSMReader.getIconTree().query2D(visibleArea);
+    public Collection<MapData> getVisibleIcons(Rectangle2D visibleArea, boolean sorted){
+        return OSMReader.getIconTree().query2D(visibleArea, sorted);
     }
 
-    public ArrayList<MapData> getVisibleRailways(Rectangle2D visibleArea){
-        return OSMReader.getRailwayTree().query2D(visibleArea);
+    public Collection<MapData> getVisibleRailways(Rectangle2D visibleArea, boolean sorted){
+        return OSMReader.getRailwayTree().query2D(visibleArea, sorted);
     }
 
     /**
@@ -173,7 +173,9 @@ public class Model extends Observable implements Serializable {
      * Takes use of a comparator, which compares their values.
      */
 
-    public void sortLayers(List<MapFeature> mapFeatures) {
+    /*public void sortLayers(Collection<MapFeature> mapFeat) {
+        ArrayList<MapData> mapFeatures = new ArrayList<>(mapFeat);
+
         Comparator<MapData> comparator = new Comparator<MapData>() {
             @Override
             /**
@@ -181,7 +183,7 @@ public class Model extends Observable implements Serializable {
              * Returns a negative integer, zero, or a positive integer as the first argument
              * is less than, equal to, or greater than the second.
              */
-            public int compare(MapData o1, MapData o2) {
+            /*public int compare(MapData o1, MapData o2) {
                 if (o1.getLayerVal() < o2.getLayerVal()) return -1;
                 else if (o1.getLayerVal() > o2.getLayerVal()) return 1;
                 return 0;
@@ -189,6 +191,6 @@ public class Model extends Observable implements Serializable {
         };
         Collections.sort(mapFeatures, comparator); //iterative mergesort. ~n*lg(n) comparisons
 
-    }
+    }*/
 
 }

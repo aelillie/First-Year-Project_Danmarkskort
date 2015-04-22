@@ -2,12 +2,9 @@ package Controller;
 
 import Model.Model;
 import View.View;
-import javax.swing.*;
+
 import java.awt.event.*;
-import java.io.File;
-import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
+import java.awt.geom.NoninvertibleTransformException;
 
 public class Controller extends MouseAdapter implements ActionListener {
     Model model;
@@ -70,7 +67,11 @@ public class Controller extends MouseAdapter implements ActionListener {
             view.mouseDragged(e);
         }
         public void mouseMoved(MouseEvent e) {
-            view.findNearest(e.getPoint());
+            try{
+                view.findNearest(e.getPoint());
+            }catch(NoninvertibleTransformException x){
+                System.out.print("wow something went really wrong tried to transform something that wasn't a point");
+            }
         }
         public void mouseClicked(MouseEvent e) {
             //view.findNearest(e.getPoint());

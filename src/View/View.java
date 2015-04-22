@@ -638,19 +638,14 @@ public class View extends JFrame implements Observer {
      * Finds the Nearest Highway from the MousePosition using distance from point to lineSegment
      * @param position Position of MousePointer
      */
-    public void findNearest(Point position){
+    public void findNearest(Point position)throws NoninvertibleTransformException{
         Insets x = getInsets();
         position.setLocation(position.getX(), position.getY()-x.top + x.bottom);
         Rectangle2D windowBounds = bounds.getBounds();
-        Point2D coordinates = new Point2D.Float();
-        try{
-            AffineTransform inversed = transform.createInverse();
-            inversed.transform(position, coordinates);
-        }catch(NoninvertibleTransformException e){}
-
+        Point2D coordinates = transformPoint(position);
         Rectangle2D mouseBox = new Rectangle2D.Double(coordinates.getX(),
                 coordinates.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
-        ArrayList<MapData> node = model.getVisibleStreets(mouseBox);
+        Collection<MapData> node = model.getVisibleStreets(mouseBox, false);
 
         MapFeature champion = null;
         Line2D championLine = null;
@@ -744,6 +739,7 @@ public class View extends JFrame implements Observer {
         private Collection<MapIcon> mapIcons;
         private DrawAttribute drawAttribute;
         private Graphics2D g;
+        private boolean sorted;
 
         @Override
         public void paint(Graphics _g) {
@@ -766,11 +762,6 @@ public class View extends JFrame implements Observer {
                 g.setColor(drawAttribute.getColor());
                 g.fill(coastLine.getWay());
             }
-
-            /*if(zoomLevel > 12) {
-                model.sortLayers(mapFStreets);
-                model.sortLayers(mapFAreas);
-            }*/
 
             g.setColor(Color.BLACK);
 
@@ -904,27 +895,29 @@ public class View extends JFrame implements Observer {
 
             bounds.updateBounds(getVisibleRect());
             Rectangle2D windowBounds = bounds.getBounds();
+            if(zoomLevel > 11)
+                sorted = true;
+            else sorted = false;
 
+            Collection < MapData > streets = model.getVisibleStreets(windowBounds, sorted);
+            mapFStreets = (Collection<MapFeature>)(Collection<?>) streets;
 
-            ArrayList < MapData > streets = model.getVisibleStreets(windowBounds);
-            mapFStreets = (ArrayList<MapFeature>)(List<?>) streets;
-
-            if(zoomLevel > 10){
-                mapFStreets.addAll((ArrayList<MapFeature>) (List<?>) model.getVisibleRailways(windowBounds));
+            if(zoomLevel > 11){
+                mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleRailways(windowBounds, sorted));
 
             }
 
             if(zoomLevel > 8){
-                mapFAreas = (ArrayList<MapFeature>)(List<?>)model.getVisibleNatural(windowBounds);
+                mapFAreas = (Collection<MapFeature>)(Collection<?>)model.getVisibleNatural(windowBounds,sorted);
 
             }
 
             if(zoomLevel >= 13){
-                mapFAreas.addAll((ArrayList<MapFeature>)(List<?>) model.getVisibleBuildings(windowBounds));
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBuildings(windowBounds, sorted));
             }
 
             if(zoomLevel >= 15){
-                mapIcons = (ArrayList<MapIcon>) (List<?>) model.getVisibleIcons(windowBounds);
+                mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds, sorted);
             }
 
         }
