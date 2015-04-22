@@ -38,7 +38,7 @@ public class OSMHandler extends DefaultHandler {
     private Long wayId; //Id of the current way
     private Point2D nodeCoord; //current node's coordinates
     //if a given feature is present:
-    private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity, isStart;
+    private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity, isStart, isOneWay;
     private String streetName, houseNumber,cityName, postCode; //address info
     private Point2D startPoint, endPoint; //coastline start point and end point
     private Rectangle2D bbox = new Rectangle2D.Double();
@@ -213,6 +213,13 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("highway")) {
                     Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"));
                     streetTree.insert(highway);
+                    if(keyValue_map.containsKey("oneway")){
+                        if(keyValue_map.get("oneway").equals("yes")){
+                            highway.setIsOneWay(true);
+                        }else{
+                            highway.setIsOneWay(false);
+                        }
+                    }
                     vertices.add(wayCoords); //create vertices for all points making up a way
                     highway.storePoints(wayCoords);
                     highway.assignEdges();
