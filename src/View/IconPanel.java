@@ -43,7 +43,10 @@ public class IconPanel extends JScrollPane {
             panel.add(l1);
             IconController controller = new IconController(icons.get(i));
             if (icons.get(i).equals(MapIcon.getIconURLs().get("restaurantIcon")) ||
-                    icons.get(i).equals(MapIcon.getIconURLs().get("pubIcon"))) {
+                    icons.get(i).equals(MapIcon.getIconURLs().get("pubIcon"))||
+                    icons.get(i).equals(MapIcon.getIconURLs().get("toiletIcon")) ||
+                    icons.get(i).equals(MapIcon.getIconURLs().get("7elevenIcon")) ||
+                    icons.get(i).equals(MapIcon.getIconURLs().get("cafeIcon"))) {
                 MapIcon.setIconState(icons.get(i), false);
                 JCheckBox checkboxx = new JCheckBox("", false);
                 checkboxx.addItemListener(controller);
