@@ -682,29 +682,31 @@ public class View extends JFrame implements Observer {
         Rectangle2D mouseBox = new Rectangle2D.Double(coordinates.getX(),
                 coordinates.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
         Collection<MapData> streets = model.getVisibleStreets(mouseBox, false);
-        Collection<MapData> streetsNeeded = filterRoads(streets);
+        filterRoads(streets);
 
 
-        nearestNeighbor = findNearestHighway(coordinates, streetsNeeded);
+        nearestNeighbor = findNearestHighway(coordinates, streets);
     }
 
-    private Collection<MapData> filterRoads(Collection<MapData> before){
-        Collection<MapData> after = new ArrayList<>();
-        for(MapData  entity : before){
-            Highway highway = (Highway) entity;
+    private void filterRoads(Collection<MapData> before){
+
+        for(Iterator<MapData> it = before.iterator(); it.hasNext();){
+            Highway highway = (Highway) it.next();
             if(highway.getValue().equals("footway") || highway.getValue().equals("cycleway") ||
                     highway.getValue().equals("steps") ||
                     highway.getValue().equals("path") ||
-                    highway.getValue().equals("bridleway"))
+                    highway.getValue().equals("bridleway")) {
+                it.remove();
                 continue;
+            }
             DrawAttribute draw = drawAttributeManager.getDrawAttribute(highway.getValueName());
-            if(draw.getZoomLevel() > zoomLevel || highway.getStreetName() == null) continue;
-
-            after.add(highway);
-
+            if(draw.getZoomLevel() > zoomLevel || highway.getStreetName() == null) {
+                it.remove();
+                continue;
+            }
         }
 
-        return after;
+
 
     }
 
