@@ -702,9 +702,9 @@ public class View extends JFrame implements Observer {
         }
         nearestNeighbor = (Highway) champion;
         //System.out.println("Street: " + nearestNeighbor.getStreetName() + " v: " + nearestNeighbor.getV() + " w: " + nearestNeighbor.getW() + " weight: " + nearestNeighbor.getWeight());
-        //if (nearestNeighbor != null) {
-            //destination = nearestNeighbor.
-        //}
+        if (nearestNeighbor != null) {
+            destination = nearestNeighbor.getVertex(0);
+        }
         repaint();
     }
 

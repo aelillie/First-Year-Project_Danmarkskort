@@ -37,7 +37,7 @@ public class Highway extends MapFeature {
      * Create edges between all points in the way for the current highway
      */
     public void assignEdges() {
-        for (int i = 0 ; i+1 <= points.size() ; i++) {
+        for (int i = 0 ; i+1 < points.size() ; i++) {
             Point2D v = points.get(i);
             Point2D w = points.get(i+1);
             DiEdge diEdge = new DiEdge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
@@ -89,6 +89,14 @@ public class Highway extends MapFeature {
 
     public Iterable<DiEdge> edges() {
         return edges;
+    }
+
+    public List<DiEdge> getEdge() {
+        return edges;
+    }
+
+    public int getVertex(int i) {
+        return edges.get(i).getV();
     }
 
     public String getStreetName(){
