@@ -38,13 +38,13 @@ public class SearchResultMouseHandler extends MouseAdapter{
         Address selectedItem = searchResults.getSelectedValue();
         textField.setText(selectedItem.toString());
         view.getCanvas().requestFocusInWindow();
-        getAddressLocation(selectedItem, model, view, iconType);
+        goToAddressLocation(selectedItem, model, view, iconType);
 
         scrollPane.setVisible(false);
         textField.postActionEvent();
     }
 
-    public static void getAddressLocation(Address selectedAddr, Model m, View v, String iconType){
+    public static void goToAddressLocation(Address selectedAddr, Model m, View v, String iconType){
         Map<Address, Point2D> addressMap = m.getOSMReader().getAddressMap();
         Map<Address, List<Path2D>> streetMap = m.getOSMReader().getStreetMap();
         Map<Address, Path2D> boundaryMap = m.getOSMReader().getBoundaryMap();

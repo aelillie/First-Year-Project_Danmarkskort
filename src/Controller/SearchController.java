@@ -6,13 +6,7 @@ import View.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.event.*;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Nicoline on 04-04-2015.
@@ -40,7 +34,7 @@ public class SearchController extends MouseAdapter implements ActionListener {
         if (command.equals("search")) { //When the search button is clicked
             Address[] results = addressSearch(2);
             if(results != null) {
-                if(results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view,"chosenAddressIcon");
+                if(results.length == 1) SearchResultMouseHandler.goToAddressLocation(results[0], model, view, "chosenAddressIcon");
                 view.getResultPane().setVisible(false);
                 view.getCanvas().requestFocusInWindow();
             } else {
@@ -128,7 +122,7 @@ public class SearchController extends MouseAdapter implements ActionListener {
 
             Address[] results = addressSearch(2);
             if (results != null) {
-                if (results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view, "chosenAddressIcon");
+                if (results.length == 1) SearchResultMouseHandler.goToAddressLocation(results[0], model, view, "chosenAddressIcon");
                 view.getResultPane().setVisible(false);
                 view.getCanvas().requestFocusInWindow();
             } else {

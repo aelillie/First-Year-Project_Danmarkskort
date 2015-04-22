@@ -9,9 +9,7 @@ import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
-import java.awt.List;
 import java.awt.event.*;
-import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.*;
 
@@ -68,8 +66,8 @@ public class RoutePanelController implements ActionListener{
         endAddressField.addActionListener(this);
         setInputChangeHandler(startAddressField, startAddrScrollpane);
         setInputChangeHandler(endAddressField,endAddrScrollpane);
-        addFocusListener("Enter start address",startAddressField);
-        addFocusListener("Enter end address",endAddressField);
+        addFocusListener("Enter start address", startAddressField);
+        addFocusListener("Enter end address", endAddressField);
     }
 
     private void setMouseDownMap(){
@@ -110,14 +108,14 @@ public class RoutePanelController implements ActionListener{
         textField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                addressSearch(1,textField,resultPane);
-                selectedNr=-1;
+                addressSearch(1, textField, resultPane);
+                selectedNr = -1;
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                addressSearch(1,textField,resultPane);
-                selectedNr=-1;
+                addressSearch(1, textField, resultPane);
+                selectedNr = -1;
             }
 
             @Override
@@ -236,7 +234,7 @@ public class RoutePanelController implements ActionListener{
             Address[] results = addressSearch(2,textField,resultPane);
             if (results != null) {
                 if (results.length == 1){
-                    SearchResultMouseHandler.getAddressLocation(results[0], model, view, textFieldToIconType.get(textField));
+                    SearchResultMouseHandler.goToAddressLocation(results[0], model, view, textFieldToIconType.get(textField));
                 }
                 resultPane.setVisible(false);
                 view.getCanvas().requestFocusInWindow();
