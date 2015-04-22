@@ -76,6 +76,10 @@ public class QuadTree implements Serializable{
 
         }
 
+        public Rectangle2D getRect(){
+            return new Rectangle2D.Double(x- width,y - height, width*2, height*2);
+        }
+
     }
 
     /**
@@ -104,8 +108,8 @@ public class QuadTree implements Serializable{
         }
         else {
             MapFeature mF = (MapFeature) value;
-
-            insert(root, mF.getWay().getBounds2D().getCenterX(), mF.getWay().getBounds2D().getCenterY() , mF);
+            Rectangle2D rec = mF.getWay().getBounds2D();
+            insert(root, rec.getCenterX(), rec.getCenterY(), mF);
 
         }
     }
@@ -129,6 +133,28 @@ public class QuadTree implements Serializable{
             if(h.SE == null) h.addvalue(value);
             else insert(h.SE, x, y, value);
         }
+    }
+
+    //TODO fix this.
+    private void insertPath(Node h, Path2D shape, MapData value){
+        if(h.NW != null) {
+            if (h.NW.getRect().contains(shape.getBounds2D())
+                    || shape.intersects(h.NW.getRect())) {
+                insertPath(h.NW, shape, value);
+            }
+            if (h.SW.getRect().contains(shape.getBounds2D())
+                    || shape.intersects(h.SW.getRect())) {
+                insertPath(h.SW, shape, value);
+            }
+            if (h.NE.getRect().contains(shape.getBounds2D())
+                    || shape.intersects(h.NE.getRect())) {
+                insertPath(h.NE, shape, value);
+            }
+            if (h.SE.getRect().contains(shape.getBounds2D())
+                    || shape.intersects(h.SE.getRect())) {
+                insertPath(h.SE, shape, value);
+            }
+        }else h.addvalue(value);
     }
 
 
@@ -155,7 +181,7 @@ public class QuadTree implements Serializable{
         Double ymin = rect.getMinY();
         Double xmax = rect.getMaxX();
         Double ymax = rect.getMaxY();
-        if (rect.intersects(new Rectangle2D.Double(h.x- h.width,h.y - h.height, h.width*2, h.height*2)) || rect.contains(h.x, h.y))
+        if (rect.intersects(h.getRect()) || rect.contains(h.x, h.y))
             if(h.N != 0) {
                 for(int i = 0; i < h.N; i++)
                     values.add(h.value[i]);
@@ -195,7 +221,7 @@ public class QuadTree implements Serializable{
         ArrayList<Rectangle2D> wut = new ArrayList<>();
         if(h == null) return null;
         else{
-            wut.add(new Rectangle2D.Double(h.x - h.width, h.y - h.height, h.width * 2, h.height * 2));
+            wut.add(h.getRect());
 
             if(h.NW != null)wut.addAll(getNodeRects(h.NW));
             if(h.NE != null)wut.addAll(getNodeRects(h.NE));

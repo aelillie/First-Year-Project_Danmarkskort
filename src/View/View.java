@@ -729,9 +729,9 @@ public class View extends JFrame implements Observer {
     class Canvas extends JComponent {
         public static final long serialVersionUID = 4;
         Stroke min_value = new BasicStroke(Float.MIN_VALUE);
-        private ArrayList<MapFeature> mapFStreets = new ArrayList<>();
-        private ArrayList<MapFeature> mapFAreas = new ArrayList<>();
-        private ArrayList<MapIcon> mapIcons = new ArrayList<>();
+        private Collection<MapFeature> mapFStreets;
+        private Collection<MapFeature> mapFAreas;
+        private Collection<MapIcon> mapIcons;
         private DrawAttribute drawAttribute;
         private Graphics2D g;
 
@@ -759,10 +759,10 @@ public class View extends JFrame implements Observer {
                 g.fill(coastLine.getWay());
             }
 
-            if(zoomLevel > 12) {
+            /*if(zoomLevel > 12) {
                 model.sortLayers(mapFStreets);
                 model.sortLayers(mapFAreas);
-            }
+            }*/
 
             g.setColor(Color.BLACK);
 
@@ -826,7 +826,6 @@ public class View extends JFrame implements Observer {
                     if (drawAttribute.isDashed()) {
                         if(zoomLevel > 13)
                             g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
-                        //TODO i've tested and dashed takes a LOT of power to draw.... maybe only dash it when zoom lvl i low, cant really see difference!
                         else  g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
                     }
                     else {
@@ -861,8 +860,9 @@ public class View extends JFrame implements Observer {
                 }
             }
             g.setColor(Color.BLACK);
-            g.draw(bounds.getBounds());
 
+            Rectangle2D windowBounds = bounds.getBounds();
+            g.draw(windowBounds);
             scalebar = new Scalebar(g, zoomLevel, View.this, transform);
 
             paintNeighbor(g);
@@ -898,7 +898,7 @@ public class View extends JFrame implements Observer {
             Rectangle2D windowBounds = bounds.getBounds();
 
 
-            ArrayList<MapData> streets = model.getVisibleStreets(windowBounds);
+            ArrayList < MapData > streets = model.getVisibleStreets(windowBounds);
             mapFStreets = (ArrayList<MapFeature>)(List<?>) streets;
 
             if(zoomLevel > 10){

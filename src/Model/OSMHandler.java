@@ -240,13 +240,14 @@ public class OSMHandler extends DefaultHandler {
                             buildingTree.insert(new Multipolygon(path, fetchOSMLayer(), "building"));
 
 
-                        /*if(keyValue_map.containsKey("place")){
+                        if(keyValue_map.containsKey("place")){
                             //TODO islets
+                            //naturalTree.insert(new Natural(path, fetchOSMLayer(), "place"));
 
-                        }*/
-                        /*else if (keyValue_map.containsKey("natural"))
-                            if(keyValue_map.get("natural").equals("water"))
-                                quadTree.insert(new Natural(path, fetchOSMLayer(), "water"));*/
+                        }
+                        else if (keyValue_map.containsKey("natural"));
+                            //if(keyValue_map.get("natural").equals("water"))
+                               // naturalTree.insert(new Natural(path, fetchOSMLayer(), "water"));
                         //TODO How do draw harbor.
                     } if (val.equals("boundary")){
                         Path2D path = PathCreater.createMultipolygon(memberReferences, wayId_longMap);
@@ -298,7 +299,7 @@ public class OSMHandler extends DefaultHandler {
                 } else if(keyValue_map.containsKey("name")) {
                         String val = keyValue_map.get("name");
                         if(val.equals("7-Eleven")){
-                        iconTree.insert(new MapIcon(nodeCoord,"7elevenIcon"));
+                        iconTree.insert(new MapIcon(nodeCoord, "7elevenIcon"));
                     }
                     else if(keyValue_map.containsKey("place")){
                         String place = keyValue_map.get("place");

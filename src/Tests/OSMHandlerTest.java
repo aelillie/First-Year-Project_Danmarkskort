@@ -48,6 +48,7 @@ public class OSMHandlerTest {
         iconList = m.getVisibleIcons(new Rectangle2D.Float(0, 0, 500, 500));
         naturalList = m.getVisibleNatural(new Rectangle2D.Float(0, 0, 500, 500));
         mapFeatureList.addAll(streetList);
+        mapFeatureList.addAll(m.getVisibleRailways(new Rectangle2D.Float(0,0,500,500)));
         mapFeatureList.addAll(buildingList);
         mapFeatureList.addAll(naturalList);
     }
@@ -150,7 +151,7 @@ public class OSMHandlerTest {
     @Test
     public void addingStreetTest(){
         Assert.assertTrue(!streetList.isEmpty());
-        Assert.assertEquals(4, streetList.size());
+        Assert.assertEquals(3, streetList.size());
         Assert.assertNotNull(streetList.get(1));
         Assert.assertTrue(streetList.get(0) instanceof Highway);
     }
