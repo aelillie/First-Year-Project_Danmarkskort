@@ -705,8 +705,9 @@ public class View extends JFrame implements Observer {
                 continue;
             }
         }
+    }
 
-
+    public void findRoute(Point2D startPoint, Point2D endPoint){
 
     }
 
