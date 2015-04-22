@@ -17,10 +17,7 @@ public class Highway extends MapFeature {
     private Vertices vertices =  Model.getModel().getVertices();
     private List<Edge> edges = new ArrayList<>();
     private List<Point2D> points = new ArrayList<>();
-
-
-
-    private boolean isOneWay;
+    private String isOneWay;
 
 
     public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName) {
@@ -113,11 +110,11 @@ public class Highway extends MapFeature {
         return points;
     }
 
-    public boolean isOneWay() {
+    public String isOneWay() {
         return isOneWay;
     }
 
-    public void setIsOneWay(boolean isOneWay) {
+    public void setIsOneWay(String isOneWay) {
         this.isOneWay = isOneWay;
     }
 }
