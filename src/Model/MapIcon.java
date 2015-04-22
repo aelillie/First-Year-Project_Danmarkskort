@@ -18,6 +18,10 @@ import java.util.Map;
 public class MapIcon implements Serializable, MapData {
     public static final long serialVersionUID = 5;
 
+    public static Map<String, URL> getIconURLs() {
+        return iconURLs;
+    }
+
     //Hashmap containing references of paths to resource files.
     public static Map<String, URL> iconURLs = new HashMap<>();
 
@@ -41,6 +45,13 @@ public class MapIcon implements Serializable, MapData {
         aMap.put("optionsIcon", MapIcon.class.getResource("/data/optionsIcon.png"));
         aMap.put("layerIcon", MapIcon.class.getResource("/data/layerIcon.png"));
         aMap.put("chosenAddressIcon", MapIcon.class.getResource("/data/chosenAddressIcon.png"));
+        aMap.put("restaurantIcon", MapIcon.class.getResource("/data/restaurantIcon.png"));
+        aMap.put("7elevenIcon", MapIcon.class.getResource("/data/7elevenIcon.jpg"));
+        aMap.put("hotelIcon", MapIcon.class.getResource("/data/hotelIcon.png"));
+        aMap.put("hospitalIcon", MapIcon.class.getResource("/data/hospitalIcon.png"));
+        aMap.put("attractionIcon",MapIcon.class.getResource("/data/attractionIcon.png"));
+        aMap.put("cafeIcon",MapIcon.class.getResource("/data/cafeIcon.png"));
+        aMap.put("toiletIcon",MapIcon.class.getResource("/data/toiletIcon.png"));
         MapIcon.iconURLs = aMap;
     }
 
@@ -157,23 +168,41 @@ public class MapIcon implements Serializable, MapData {
      */
     public static ArrayList<URL> getIcons(){
         ArrayList<URL> iconsOne = new ArrayList<>();
+        iconsOne.add(MapIcon.iconURLs.get("restaurantIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("pubIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("cafeIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("toiletIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("7elevenIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("hotelIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("atmIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("parkingIcon"));
         iconsOne.add(MapIcon.iconURLs.get("metroIcon"));
         iconsOne.add(MapIcon.iconURLs.get("busIcon"));
         iconsOne.add(MapIcon.iconURLs.get("stogIcon"));
-        iconsOne.add(MapIcon.iconURLs.get("parkingIcon"));
-        iconsOne.add(MapIcon.iconURLs.get("atmIcon"));
-        iconsOne.add(MapIcon.iconURLs.get("pubIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("attractionIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("hospitalIcon"));
         return iconsOne;
+    }
+
+    public static HashMap<URL, Boolean> getHashIcon() {
+        return hashIcon;
     }
 
     private static HashMap<URL,Boolean> addIcon(){
         HashMap<URL, Boolean> hashIcon = new HashMap<>();
+        hashIcon.put(MapIcon.iconURLs.get("restaurantIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("pubIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("cafeIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("toiletIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("7elevenIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("hotelIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("atmIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("parkingIcon"),false);
         hashIcon.put(MapIcon.iconURLs.get("metroIcon"),false);
         hashIcon.put(MapIcon.iconURLs.get("busIcon"),false);
         hashIcon.put(MapIcon.iconURLs.get("stogIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("parkingIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("atmIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("pubIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("attractionsIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("hospitalIcon"),false);
         return hashIcon;
     }
 

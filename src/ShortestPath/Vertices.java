@@ -2,6 +2,7 @@ package ShortestPath;
 
 import java.awt.geom.Point2D;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Vertices {
@@ -14,7 +15,13 @@ public class Vertices {
         counter = 0;
     }
 
-    public void add(Point2D vertex) {
+    public void add(List<Point2D> wayCoords) {
+        for(Point2D vertex : wayCoords) {
+            add(vertex);
+        }
+    }
+
+    private void add(Point2D vertex) {
         if(vertex_map.containsKey(vertex)) return; //Vertex already added
         vertex_map.put(vertex, counter); //Put vertex in map with an index
         counter++; //next index

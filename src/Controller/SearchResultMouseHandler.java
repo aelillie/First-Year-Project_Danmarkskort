@@ -2,23 +2,15 @@ package Controller;
 
 import Model.Address;
 import Model.Model;
+import View.MapPointer;
 import View.View;
 
-import java.awt.*;
-import java.awt.event.KeyAdapter;
-import java.awt.event.KeyEvent;
+import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.*;
 import java.util.List;
 import java.util.Map;
-
-import View.*;
-import Model.*;
-
-import javax.swing.*;
 
 /**
  * Created by Nicoline on 04-04-2015.
@@ -81,10 +73,19 @@ public class SearchResultMouseHandler extends MouseAdapter{
         double xCoordinateMean = 0;
         double yCoordinateMean = 0;
         for(Path2D path: street){
-            Rectangle2D rect = path.getBounds2D();
-            xCoordinateMean += rect.getX();
-            yCoordinateMean += rect.getY();
-            pathCount++;
+            double[] points = new double[6];
+            PathIterator pathIterator = path.getPathIterator(new AffineTransform());
+            while(!pathIterator.isDone()){
+                pathIterator.currentSegment(points);
+
+                xCoordinateMean += points[0];
+                yCoordinateMean += points[1];
+
+                pathCount++;
+
+                pathIterator.next();
+            }
+
         }
 
         xCoordinateMean = xCoordinateMean/pathCount;
