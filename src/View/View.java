@@ -5,7 +5,7 @@ import MapFeatures.Bounds;
 import MapFeatures.Highway;
 import MapFeatures.Route;
 import Model.*;
-import ShortestPath.ShortestPath;
+import ShortestPath.PathTree;
 import ShortestPath.Edge;
 import QuadTree.QuadTree;
 import ShortestPath.Vertices;
@@ -726,37 +726,43 @@ public class View extends JFrame implements Observer {
                 endPoint.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
 
         Highway startWay = findNearestHighway(startPoint, model.getVisibleStreets(startBox, false));
-        int vNr = findVertex(startPoint, startWay);
+        int startPointIndex = findVertexIndex(startPoint, startWay);
         Highway endWay = findNearestHighway(endPoint, model.getVisibleStreets(endBox, false));
-        int vNr2 = findVertex(endPoint, endWay);
-        ShortestPath djikstra = new ShortestPath(model.getDiGraph(), vNr);
+        int endPointIndex = findVertexIndex(endPoint, endWay);
+        PathTree pathTree = new PathTree(model.getDiGraph(), startPointIndex);
 
-        shortestPath = djikstra.pathTo(vNr2);
-
-        System.out.println("Distance in km: " + djikstra.distTo(vNr2));
+        shortestPath = pathTree.pathTo(endPointIndex);
+        double distance = pathTree.distTo(endPointIndex);
+        if (distance < 1) {
+            //distance *= 100;
+            System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
+        } else System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
         repaint();
     }
 
     public void findPath() {
-        //TODO Is not done. Functions as a test when pressed "l"
+        //Functions as a test when pressed "l"
         int source = 0;
-        ShortestPath pathTree = new ShortestPath(model.getDiGraph(), source);
+        PathTree pathTree = new PathTree(model.getDiGraph(), source);
         shortestPath = pathTree.pathTo(destination);
-        System.out.println("Distance in km: " + pathTree.distTo(destination));
+        double distance = pathTree.distTo(destination);
+        if (distance < 1) {
+            distance *= 100;
+            System.out.println("Distance: " + String.format("%3.0f", distance) + " m");
+        } else System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
         repaint();
     }
 
-    private int findVertex(Point2D loc, Highway way){
-        Vertices vertexIndex = model.getVertices();
-        List<Point2D> vertices = way.getPoints();
-        Point2D closest = new Point2D.Double();
-        double distance = Integer.MAX_VALUE;
-        for(Point2D p : vertices){
-            if(loc.distance(p)< distance)
-                closest = p;
+    private int findVertexIndex(Point2D chosenPoint, Highway way){
+        Vertices vertices = model.getVertices();
+        List<Point2D> wayPoints = way.getPoints();
+        Point2D closestPoint = new Point2D.Float();
+        for(Point2D point : wayPoints){
+            if(chosenPoint.distance(point) < Double.MAX_VALUE)
+                closestPoint = point;
         }
 
-        return vertexIndex.getIndex(closest);
+        return vertices.getIndex(closestPoint);
     }
 
     /**

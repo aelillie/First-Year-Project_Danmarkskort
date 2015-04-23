@@ -16,7 +16,6 @@ public class Highway extends MapFeature {
     private String streetName;
     private Vertices vertices =  Model.getModel().getVertices();
     private List<Edge> edges = new ArrayList<>();
-    private List<Point2D> points = new ArrayList<>();
     private String oneWay;
     private int maxspeed;
 
@@ -32,23 +31,20 @@ public class Highway extends MapFeature {
     public Highway() {
     }
 
-    public void storePoints(List<Point2D> points) {
-        this.points = points;
-    }
-
 
     /**
      * Create edges between all points in the way for the current highway
      */
-    public void assignEdges() {
-        for (int i = 0; i + 1 < points.size(); i++) {
+    public void assignEdges(List<Point2D> points) {
+        for (int i = 0; i + 1 < points.size(); i++) { //Edge(s) in its order of appearance in .osm
             if(oneWay.equals("yes") || oneWay.equals("no")) {
                 Point2D v = points.get(i);
                 Point2D w = points.get(i + 1);
                 Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
                 edges.add(edge);
                 edge.createEdge(v, w);
-            }else{
+            }else{ //Edge(s) in its reverse order of appearance in .osm
+                assert oneWay.equals("-1");
                 Point2D v = points.get(i+1);
                 Point2D w = points.get(i);
                 Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
@@ -103,7 +99,7 @@ public class Highway extends MapFeature {
         return edges;
     }
 
-    public List<Edge> getEdge() {
+    public List<Edge> getEdges() {
         return edges;
     }
 
@@ -111,12 +107,17 @@ public class Highway extends MapFeature {
         return edges.get(i).getV();
     }
 
-    public String getStreetName(){
-        return streetName;
+    public List<Point2D> getPoints() {
+        List<Point2D> vertices = new ArrayList<>();
+        vertices.add(this.vertices.getVertex(edges.get(0).getV()));
+        for (Edge e : edges) {
+            vertices.add(this.vertices.getVertex(e.getW()));
+        }
+        return  vertices;
     }
 
-    public List<Point2D> getPoints() {
-        return points;
+    public String getStreetName(){
+        return streetName;
     }
 
     public String isOneWay() {

@@ -157,7 +157,7 @@ public class RoutePanelController implements ActionListener{
                 endPoint = null;
 
             if (startPoint != null && endPoint != null) {
-                System.out.println("Working");
+                System.out.println("Trying to find shortest path...");
                 try {
                     view.findRoute(startPoint, endPoint);
                 }catch (NoninvertibleTransformException ex){}
@@ -171,7 +171,7 @@ public class RoutePanelController implements ActionListener{
             Address[] results = addressSearch(2,startAddressField,startAddrScrollpane);
             if(results != null && results.length == 1) {
                 startAddrScrollpane.setVisible(false);
-                System.out.println("search");
+                System.out.println("Point A found");
                 startPoint = SearchResultMouseHandler.getPoint(results[0], model);
             }else startPoint = null;
         }
@@ -179,7 +179,7 @@ public class RoutePanelController implements ActionListener{
             Address[] results = addressSearch(2, endAddressField, endAddrScrollpane);
             if (results != null && results.length == 1) {
                 endAddrScrollpane.setVisible(false);
-                System.out.println("found!");
+                System.out.println("Point B found");
                 endPoint = SearchResultMouseHandler.getPoint(results[0], model);
             } else endPoint = null;
         }

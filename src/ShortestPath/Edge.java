@@ -1,15 +1,18 @@
 package ShortestPath;
 
 import Model.PathCreater;
+import Model.Model;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
+import java.util.List;
 
 /**
  * Created by Anders on 22-04-2015.
  */
 public class Edge implements Serializable {
+    private Vertices vertices = Model.getModel().getVertices();
     private int v;
     private int w;
     private double weight;

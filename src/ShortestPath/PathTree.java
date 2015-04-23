@@ -2,7 +2,7 @@ package ShortestPath;
 
 import java.util.Stack;
 
-public class ShortestPath {
+public class PathTree {
     private double[] distTo;          // distTo[v] = distance  of shortest s->v path
     private Edge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
     private IndexMinPQ<Double> pq;    // priority queue of vertices
@@ -15,7 +15,7 @@ public class ShortestPath {
      * @throws IllegalArgumentException if an edge weight is negative
      * @throws IllegalArgumentException unless 0 &le; <tt>s</tt> &le; <tt>V</tt> - 1
      */
-    public ShortestPath(EdgeWeightedDigraph G, int s) {
+    public PathTree(EdgeWeightedDigraph G, int s) {
         for (Edge e : G.edges()) {
             if (e.weight() < 0)
                 throw new IllegalArgumentException("edge " + e + " has negative weight");

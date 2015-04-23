@@ -223,8 +223,7 @@ public class OSMHandler extends DefaultHandler {
                     if (keyValue_map.containsKey("maxspeed")) highway.setMaxSpeed(keyValue_map.get("maxspeed"));
 
                     vertices.add(wayCoords); //create vertices for all points making up a way
-                    highway.storePoints(new ArrayList<>(wayCoords));
-                    highway.assignEdges();
+                    highway.assignEdges(wayCoords);
                 }
                 else if (keyValue_map.containsKey("railway")) railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  railwayTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
