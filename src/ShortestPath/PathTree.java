@@ -3,6 +3,7 @@ package ShortestPath;
 import java.util.Stack;
 
 public class PathTree {
+
     private double[] distTo;          // distTo[v] = distance  of shortest s->v path
     private Edge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
     private IndexMinPQ<Double> pq;    // priority queue of vertices
@@ -12,10 +13,11 @@ public class PathTree {
      * the edge-weighted digraph <tt>G</tt>.
      * @param G the edge-weighted digraph
      * @param s the source vertex
+     * @param d the destination vertex
      * @throws IllegalArgumentException if an edge weight is negative
      * @throws IllegalArgumentException unless 0 &le; <tt>s</tt> &le; <tt>V</tt> - 1
      */
-    public PathTree(EdgeWeightedDigraph G, int s) {
+    public PathTree(EdgeWeightedDigraph G, int s, int d) {
         for (Edge e : G.edges()) {
             if (e.weight() < 0)
                 throw new IllegalArgumentException("edge " + e + " has negative weight");
@@ -36,6 +38,8 @@ public class PathTree {
                 relax(e);
                 //System.out.println("Street: " + e.getStreetName());
             }
+            if(v == d)
+                break;
         }
 
         // check optimality conditions

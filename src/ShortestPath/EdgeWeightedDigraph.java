@@ -12,6 +12,7 @@ import java.util.Set;
  * Created by woozy_000 on 13-04-2015.
  */
 public class EdgeWeightedDigraph implements Serializable{
+    private static final long serialVersionUID = 2;
     private int V; //Total amount of vertices
     private int E; //Total amount of edges
     private Bag<Edge>[] adj; //a bag for each vertex containing adjacent edges

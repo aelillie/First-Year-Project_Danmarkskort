@@ -8,11 +8,13 @@ import java.util.NoSuchElementException;
  * Created by woozy_000 on 15-04-2015.
  */
 public class Bag<Item> implements Iterable<Item>, Serializable {
+    private static final long serialVersionUID = 25;
     private int N;               // number of elements in bag
     private Node<Item> first;    // beginning of bag
 
     // helper linked list class
     private static class Node<Item> implements Serializable {
+        private static final long serialVersionUID = 34;
         private Item item;
         private Node<Item> next;
     }

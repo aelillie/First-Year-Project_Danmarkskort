@@ -8,6 +8,7 @@ import java.util.NoSuchElementException;
  * Created by Anders on 15-04-2015.
  */
 public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer>, Serializable {
+    private static final long serialVersionUID = 11;
     private int NMAX;        // maximum number of elements on PQ
     private int N;           // number of elements on PQ
     private int[] pq;        // binary heap using 1-based indexing

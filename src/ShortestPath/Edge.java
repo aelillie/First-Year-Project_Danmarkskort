@@ -11,6 +11,7 @@ import java.io.Serializable;
  * Created by Anders on 22-04-2015.
  */
 public class Edge implements Serializable {
+    private static final long serialVersionUID = 128;
     private Vertices vertices = Model.getModel().getVertices();
     private int v;
     private int w;

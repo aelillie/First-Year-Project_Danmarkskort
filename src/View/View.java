@@ -729,7 +729,7 @@ public class View extends JFrame implements Observer {
         int startPointIndex = findVertexIndex(startPoint, startWay);
         Highway endWay = findNearestHighway(endPoint, model.getVisibleStreets(endBox, false));
         int endPointIndex = findVertexIndex(endPoint, endWay);
-        PathTree pathTree = new PathTree(model.getDiGraph(), startPointIndex);
+        PathTree pathTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex);
 
         shortestPath = pathTree.pathTo(endPointIndex);
         double distance = pathTree.distTo(endPointIndex);
@@ -745,7 +745,7 @@ public class View extends JFrame implements Observer {
     public void findPath() {
         //Functions as a test when pressed "l"
         int source = 0;
-        PathTree pathTree = new PathTree(model.getDiGraph(), source);
+        PathTree pathTree = new PathTree(model.getDiGraph(), source, destination);
         shortestPath = pathTree.pathTo(destination);
         double distance = pathTree.distTo(destination);
         System.out.println("Distance: " + String.format("%5.2f", distance) + " km");

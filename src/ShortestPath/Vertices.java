@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.Map;
 
 public class Vertices implements Serializable {
+    private static final long serialVersionUID = 16;
     private Map<Point2D, Integer> vertex_map;
     private Point2D[] vertex_index;
     private int counter;
