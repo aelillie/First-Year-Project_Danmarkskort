@@ -14,7 +14,6 @@ import java.util.List;
 
 public class Highway extends MapFeature {
     private String streetName;
-    private Vertices vertices =  Model.getModel().getVertices();
     private List<Edge> edges = new ArrayList<>();
     private String oneWay;
     private int maxspeed;
@@ -66,6 +65,7 @@ public class Highway extends MapFeature {
      * Create edges between all points in the way for the current highway
      */
     public void assignEdges(List<Point2D> points) {
+        Vertices vertices = Model.getModel().getVertices();
         for (int i = 0; i + 1 < points.size(); i++) { //Edge(s) in its order of appearance in .osm
             if(oneWay.equals("yes") || oneWay.equals("no")) {
                 Point2D v = points.get(i);
@@ -140,12 +140,13 @@ public class Highway extends MapFeature {
     }
 
     public List<Point2D> getPoints() {
-        List<Point2D> vertices = new ArrayList<>();
-        vertices.add(this.vertices.getVertex(edges.get(0).getV()));
+        Vertices vertices = Model.getModel().getVertices();
+        List<Point2D> localVertices = new ArrayList<>();
+        localVertices.add(vertices.getVertex(edges.get(0).getV()));
         for (Edge e : edges) {
-            vertices.add(this.vertices.getVertex(e.getW()));
+            localVertices.add(vertices.getVertex(e.getW()));
         }
-        return  vertices;
+        return  localVertices;
     }
 
     public String getStreetName(){
