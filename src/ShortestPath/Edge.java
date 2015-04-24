@@ -16,7 +16,7 @@ public class Edge implements Serializable {
     private int w;
     private double distance; //edge's weight
     private Path2D edge;
-    private double travelTime; //min pr. km
+    private double travelTime; //min pr. distance
 
     /**
      * Initializes a directed edge from vertex <tt>v</tt> to vertex <tt>w</tt> with
@@ -136,8 +136,10 @@ public class Edge implements Serializable {
     }
 
     public void setTravelTime(int maxspeed) {
-        double minPrKm = 60/maxspeed;
-        double minPrDist = minPrKm*distance;
-        travelTime = minPrDist;
+        if (maxspeed != 0) {
+            double minPrKm = 60/maxspeed;
+            double minPrDist = minPrKm*distance;
+            travelTime = minPrDist;
+        } else travelTime = 0; //TODO: Should be set to some default value for the given highway type
     }
 }

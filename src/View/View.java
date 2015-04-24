@@ -748,10 +748,12 @@ public class View extends JFrame implements Observer {
         PathTree pathTree = new PathTree(model.getDiGraph(), source);
         shortestPath = pathTree.pathTo(destination);
         double distance = pathTree.distTo(destination);
-        if (distance < 1) {
-            distance *= 100;
-            System.out.println("Distance: " + String.format("%3.0f", distance) + " m");
-        } else System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
+        System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
+        double travelTime = 0;
+        for (Edge e : shortestPath) {
+            travelTime += e.getTravelTime();
+        }
+        System.out.println("Time: " + String.format("%5.2f", travelTime) + " minutes");
         repaint();
     }
 
