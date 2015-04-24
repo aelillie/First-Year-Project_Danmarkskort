@@ -136,10 +136,7 @@ public class Edge implements Serializable {
     }
 
     public void setTravelTime(int maxspeed) {
-        if (maxspeed != 0) {
-            double minPrKm = 60/maxspeed;
-            double minPrDist = minPrKm*distance;
-            travelTime = minPrDist;
-        } else travelTime = 0; //TODO: Should be set to some default value for the given highway type
+        double minPrKm = 60/maxspeed;
+        travelTime = minPrKm*distance;
     }
 }

@@ -216,12 +216,10 @@ public class OSMHandler extends DefaultHandler {
 
                 }
                 else if (keyValue_map.containsKey("highway")) {
-                    Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"));
+                    Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"), keyValue_map.get("maxspeed"));
                     streetTree.insert(highway);
                     if(keyValue_map.containsKey("oneway")) highway.setOneWay(keyValue_map.get("oneway"));
                     else highway.setOneWay("no");
-                    if (keyValue_map.containsKey("maxspeed")) highway.setMaxSpeed(keyValue_map.get("maxspeed"));
-
                     vertices.add(wayCoords); //create vertices for all points making up a way
                     highway.assignEdges(wayCoords);
                 }

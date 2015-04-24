@@ -18,18 +18,47 @@ public class Highway extends MapFeature {
     private List<Edge> edges = new ArrayList<>();
     private String oneWay;
     private int maxspeed;
-    private double wayTravelTime;
 
+    public Highway() {}
 
-    public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName) {
+    public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName, String maxspeed) {
         super(way, layer_value, value);
         this.isArea = isArea;
         if(streetName != null)
             this.streetName = streetName.intern();
-
+        if (maxspeed != null) setMaxSpeed(maxspeed);
+        else setPreDefMaxSpeed();
     }
 
-    public Highway() {
+    private void setMaxSpeed(String maxspeed) {
+        try {
+            this.maxspeed = Integer.parseInt(maxspeed);
+        } catch (NumberFormatException e) {
+            setPreDefMaxSpeed();
+        }
+    }
+
+    private void setPreDefMaxSpeed() {
+        switch (value) {
+            case "motorway":
+                maxspeed = 130;
+                break;
+            case "primary":
+                maxspeed = 80;
+                break;
+            case "secondary":
+                maxspeed = 80;
+                break;
+            case "tertiary":
+                maxspeed = 80;
+                break;
+            case "unclassified":
+                maxspeed = 80;
+                break;
+            default:
+                maxspeed = 50;
+                break;
+        }
     }
 
 
@@ -61,17 +90,6 @@ public class Highway extends MapFeature {
         return MapCalculator.haversineDist(v, w);
 
     }
-
-    public void setWayTravelTime() {
-        double traveltime = 0;
-        for (Edge e : edges) {
-            traveltime += e.getTravelTime();
-        }
-        wayTravelTime = traveltime;
-    }
-
-
-
 
     @Override
     public void setPreDefValues() {
@@ -144,13 +162,4 @@ public class Highway extends MapFeature {
         else oneWay = "no"; //one way not present
     }
 
-    public void setMaxSpeed(String speedLimit) {
-        int speed = 0;
-        try {
-            speed = Integer.parseInt(speedLimit);
-        } catch (NumberFormatException e) {
-            e.printStackTrace();
-        }
-        maxspeed = speed;
-    }
 }
