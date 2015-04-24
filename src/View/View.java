@@ -676,7 +676,7 @@ public class View extends JFrame implements Observer {
             }
         }
         nearestNeighbor = (Highway) champion;
-        //System.out.println("Street: " + nearestNeighbor.getStreetName() + " v: " + nearestNeighbor.getV() + " w: " + nearestNeighbor.getW() + " weight: " + nearestNeighbor.getWeight());
+        //System.out.println("Street: " + nearestNeighbor.getStreetName() + " v: " + nearestNeighbor.getV() + " w: " + nearestNeighbor.getW() + " weight: " + nearestNeighbor.getDistance());
         if (nearestNeighbor != null) {
             destination = nearestNeighbor.getVertex(0);
         }
@@ -733,10 +733,12 @@ public class View extends JFrame implements Observer {
 
         shortestPath = pathTree.pathTo(endPointIndex);
         double distance = pathTree.distTo(endPointIndex);
-        if (distance < 1) {
-            //distance *= 100;
-            System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
-        } else System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
+        System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
+        double travelTime = 0;
+        for (Edge e : shortestPath) {
+            travelTime += e.getTravelTime();
+        }
+        System.out.println("Time: " + travelTime + " minutes pr. km");
         repaint();
     }
 

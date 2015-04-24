@@ -96,19 +96,23 @@ public class EdgeWeightedDigraph implements Serializable{
     }
 
 
-    private void addEdges(Highway e) {
-        for (Edge edge : e.edges()) {
-            int v = edge.from();
-            int w = edge.to();
-            validateVertex(v);
-            validateVertex(w);
-            adj[v].add(edge);
-            E++;
-            if (e.isOneWay().equals("no")) { //if it's NOT a one way street
-                Edge di = new Edge(w, v, edge.weight());
-                di.setWay(edge.getWay());
-                adj[w].add(di);
-                E ++;
+    private void addEdges(Highway way) {
+        for (Edge edge : way.edges()) {
+            if (way.isOneWay().equals("no")) { //if it's NOT a one way street
+                int v = edge.either();
+                int w = edge.other(v);
+                validateVertex(v);
+                validateVertex(w);
+                adj[v].add(edge);
+                adj[w].add(edge);
+                E++;
+            } else {
+                int v = edge.from();
+                int w = edge.to();
+                validateVertex(v);
+                validateVertex(w);
+                adj[v].add(edge);
+                E++;
             }
         }
     }

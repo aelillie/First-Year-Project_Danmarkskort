@@ -83,7 +83,6 @@ public class PathTree {
         if (!hasPathTo(v)) return null;
         Stack<Edge> path = new Stack<>();
         for (Edge e = edgeTo[v]; e != null; e = edgeTo[e.from()]) {
-            //System.out.println("Street: " + e.getStreetName());
             path.push(e);
         }
         return path;

@@ -18,6 +18,7 @@ public class Highway extends MapFeature {
     private List<Edge> edges = new ArrayList<>();
     private String oneWay;
     private int maxspeed;
+    private double wayTravelTime;
 
 
     public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName) {
@@ -41,6 +42,7 @@ public class Highway extends MapFeature {
                 Point2D v = points.get(i);
                 Point2D w = points.get(i + 1);
                 Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
+                edge.setTravelTime(maxspeed);
                 edges.add(edge);
                 edge.createEdge(v, w);
             }else{ //Edge(s) in its reverse order of appearance in .osm
@@ -48,6 +50,7 @@ public class Highway extends MapFeature {
                 Point2D v = points.get(i+1);
                 Point2D w = points.get(i);
                 Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
+                edge.setTravelTime(maxspeed);
                 edges.add(edge);
                 edge.createEdge(v, w);
             }
@@ -56,7 +59,18 @@ public class Highway extends MapFeature {
 
     private double calcDist(Point2D v, Point2D w) {
         return MapCalculator.haversineDist(v, w);
+
     }
+
+    public void setWayTravelTime() {
+        double traveltime = 0;
+        for (Edge e : edges) {
+            traveltime += e.getTravelTime();
+        }
+        wayTravelTime = traveltime;
+    }
+
+
 
 
     @Override

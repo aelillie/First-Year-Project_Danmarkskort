@@ -6,7 +6,6 @@ import Model.Model;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
-import java.util.List;
 
 /**
  * Created by Anders on 22-04-2015.
@@ -15,28 +14,28 @@ public class Edge implements Serializable {
     private Vertices vertices = Model.getModel().getVertices();
     private int v;
     private int w;
-    private double weight;
+    private double distance; //edge's weight
     private Path2D edge;
-    private boolean oneWay;
+    private double travelTime; //min pr. km
 
     /**
      * Initializes a directed edge from vertex <tt>v</tt> to vertex <tt>w</tt> with
-     * the given <tt>weight</tt>.
+     * the given <tt>distance</tt>.
      *
      * @param v      the tail vertex
      * @param w      the head vertex
-     * @param weight the weight of the directed edge
+     * @param distance the distance of the directed edge
      * @throws IndexOutOfBoundsException if either <tt>v</tt> or <tt>w</tt>
      *                                             is a negative integer
-     * @throws IllegalArgumentException            if <tt>weight</tt> is <tt>NaN</tt>
+     * @throws IllegalArgumentException            if <tt>distance</tt> is <tt>NaN</tt>
      */
-    public Edge(int v, int w, double weight) {
+    public Edge(int v, int w, double distance) {
         if (v < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
         if (w < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
-        if (Double.isNaN(weight)) throw new IllegalArgumentException("Weight is NaN");
+        if (Double.isNaN(distance)) throw new IllegalArgumentException("Weight is NaN");
         this.v = v;
         this.w = w;
-        this.weight = weight;
+        this.distance = distance;
     }
 
     /**
@@ -58,12 +57,12 @@ public class Edge implements Serializable {
     }
 
     /**
-     * Returns the weight of the directed edge.
+     * Returns the distance of the directed edge.
      *
-     * @return the weight of the directed edge
+     * @return the distance of the directed edge
      */
     public double weight() {
-        return weight;
+        return distance;
     }
 
     /**
@@ -95,7 +94,7 @@ public class Edge implements Serializable {
      * @return a string representation of the directed edge
      */
     public String toString() {
-        return v + "->" + w + " " + String.format("%5.2f", weight);
+        return v + "->" + w + " " + String.format("%5.2f", distance);
     }
 
     public int getV() {
@@ -106,8 +105,8 @@ public class Edge implements Serializable {
         return w;
     }
 
-    public double getWeight() {
-        return weight;
+    public double getDistance() {
+        return distance;
     }
 
     public void setV(int v) {
@@ -118,8 +117,8 @@ public class Edge implements Serializable {
         this.w = w;
     }
 
-    public void setWeight(double weight) {
-        this.weight = weight;
+    public void setDistance(double distance) {
+        this.distance = distance;
     }
 
     public void createEdge(Point2D point1, Point2D point2) {
@@ -131,4 +130,14 @@ public class Edge implements Serializable {
     }
 
     public void setWay(Path2D edge){this.edge = edge ;}
+
+    public double getTravelTime() {
+        return travelTime;
+    }
+
+    public void setTravelTime(int maxspeed) {
+        double minPrKm = 60/maxspeed;
+        double minPrDist = minPrKm*distance;
+        travelTime = minPrDist;
+    }
 }
