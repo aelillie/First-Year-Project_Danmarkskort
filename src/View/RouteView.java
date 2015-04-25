@@ -92,8 +92,8 @@ public class RouteView extends JPanel{
         c.fill= GridBagConstraints.NONE;
         c.gridx = 0; //Which column the component should be in.
         c.gridy = 0; //Which row the component should be in.
-        c.weightx = 0.15; //The weight amongst the elements in the row
-        c.weighty = 0.5; //The weight amongst the elements in the column.
+        c.weightx = 0.15; //The distance amongst the elements in the row
+        c.weighty = 0.5; //The distance amongst the elements in the column.
         startEndAddressPanel.add(startIconLabel,c);
 
 

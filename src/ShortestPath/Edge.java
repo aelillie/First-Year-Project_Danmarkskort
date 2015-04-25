@@ -15,7 +15,7 @@ public class Edge implements Serializable {
     private Vertices vertices = Model.getModel().getVertices();
     private int v;
     private int w;
-    private double distance; //edge's weight
+    private double distance; //edge's distance
     private Path2D edge;
     private double travelTime; //min pr. distance
 
@@ -62,7 +62,7 @@ public class Edge implements Serializable {
      *
      * @return the distance of the directed edge
      */
-    public double weight() {
+    public double distance() {
         return distance;
     }
 
@@ -132,7 +132,7 @@ public class Edge implements Serializable {
 
     public void setWay(Path2D edge){this.edge = edge ;}
 
-    public double getTravelTime() {
+    public double travelTime() {
         return travelTime;
     }
 

@@ -25,8 +25,10 @@ public class Highway extends MapFeature {
         this.isArea = isArea;
         if(streetName != null)
             this.streetName = streetName.intern();
-        if (maxspeed != null) setMaxSpeed(maxspeed);
-        else setPreDefMaxSpeed();
+        if (maxspeed == null)
+            setPreDefMaxSpeed();
+        else
+            setMaxSpeed(maxspeed);
     }
 
     private void setMaxSpeed(String maxspeed) {

@@ -26,7 +26,7 @@ public class EdgeWeightedDigraph implements Serializable{
         this.E = 0;
         adj = (Bag<Edge>[]) new Bag[V];
         for (int v = 0; v < V; v++) {
-            adj[v] = new Bag<Edge>();
+            adj[v] = new Bag<>();
         }
     }
 

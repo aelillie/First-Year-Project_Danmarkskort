@@ -4,7 +4,7 @@ import java.util.Stack;
 
 public class PathTree {
 
-    private double[] distTo;          // distTo[v] = distance  of shortest s->v path
+    private double[] valueTo;          // valueTo[v] = distance  of shortest s->v path
     private Edge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
     private IndexMinPQ<Double> pq;    // priority queue of vertices
 
@@ -14,46 +14,69 @@ public class PathTree {
      * @param G the edge-weighted digraph
      * @param s the source vertex
      * @param d the destination vertex
-     * @throws IllegalArgumentException if an edge weight is negative
+     * @throws IllegalArgumentException if an edge distance is negative
      * @throws IllegalArgumentException unless 0 &le; <tt>s</tt> &le; <tt>V</tt> - 1
      */
-    public PathTree(EdgeWeightedDigraph G, int s, int d) {
+    public PathTree(EdgeWeightedDigraph G, int s, int d, boolean shortestPath) {
         for (Edge e : G.edges()) {
-            if (e.weight() < 0)
-                throw new IllegalArgumentException("edge " + e + " has negative weight");
+            if (e.distance() < 0)
+                throw new IllegalArgumentException("edge " + e + " has negative distance");
         }
 
-        distTo = new double[G.V()];
+        valueTo = new double[G.V()];
         edgeTo = new Edge[G.V()];
         for (int v = 0; v < G.V(); v++)
-            distTo[v] = Double.POSITIVE_INFINITY; //infinite distance to all vertices
-        distTo[s] = 0.0; //distance 0 to self
+            valueTo[v] = Double.POSITIVE_INFINITY; //infinite distance to all vertices
+        valueTo[s] = 0.0; //distance 0 to self
 
-        // relax vertices in order of distance from s
-        pq = new IndexMinPQ<Double>(G.V());
-        pq.insert(s, distTo[s]);
-        while (!pq.isEmpty()) {
-            int v = pq.delMin();
-            for (Edge e : G.adj(v)) {
-                relax(e);
-                //System.out.println("Street: " + e.getStreetName());
+        // relax vertices in order of distance/travel time from s
+        if (shortestPath) {
+            pq = new IndexMinPQ<>(G.V());
+            pq.insert(s, valueTo[s]);
+            while (!pq.isEmpty()) {
+                int v = pq.delMin();
+                for (Edge e : G.adj(v)) {
+                    relaxDistance(e);
+                }
+                if(v == d)
+                    break;
             }
-            if(v == d)
-                break;
+        } else {
+            pq = new IndexMinPQ<>(G.V());
+            pq.insert(s, valueTo[s]);
+            while (!pq.isEmpty()) {
+                int v = pq.delMin();
+                for (Edge e : G.adj(v)) {
+                    relaxTime(e);
+                }
+                if(v == d)
+                    break;
+            }
         }
 
         // check optimality conditions
         assert check(G, s);
     }
 
+
     // relax edge e and update pq if changed
-    private void relax(Edge e) {
+    private void relaxDistance(Edge e) {
         int v = e.from(), w = e.to();
-        if (distTo[w] > distTo[v] + e.weight()) {
-            distTo[w] = distTo[v] + e.weight();
+        if (valueTo[w] > valueTo[v] + e.distance()) {
+            valueTo[w] = valueTo[v] + e.distance();
             edgeTo[w] = e;
-            if (pq.contains(w)) pq.decreaseKey(w, distTo[w]);
-            else                pq.insert(w, distTo[w]);
+            if (pq.contains(w)) pq.decreaseKey(w, valueTo[w]);
+            else                pq.insert(w, valueTo[w]);
+        }
+    }
+
+    private void relaxTime(Edge e) {
+        int v = e.from(), w = e.to();
+        if (valueTo[w] > valueTo[v] + e.travelTime()) {
+            valueTo[w] = valueTo[v] + e.travelTime();
+            edgeTo[w] = e;
+            if (pq.contains(w)) pq.decreaseKey(w, valueTo[w]);
+            else                pq.insert(w, valueTo[w]);
         }
     }
 
@@ -64,7 +87,10 @@ public class PathTree {
      *    <tt>Double.POSITIVE_INFINITY</tt> if no such path
      */
     public double distTo(int v) {
-        return distTo[v];
+        return valueTo[v];
+    }
+    public double timeTo(int v) {
+        return valueTo[v];
     }
 
     /**
@@ -74,7 +100,7 @@ public class PathTree {
      *    <tt>s</tt> to vertex <tt>v</tt>, and <tt>false</tt> otherwise
      */
     public boolean hasPathTo(int v) {
-        return distTo[v] < Double.POSITIVE_INFINITY;
+        return valueTo[v] < Double.POSITIVE_INFINITY;
     }
 
     /**
@@ -94,49 +120,49 @@ public class PathTree {
 
 
     // check optimality conditions:
-    // (i) for all edges e:            distTo[e.to()] <= distTo[e.from()] + e.weight()
-    // (ii) for all edge e on the SPT: distTo[e.to()] == distTo[e.from()] + e.weight()
+    // (i) for all edges e:            valueTo[e.to()] <= valueTo[e.from()] + e.distance()
+    // (ii) for all edge e on the SPT: valueTo[e.to()] == valueTo[e.from()] + e.distance()
     private boolean check(EdgeWeightedDigraph G, int s) {
 
         // check that edge weights are nonnegative
         for (Edge e : G.edges()) {
-            if (e.weight() < 0) {
-                System.err.println("negative edge weight detected");
+            if (e.distance() < 0) {
+                System.err.println("negative edge distance detected");
                 return false;
             }
         }
 
-        // check that distTo[v] and edgeTo[v] are consistent
-        if (distTo[s] != 0.0 || edgeTo[s] != null) {
-            System.err.println("distTo[s] and edgeTo[s] inconsistent");
+        // check that valueTo[v] and edgeTo[v] are consistent
+        if (valueTo[s] != 0.0 || edgeTo[s] != null) {
+            System.err.println("valueTo[s] and edgeTo[s] inconsistent");
             return false;
         }
         for (int v = 0; v < G.V(); v++) {
             if (v == s) continue;
-            if (edgeTo[v] == null && distTo[v] != Double.POSITIVE_INFINITY) {
-                System.err.println("distTo[] and edgeTo[] inconsistent");
+            if (edgeTo[v] == null && valueTo[v] != Double.POSITIVE_INFINITY) {
+                System.err.println("valueTo[] and edgeTo[] inconsistent");
                 return false;
             }
         }
 
-        // check that all edges e = v->w satisfy distTo[w] <= distTo[v] + e.weight()
+        // check that all edges e = v->w satisfy valueTo[w] <= valueTo[v] + e.distance()
         for (int v = 0; v < G.V(); v++) {
             for (Edge e : G.adj(v)) {
                 int w = e.to();
-                if (distTo[v] + e.weight() < distTo[w]) {
+                if (valueTo[v] + e.distance() < valueTo[w]) {
                     System.err.println("edge " + e + " not relaxed");
                     return false;
                 }
             }
         }
 
-        // check that all edges e = v->w on SPT satisfy distTo[w] == distTo[v] + e.weight()
+        // check that all edges e = v->w on SPT satisfy valueTo[w] == valueTo[v] + e.distance()
         for (int w = 0; w < G.V(); w++) {
             if (edgeTo[w] == null) continue;
             Edge e = edgeTo[w];
             int v = e.from();
             if (w != e.to()) return false;
-            if (distTo[v] + e.weight() != distTo[w]) {
+            if (valueTo[v] + e.distance() != valueTo[w]) {
                 System.err.println("edge " + e + " on shortest path not tight");
                 return false;
             }

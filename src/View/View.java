@@ -52,6 +52,7 @@ public class View extends JFrame implements Observer {
     private Map<String,MapPointer> addressPointerMap = new HashMap<>();
 
     private Iterable<Edge> shortestPath;
+    private Iterable<Edge> fastestPath;
 
     private boolean isFullscreen = false;
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -676,7 +677,7 @@ public class View extends JFrame implements Observer {
             }
         }
         nearestNeighbor = (Highway) champion;
-        //System.out.println("Street: " + nearestNeighbor.getStreetName() + " v: " + nearestNeighbor.getV() + " w: " + nearestNeighbor.getW() + " weight: " + nearestNeighbor.getDistance());
+        //System.out.println("Street: " + nearestNeighbor.getStreetName() + " v: " + nearestNeighbor.getV() + " w: " + nearestNeighbor.getW() + " distance: " + nearestNeighbor.getDistance());
         if (nearestNeighbor != null) {
             destination = nearestNeighbor.getVertex(0);
         }
@@ -729,31 +730,54 @@ public class View extends JFrame implements Observer {
         int startPointIndex = findVertexIndex(startPoint, startWay);
         Highway endWay = findNearestHighway(endPoint, model.getVisibleStreets(endBox, false));
         int endPointIndex = findVertexIndex(endPoint, endWay);
-        PathTree pathTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex);
+        PathTree pathTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex, true);
 
         shortestPath = pathTree.pathTo(endPointIndex);
         double distance = pathTree.distTo(endPointIndex);
         System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
         double travelTime = 0;
         for (Edge e : shortestPath) {
-            travelTime += e.getTravelTime();
+            travelTime += e.travelTime();
         }
         System.out.println("Time: " + travelTime + " minutes pr. km");
         repaint();
     }
 
-    public void findPath() {
+    public void findShortestPath() {
         //Functions as a test when pressed "l"
         int source = 0;
-        PathTree pathTree = new PathTree(model.getDiGraph(), source, destination);
-        shortestPath = pathTree.pathTo(destination);
-        double distance = pathTree.distTo(destination);
+        PathTree SPpathTree = new PathTree(model.getDiGraph(), source, destination, true);
+        shortestPath = SPpathTree.pathTo(destination);
+
+        double distance = SPpathTree.distTo(destination);
+        System.out.println("");
+        System.out.println("Shortest path:");
         System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
         double travelTime = 0;
         for (Edge e : shortestPath) {
-            travelTime += e.getTravelTime();
+            travelTime += e.travelTime();
         }
         System.out.println("Time: " + String.format("%5.2f", travelTime) + " minutes");
+        System.out.println("");
+        repaint();
+    }
+
+    public void findFastestPath() {
+        //Functions as a test when pressed "f"
+        int source = 0;
+        PathTree FPpathTree = new PathTree(model.getDiGraph(), source, destination, false);
+        fastestPath = FPpathTree.pathTo(destination);
+
+        double time = FPpathTree.timeTo(destination);
+        System.out.println("");
+        System.out.println("Fastest path:");
+        System.out.println("Time: " + String.format("%5.2f", time) + " minuts");
+        double distance = 0;
+        for (Edge e : fastestPath) {
+            distance += e.distance();
+        }
+        System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
+        System.out.println("");
         repaint();
     }
 
@@ -922,6 +946,14 @@ public class View extends JFrame implements Observer {
                 g.setColor(DrawAttribute.cl_darkorange);
                 g.setStroke(new BasicStroke(0.00010f));
                 for (Edge e : shortestPath) {
+                    //Path2D path = PathCreater.createWay(e.getVPoint(), e.getWPoint());
+                    g.draw(e.getWay());
+                }
+            }
+            if (fastestPath != null) {
+                g.setColor(DrawAttribute.lightblue);
+                g.setStroke(new BasicStroke(0.00010f));
+                for (Edge e : fastestPath) {
                     //Path2D path = PathCreater.createWay(e.getVPoint(), e.getWPoint());
                     g.draw(e.getWay());
                 }
