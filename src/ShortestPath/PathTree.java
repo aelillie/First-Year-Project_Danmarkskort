@@ -30,9 +30,9 @@ public class PathTree {
         valueTo[s] = 0.0; //distance 0 to self
 
         // relax vertices in order of distance/travel time from s
+        pq = new IndexMinPQ<>(G.V());
+        pq.insert(s, valueTo[s]);
         if (shortestPath) {
-            pq = new IndexMinPQ<>(G.V());
-            pq.insert(s, valueTo[s]);
             while (!pq.isEmpty()) {
                 int v = pq.delMin();
                 for (Edge e : G.adj(v)) {
@@ -42,8 +42,6 @@ public class PathTree {
                     break;
             }
         } else {
-            pq = new IndexMinPQ<>(G.V());
-            pq.insert(s, valueTo[s]);
             while (!pq.isEmpty()) {
                 int v = pq.delMin();
                 for (Edge e : G.adj(v)) {
