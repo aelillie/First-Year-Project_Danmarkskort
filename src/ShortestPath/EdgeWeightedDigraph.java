@@ -45,54 +45,12 @@ public class EdgeWeightedDigraph implements Serializable{
     }
 
     public void addEdges(Collection<Highway> highways) {
-        for (Highway e : highways) {
-            switch (e.getValue()) {
-                case "motorway":
-                    addEdges(e);
-                    break;
-                case "motorway_link":
-                    addEdges(e);
-                    break;
-                case "trunk_link":
-                    addEdges(e);
-                    break;
-                case "primary_link":
-                    addEdges(e);
-                    break;
-                case "secondary_link":
-                    addEdges(e);
-                    break;
-                case "tertiary_link":
-                    addEdges(e);
-                    break;
-                case "trunk":
-                    addEdges(e);
-                    break;
-                case "primary":
-                    addEdges(e);
-                    break;
-                case "secondary":
-                    addEdges(e);
-                    break;
-                case "tertiary":
-                    addEdges(e);
-                    break;
-                case "unclassified":
-                    addEdges(e);
-                    break;
-                case "residential":
-                    addEdges(e);
-                    break;
-                case "service":
-                    addEdges(e);
-                    break;
-                case "living_street":
-                    addEdges(e);
-                    break;
-                case "road":
-                    addEdges(e);
-                    break;
-            }
+        for (Highway highway : highways) {
+            String value = highway.getValue();
+            if(value.equals("footway") || value.equals("cycleway") || value.equals("steps") ||
+                    value.equals("path") || value.equals("bridleway"))
+                continue;
+            addEdges(highway);
         }
     }
 
@@ -100,12 +58,11 @@ public class EdgeWeightedDigraph implements Serializable{
     private void addEdges(Highway way) {
         for (Edge edge : way.edges()) {
             if (way.isOneWay().equals("no")) { //if it's NOT a one way street
-                int v = edge.either();
-                int w = edge.other(v);
+                int v = edge.from();
+                int w = edge.to();
                 validateVertex(v);
                 validateVertex(w);
                 adj[v].add(edge);
-                adj[w].add(edge);
                 E++;
             } else {
                 int v = edge.from();

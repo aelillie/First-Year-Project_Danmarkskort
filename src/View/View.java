@@ -713,7 +713,6 @@ public class View extends JFrame implements Observer {
             DrawAttribute draw = drawAttributeManager.getDrawAttribute(highway.getValueName());
             if(draw.getZoomLevel() > zoomLevel || highway.getStreetName() == null) {
                 it.remove();
-                continue;
             }
         }
     }
@@ -763,6 +762,7 @@ public class View extends JFrame implements Observer {
     }
 
     public void findFastestPath() {
+        //TODO: Does not work properly
         //Functions as a test when pressed "f"
         int source = 0;
         PathTree FPpathTree = new PathTree(model.getDiGraph(), source, destination, false);
@@ -802,7 +802,6 @@ public class View extends JFrame implements Observer {
         FileNameExtensionFilter filter =  new FileNameExtensionFilter("ZIP & OSM & BIN", "osm", "zip", "bin","OSM","ZIP","BIN"); //The allowed files in the filechooser
         fileChooser.setFileFilter(filter); //sets the above filter
         return returnVal;
-        //TODO: When in fullscreen and opening the dialog, it closes the window?!?
     }
 
     public void adjustZoomFactor(){

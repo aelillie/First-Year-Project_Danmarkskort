@@ -12,7 +12,6 @@ import java.io.Serializable;
  */
 public class Edge implements Serializable {
     private static final long serialVersionUID = 128;
-    private Vertices vertices = Model.getModel().getVertices();
     private int v;
     private int w;
     private double distance; //edge's distance

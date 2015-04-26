@@ -25,8 +25,8 @@ public class Highway extends MapFeature {
         this.isArea = isArea;
         if(streetName != null)
             this.streetName = streetName.intern();
-        if (maxspeed == null)
-            setPreDefMaxSpeed();
+        if (maxspeed == null) //no max speed defined in OSM
+            setPreDefMaxSpeed(); //default values set by OSM standards
         else
             setMaxSpeed(maxspeed);
     }
