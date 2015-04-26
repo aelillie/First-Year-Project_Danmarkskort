@@ -948,7 +948,7 @@ public class View extends JFrame implements Observer {
                 if (zoomLevel >= drawAttribute.getZoomLevel()) {
                     g.setColor(drawAttribute.getColor());
                     if (drawAttribute.isDashed()) {
-                        if(zoomLevel > 13)
+                        if(zoomLevel > 13 && !(mapFeature instanceof  Route))
                             g.setStroke(DrawAttribute.dashedStrokes[drawAttribute.getStrokeId()]);
                         else  g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
                     }
