@@ -781,16 +781,39 @@ public class View extends JFrame implements Observer {
         repaint();
     }
 
+
     private int findVertexIndex(Point2D chosenPoint, Highway way){
-        Vertices vertices = model.getVertices();
-        List<Point2D> wayPoints = way.getPoints();
-        Point2D closestPoint = new Point2D.Float();
-        for(Point2D point : wayPoints){
-            if(chosenPoint.distance(point) < Double.MAX_VALUE)
-                closestPoint = point;
+        List<Edge> edges = way.getEdges();
+        Edge closestEdge = null;
+
+        Line2D closestLine = null;
+        for(Edge edge : edges){
+            Path2D segment = edge.getWay();
+            double[] points = new double[6];
+            PathIterator pI = segment.getPathIterator(new AffineTransform());
+            pI.currentSegment(points);
+            Point2D p1 = new Point2D.Double(points[0], points[1]);
+            pI.next();
+            while(!pI.isDone()) {
+                pI.currentSegment(points);
+                Point2D p2 = new Point2D.Double(points[0], points[1]);
+
+                Line2D path = new Line2D.Double(p1, p2);
+                p1 = p2;
+                pI.next();
+                if (closestLine == null) {
+                    closestLine = path;
+                    closestEdge = edge;
+                }
+                else if (closestLine.ptSegDist(chosenPoint) > path.ptSegDist(chosenPoint)) {
+                    closestLine = path;
+                    closestEdge = edge;
+                }
+            }
+
         }
 
-        return vertices.getIndex(closestPoint);
+        return closestEdge.from();
     }
 
     /**
