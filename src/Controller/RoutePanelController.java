@@ -166,10 +166,16 @@ public class RoutePanelController implements ActionListener{
             }
         }
 
-        else if (command == "car") transportButtonDown(routeView.getCarButton());
-        else if (command == "bicycle") transportButtonDown(routeView.getBicycleButton());
-        else if (command == "walking") transportButtonDown(routeView.getFootButton());
-        else if (command == "startAddressSearch"){
+        else if (command == "car") {
+            setOtherButtons(routeView.getCarButton());
+            transportButtonDown(routeView.getCarButton());
+        } else if (command == "bicycle"){
+            setOtherButtons(routeView.getBicycleButton());
+            transportButtonDown(routeView.getBicycleButton());
+        } else if (command == "walking"){
+            setOtherButtons(routeView.getFootButton());
+            transportButtonDown(routeView.getFootButton());
+        } else if (command == "startAddressSearch"){
             Address[] results = addressSearch(2,startAddressField,startAddrScrollpane);
             if(results != null && results.length == 1) {
                 startAddrScrollpane.setVisible(false);
@@ -186,8 +192,10 @@ public class RoutePanelController implements ActionListener{
             } else endPoint = null;
         } else if (command == "clearStartField") {
             startAddressField.setText(null);
+            view.setShortestPath(null);
         } else if (command == "clearEndField") {
             endAddressField.setText(null);
+            view.setShortestPath(null);
         }
     }
 
@@ -196,6 +204,26 @@ public class RoutePanelController implements ActionListener{
         boolean isButtonDown = buttonDownMap.get(button);
         routeView.changeButtonAppearence(button,isButtonDown);
         buttonDownMap.put(button,!isButtonDown);
+    }
+
+    private void setOtherButtons(JButton button){
+        JButton bicycleButton = routeView.getBicycleButton();
+        JButton footButton = routeView.getFootButton();
+        JButton carButton = routeView.getCarButton();
+        boolean isButtonDown = buttonDownMap.get(button);
+        if(!isButtonDown) {
+            if (button.equals(bicycleButton)) {
+                if (buttonDownMap.get(footButton)) transportButtonDown(footButton);
+                if (buttonDownMap.get(carButton)) transportButtonDown(carButton);
+            } else if (button.equals(routeView.getCarButton())) {
+                if (buttonDownMap.get(bicycleButton)) transportButtonDown(bicycleButton);
+                if (buttonDownMap.get(footButton)) transportButtonDown(footButton);
+            } else if (button.equals(routeView.getFootButton())) {
+                if (buttonDownMap.get(carButton)) transportButtonDown(carButton);
+                if (buttonDownMap.get(bicycleButton)) transportButtonDown(bicycleButton);
+            }
+        }
+
     }
 
     private class SearchFieldKeyHandler extends KeyAdapter {

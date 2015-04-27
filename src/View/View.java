@@ -1158,4 +1158,6 @@ public class View extends JFrame implements Observer {
     public JScrollPane getResultEndPane() {return resultEndPane;}
 
     public JScrollPane getResultStartPane() {return resultStartPane;}
+
+    public void setShortestPath(Iterable<Edge> it ) { shortestPath = it; }
 }
