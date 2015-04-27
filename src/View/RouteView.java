@@ -16,7 +16,7 @@ public class RouteView extends JPanel{
 
     private JTextField startAddressField, endAddressField;
     private JPanel startEndAddressPanel;
-    private JButton findRouteButton;
+    private JButton findRouteButton, clearButtonEnd, clearButtonStart;
     private JButton carButton, bicycleButton, footButton;
     private View view;
     private Map<JButton,ImageIcon> iconWhiteEquivalenceMap;
@@ -108,8 +108,9 @@ public class RouteView extends JPanel{
         c.ipady = 15;
         c.weightx = 0.85;
         c.weighty = 0.5;
-        c.insets = new Insets(5,0,0,25); //Inset/distance from the right.
+        c.insets = new Insets(5,0,0,0); //Inset/distance from the right.
         startEndAddressPanel.add(startAddressField,c);
+
         JLabel endIconLabel = new JLabel(new ImageIcon(this.getClass().getResource("/data/endPointIcon.png")));
         c = new GridBagConstraints();
         c.fill= GridBagConstraints.NONE;
@@ -132,8 +133,40 @@ public class RouteView extends JPanel{
         c.weightx = 0.85;
         c.weighty = 0.5;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
-        c.insets = new Insets(0,0,0,25); //Inset/distance from the right
         startEndAddressPanel.add(endAddressField,c);
+
+
+        ImageIcon resetButtonIcon = new ImageIcon(this.getClass().getResource("/data/resetButtonIcon.png"));
+        clearButtonStart = new JButton();
+        clearButtonStart.setFocusable(false);
+        clearButtonStart.setIcon(resetButtonIcon);
+        clearButtonStart.setActionCommand("clearStartField");
+        c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 2;
+        c.gridy = 0;
+        c.weightx = 0.02;
+        c.ipady = 12;
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        c.insets = new Insets(12,0,0,12);
+        clearButtonStart.setBackground(Color.WHITE);
+        startEndAddressPanel.add(clearButtonStart,c);
+
+        clearButtonEnd = new JButton();
+        clearButtonEnd.setFocusable(false);
+        clearButtonEnd.setIcon(resetButtonIcon);
+        clearButtonEnd.setActionCommand("clearEndField");
+        c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 2;
+        c.gridy = 1;
+        c.weightx = 0.05;
+        c.ipady = 12;
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        c.insets = new Insets(0,0,0,12);
+        //c.insets = new Insets(0,320,0,0);
+        clearButtonEnd.setBackground(Color.WHITE);
+        startEndAddressPanel.add(clearButtonEnd,c);
 
         findRouteButton = new JButton("Find route");
         findRouteButton.setBackground(Color.WHITE);
@@ -144,6 +177,7 @@ public class RouteView extends JPanel{
         //c.weighty = 0.1;
         c.gridx = 1;
         c.gridy = 2;
+        c.gridwidth = 2;
         c.insets = new Insets(0,0,10,10);
         startEndAddressPanel.add(findRouteButton,c);
     }
@@ -196,6 +230,10 @@ public class RouteView extends JPanel{
     public JButton getBicycleButton() { return bicycleButton; }
 
     public JButton getFootButton() { return footButton; }
+
+    public JButton getStartClearButton(){ return clearButtonStart;}
+
+    public JButton getEndClearButton(){ return clearButtonEnd;}
 
     public View getView() { return view;}
 }
