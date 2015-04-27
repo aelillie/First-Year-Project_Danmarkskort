@@ -15,7 +15,10 @@ import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
+import java.util.List;
+import java.util.Observable;
 import java.util.zip.ZipInputStream;
 
 
@@ -97,21 +100,6 @@ public class Model extends Observable implements Serializable {
     public Address[] searchForAddresses(Address address, int type){
         return OSMReader.searchForAddressess(address, type);
     }
-    /*
-    public void searchForAddresses1(Model.Address addressInput){
-
-
-
-   /* public void searchForAddresses1(Model.Address addressInput){
-        int index = Collections.binarySearch(addressList,addressInput,new AddressComparator());
-        if(index < 0) { //If it is not found the return value will be negative
-            System.out.println("Too bad - didn't find!");
-        } else {
-            Model.Address foundAddr = addressList.get(index);
-            Point2D coordinate = addressMap.get(foundAddr);
-            System.out.println("x = " + coordinate.getX() + ", y = " +coordinate.getY());
-        } //if multiple results ... suggest these
-    }*/
 
 
     public String getCurrentFilename() {
@@ -176,31 +164,6 @@ public class Model extends Observable implements Serializable {
     public EdgeWeightedDigraph getDiGraph() {
         return OSMReader.getDiGraph();
     }
-
-    /**
-     * Sorts the Model.Drawable elements in the drawables list from their layer value.
-     * Takes use of a comparator, which compares their values.
-     */
-
-    /*public void sortLayers(Collection<MapFeature> mapFeat) {
-        ArrayList<MapData> mapFeatures = new ArrayList<>(mapFeat);
-
-        Comparator<MapData> comparator = new Comparator<MapData>() {
-            @Override
-            /**
-             * Compares two MapFeature objects.
-             * Returns a negative integer, zero, or a positive integer as the first argument
-             * is less than, equal to, or greater than the second.
-             */
-            /*public int compare(MapData o1, MapData o2) {
-                if (o1.getLayerVal() < o2.getLayerVal()) return -1;
-                else if (o1.getLayerVal() > o2.getLayerVal()) return 1;
-                return 0;
-            }
-        };
-        Collections.sort(mapFeatures, comparator); //iterative mergesort. ~n*lg(n) comparisons
-
-    }*/
 
 }
 
