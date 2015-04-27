@@ -223,6 +223,7 @@ public class OSMHandler extends DefaultHandler {
                     vertices.add(wayCoords); //create vertices for all points making up a way
                     highway.assignEdges(wayCoords);
                 }
+                else if (keyValue_map.containsKey("place")) naturalTree.insert(new Place(way, fetchOSMLayer(), keyValue_map.get("place")));
                 else if (keyValue_map.containsKey("railway")) railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  railwayTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
                 if (keyValue_map.containsKey("name")) {
@@ -248,13 +249,9 @@ public class OSMHandler extends DefaultHandler {
                         if(path == null) return;
                         if (keyValue_map.containsKey("building"))
                             buildingTree.insert(new Multipolygon(path, fetchOSMLayer(), "building"));
+                        else if (keyValue_map.containsKey("place"))
+                            naturalTree.insert(new Multipolygon(path, fetchOSMLayer(), "place"));
 
-
-                        if(keyValue_map.containsKey("place")){
-                            //TODO islets
-                            //naturalTree.insert(new Natural(path, fetchOSMLayer(), "place"));
-
-                        }
                         else if (keyValue_map.containsKey("natural"));
                             //if(keyValue_map.get("natural").equals("water"))
                                // naturalTree.insert(new Natural(path, fetchOSMLayer(), "water"));

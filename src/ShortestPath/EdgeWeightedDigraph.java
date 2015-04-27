@@ -60,12 +60,10 @@ public class EdgeWeightedDigraph implements Serializable{
                 int w = edge.to();
                 validateVertex(v);
                 validateVertex(w);
-                Edge diEdge = new Edge(w,v, edge.distance());
-                diEdge.setWay(edge.getWay());
-                if(edge.getWay() == null)
-                    System.out.print(way.getStreetName() + " ");
-                adj[w].add(diEdge);
+                Edge edge1 = new Edge(w, v, edge.getDistance());
+                edge1.setWay(edge.getWay());
                 adj[v].add(edge);
+                adj[w].add(edge1);
                 E += 2;
             } else {
                 int v = edge.from();
