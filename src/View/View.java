@@ -760,6 +760,7 @@ public class View extends JFrame implements Observer {
 
 
         double distance = shortestTree.distTo(endPointIndex);
+        System.out.println("");
         System.out.println("SHORTEST PATH");
         System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
         double travelTime = 0;
@@ -767,8 +768,7 @@ public class View extends JFrame implements Observer {
         for (Edge e : shortestPath) {
             travelTime += e.travelTime();
         }
-        System.out.println("Time: " + travelTime * 60 + " minutes pr. km\n");
-
+        System.out.println("Time: " + travelTime + " minutes pr. km\n");
         double fastDist = fastestTree.distTo(endPointIndex);
         System.out.println("FASTEST PATH");
         System.out.println("Distance: " + String.format("%5.2f", fastDist) + " km");
@@ -777,8 +777,7 @@ public class View extends JFrame implements Observer {
         for (Edge e : fastestPath) {
             fastTime += e.travelTime();
         }
-        System.out.println("Time: " + fastTime * 60 + " minutes pr. km\n");
-
+        System.out.println("Time: " + fastTime + " minutes pr. km\n");
 
         repaint();
     }
