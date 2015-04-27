@@ -1,7 +1,6 @@
 package ShortestPath;
 
 import Model.PathCreater;
-import Model.Model;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
