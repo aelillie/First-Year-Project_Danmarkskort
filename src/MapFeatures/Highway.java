@@ -69,30 +69,37 @@ public class Highway extends MapFeature {
     public void assignEdges(List<Point2D> points) {
         Vertices vertices = Model.getModel().getVertices();
         for (int i = 0; i + 1 < points.size(); i++) {
-            if(oneWay.equals("no")) { //Edge(s) in its order of appearance in .osm
-                Point2D v = points.get(i);
-                Point2D w = points.get(i + 1);
-                Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
-                edge.setTravelTime(maxspeed);
-                edges.add(edge);
-                edge.createEdge(v, w);
-            } else if(oneWay.equals("yes")) { //Edge(s) in its order of appearance in .osm (one way)
-                Point2D v = points.get(i);
-                Point2D w = points.get(i + 1);
-                Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
-                edge.setTravelTime(maxspeed);
-                edge.setOneWay(true);
-                edges.add(edge);
-                edge.createEdge(v, w);
-            } else{ //Edge(s) in its reverse order of appearance in .osm
-                assert oneWay.equals("-1");
-                Point2D v = points.get(i+1);
-                Point2D w = points.get(i);
-                Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
-                edge.setTravelTime(maxspeed);
-                edge.setOneWayReverse(true);
-                edges.add(edge);
-                edge.createEdge(v, w);
+            switch (oneWay) {
+                case "no": { //Edge(s) in its order of appearance in .osm
+                    Point2D v = points.get(i);
+                    Point2D w = points.get(i + 1);
+                    Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
+                    edge.setTravelTime(maxspeed);
+                    edges.add(edge);
+                    edge.createEdge(v, w);
+                    break;
+                }
+                case "yes": { //Edge(s) in its order of appearance in .osm (one way)
+                    Point2D v = points.get(i);
+                    Point2D w = points.get(i + 1);
+                    Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
+                    edge.setTravelTime(maxspeed);
+                    edge.setOneWay(true);
+                    edges.add(edge);
+                    edge.createEdge(v, w);
+                    break;
+                }
+                default: { //Edge(s) in its reverse order of appearance in .osm
+                    assert oneWay.equals("-1");
+                    Point2D v = points.get(i + 1);
+                    Point2D w = points.get(i);
+                    Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
+                    edge.setTravelTime(maxspeed);
+                    edge.setOneWayReverse(true);
+                    edges.add(edge);
+                    edge.createEdge(v, w);
+                    break;
+                }
             }
         }
     }
