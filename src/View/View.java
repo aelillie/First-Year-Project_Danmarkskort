@@ -652,7 +652,9 @@ public class View extends JFrame implements Observer {
             if (mp instanceof Highway ) {
                 Highway highway = (Highway) mp;
                 double[] points = new double[6];
+
                 PathIterator pI = highway.getWay().getPathIterator(new AffineTransform());
+
                 pI.currentSegment(points);
                 Point2D p1 = new Point2D.Double(points[0], points[1]);
                 pI.next();
@@ -685,14 +687,16 @@ public class View extends JFrame implements Observer {
     }
 
     public void findNearestToMouse(Point2D position) throws NoninvertibleTransformException{
+        //Take insets into account when using mouseCoordinates.
         Insets x = getInsets();
         position.setLocation(position.getX(), position.getY()-x.top + x.bottom);
         Point2D coordinates = transformPoint(position);
         Rectangle2D windowBounds = bounds.getBounds();
-        Rectangle2D mouseBox = new Rectangle2D.Double(coordinates.getX(),
-                coordinates.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
+        Rectangle2D mouseBox = new Rectangle2D.Double(coordinates.getX()- windowBounds.getWidth()/6,
+                coordinates.getY() - windowBounds.getHeight()/6,
+                windowBounds.getWidth()/3 , windowBounds.getHeight()/5);
         Collection<MapData> streets = model.getVisibleStreets(mouseBox, false);
-        filterRoads(streets);
+        filterRoads(streets);  //remove all highways without names.
 
 
         nearestNeighbor = findNearestHighway(coordinates, streets);
@@ -716,19 +720,35 @@ public class View extends JFrame implements Observer {
         }
     }
 
+    /**
+     * Finds shortest path between 2 points.
+     * @param startPoint - Coordinates of start Address
+     * @param endPoint - Coordinates of end address
+     * @throws NoninvertibleTransformException
+     */
     public void findRoute(Point2D startPoint, Point2D endPoint)throws NoninvertibleTransformException{
-        Rectangle2D windowBounds = bounds.getBounds();
-        Rectangle2D startBox = new Rectangle2D.Double(startPoint.getX(),
-                startPoint.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
+        //Create 2 boxes around the the addresses.
+        Rectangle2D startBox = new Rectangle2D.Double();
+        startBox.setRect((startPoint.getX()- 0.045),
+                startPoint.getY() - 0.045, 0.09, 0.09);
 
-        Rectangle2D endBox = new Rectangle2D.Double(endPoint.getX(),
-                endPoint.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
+        Rectangle2D endBox = new Rectangle2D.Double(endPoint.getX()- 0.045,
+                endPoint.getY() - 0.045, 0.09 , 0.09);
 
-        Highway startWay = findNearestHighway(startPoint, model.getVisibleStreets(startBox, false));
-        System.out.print(startWay.getValueName());
+        //Extract all highways around the address
+        Collection<MapData> streets = model.getVisibleStreets(startBox,false);
+
+        //Find nearest highway
+        Highway startWay = findNearestHighway(startPoint,streets );
+
+        //Find nearest Vector on highway
         int startPointIndex = findVertexIndex(startPoint, startWay);
+
+        //Do same for end Address
         Highway endWay = findNearestHighway(endPoint, model.getVisibleStreets(endBox, false));
         int endPointIndex = findVertexIndex(endPoint, endWay);
+
+        //Find shortest Path.
         PathTree pathTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex, true);
         if(pathTree.hasPathTo(endPointIndex))
             shortestPath = pathTree.pathTo(endPointIndex);
