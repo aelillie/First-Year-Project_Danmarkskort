@@ -12,18 +12,30 @@ public class Multipolygon extends MapFeature {
 
     public Multipolygon(Path2D way, int layer_value, String value) {
         super(way, layer_value, value);
-        isArea = true;
     }
 
     @Override
     public void setPreDefValues() {
         super.setPreDefValues();
+        if (value.equals("islet")) layer_value = 49;
+        if (value.equals("building")) layer_value = 35;
+        else layer_value = 0;
     }
 
     @Override
     public void setValueAttributes() {
-        if(value.equals("building")) setValueName(ValueName.BUILDING);
-        else setValueName(ValueName.BUILDING);
+        if(value.equals("building")) {
+            isArea = true;
+            setValueName(ValueName.BUILDING);
+        }
+        else if(value.equals("islet")) {
+            isArea = true;
+            setValueName(ValueName.ISLET);
+        }
+        else {
+            isArea = false;
+            setValueName(ValueName.PLACE);
+        }
     }
 
 }

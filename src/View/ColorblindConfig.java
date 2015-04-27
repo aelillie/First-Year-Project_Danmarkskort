@@ -102,6 +102,10 @@ public class ColorblindConfig {
         colorblindView[ValueName.WETLAND.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.greenblue, 9);
         colorblindView[ValueName.BEACH.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.sand, 9);
         colorblindView[ValueName.COASTLINE.ordinal()] =       new DrawAttribute(false, 0, DrawAttribute.cl_orange, 0);
+        //PLACE
+        colorblindView[ValueName.PLACE.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightergrey, 13);
+        colorblindView[ValueName.ISLAND.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightergrey, 13);
+        colorblindView[ValueName.ISLET.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightergrey, 13);
         //RAILWAY
         colorblindView[ValueName.RAILWAY.ordinal()] =         new DrawAttribute(true, 1, DrawAttribute.cl_lightblue, 6);
         colorblindView[ValueName.LIGHT_RAIL.ordinal()] =      new DrawAttribute(true, 1, DrawAttribute.cl_lightblue, 8);

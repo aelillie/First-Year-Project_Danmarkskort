@@ -65,6 +65,8 @@ public class RoutePanelController implements ActionListener{
         endAddressField.addKeyListener(new SearchFieldKeyHandler(endAddressField, endAddrScrollpane));
         startAddressField.addActionListener(this);
         endAddressField.addActionListener(this);
+        routeView.getStartClearButton().addActionListener(this);
+        routeView.getEndClearButton().addActionListener(this);
         setInputChangeHandler(startAddressField, startAddrScrollpane);
         setInputChangeHandler(endAddressField,endAddrScrollpane);
         addFocusListener("Enter start address", startAddressField);
@@ -164,9 +166,9 @@ public class RoutePanelController implements ActionListener{
             }
         }
 
-        else if (command == "car") buttonDown(routeView.getCarButton());
-        else if (command == "bicycle") buttonDown(routeView.getBicycleButton());
-        else if (command == "walking") buttonDown(routeView.getFootButton());
+        else if (command == "car") transportButtonDown(routeView.getCarButton());
+        else if (command == "bicycle") transportButtonDown(routeView.getBicycleButton());
+        else if (command == "walking") transportButtonDown(routeView.getFootButton());
         else if (command == "startAddressSearch"){
             Address[] results = addressSearch(2,startAddressField,startAddrScrollpane);
             if(results != null && results.length == 1) {
@@ -182,11 +184,14 @@ public class RoutePanelController implements ActionListener{
                 System.out.println("Point B found");
                 endPoint = SearchResultMouseHandler.getPoint(results[0], model);
             } else endPoint = null;
+        } else if (command == "clearStartField") {
+            startAddressField.setText(null);
+        } else if (command == "clearEndField") {
+            endAddressField.setText(null);
         }
-
     }
 
-    public void buttonDown(JButton button){
+    public void transportButtonDown(JButton button){
         //TODO: what to do on button down?
         boolean isButtonDown = buttonDownMap.get(button);
         routeView.changeButtonAppearence(button,isButtonDown);
