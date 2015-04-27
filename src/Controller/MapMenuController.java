@@ -10,8 +10,10 @@ import java.awt.event.ActionListener;
  */
 public class MapMenuController implements ActionListener {
     private View v;
+    private MapTypePanel mapPanel;
     public MapMenuController(MapTypePanel panel){
         v = panel.getView();
+        mapPanel = panel;
         panel.getStandardButton().addActionListener(this);
         panel.getColorblindButton().addActionListener(this);
         panel.getTransportButton().addActionListener(this);
@@ -23,12 +25,16 @@ public class MapMenuController implements ActionListener {
         switch (command) {
             case "standardMap":
                 v.changeToStandard();
+                mapPanel.setVisible(false);
+
                 break;
             case "colorblindMap":
                 v.changeToColorblind();
+                mapPanel.setVisible(false);
                 break;
             case "transportMap":
                 v.changeToTransport();
+                mapPanel.setVisible(false);
                 break;
         }
     }

@@ -749,18 +749,37 @@ public class View extends JFrame implements Observer {
         int endPointIndex = findVertexIndex(endPoint, endWay);
 
         //Find shortest Path.
-        PathTree pathTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex, true);
-        if(pathTree.hasPathTo(endPointIndex))
-            shortestPath = pathTree.pathTo(endPointIndex);
+        PathTree shortestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex, true);
+        PathTree fastestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex, false);
 
-        double distance = pathTree.distTo(endPointIndex);
+        if(shortestTree.hasPathTo(endPointIndex) && fastestTree.hasPathTo(endPointIndex)){
+            shortestPath = shortestTree.pathTo(endPointIndex);
+            fastestPath = fastestTree.pathTo(endPointIndex);
+
+        }
+
+
+        double distance = shortestTree.distTo(endPointIndex);
+        System.out.println("SHORTEST PATH");
         System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
         double travelTime = 0;
         if(shortestPath == null) return;
         for (Edge e : shortestPath) {
             travelTime += e.travelTime();
         }
-        System.out.println("Time: " + travelTime + " minutes pr. km");
+        System.out.println("Time: " + travelTime * 60 + " minutes pr. km\n");
+
+        double fastDist = fastestTree.distTo(endPointIndex);
+        System.out.println("FASTEST PATH");
+        System.out.println("Distance: " + String.format("%5.2f", fastDist) + " km");
+        double fastTime = 0;
+        if(fastestPath == null) return;
+        for (Edge e : fastestPath) {
+            fastTime += e.travelTime();
+        }
+        System.out.println("Time: " + fastTime * 60 + " minutes pr. km\n");
+
+
         repaint();
     }
 
