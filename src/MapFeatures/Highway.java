@@ -68,20 +68,29 @@ public class Highway extends MapFeature {
      */
     public void assignEdges(List<Point2D> points) {
         Vertices vertices = Model.getModel().getVertices();
-        for (int i = 0; i + 1 < points.size(); i++) { //Edge(s) in its order of appearance in .osm
-            if(oneWay.equals("yes") || oneWay.equals("no")) {
+        for (int i = 0; i + 1 < points.size(); i++) {
+            if(oneWay.equals("no")) { //Edge(s) in its order of appearance in .osm
                 Point2D v = points.get(i);
                 Point2D w = points.get(i + 1);
                 Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
                 edge.setTravelTime(maxspeed);
                 edges.add(edge);
                 edge.createEdge(v, w);
-            }else{ //Edge(s) in its reverse order of appearance in .osm
+            } else if(oneWay.equals("yes")) { //Edge(s) in its order of appearance in .osm (one way)
+                Point2D v = points.get(i);
+                Point2D w = points.get(i + 1);
+                Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
+                edge.setTravelTime(maxspeed);
+                edge.setOneWay(true);
+                edges.add(edge);
+                edge.createEdge(v, w);
+            } else{ //Edge(s) in its reverse order of appearance in .osm
                 assert oneWay.equals("-1");
                 Point2D v = points.get(i+1);
                 Point2D w = points.get(i);
                 Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
                 edge.setTravelTime(maxspeed);
+                edge.setOneWayReverse(true);
                 edges.add(edge);
                 edge.createEdge(v, w);
             }
@@ -118,7 +127,6 @@ public class Highway extends MapFeature {
         else if (value.equals("living_street")) setValueName(ValueName.LIVING_STREET);
         else if (value.equals("pedestrian")) setValueName(ValueName.PEDESTRIAN);
         else if (value.equals("track")) setValueName(ValueName.TRACK);
-        //else if (value.equals("bus_guideway")) setValueName(ValueName.BUS_GUIDEWAY);
         else if (value.equals("road")) setValueName(ValueName.ROAD);
         else if (value.equals("footway") && isArea) setValueName(ValueName.FOOTWAY_AREA);
         else if (value.equals("footway")) setValueName(ValueName.FOOTWAY);
@@ -160,9 +168,17 @@ public class Highway extends MapFeature {
     }
     
     public void setOneWay(String value) {
-        if(value.equals("yes")) oneWay = "yes"; //one way in normal direction
-        else if(value.equals("-1")) oneWay = "-1"; //one way in reverse direction
-        else oneWay = "no"; //one way not present
+        switch (value) {
+            case "yes":
+                oneWay = "yes"; //one way in normal direction
+                break;
+            case "-1":
+                oneWay = "-1"; //one way in reverse direction
+                break;
+            default:
+                oneWay = "no"; //one way not present
+                break;
+        }
     }
 
 }

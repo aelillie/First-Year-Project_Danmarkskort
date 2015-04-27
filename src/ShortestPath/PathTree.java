@@ -17,7 +17,7 @@ public class PathTree {
      * @throws IllegalArgumentException if an edge distance is negative
      * @throws IllegalArgumentException unless 0 &le; <tt>s</tt> &le; <tt>V</tt> - 1
      */
-    public PathTree(EdgeWeightedDigraph G, int s, int d, boolean shortestPath) {
+    public PathTree(Graph G, int s, int d, boolean shortestPath) {
         for (Edge e : G.edges()) {
             if (e.distance() < 0)
                 throw new IllegalArgumentException("edge " + e + " has negative distance");
@@ -59,7 +59,7 @@ public class PathTree {
 
     // relax edge e and update pq if changed
     private void relaxDistance(Edge e) {
-        int v = e.from(), w = e.to();
+        int v = e.either(), w = e.other(v);
         if (valueTo[w] > valueTo[v] + e.distance()) {
             valueTo[w] = valueTo[v] + e.distance();
             edgeTo[w] = e;
@@ -69,7 +69,7 @@ public class PathTree {
     }
 
     private void relaxTime(Edge e) {
-        int v = e.from(), w = e.to();
+        int v = e.either(), w = e.other(v);
         if (valueTo[w] > valueTo[v] + e.travelTime()) {
             valueTo[w] = valueTo[v] + e.travelTime();
             edgeTo[w] = e;
@@ -110,7 +110,7 @@ public class PathTree {
     public Iterable<Edge> pathTo(int v) {
         if (!hasPathTo(v)) return null;
         Stack<Edge> path = new Stack<>();
-        for (Edge e = edgeTo[v]; e != null; e = edgeTo[e.from()]) {
+        for (Edge e = edgeTo[v]; e != null; e = edgeTo[e.either()]) {
             path.push(e);
         }
         return path;
@@ -120,7 +120,7 @@ public class PathTree {
     // check optimality conditions:
     // (i) for all edges e:            valueTo[e.to()] <= valueTo[e.from()] + e.distance()
     // (ii) for all edge e on the SPT: valueTo[e.to()] == valueTo[e.from()] + e.distance()
-    private boolean check(EdgeWeightedDigraph G, int s) {
+    private boolean check(Graph G, int s) {
 
         // check that edge weights are nonnegative
         for (Edge e : G.edges()) {
@@ -146,7 +146,7 @@ public class PathTree {
         // check that all edges e = v->w satisfy valueTo[w] <= valueTo[v] + e.distance()
         for (int v = 0; v < G.V(); v++) {
             for (Edge e : G.adj(v)) {
-                int w = e.to();
+                int w = e.other(v);
                 if (valueTo[v] + e.distance() < valueTo[w]) {
                     System.err.println("edge " + e + " not relaxed");
                     return false;
@@ -158,8 +158,8 @@ public class PathTree {
         for (int w = 0; w < G.V(); w++) {
             if (edgeTo[w] == null) continue;
             Edge e = edgeTo[w];
-            int v = e.from();
-            if (w != e.to()) return false;
+            int v = e.either();
+            if (w != e.other(v)) return false;
             if (valueTo[v] + e.distance() != valueTo[w]) {
                 System.err.println("edge " + e + " on shortest path not tight");
                 return false;

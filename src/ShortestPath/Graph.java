@@ -9,14 +9,14 @@ import java.util.Collection;
 /**
  * Created by woozy_000 on 13-04-2015.
  */
-public class EdgeWeightedDigraph implements Serializable{
+public class Graph implements Serializable{
     private static final long serialVersionUID = 2;
     private int V; //Total amount of vertices
     private int E; //Total amount of edges
     private Bag<Edge>[] adj; //a bag for each vertex containing adjacent edges
 
 
-    public EdgeWeightedDigraph() {
+    public Graph() {
     }
 
     public void initialize(int V) {
@@ -48,29 +48,26 @@ public class EdgeWeightedDigraph implements Serializable{
             if(value.equals("footway") || value.equals("cycleway") || value.equals("steps") ||
                     value.equals("path") || value.equals("bridleway"))
                 continue;
-            addEdges(highway);
+            addEdge(highway);
         }
     }
 
 
-    private void addEdges(Highway way) {
-        for (Edge edge : way.edges()) {
-            if (way.isOneWay().equals("no")) { //if it's NOT a one way street
-                int v = edge.from();
-                int w = edge.to();
-                validateVertex(v);
-                validateVertex(w);
-                Edge edge1 = new Edge(w, v, edge.getDistance());
-                edge1.setWay(edge.getWay());
-                adj[v].add(edge);
-                adj[w].add(edge1);
-                E += 2;
+    private void addEdge(Highway way) {
+        for (Edge e : way.edges()) {
+            int v = e.v();
+            int w = e.w();
+            validateVertex(v);
+            validateVertex(w);
+            if (e.isOneWay()) {
+                adj[v].add(e);
+                E++;
+            } else if (e.isOneWayReverse()) {
+                adj[w].add(e);
+                E++;
             } else {
-                int v = edge.from();
-                int w = edge.to();
-                validateVertex(v);
-                validateVertex(w);
-                adj[v].add(edge);
+                adj[v].add(e);
+                adj[w].add(e);
                 E++;
             }
         }
@@ -90,28 +87,35 @@ public class EdgeWeightedDigraph implements Serializable{
     }
 
     /**
-     * Returns the number of directed edges incident from vertex <tt>v</tt>.
-     * This is known as the <em>outdegree</em> of vertex <tt>v</tt>.
-     * @return the outdegree of vertex <tt>v</tt>
+     * Returns the degree of vertex <tt>v</tt>.
+     * @return the degree of vertex <tt>v</tt>
      * @param v the vertex
      * @throws java.lang.IndexOutOfBoundsException unless 0 <= v < V
      */
-    public int outdegree(int v) {
+    public int degree(int v) {
         validateVertex(v);
         return adj[v].size();
     }
 
     /**
-     * Returns all directed edges in the edge-weighted digraph.
+     * Returns all edges in the edge-weighted graph.
      * To iterate over the edges in the edge-weighted graph, use foreach notation:
-     * <tt>for (DirectedEdge e : G.edges())</tt>.
+     * <tt>for (Edge e : G.edges())</tt>.
      * @return all edges in the edge-weighted graph as an Iterable.
      */
     public Iterable<Edge> edges() {
-        Bag<Edge> list = new Bag<Edge>();
+        Bag<Edge> list = new Bag<>();
         for (int v = 0; v < V; v++) {
+            int selfLoops = 0;
             for (Edge e : adj(v)) {
-                list.add(e);
+                if (e.other(v) > v) {
+                    list.add(e);
+                }
+                // only add one copy of each self loop (self loops will be consecutive)
+                else if (e.other(v) == v) {
+                    if (selfLoops % 2 == 0) list.add(e);
+                    selfLoops++;
+                }
             }
         }
         return list;

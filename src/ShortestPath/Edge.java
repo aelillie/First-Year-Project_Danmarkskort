@@ -17,6 +17,8 @@ public class Edge implements Serializable {
     private double distance; //edge's distance
     private Path2D edge;
     private double travelTime; //min pr. distance
+    private boolean oneWay = false;
+    private boolean oneWayReverse = false;
 
     /**
      * Initializes a directed edge from vertex <tt>v</tt> to vertex <tt>w</tt> with
@@ -43,7 +45,8 @@ public class Edge implements Serializable {
      *
      * @return the tail vertex of the directed edge
      */
-    public int from() {
+
+    public int v() {
         return v;
     }
 
@@ -52,7 +55,8 @@ public class Edge implements Serializable {
      *
      * @return the head vertex of the directed edge
      */
-    public int to() {
+
+    public int w() {
         return w;
     }
 
@@ -87,6 +91,13 @@ public class Edge implements Serializable {
         else if (vertex == w) return v;
         else throw new IllegalArgumentException("Illegal endpoint");
     }
+
+    public boolean canGoTo(int that) {
+        if (that == v && oneWay) return false; //if edge is one way reversed or undirected
+        else if (that == w && oneWayReverse) return false; //if edge is one way or undirected
+        else return true; //if edge is not a one way
+    }
+
 
     /**
      * Returns a string representation of the directed edge.
@@ -138,5 +149,21 @@ public class Edge implements Serializable {
     public void setTravelTime(int maxspeed) {
         double minPrKm = 60/maxspeed;
         travelTime = minPrKm*distance;
+    }
+
+    public void setOneWay(boolean isOneWay) {
+        oneWay = isOneWay;
+    }
+
+    public void setOneWayReverse(boolean isOneWayReverse) {
+        oneWayReverse = isOneWayReverse;
+    }
+
+    public boolean isOneWay() {
+        return oneWay;
+    }
+
+    public boolean isOneWayReverse() {
+        return oneWayReverse;
     }
 }

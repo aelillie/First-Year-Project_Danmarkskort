@@ -815,7 +815,7 @@ public class View extends JFrame implements Observer {
 
         }
 
-        return closestEdge.from();
+        return closestEdge.either();
     }
 
     /**

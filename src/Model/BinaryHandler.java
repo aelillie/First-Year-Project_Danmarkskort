@@ -2,7 +2,7 @@ package Model;
 
 import MapFeatures.Coastline;
 import QuadTree.QuadTree;
-import ShortestPath.EdgeWeightedDigraph;
+import ShortestPath.Graph;
 import ShortestPath.Vertices;
 
 import java.awt.geom.Path2D;
@@ -90,7 +90,7 @@ public class BinaryHandler{
         model.getOSMReader().setAddressList((ArrayList<Address>) in.readObject());
 
         loadingScreen.updateLoadBar(55);
-        model.getOSMReader().setDiGraph((EdgeWeightedDigraph) in.readObject());
+        model.getOSMReader().setDiGraph((Graph) in.readObject());
         loadingScreen.updateLoadBar(65);
         model.getOSMReader().setVertices((Vertices) in.readObject());
 
