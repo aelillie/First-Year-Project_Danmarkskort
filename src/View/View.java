@@ -5,10 +5,9 @@ import MapFeatures.Bounds;
 import MapFeatures.Highway;
 import MapFeatures.Route;
 import Model.*;
-import ShortestPath.PathTree;
-import ShortestPath.Edge;
 import QuadTree.QuadTree;
-import ShortestPath.Vertices;
+import ShortestPath.Edge;
+import ShortestPath.PathTree;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -726,15 +725,18 @@ public class View extends JFrame implements Observer {
                 endPoint.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
 
         Highway startWay = findNearestHighway(startPoint, model.getVisibleStreets(startBox, false));
+        System.out.print(startWay.getValueName());
         int startPointIndex = findVertexIndex(startPoint, startWay);
         Highway endWay = findNearestHighway(endPoint, model.getVisibleStreets(endBox, false));
         int endPointIndex = findVertexIndex(endPoint, endWay);
         PathTree pathTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex, true);
+        if(pathTree.hasPathTo(endPointIndex))
+            shortestPath = pathTree.pathTo(endPointIndex);
 
-        shortestPath = pathTree.pathTo(endPointIndex);
         double distance = pathTree.distTo(endPointIndex);
         System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
         double travelTime = 0;
+        if(shortestPath == null) return;
         for (Edge e : shortestPath) {
             travelTime += e.travelTime();
         }

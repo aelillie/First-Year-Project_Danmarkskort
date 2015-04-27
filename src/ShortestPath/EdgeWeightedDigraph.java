@@ -5,8 +5,6 @@ import MapFeatures.Highway;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by woozy_000 on 13-04-2015.
