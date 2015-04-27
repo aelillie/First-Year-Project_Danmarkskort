@@ -8,7 +8,10 @@ import View.View;
 import javax.swing.*;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import java.awt.geom.*;
+import java.awt.geom.AffineTransform;
+import java.awt.geom.Path2D;
+import java.awt.geom.PathIterator;
+import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Map;
 
@@ -24,6 +27,7 @@ public class SearchResultMouseHandler extends MouseAdapter{
     private JScrollPane scrollPane;
     private String iconType;
 
+
     public SearchResultMouseHandler(View view, Model model, JList<Address> searchResults, JTextField textField, JScrollPane scrollPane, String iconType) {
         this.view = view;
         this.model = model;
@@ -33,8 +37,14 @@ public class SearchResultMouseHandler extends MouseAdapter{
         this.iconType = iconType;
     }
 
+    /**
+     * When an address i chosen from suggestion Pane with mouse this function
+     * calls the same functions as if normally chosen.
+     * @param e
+     */
     @Override
     public void mouseClicked(MouseEvent e) {
+
         Address selectedItem = searchResults.getSelectedValue();
         textField.setText(selectedItem.toString());
         view.getCanvas().requestFocusInWindow();
@@ -44,6 +54,13 @@ public class SearchResultMouseHandler extends MouseAdapter{
         textField.postActionEvent();
     }
 
+    /**
+     * Moves the position of the window to the address Location
+     * @param selectedAddr - Address chosen
+     * @param m - Model instance
+     * @param v - View Instance
+     * @param iconType - End or start Position icon type
+     */
     public static void goToAddressLocation(Address selectedAddr, Model m, View v, String iconType){
         Map<Address, Point2D> addressMap = m.getOSMReader().getAddressMap();
         Map<Address, List<Path2D>> streetMap = m.getOSMReader().getStreetMap();
