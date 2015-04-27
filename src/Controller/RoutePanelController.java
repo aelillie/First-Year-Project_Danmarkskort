@@ -30,6 +30,11 @@ public class RoutePanelController implements ActionListener{
 
     private HashMap<JButton, Boolean> buttonDownMap;
 
+    /**
+     * Controller for route panel.
+     * @param routeView - view Instance.
+     * @param model - model Instance.
+     */
     public RoutePanelController(RouteView routeView, Model model){
         view = routeView.getView();
         this.model = model;
@@ -149,7 +154,10 @@ public class RoutePanelController implements ActionListener{
         }
     }
 
-
+    /**
+     * Sets up the actions to each event
+     * @param e ActionEvent
+     */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command == "findRoute") {

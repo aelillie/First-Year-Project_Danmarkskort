@@ -7,7 +7,6 @@ import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
-import java.util.Map;
 
 public class PathCreater {
 
@@ -19,24 +18,25 @@ public class PathCreater {
      * @return Path2D
      */
     public static Path2D createMultipolygon(List<Long> memberReferences, LongHashMap<Path2D> wayId_map) {
+
         Long ref = memberReferences.get(0);
-        if (wayId_map.contains(ref)) {
+        if (wayId_map.contains(ref)) { // check whether first ref is in the hashMap
             Path2D path = (Path2D) wayId_map.get(ref).clone();
-            for (int i = 1; i < memberReferences.size(); i++) {
+            for (int i = 1; i < memberReferences.size(); i++) {     //check for all members if the exist
                 ref = memberReferences.get(i);
                 if (wayId_map.contains(ref)) {
                     Path2D element = (Path2D) wayId_map.get(memberReferences.get(i)).clone();
-                    path.append(element, false);
+                    path.append(element, false); // append the elements together
                 } else {}
 
             }
 
-            path.setWindingRule(Path2D.WIND_EVEN_ODD);
+            path.setWindingRule(Path2D.WIND_EVEN_ODD); // Remember to set winding rule for when drawn.
 
             return path;
 
         }
-        return null;
+        return null; //Return null if the map doesn't contain the member.
     }
 
     /**
@@ -56,6 +56,12 @@ public class PathCreater {
         return way;
     }
 
+    /**
+     * Creates a path2D between two points
+     * @param point1 -
+     * @param point2
+     * @return
+     */
     public static Path2D createWay(Point2D point1, Point2D point2) {
         Path2D way = new Path2D.Float();
         way.moveTo(point1.getX(), point1.getY());

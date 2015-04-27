@@ -3,7 +3,6 @@ package Model;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -94,7 +93,7 @@ public class MapIcon implements Serializable, MapData {
      */
     public void draw(Graphics2D g, AffineTransform transform){
         try{
-            if(img == null)
+            if(img == null) //First time drawing the image we'll need to load it in first
                 img = ImageIO.read(imgPath);
         } catch(IOException e){
             e.printStackTrace();
@@ -102,7 +101,7 @@ public class MapIcon implements Serializable, MapData {
         double x = 0;
         double y = 0;
         if(imgPath.getPath().equals(iconURLs.get("chosenAddressIcon").getPath())){
-
+            //Move the icon a bit to better represent the actual address.
             double height = (img.getHeight()/transform.getScaleY());
             double width = (img.getWidth()/transform.getScaleX())/2;
             x = coord.getX() - width;
@@ -120,12 +119,13 @@ public class MapIcon implements Serializable, MapData {
     }
 
     private void writeObject(ObjectOutputStream stream)throws IOException{
+        //Specifically telling how the object should be written when using objectOutputStream
         stream.writeObject(coord);
         stream.writeUTF(type);
     }
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-
+        //How the object is read by a ObjectInputStream
         Object co = stream.readObject();
         coord = (Point2D) co;
         this.type = stream.readUTF().intern();
@@ -137,7 +137,11 @@ public class MapIcon implements Serializable, MapData {
         return this.imgPath;
     }
 
-
+    /**
+     * Changes the state of wether an icon is visible or not.
+     * @param url - Icons URL
+     * @param state - boolean visible/not visible
+     */
     public static void setIconState(URL url, boolean state)
     {
         hashIcon.put(url, state);
@@ -158,7 +162,6 @@ public class MapIcon implements Serializable, MapData {
     }
 
     public Point2D getPosition(){
-
         return coord;
     }
 

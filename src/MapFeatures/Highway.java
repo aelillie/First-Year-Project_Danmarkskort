@@ -16,7 +16,7 @@ public class Highway extends MapFeature {
     private String streetName;
     private List<Edge> edges = new ArrayList<>();
     private String oneWay;
-    private int maxspeed;
+    private double maxspeed;
 
     public Highway() {}
 
@@ -33,7 +33,7 @@ public class Highway extends MapFeature {
 
     private void setMaxSpeed(String maxspeed) {
         try {
-            this.maxspeed = Integer.parseInt(maxspeed);
+            this.maxspeed = Double.parseDouble(maxspeed);
         } catch (NumberFormatException e) {
             setPreDefMaxSpeed();
         }
@@ -42,22 +42,22 @@ public class Highway extends MapFeature {
     private void setPreDefMaxSpeed() {
         switch (value) {
             case "motorway":
-                maxspeed = 130;
+                maxspeed = 130.0;
                 break;
             case "primary":
-                maxspeed = 80;
+                maxspeed = 80.0;
                 break;
             case "secondary":
-                maxspeed = 80;
+                maxspeed = 80.0;
                 break;
             case "tertiary":
-                maxspeed = 80;
+                maxspeed = 80.0;
                 break;
             case "unclassified":
-                maxspeed = 80;
+                maxspeed = 80.0;
                 break;
             default:
-                maxspeed = 50;
+                maxspeed = 50.0;
                 break;
         }
     }
@@ -72,16 +72,16 @@ public class Highway extends MapFeature {
             if(oneWay.equals("yes") || oneWay.equals("no")) {
                 Point2D v = points.get(i);
                 Point2D w = points.get(i + 1);
-                Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
-                edge.setTravelTime(maxspeed);
+                double distance = calcDist(v, w);
+                Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), distance, calcTime(distance));
                 edges.add(edge);
                 edge.createEdge(v, w);
             }else{ //Edge(s) in its reverse order of appearance in .osm
                 assert oneWay.equals("-1");
                 Point2D v = points.get(i+1);
                 Point2D w = points.get(i);
-                Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
-                edge.setTravelTime(maxspeed);
+                double distance = calcDist(v, w);
+                Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), distance, calcTime(distance));
                 edges.add(edge);
                 edge.createEdge(v, w);
             }
@@ -91,6 +91,10 @@ public class Highway extends MapFeature {
     private double calcDist(Point2D v, Point2D w) {
         return MapCalculator.haversineDist(v, w);
 
+    }
+
+    private double calcTime(double distance) {
+        return distance/maxspeed;
     }
 
     @Override
@@ -164,5 +168,4 @@ public class Highway extends MapFeature {
         else if(value.equals("-1")) oneWay = "-1"; //one way in reverse direction
         else oneWay = "no"; //one way not present
     }
-
 }
