@@ -15,7 +15,7 @@ public class Edge implements Serializable {
     private int v;
     private int w;
     private double distance; //edge's distance
-    private Path2D edge;
+    private Path2D edgePath;
     private double travelTime; //min pr. distance
 
     /**
@@ -29,7 +29,7 @@ public class Edge implements Serializable {
      *                                             is a negative integer
      * @throws IllegalArgumentException            if <tt>distance</tt> is <tt>NaN</tt>
      */
-    public Edge(int v, int w, double distance, double travelTime) {
+    public Edge(int v, int w, double distance, double travelTime, Path2D edgePath) {
         if (v < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
         if (w < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
         if (Double.isNaN(distance)) throw new IllegalArgumentException("Weight is NaN");
@@ -37,6 +37,7 @@ public class Edge implements Serializable {
         this.w = w;
         this.distance = distance;
         this.travelTime = travelTime;
+        this.edgePath = edgePath;
     }
 
     /**
@@ -122,14 +123,8 @@ public class Edge implements Serializable {
         this.distance = distance;
     }
 
-    public void createEdge(Point2D point1, Point2D point2) {
-        edge = PathCreater.createWay(point1, point2);
+
+    public Path2D getEdgePath() {
+        return edgePath;
     }
-
-    public Path2D getWay() {
-        return edge;
-    }
-
-    public void setWay(Path2D edge){this.edge = edge ;}
-
 }

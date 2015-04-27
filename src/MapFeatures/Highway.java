@@ -6,6 +6,7 @@ import Model.ValueName;
 import ShortestPath.Edge;
 import ShortestPath.Vertices;
 import Model.MapCalculator;
+import Model.PathCreater;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -67,23 +68,21 @@ public class Highway extends MapFeature {
      * Create edges between all points in the way for the current highway
      */
     public void assignEdges(List<Point2D> points) {
-        Vertices vertices = Model.getModel().getVertices();
+        Vertices V = Model.getModel().getVertices();
         for (int i = 0; i + 1 < points.size(); i++) { //Edge(s) in its order of appearance in .osm
             if(oneWay.equals("yes") || oneWay.equals("no")) {
                 Point2D v = points.get(i);
                 Point2D w = points.get(i + 1);
-                double distance = calcDist(v, w);
-                Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), distance, calcTime(distance));
+                double dist = calcDist(v, w);
+                Edge edge = new Edge(V.getIndex(v), V.getIndex(w), dist, calcTime(dist), edgePath(v, w));
                 edges.add(edge);
-                edge.createEdge(v, w);
             }else{ //Edge(s) in its reverse order of appearance in .osm
                 assert oneWay.equals("-1");
                 Point2D v = points.get(i+1);
                 Point2D w = points.get(i);
-                double distance = calcDist(v, w);
-                Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), distance, calcTime(distance));
+                double dist = calcDist(v, w);
+                Edge edge = new Edge(V.getIndex(v), V.getIndex(w), dist, calcTime(dist), edgePath(w, v));
                 edges.add(edge);
-                edge.createEdge(v, w);
             }
         }
     }
@@ -94,7 +93,11 @@ public class Highway extends MapFeature {
     }
 
     private double calcTime(double distance) {
-        return distance/maxspeed;
+        return (distance/maxspeed)*60;
+    }
+
+    private Path2D edgePath(Point2D point1, Point2D point2) {
+        return PathCreater.createWay(point1, point2);
     }
 
     @Override
@@ -164,8 +167,16 @@ public class Highway extends MapFeature {
     }
     
     public void setOneWay(String value) {
-        if(value.equals("yes")) oneWay = "yes"; //one way in normal direction
-        else if(value.equals("-1")) oneWay = "-1"; //one way in reverse direction
-        else oneWay = "no"; //one way not present
+        switch (value) {
+            case "yes":
+                oneWay = "yes"; //one way in normal direction
+                break;
+            case "-1":
+                oneWay = "-1"; //one way in reverse direction
+                break;
+            default:
+                oneWay = "no"; //one way not present
+                break;
+        }
     }
 }

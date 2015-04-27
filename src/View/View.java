@@ -784,7 +784,6 @@ public class View extends JFrame implements Observer {
     }
 
     public void findFastestPath() {
-        //TODO: Does not work properly
         //Functions as a test when pressed "f"
         int source = 0;
         PathTree FPpathTree = new PathTree(model.getDiGraph(), source, destination, false);
@@ -793,7 +792,7 @@ public class View extends JFrame implements Observer {
         double time = FPpathTree.timeTo(destination);
         System.out.println("");
         System.out.println("Fastest path:");
-        System.out.println("Time: " + String.format("%5.2f", time) + " minuts");
+        System.out.println("Time: " + String.format("%5.2f", time) + " minutes");
         double distance = 0;
         for (Edge e : fastestPath) {
             distance += e.distance();
@@ -810,7 +809,7 @@ public class View extends JFrame implements Observer {
 
         Line2D closestLine = null;
         for(Edge edge : edges){
-            Path2D segment = edge.getWay();
+            Path2D segment = edge.getEdgePath();
             double[] points = new double[6];
             PathIterator pI = segment.getPathIterator(new AffineTransform());
             pI.currentSegment(points);
@@ -991,7 +990,7 @@ public class View extends JFrame implements Observer {
                 g.setStroke(new BasicStroke(0.00010f));
                 for (Edge e : shortestPath) {
                     //Path2D path = PathCreater.createWay(e.getVPoint(), e.getWPoint());
-                    g.draw(e.getWay());
+                    g.draw(e.getEdgePath());
                 }
             }
             if (fastestPath != null) {
@@ -999,7 +998,7 @@ public class View extends JFrame implements Observer {
                 g.setStroke(new BasicStroke(0.00010f));
                 for (Edge e : fastestPath) {
                     //Path2D path = PathCreater.createWay(e.getVPoint(), e.getWPoint());
-                    g.draw(e.getWay());
+                    g.draw(e.getEdgePath());
                 }
             }
             g.setColor(Color.BLACK);
