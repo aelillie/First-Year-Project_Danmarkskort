@@ -792,12 +792,12 @@ public class View extends JFrame implements Observer {
         double time = FPpathTree.timeTo(destination);
         System.out.println("");
         System.out.println("Fastest path:");
-        System.out.println("Time: " + String.format("%5.2f", time) + " minutes");
         double distance = 0;
         for (Edge e : fastestPath) {
             distance += e.distance();
         }
         System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
+        System.out.println("Time: " + String.format("%5.2f", time) + " minutes");
         System.out.println("");
         repaint();
     }
@@ -984,12 +984,10 @@ public class View extends JFrame implements Observer {
                 }
             }
 
-            //TODO: Test of shortest path
             if (shortestPath != null) {
                 g.setColor(DrawAttribute.cl_darkorange);
                 g.setStroke(new BasicStroke(0.00010f));
                 for (Edge e : shortestPath) {
-                    //Path2D path = PathCreater.createWay(e.getVPoint(), e.getWPoint());
                     g.draw(e.getEdgePath());
                 }
             }
@@ -997,7 +995,6 @@ public class View extends JFrame implements Observer {
                 g.setColor(DrawAttribute.lightblue);
                 g.setStroke(new BasicStroke(0.00010f));
                 for (Edge e : fastestPath) {
-                    //Path2D path = PathCreater.createWay(e.getVPoint(), e.getWPoint());
                     g.draw(e.getEdgePath());
                 }
             }
@@ -1159,4 +1156,6 @@ public class View extends JFrame implements Observer {
     public JScrollPane getResultStartPane() {return resultStartPane;}
 
     public void setShortestPath(Iterable<Edge> it ) { shortestPath = it; }
+    public void setFastestPath(Iterable<Edge> it ) { fastestPath = it; }
+
 }

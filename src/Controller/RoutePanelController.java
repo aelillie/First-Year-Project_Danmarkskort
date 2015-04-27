@@ -201,9 +201,11 @@ public class RoutePanelController implements ActionListener{
         } else if (command == "clearStartField") {
             startAddressField.setText(null);
             view.setShortestPath(null);
+            view.setFastestPath(null);
         } else if (command == "clearEndField") {
             endAddressField.setText(null);
             view.setShortestPath(null);
+            view.setFastestPath(null);
         }
     }
 
