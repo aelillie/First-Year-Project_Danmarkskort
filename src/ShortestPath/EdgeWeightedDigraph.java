@@ -5,8 +5,6 @@ import MapFeatures.Highway;
 
 import java.io.Serializable;
 import java.util.Collection;
-import java.util.List;
-import java.util.Set;
 
 /**
  * Created by woozy_000 on 13-04-2015.
@@ -62,8 +60,13 @@ public class EdgeWeightedDigraph implements Serializable{
                 int w = edge.to();
                 validateVertex(v);
                 validateVertex(w);
+                Edge diEdge = new Edge(w,v, edge.distance());
+                diEdge.setWay(edge.getWay());
+                if(edge.getWay() == null)
+                    System.out.print(way.getStreetName() + " ");
+                adj[w].add(diEdge);
                 adj[v].add(edge);
-                E++;
+                E += 2;
             } else {
                 int v = edge.from();
                 int w = edge.to();
