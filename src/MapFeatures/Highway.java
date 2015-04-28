@@ -79,15 +79,13 @@ public class Highway extends MapFeature {
                 v = points.get(i);
                 w = points.get(i+1);
             }
-            Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
-            edge.setTravelTime(maxspeed);
+            double distance = calcDist(v, w);
+            Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), distance, calcTime(distance), edgePath(v,w));
             if(oneWay.equals("yes"))
                 edge.setOneWay(true);
             if(oneWay.equals("-1"))
                 edge.setOneWayReverse(true);
             edges.add(edge);
-            edge.createEdge(v, w);
-
         }
     }
 

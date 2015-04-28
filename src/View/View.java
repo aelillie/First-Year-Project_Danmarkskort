@@ -755,25 +755,34 @@ public class View extends JFrame implements Observer {
         }
 
 
-        double distance = shortestTree.distTo(endPointIndex);
+        //Shortest path
         System.out.println("");
-        System.out.println("SHORTEST PATH");
-        System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
+        System.out.println("Shortest path from A to B");
+        double distance = shortestTree.distTo(endPointIndex);
+        if (distance < 1) {
+            distance *= 1000;
+            System.out.println("Distance: " + String.format("%.0f", distance) + " m");
+        } else System.out.println("Distance: " + String.format("%.2f", distance) + " km");
         double travelTime = 0;
         if(shortestPath == null) return;
         for (Edge e : shortestPath) {
             travelTime += e.travelTime();
         }
-        System.out.println("Time: " + travelTime + " minutes pr. km\n");
+        System.out.println("Time: " + String.format("%.2f", travelTime) + " minutes\n");
+
+        //Fastest path
+        System.out.println("Fastest Path from A to B");
         double fastDist = fastestTree.distTo(endPointIndex);
-        System.out.println("FASTEST PATH");
-        System.out.println("Distance: " + String.format("%5.2f", fastDist) + " km");
+        if (distance < 1) {
+            fastDist *= 1000;
+            System.out.println("Distance: " + String.format("%.0f", fastDist) + " m");
+        } else System.out.println("Distance: " + String.format("%.2f", fastDist) + " km");
         double fastTime = 0;
         if(fastestPath == null) return;
         for (Edge e : fastestPath) {
             fastTime += e.travelTime();
         }
-        System.out.println("Time: " + fastTime + " minutes pr. km\n");
+        System.out.println("Time: " + String.format("%.2f", fastTime) + " minutes");
 
         repaint();
     }
@@ -1025,7 +1034,7 @@ public class View extends JFrame implements Observer {
                             g.setPaint(Color.orange);
                         else if (e.isOneWayReverse())
                             g.setPaint(Color.PINK);
-                        g.draw(e.getWay());
+                        g.draw(e.getEdgePath());
                     }
 
 
