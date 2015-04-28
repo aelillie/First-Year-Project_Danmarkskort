@@ -726,12 +726,13 @@ public class View extends JFrame implements Observer {
                 startPoint.getY()-0.045, 0.09 , 0.09);
 
         Rectangle2D endBox = new Rectangle2D.Double(endPoint.getX()-0.045,
-                endPoint.getY()-0.45, 0.09 , 0.09);
+                endPoint.getY()-0.045, 0.09 , 0.09);
 
         Highway startWay = findNearestHighway(startPoint, model.getVisibleStreets(startBox, false));
 
         int startPointIndex = findVertexIndex(startPoint, startWay);
         Highway endWay = findNearestHighway(endPoint, model.getVisibleStreets(endBox, false));
+        if(endWay == null)System.out.println("hey");
         int endPointIndex = findVertexIndex(endPoint, endWay);
         PathTree pathTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex, true);
         if(pathTree.hasPathTo(endPointIndex))

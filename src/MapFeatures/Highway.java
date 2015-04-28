@@ -69,13 +69,20 @@ public class Highway extends MapFeature {
     public void assignEdges(List<Point2D> points) {
         Vertices vertices = Model.getModel().getVertices();
         for (int i = 0; i + 1 < points.size(); i++) {
-            Point2D v = points.get(i);
-            Point2D w = points.get(i + 1);
+            Point2D v;
+            Point2D w;
+            if(oneWay.equals("-1")){
+                v = points.get(i+1);
+                w = points.get(i);
+            }else{
+                v = points.get(i);
+                w = points.get(i+1);
+            }
             Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
             edge.setTravelTime(maxspeed);
             if(oneWay.equals("yes"))
                 edge.setOneWay(true);
-            else if(oneWay.endsWith("-1"))
+            if(oneWay.equals("-1"))
                 edge.setOneWayReverse(true);
             edges.add(edge);
             edge.createEdge(v, w);
