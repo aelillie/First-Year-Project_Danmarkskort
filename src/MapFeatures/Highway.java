@@ -6,6 +6,7 @@ import Model.ValueName;
 import ShortestPath.Edge;
 import ShortestPath.Vertices;
 import Model.MapCalculator;
+import Model.PathCreater;
 
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
@@ -16,7 +17,7 @@ public class Highway extends MapFeature {
     private String streetName;
     private List<Edge> edges = new ArrayList<>();
     private String oneWay;
-    private int maxspeed;
+    private double maxspeed;
 
     public Highway() {}
 
@@ -33,7 +34,7 @@ public class Highway extends MapFeature {
 
     private void setMaxSpeed(String maxspeed) {
         try {
-            this.maxspeed = Integer.parseInt(maxspeed);
+            this.maxspeed = Double.parseDouble(maxspeed);
         } catch (NumberFormatException e) {
             setPreDefMaxSpeed();
         }
@@ -42,22 +43,22 @@ public class Highway extends MapFeature {
     private void setPreDefMaxSpeed() {
         switch (value) {
             case "motorway":
-                maxspeed = 130;
+                maxspeed = 130.0;
                 break;
             case "primary":
-                maxspeed = 80;
+                maxspeed = 80.0;
                 break;
             case "secondary":
-                maxspeed = 80;
+                maxspeed = 80.0;
                 break;
             case "tertiary":
-                maxspeed = 80;
+                maxspeed = 80.0;
                 break;
             case "unclassified":
-                maxspeed = 80;
+                maxspeed = 80.0;
                 break;
             default:
-                maxspeed = 50;
+                maxspeed = 50.0;
                 break;
         }
     }
@@ -91,8 +92,15 @@ public class Highway extends MapFeature {
     }
 
     private double calcDist(Point2D v, Point2D w) {
-        return MapCalculator.haversineDist(v, w);
+        return MapCalculator.haversineDist(v, w); //returns km as unit
+    }
 
+    private double calcTime(double distance) {
+        return (distance/maxspeed)*60;
+    }
+
+    private Path2D edgePath(Point2D point1, Point2D point2) {
+        return PathCreater.createWay(point1, point2);
     }
 
     @Override
@@ -173,5 +181,4 @@ public class Highway extends MapFeature {
                 break;
         }
     }
-
 }

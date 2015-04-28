@@ -29,6 +29,7 @@ public class SearchController extends MouseAdapter implements ActionListener {
         setInputChangeHandler();
     }
 
+
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
         if (command.equals("search")) { //When the search button is clicked
@@ -84,6 +85,7 @@ public class SearchController extends MouseAdapter implements ActionListener {
         }
     }
 
+    //Inner control class for keyboard Control on SearchResultPane.
     private class SearchAreaKeyHandler extends KeyAdapter {
         private JList<Address> list = view.getAddressSearchResults();
 
@@ -107,6 +109,10 @@ public class SearchController extends MouseAdapter implements ActionListener {
 
         }
 
+        /**
+         * When an address is selected with the Enter key this function tells
+         * the Controller.
+         */
         public void enterPressed(){
             Address selectedItem = null;
             try{
