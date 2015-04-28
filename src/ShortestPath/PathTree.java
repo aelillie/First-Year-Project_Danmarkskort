@@ -36,7 +36,7 @@ public class PathTree {
             while (!pq.isEmpty()) {
                 int v = pq.delMin();
                 for (Edge e : G.adj(v)) {
-                    relaxDistance(e);
+                    relaxDistance(e, v);
                 }
                 if(v == d)
                     break;
@@ -45,7 +45,7 @@ public class PathTree {
             while (!pq.isEmpty()) {
                 int v = pq.delMin();
                 for (Edge e : G.adj(v)) {
-                    relaxTime(e);
+                    relaxTime(e, v);
                 }
                 if(v == d)
                     break;
@@ -53,13 +53,19 @@ public class PathTree {
         }
 
         // check optimality conditions
-        assert check(G, s);
+
+        assert(check(G, s));
     }
 
 
     // relax edge e and update pq if changed
-    private void relaxDistance(Edge e) {
-        int v = e.either(), w = e.other(v);
+    private void relaxDistance(Edge e, int v) {
+        int w;
+        if(v == e.either()) {
+            w = e.other(v);
+        }
+        else w = e.either();
+
         if (valueTo[w] > valueTo[v] + e.distance()) {
             valueTo[w] = valueTo[v] + e.distance();
             edgeTo[w] = e;
@@ -68,8 +74,12 @@ public class PathTree {
         }
     }
 
-    private void relaxTime(Edge e) {
-        int v = e.either(), w = e.other(v);
+    private void relaxTime(Edge e, int v) {
+        int w;
+        if(v == e.either()) {
+            w = e.other(v);
+        }
+        else w = e.either();
         if (valueTo[w] > valueTo[v] + e.travelTime()) {
             valueTo[w] = valueTo[v] + e.travelTime();
             edgeTo[w] = e;
@@ -110,8 +120,14 @@ public class PathTree {
     public Iterable<Edge> pathTo(int v) {
         if (!hasPathTo(v)) return null;
         Stack<Edge> path = new Stack<>();
-        for (Edge e = edgeTo[v]; e != null; e = edgeTo[e.either()]) {
+        int w = v;
+        Edge e = edgeTo[v];
+        while(e != null){
             path.push(e);
+            if(w == e.either())
+                w = e.other(e.either());
+            else w = e.either();
+            e = edgeTo[w];
         }
         return path;
     }

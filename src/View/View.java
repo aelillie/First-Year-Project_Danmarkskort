@@ -993,12 +993,18 @@ public class View extends JFrame implements Observer {
                         g.draw(e.getWay());
                     }
 
+
+
+
+                }
+                for (MapFeature street : mapFStreets) {
+                    if (!(street instanceof Highway)) continue;
+                    Highway streetedge = (Highway) street;
                     List<Point2D> points = streetedge.getPoints();
                     for(Point2D p : points){
                         g.setPaint(Color.yellow);
                         g.draw(new Rectangle2D.Double(p.getX(), p.getY(), 0.000005, 0.000005));
                     }
-
 
                 }
             }
