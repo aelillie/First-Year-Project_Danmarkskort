@@ -101,7 +101,6 @@ public class View extends JFrame implements Observer {
         pack();
         canvas.requestFocusInWindow();
         model.addObserver(this);
-        System.out.print(model.getOSMReader().getAddressList().size());
     }
 
     /**
@@ -653,9 +652,7 @@ public class View extends JFrame implements Observer {
             if (mp instanceof Highway ) {
                 Highway highway = (Highway) mp;
                 double[] points = new double[6];
-
                 PathIterator pI = highway.getWay().getPathIterator(new AffineTransform());
-
                 pI.currentSegment(points);
                 Point2D p1 = new Point2D.Double(points[0], points[1]);
                 pI.next();
@@ -761,24 +758,25 @@ public class View extends JFrame implements Observer {
 
         double distance = shortestTree.distTo(endPointIndex);
         System.out.println("");
-        System.out.println("SHORTEST PATH");
+        System.out.println("SHORTEST PATH (ORANGE)");
         System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
         double travelTime = 0;
         if(shortestPath == null) return;
         for (Edge e : shortestPath) {
             travelTime += e.travelTime();
         }
-        System.out.println("Time: " + travelTime + " minutes pr. km\n");
-        double fastDist = fastestTree.distTo(endPointIndex);
-        System.out.println("FASTEST PATH");
-        System.out.println("Distance: " + String.format("%5.2f", fastDist) + " km");
+        System.out.println("Time: " + travelTime + " minutes pr. km");
+
+        double distFast = fastestTree.distTo(endPointIndex);
+        System.out.println("");
+        System.out.println("FASTEST PATH (CYAN)");
+        System.out.println("Distance: " + String.format("%5.2f", distFast) + " km");
         double fastTime = 0;
-        if(fastestPath == null) return;
-        for (Edge e : fastestPath) {
+        if(shortestPath == null) return;
+        for (Edge e : shortestPath) {
             fastTime += e.travelTime();
         }
-        System.out.println("Time: " + fastTime + " minutes pr. km\n");
-
+        System.out.println("Time: " + fastTime + " minutes pr. km");
         repaint();
     }
 
@@ -1010,14 +1008,14 @@ public class View extends JFrame implements Observer {
 
             if (shortestPath != null) {
                 g.setColor(DrawAttribute.cl_darkorange);
-                g.setStroke(new BasicStroke(0.00010f));
+                g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
                 for (Edge e : shortestPath) {
                     g.draw(e.getEdgePath());
                 }
             }
             if (fastestPath != null) {
-                g.setColor(DrawAttribute.lightblue);
-                g.setStroke(new BasicStroke(0.00010f));
+                g.setColor(Color.CYAN);
+                g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
                 for (Edge e : fastestPath) {
                     g.draw(e.getEdgePath());
                 }
