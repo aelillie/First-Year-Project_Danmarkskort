@@ -717,15 +717,15 @@ public class View extends JFrame implements Observer {
     }
 
     public void findRoute(Point2D startPoint, Point2D endPoint)throws NoninvertibleTransformException{
-        Rectangle2D windowBounds = bounds.getBounds();
-        Rectangle2D startBox = new Rectangle2D.Double(startPoint.getX(),
-                startPoint.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
 
-        Rectangle2D endBox = new Rectangle2D.Double(endPoint.getX(),
-                endPoint.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
+        Rectangle2D startBox = new Rectangle2D.Double(startPoint.getX()-0.045,
+                startPoint.getY()-0.045, 0.09 , 0.09);
+
+        Rectangle2D endBox = new Rectangle2D.Double(endPoint.getX()-0.045,
+                endPoint.getY()-0.45, 0.09 , 0.09);
 
         Highway startWay = findNearestHighway(startPoint, model.getVisibleStreets(startBox, false));
-        System.out.print(startWay.getValueName());
+
         int startPointIndex = findVertexIndex(startPoint, startWay);
         Highway endWay = findNearestHighway(endPoint, model.getVisibleStreets(endBox, false));
         int endPointIndex = findVertexIndex(endPoint, endWay);
