@@ -1,0 +1,75 @@
+﻿Group G v0.9
+==================
+
+Features added since v0.8:
+*First version of finding a shortest path from A to B
+*A paragraph in the report discussing the implementation of the address search
+
+
+
+“Features” discovered/added since v0.8:
+*Shortest path does not draw the line from A and B’s exact positions. Some paths give NullPointerException.
+*For every Edge added to the Graph another Edge object is created pointing in the opposite direction (A lot of memory when running Denmark)
+
+
+
+Time usage in man hours:
+* GUI (routepanel, closing windows, optionspanel) 	8 hours
+* Report (address search)				20 hours
+* More icons/which icon to show				5 hours
+* Shortest path						30 hours
+* Finding Nearest					5 hours
+* Route Panel						2 hours
+* Binary Search						1 hour
+* Restructuring						3 hours
+
+Cumulative cost so far: (1h = DKK 625)
+Lectures:			21.875,-
+Meetings:                	7.187,-
+Code review:            	15.625,-
+"Homework":			15.625,-
+GUI				45.935,- + 8750,- 
+Code trimming:			3.125,-
+Address search	 		43.125,-
+OSM layers			13.125,-
+Road names 		 	8.125,-
+Binary save/load		6.875,- + 625,- 
+Visualisation 			29.250,-
+Restructuring 			45.625,- + 1.875,-
+Workshop			12.500,-
+Report writing			10.625,- + 12500,-
+Coastlines		 	26.875,-
+Mercator projection 		2.500,-
+Load files from program 	4.375,-
+Self-contained jar		9.375,-
+Zoomlevel 			3.125,-
+Group presentations		12.500,-
+Maptypes			1.875,-
+Scalebar			6.250,-
+Tests 				18.750,-
+Quadtree                        18.125,-
+Strokewidth 			5.000,-
+Nearest neighbor		4.375,- + 625,-
+LoadingScreen		 	1875,-
+Keybordnavigation		3125,-
+Shortest path			12.500,- + 18.750,-
+
+
+
+Wishlist for v0.10:
+* A working shortest path function
+* Different path for car and walking/bike
+* Whiteboxtesting of an interesting part of the program
+* More tests
+* Routefinding output: e.g. turn left, drive 300 m, turn right and so on.
+* Setting up the LaTeX format for our report
+
+Feedback Request:
+* Everytime we add an Edge to the Graph, another Edge object is created pointing in the opposite direction. Is there a smart way of avoiding this? For example by utilizing undirected edges in such situations and directed edges for one way streets?
+
+
+
+
+
+
+

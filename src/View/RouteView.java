@@ -1,13 +1,13 @@
 package View;
 
 import Controller.RoutePanelController;
-import Model.MapIcon;
+import Model.Model;
 
 import javax.swing.*;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import Model.Model;
-import java.net.URL;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Created by Kevin on 16-03-2015.
@@ -16,9 +16,12 @@ public class RouteView extends JPanel{
 
     private JTextField startAddressField, endAddressField;
     private JPanel startEndAddressPanel;
-    private JButton findRouteButton;
+    private JButton findRouteButton, clearButtonEnd, clearButtonStart;
     private JButton carButton, bicycleButton, footButton;
     private View view;
+    private Map<JButton,ImageIcon> iconWhiteEquivalenceMap;
+    private Map<JButton, ImageIcon> iconBlackEquivalenceMap;
+    private ImageIcon carOptionIcon, walkingOptionIcon,bicycleOptionIcon;
 
     /**
      * Creates a panel used for getting a path from A to B in the program
@@ -34,7 +37,6 @@ public class RouteView extends JPanel{
         setLayout(new BorderLayout());
         makeFindRoutePanel();
         add(startEndAddressPanel, BorderLayout.CENTER);
-
         RoutePanelController rp = new RoutePanelController(this,model);
 
     }
@@ -46,24 +48,26 @@ public class RouteView extends JPanel{
         transportTypePanel.setLayout(new FlowLayout(FlowLayout.LEADING));
         transportTypePanel.setBorder(new MatteBorder(0,0,1,0, new Color(161, 161, 161)));
 
-
-        carButton = new JButton("Car");
+        carOptionIcon = new ImageIcon(this.getClass().getResource("/data/carOptionIcon.png"));
+        carButton = new JButton("Car",carOptionIcon);
         carButton.setFocusable(false);
         carButton.setForeground(new Color(114, 114, 114));
         carButton.setBackground(Color.WHITE);
+        carButton.setActionCommand("car");
 
-
-        bicycleButton = new JButton("Bicycle");
+        bicycleOptionIcon = new ImageIcon(this.getClass().getResource("/data/bicycleOptionIcon.png"));
+        bicycleButton = new JButton("Bicycle",bicycleOptionIcon);
         bicycleButton.setFocusable(false);
         bicycleButton.setForeground(new Color(114, 114, 114));
         bicycleButton.setBackground(Color.WHITE);
+        bicycleButton.setActionCommand("bicycle");
 
-
-        footButton = new JButton("By foot");
+        walkingOptionIcon = new ImageIcon(this.getClass().getResource("/data/walkingOptionIcon.png"));
+        footButton = new JButton("By foot",walkingOptionIcon);
         footButton.setFocusable(false);
         footButton.setForeground(new Color(114, 114, 114));
         footButton.setBackground(Color.WHITE);
-
+        footButton.setActionCommand("walking");
 
         transportTypePanel.add(carButton);
         transportTypePanel.add(bicycleButton);
@@ -72,6 +76,7 @@ public class RouteView extends JPanel{
 
 
         makeStartEndAddressPanel();
+        createIconEquivalenceMap();
 
         add(transportTypePanel, BorderLayout.NORTH);
 
@@ -87,8 +92,8 @@ public class RouteView extends JPanel{
         c.fill= GridBagConstraints.NONE;
         c.gridx = 0; //Which column the component should be in.
         c.gridy = 0; //Which row the component should be in.
-        c.weightx = 0.15; //The weight amongst the elements in the row
-        c.weighty = 0.5; //The weight amongst the elements in the column.
+        c.weightx = 0.15; //The distance amongst the elements in the row
+        c.weighty = 0.5; //The distance amongst the elements in the column.
         startEndAddressPanel.add(startIconLabel,c);
 
 
@@ -103,8 +108,9 @@ public class RouteView extends JPanel{
         c.ipady = 15;
         c.weightx = 0.85;
         c.weighty = 0.5;
-        c.insets = new Insets(5,0,0,25); //Inset/distance from the right.
+        c.insets = new Insets(5,0,0,0); //Inset/distance from the right.
         startEndAddressPanel.add(startAddressField,c);
+
         JLabel endIconLabel = new JLabel(new ImageIcon(this.getClass().getResource("/data/endPointIcon.png")));
         c = new GridBagConstraints();
         c.fill= GridBagConstraints.NONE;
@@ -118,7 +124,7 @@ public class RouteView extends JPanel{
         endAddressField = new JTextField();
         endAddressField.setActionCommand("endAddressSearch");
         endAddressField.setForeground(Color.GRAY);
-        endAddressField.setText("Enter start address");
+        endAddressField.setText("Enter end address");
         c = new GridBagConstraints();
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
@@ -127,8 +133,40 @@ public class RouteView extends JPanel{
         c.weightx = 0.85;
         c.weighty = 0.5;
         c.anchor = GridBagConstraints.FIRST_LINE_START;
-        c.insets = new Insets(0,0,0,25); //Inset/distance from the right
         startEndAddressPanel.add(endAddressField,c);
+
+
+        ImageIcon resetButtonIcon = new ImageIcon(this.getClass().getResource("/data/resetButtonIcon.png"));
+        clearButtonStart = new JButton();
+        clearButtonStart.setFocusable(false);
+        clearButtonStart.setIcon(resetButtonIcon);
+        clearButtonStart.setActionCommand("clearStartField");
+        c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 2;
+        c.gridy = 0;
+        c.weightx = 0.02;
+        c.ipady = 12;
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        c.insets = new Insets(12,0,0,12);
+        clearButtonStart.setBackground(Color.WHITE);
+        startEndAddressPanel.add(clearButtonStart,c);
+
+        clearButtonEnd = new JButton();
+        clearButtonEnd.setFocusable(false);
+        clearButtonEnd.setIcon(resetButtonIcon);
+        clearButtonEnd.setActionCommand("clearEndField");
+        c = new GridBagConstraints();
+        c.fill = GridBagConstraints.HORIZONTAL;
+        c.gridx = 2;
+        c.gridy = 1;
+        c.weightx = 0.05;
+        c.ipady = 12;
+        c.anchor = GridBagConstraints.FIRST_LINE_START;
+        c.insets = new Insets(0,0,0,12);
+        //c.insets = new Insets(0,320,0,0);
+        clearButtonEnd.setBackground(Color.WHITE);
+        startEndAddressPanel.add(clearButtonEnd,c);
 
         findRouteButton = new JButton("Find route");
         findRouteButton.setBackground(Color.WHITE);
@@ -139,8 +177,38 @@ public class RouteView extends JPanel{
         //c.weighty = 0.1;
         c.gridx = 1;
         c.gridy = 2;
+        c.gridwidth = 2;
         c.insets = new Insets(0,0,10,10);
         startEndAddressPanel.add(findRouteButton,c);
+    }
+
+    public void createIconEquivalenceMap(){
+        iconWhiteEquivalenceMap = new HashMap<>();
+        iconWhiteEquivalenceMap.put(carButton,new ImageIcon(this.getClass().getResource("/data/carOptionIconWhite.png")));
+        iconWhiteEquivalenceMap.put(bicycleButton, new ImageIcon(this.getClass().getResource("/data/bicycleOptionIconWhite.png")));
+        iconWhiteEquivalenceMap.put(footButton,new ImageIcon(this.getClass().getResource("/data/walkingOptionIconWhite.png")));
+
+        iconBlackEquivalenceMap = new HashMap<>();
+        iconBlackEquivalenceMap.put(carButton,carOptionIcon);
+        iconBlackEquivalenceMap.put(bicycleButton,bicycleOptionIcon);
+        iconBlackEquivalenceMap.put(footButton,walkingOptionIcon);
+    }
+
+
+
+    public void changeButtonAppearence(JButton button, boolean buttonDown){
+        ImageIcon newIcon;
+        if(buttonDown){
+            newIcon = iconBlackEquivalenceMap.get(button);
+            button.setBackground(Color.WHITE);
+            button.setForeground(Color.GRAY);
+            button.setIcon(newIcon);
+        } else {
+            newIcon = iconWhiteEquivalenceMap.get(button);
+            button.setBackground(Color.GRAY);
+            button.setForeground(Color.WHITE);
+            button.setIcon(newIcon);
+        }
     }
 
     /**
@@ -162,6 +230,10 @@ public class RouteView extends JPanel{
     public JButton getBicycleButton() { return bicycleButton; }
 
     public JButton getFootButton() { return footButton; }
+
+    public JButton getStartClearButton(){ return clearButtonStart;}
+
+    public JButton getEndClearButton(){ return clearButtonEnd;}
 
     public View getView() { return view;}
 }

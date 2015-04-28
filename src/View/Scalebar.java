@@ -35,17 +35,20 @@ public class Scalebar {
     /**
      * Draws the scalebar line and the markers at each end.
      */
+
+    //loadButton.setBounds((int) preferred.getWidth() - 65, (int) preferred.getHeight() - 65, 40, 20);
+
     public void drawScaleBar(){
         g.setTransform(new AffineTransform());
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         lineStart = new Point2D.Float(view.getWidth()-200,view.getContentPane().getHeight()-13); //Place the linestart at a arbitrary location to start with
-        lineEnd = new Point2D.Float(view.getWidth()-100,view.getContentPane().getHeight()-13); //The endpoint is static
+        lineEnd = new Point2D.Float(view.getWidth()-65,view.getContentPane().getHeight()-13); //The endpoint is static
 
         double lineWidth = lineEnd.getX()-lineStart.getX();
-            g.setColor(DrawAttribute.fadewhite);
-        Double x = lineStart.getX() - 95;
+        g.setColor(DrawAttribute.fadewhite);
+        Double x = lineStart.getX() - 80;
         Double y = lineStart.getY() - 13;
-        Double line = lineWidth + 115;
+        Double line = lineWidth + 100;
         g.fill(new Rectangle2D.Float(x.floatValue(), y.floatValue(), line.floatValue() , 20));
         double desiredDistance = zoomLevelDistances.get(zoomLevel); //The distance we want to display according to the zoomlevel
         lineStart.setLocation(getDesiredDistance(lineWidth,desiredDistance));

@@ -2,21 +2,23 @@ package Model;
 
 import MapFeatures.Coastline;
 import QuadTree.QuadTree;
-import View.View;
+import ShortestPath.EdgeWeightedDigraph;
+import ShortestPath.Vertices;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.awt.*;
 import java.awt.geom.Rectangle2D;
 import java.io.BufferedInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.Serializable;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.List;
+import java.util.Observable;
 import java.util.zip.ZipInputStream;
 
 
@@ -87,9 +89,7 @@ public class Model extends Observable implements Serializable {
 
     private void saveBin(String filename) {
         try {
-
             BinaryHandler.save(filename + ".bin");
-
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -100,21 +100,6 @@ public class Model extends Observable implements Serializable {
     public Address[] searchForAddresses(Address address, int type){
         return OSMReader.searchForAddressess(address, type);
     }
-    /*
-    public void searchForAddresses1(Model.Address addressInput){
-
-
-
-   /* public void searchForAddresses1(Model.Address addressInput){
-        int index = Collections.binarySearch(addressList,addressInput,new AddressComparator());
-        if(index < 0) { //If it is not found the return value will be negative
-            System.out.println("Too bad - didn't find!");
-        } else {
-            Model.Address foundAddr = addressList.get(index);
-            Point2D coordinate = addressMap.get(foundAddr);
-            System.out.println("x = " + coordinate.getX() + ", y = " +coordinate.getY());
-        } //if multiple results ... suggest these
-    }*/
 
 
     public String getCurrentFilename() {
@@ -151,43 +136,34 @@ public class Model extends Observable implements Serializable {
 
     public OSMHandler getOSMReader(){return OSMReader;}
 
-    public ArrayList<MapData> getVisibleStreets(Rectangle2D visibleArea){
-        return OSMReader.getStreetTree().query2D(visibleArea);
+    public Collection<MapData> getVisibleStreets(Rectangle2D visibleArea, boolean sorted){
+        return OSMReader.getStreetTree().query2D(visibleArea, sorted);
     }
 
-    public ArrayList<MapData> getVisibleNatural(Rectangle2D visibleArea){
-        return OSMReader.getNaturalTree().query2D(visibleArea);
+    public Collection<MapData> getVisibleNatural(Rectangle2D visibleArea, boolean sorted){
+        return OSMReader.getNaturalTree().query2D(visibleArea, sorted);
     }
 
-    public ArrayList<MapData> getVisibleBuildings(Rectangle2D visibleArea){
-        return OSMReader.getBuildingTree().query2D(visibleArea);
+    public Collection<MapData> getVisibleBuildings(Rectangle2D visibleArea, boolean sorted){
+        return OSMReader.getBuildingTree().query2D(visibleArea, sorted);
     }
 
-    public ArrayList<MapData> getVisibleIcons(Rectangle2D visibleArea){
-        return OSMReader.getIconTree().query2D(visibleArea);
+    public Collection<MapData> getVisibleIcons(Rectangle2D visibleArea, boolean sorted){
+        return OSMReader.getIconTree().query2D(visibleArea, sorted);
     }
 
-    /**
-     * Sorts the Model.Drawable elements in the drawables list from their layer value.
-     * Takes use of a comparator, which compares their values.
-     */
+    public Collection<MapData> getVisibleRailways(Rectangle2D visibleArea, boolean sorted) {
+        return OSMReader.getRailwayTree().query2D(visibleArea, sorted);
+    }
+    public Vertices getVertices() {
+        return OSMReader.getVertices();
+    }
 
-    public void sortLayers(List<MapFeature> mapFeatures) {
-        Comparator<MapData> comparator = new Comparator<MapData>() {
-            @Override
-            /**
-             * Compares two MapFeature objects.
-             * Returns a negative integer, zero, or a positive integer as the first argument
-             * is less than, equal to, or greater than the second.
-             */
-            public int compare(MapData o1, MapData o2) {
-                if (o1.getLayerVal() < o2.getLayerVal()) return -1;
-                else if (o1.getLayerVal() > o2.getLayerVal()) return 1;
-                return 0;
-            }
-        };
-        Collections.sort(mapFeatures, comparator); //iterative mergesort. ~n*lg(n) comparisons
 
+
+    public EdgeWeightedDigraph getDiGraph() {
+        return OSMReader.getDiGraph();
     }
 
 }
+

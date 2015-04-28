@@ -1,15 +1,13 @@
 package View;
 
-import Controller.MapMenuController;
 import Controller.OptionsPanelController;
-import Model.MapIcon;
+import Model.Model;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
 import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.util.HashMap;
 
 /**
  * Created by Nicoline on 30-03-2015.
@@ -20,8 +18,9 @@ public class OptionsPanel extends JPanel {
     private JButton loadButton;
     private JButton toggleIconPanelButton;
     private View view;
+    private Model model;
 
-    public OptionsPanel(View view){
+    public OptionsPanel(View view, Model model){
         this.view = view;
         setVisible(false);
         setBounds(view.getWidth() - 300, view.getHeight() - view.getHeight() / 3 - 45, 200, 200);
@@ -29,6 +28,7 @@ public class OptionsPanel extends JPanel {
         setBackground(DrawAttribute.fadeblack);
         setBorder(new CompoundBorder(new MatteBorder(1, 1, 1, 1, Color.BLACK), new EmptyBorder(0,0,0,0)));
         setLayout(new GridLayout(2,1,10,0));
+        this.model = model;
         init();
     }
 
@@ -39,8 +39,9 @@ public class OptionsPanel extends JPanel {
         loadButton = new JButton("LOAD");
         loadButton.setBackground(Color.WHITE);
         loadButton.setForeground(Color.BLACK);
+        loadButton.setActionCommand("load");
         saveButton = new JButton("SAVE");
-        saveButton.setActionCommand("saveFile");
+        saveButton.setActionCommand("save");
         saveButton.setBackground(Color.WHITE);
         saveButton.setForeground(Color.BLACK);
         saveLoadPanel.add(loadButton);
@@ -58,7 +59,7 @@ public class OptionsPanel extends JPanel {
         toggleIconPanelButton.setPreferredSize(new Dimension(135, 25));
         bottomPanel.add(toggleIconPanelButton);
         add(bottomPanel);
-        new OptionsPanelController(this);
+        new OptionsPanelController(this,view,model);
     }
 
     public void showOptionsPanel(){

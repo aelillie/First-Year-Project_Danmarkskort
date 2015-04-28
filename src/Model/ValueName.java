@@ -18,7 +18,7 @@ public enum ValueName {
     BOUNDARY, //##New key##
         ADMINISTRATIVE, NATIONAL_PARK,
 
-    BOUNDS, //##New key## //TODO: bbox
+    BOUNDS, //##New key## //
 
     BUILDING, //##New key##
         HOTEL, CATHEDRAL, CHAPEL, CHURCH, MOSQUE, TEMPLE, SYNAGOGUE, HOSPITAL, BRIDGE,
@@ -52,7 +52,6 @@ public enum ValueName {
     NATURAL,//##New key##
         WOOD, SCRUB, HEATH, GRASSLAND, FELL, SAND, SCREE, WATER, WETLAND, BEACH, COASTLINE,
 
-    PLACE,//##New key##
 
     POWER,//##New key##
 
@@ -62,11 +61,15 @@ public enum ValueName {
     ROUTE,
         FERRY,//##New key##
 
+    PLACE, //##New key##
+        ISLAND, ISLET,
+
     SHOP,//##New key##
 
     TOURISM,//##New key##
 
     WATERWAY,//##New key##
         RIVERBANK, STREAM, CANAL, RIVER, DAM,
+    MULTIPOLYGON,
     LAST_VALUE_NAME
 }

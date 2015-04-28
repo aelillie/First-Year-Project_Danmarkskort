@@ -28,7 +28,7 @@ public class DrawAttributeManagerTest {
     public void setUp(){
         mapFeatures = new ArrayList<>();
 
-        mapFeatures.add(new Highway(createRandomPath(), -5, "tertiary", false, "vej312312"));
+        mapFeatures.add(new Highway(createRandomPath(), -5, "tertiary", false, "vej312312", null));
         mapFeatures.add(new Building(createRandomPath(), 0, "building"));
         mapFeatures.add(new Natural(createRandomPath(), 0, "wood"));
         mapFeatures.add(new Leisure(createRandomPath(), -1, "park"));

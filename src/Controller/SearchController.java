@@ -6,13 +6,7 @@ import View.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
-import javax.swing.event.ListSelectionEvent;
-import javax.swing.event.ListSelectionListener;
 import java.awt.event.*;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
-import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Nicoline on 04-04-2015.
@@ -35,22 +29,20 @@ public class SearchController extends MouseAdapter implements ActionListener {
         setInputChangeHandler();
     }
 
+
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if (command.equals("search")) {
+        if (command.equals("search")) { //When the search button is clicked
             Address[] results = addressSearch(2);
             if(results != null) {
-                if(results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view);
+                if(results.length == 1) SearchResultMouseHandler.goToAddressLocation(results[0], model, view, "chosenAddressIcon");
                 view.getResultPane().setVisible(false);
                 view.getCanvas().requestFocusInWindow();
             } else {
                 addressSearch(1);
                 view.getCanvas().requestFocusInWindow();
             }
-            /*Address[] results = addressSearch(2);
-            //if(results == null) addressSearch(1);
-            //view.getCanvas().requestFocusInWindow();*/
-        } //When the search button is clicked
+        }
     }
 
 
@@ -84,7 +76,7 @@ public class SearchController extends MouseAdapter implements ActionListener {
         if(input.length() < 3){
             if(input.equals("") && input != null) {
                 view.getResultPane().setVisible(false);
-                view.setCurrentAddress(null);
+                view.removePointer("chosenAddressIcon");
             }
             return null;
         } else {
@@ -98,6 +90,7 @@ public class SearchController extends MouseAdapter implements ActionListener {
         }
     }
 
+    //Inner control class for keyboard Control on SearchResultPane.
     private class SearchAreaKeyHandler extends KeyAdapter {
         private JList<Address> list = view.getAddressSearchResults();
 
@@ -108,22 +101,7 @@ public class SearchController extends MouseAdapter implements ActionListener {
 
             //Set up the keyboard handler for different keys.
             if(e.getKeyCode() == KeyEvent.VK_ENTER) {
-                Address selectedItem = list.getSelectedValue();
-                if(!(selectedItem==null)) {
-                    view.getSearchArea().setText(selectedItem.toString());
-                    view.getResultPane().setVisible(false);
-                }
-
-                Address[] results = addressSearch(2);
-                if (results != null) {
-                    if (results.length == 1) SearchResultMouseHandler.getAddressLocation(results[0], model, view);
-                    view.getResultPane().setVisible(false);
-                    view.getCanvas().requestFocusInWindow();
-                } else {
-                    addressSearch(1);
-                    view.getCanvas().requestFocusInWindow();
-                }
-
+                enterPressed();
             }
 
             if(e.getKeyCode() == KeyEvent.VK_DOWN && selectedNr < list.getModel().getSize()-1){
@@ -132,6 +110,35 @@ public class SearchController extends MouseAdapter implements ActionListener {
             }
             if(e.getKeyCode() == KeyEvent.VK_UP && selectedNr>0){
                 list.setSelectedIndex(--selectedNr);
+            }
+
+        }
+
+        /**
+         * When an address is selected with the Enter key this function tells
+         * the Controller.
+         */
+        public void enterPressed(){
+            Address selectedItem = null;
+            try{
+                selectedItem = list.getSelectedValue();
+            } catch (NullPointerException ex){
+                System.out.println("No address chosen");
+            }
+
+            if(!(selectedItem==null)) {
+                view.getSearchArea().setText(selectedItem.toString());
+                view.getResultPane().setVisible(false);
+            }
+
+            Address[] results = addressSearch(2);
+            if (results != null) {
+                if (results.length == 1) SearchResultMouseHandler.goToAddressLocation(results[0], model, view, "chosenAddressIcon");
+                view.getResultPane().setVisible(false);
+                view.getCanvas().requestFocusInWindow();
+            } else {
+                addressSearch(1);
+                view.getCanvas().requestFocusInWindow();
             }
 
         }

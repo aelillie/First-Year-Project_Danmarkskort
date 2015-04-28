@@ -1,19 +1,104 @@
 package MapFeatures;
 
 import Model.MapFeature;
+import Model.Model;
 import Model.ValueName;
+import ShortestPath.Edge;
+import ShortestPath.Vertices;
+import Model.MapCalculator;
+import Model.PathCreater;
 
 import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
+import java.util.ArrayList;
+import java.util.List;
 
 public class Highway extends MapFeature {
     private String streetName;
-    public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName) {
+    private List<Edge> edges = new ArrayList<>();
+    private String oneWay;
+    private double maxspeed;
+
+    public Highway() {}
+
+    public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName, String maxspeed) {
         super(way, layer_value, value);
         this.isArea = isArea;
         if(streetName != null)
             this.streetName = streetName.intern();
+        if (maxspeed == null) //no max speed defined in OSM
+            setPreDefMaxSpeed(); //default values set by OSM standards
+        else
+            setMaxSpeed(maxspeed);
     }
 
+    private void setMaxSpeed(String maxspeed) {
+        try {
+            this.maxspeed = Double.parseDouble(maxspeed);
+        } catch (NumberFormatException e) {
+            setPreDefMaxSpeed();
+        }
+    }
+
+    private void setPreDefMaxSpeed() {
+        switch (value) {
+            case "motorway":
+                maxspeed = 130.0;
+                break;
+            case "primary":
+                maxspeed = 80.0;
+                break;
+            case "secondary":
+                maxspeed = 80.0;
+                break;
+            case "tertiary":
+                maxspeed = 80.0;
+                break;
+            case "unclassified":
+                maxspeed = 80.0;
+                break;
+            default:
+                maxspeed = 50.0;
+                break;
+        }
+    }
+
+
+    /**
+     * Create edges between all points in the way for the current highway
+     */
+    public void assignEdges(List<Point2D> points) {
+        Vertices V = Model.getModel().getVertices();
+        for (int i = 0; i + 1 < points.size(); i++) { //Edge(s) in its order of appearance in .osm
+            if(oneWay.equals("yes") || oneWay.equals("no")) {
+                Point2D v = points.get(i);
+                Point2D w = points.get(i + 1);
+                double dist = calcDist(v, w);
+                Edge edge = new Edge(V.getIndex(v), V.getIndex(w), dist, calcTime(dist), edgePath(v, w));
+                edges.add(edge);
+            }else{ //Edge(s) in its reverse order of appearance in .osm
+                assert oneWay.equals("-1");
+                Point2D v = points.get(i+1);
+                Point2D w = points.get(i);
+                double dist = calcDist(v, w);
+                Edge edge = new Edge(V.getIndex(v), V.getIndex(w), dist, calcTime(dist), edgePath(w, v));
+                edges.add(edge);
+            }
+        }
+    }
+
+    private double calcDist(Point2D v, Point2D w) {
+        return MapCalculator.haversineDist(v, w);
+
+    }
+
+    private double calcTime(double distance) {
+        return (distance/maxspeed)*60;
+    }
+
+    private Path2D edgePath(Point2D point1, Point2D point2) {
+        return PathCreater.createWay(point1, point2);
+    }
 
     @Override
     public void setPreDefValues() {
@@ -51,7 +136,47 @@ public class Highway extends MapFeature {
         else setValueName(ValueName.HIGHWAY);
     }
 
+    public Iterable<Edge> edges() {
+        return edges;
+    }
+
+    public List<Edge> getEdges() {
+        return edges;
+    }
+
+    public int getVertex(int i) {
+        return edges.get(i).getV();
+    }
+
+    public List<Point2D> getPoints() {
+        Vertices vertices = Model.getModel().getVertices();
+        List<Point2D> localVertices = new ArrayList<>();
+        localVertices.add(vertices.getVertex(edges.get(0).getV()));
+        for (Edge e : edges) {
+            localVertices.add(vertices.getVertex(e.getW()));
+        }
+        return  localVertices;
+    }
+
     public String getStreetName(){
         return streetName;
+    }
+
+    public String isOneWay() {
+        return oneWay;
+    }
+    
+    public void setOneWay(String value) {
+        switch (value) {
+            case "yes":
+                oneWay = "yes"; //one way in normal direction
+                break;
+            case "-1":
+                oneWay = "-1"; //one way in reverse direction
+                break;
+            default:
+                oneWay = "no"; //one way not present
+                break;
+        }
     }
 }

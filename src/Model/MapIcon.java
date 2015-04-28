@@ -3,7 +3,6 @@ package Model;
 import javax.imageio.ImageIO;
 import java.awt.*;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
@@ -17,6 +16,10 @@ import java.util.Map;
 
 public class MapIcon implements Serializable, MapData {
     public static final long serialVersionUID = 5;
+
+    public static Map<String, URL> getIconURLs() {
+        return iconURLs;
+    }
 
     //Hashmap containing references of paths to resource files.
     public static Map<String, URL> iconURLs = new HashMap<>();
@@ -41,6 +44,13 @@ public class MapIcon implements Serializable, MapData {
         aMap.put("optionsIcon", MapIcon.class.getResource("/data/optionsIcon.png"));
         aMap.put("layerIcon", MapIcon.class.getResource("/data/layerIcon.png"));
         aMap.put("chosenAddressIcon", MapIcon.class.getResource("/data/chosenAddressIcon.png"));
+        aMap.put("restaurantIcon", MapIcon.class.getResource("/data/restaurantIcon.png"));
+        aMap.put("7elevenIcon", MapIcon.class.getResource("/data/7elevenIcon.jpg"));
+        aMap.put("hotelIcon", MapIcon.class.getResource("/data/hotelIcon.png"));
+        aMap.put("hospitalIcon", MapIcon.class.getResource("/data/hospitalIcon.png"));
+        aMap.put("attractionIcon",MapIcon.class.getResource("/data/attractionIcon.png"));
+        aMap.put("cafeIcon",MapIcon.class.getResource("/data/cafeIcon.png"));
+        aMap.put("toiletIcon",MapIcon.class.getResource("/data/toiletIcon.png"));
         MapIcon.iconURLs = aMap;
     }
 
@@ -83,7 +93,7 @@ public class MapIcon implements Serializable, MapData {
      */
     public void draw(Graphics2D g, AffineTransform transform){
         try{
-            if(img == null)
+            if(img == null) //First time drawing the image we'll need to load it in first
                 img = ImageIO.read(imgPath);
         } catch(IOException e){
             e.printStackTrace();
@@ -91,7 +101,7 @@ public class MapIcon implements Serializable, MapData {
         double x = 0;
         double y = 0;
         if(imgPath.getPath().equals(iconURLs.get("chosenAddressIcon").getPath())){
-
+            //Move the icon a bit to better represent the actual address.
             double height = (img.getHeight()/transform.getScaleY());
             double width = (img.getWidth()/transform.getScaleX())/2;
             x = coord.getX() - width;
@@ -109,12 +119,13 @@ public class MapIcon implements Serializable, MapData {
     }
 
     private void writeObject(ObjectOutputStream stream)throws IOException{
+        //Specifically telling how the object should be written when using objectOutputStream
         stream.writeObject(coord);
         stream.writeUTF(type);
     }
 
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-
+        //How the object is read by a ObjectInputStream
         Object co = stream.readObject();
         coord = (Point2D) co;
         this.type = stream.readUTF().intern();
@@ -126,7 +137,11 @@ public class MapIcon implements Serializable, MapData {
         return this.imgPath;
     }
 
-
+    /**
+     * Changes the state of wether an icon is visible or not.
+     * @param url - Icons URL
+     * @param state - boolean visible/not visible
+     */
     public static void setIconState(URL url, boolean state)
     {
         hashIcon.put(url, state);
@@ -147,7 +162,6 @@ public class MapIcon implements Serializable, MapData {
     }
 
     public Point2D getPosition(){
-
         return coord;
     }
 
@@ -157,23 +171,41 @@ public class MapIcon implements Serializable, MapData {
      */
     public static ArrayList<URL> getIcons(){
         ArrayList<URL> iconsOne = new ArrayList<>();
+        iconsOne.add(MapIcon.iconURLs.get("restaurantIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("pubIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("cafeIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("toiletIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("7elevenIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("hotelIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("atmIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("parkingIcon"));
         iconsOne.add(MapIcon.iconURLs.get("metroIcon"));
         iconsOne.add(MapIcon.iconURLs.get("busIcon"));
         iconsOne.add(MapIcon.iconURLs.get("stogIcon"));
-        iconsOne.add(MapIcon.iconURLs.get("parkingIcon"));
-        iconsOne.add(MapIcon.iconURLs.get("atmIcon"));
-        iconsOne.add(MapIcon.iconURLs.get("pubIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("attractionIcon"));
+        iconsOne.add(MapIcon.iconURLs.get("hospitalIcon"));
         return iconsOne;
+    }
+
+    public static HashMap<URL, Boolean> getHashIcon() {
+        return hashIcon;
     }
 
     private static HashMap<URL,Boolean> addIcon(){
         HashMap<URL, Boolean> hashIcon = new HashMap<>();
+        hashIcon.put(MapIcon.iconURLs.get("restaurantIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("pubIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("cafeIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("toiletIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("7elevenIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("hotelIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("atmIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("parkingIcon"),false);
         hashIcon.put(MapIcon.iconURLs.get("metroIcon"),false);
         hashIcon.put(MapIcon.iconURLs.get("busIcon"),false);
         hashIcon.put(MapIcon.iconURLs.get("stogIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("parkingIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("atmIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("pubIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("attractionsIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("hospitalIcon"),false);
         return hashIcon;
     }
 

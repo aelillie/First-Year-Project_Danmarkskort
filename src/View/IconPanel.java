@@ -21,11 +21,10 @@ public class IconPanel extends JScrollPane {
     public IconPanel() {
         super();
         controllers = new ArrayList<>();
-
+        Dimension preferred = getPreferredSize();
         GridLayout gridLayout = new GridLayout(0, 2);
+        setBounds((int) (preferred.getWidth() - 214), (int) (preferred.getHeight() - preferred.getHeight() * 0.98 + 70), 120, 180);
         setBounds(593, 80, 120, 180);
-        // setOpaque(false);
-        //setBorder(new MatteBorder(100, 100, 10, 10, new Color(161, 161, 161)));
         this.setBackground(Color.BLACK);
         panel = new JPanel();
         panel.setBackground(Color.LIGHT_GRAY);
@@ -34,42 +33,51 @@ public class IconPanel extends JScrollPane {
         this.setViewportView(panel);
         panel.setVisible(true);
         showIconPanel();
-
     }
 
-    public void addIcons(){
+    public void addIcons() {
         icons = MapIcon.getIcons();
-        for (int i= 0; i < icons.size(); i++)
-        {
+        for (int i = 0; i < icons.size(); i++) {
             String ikoner = icons.get(i).getFile();
             JLabel l1 = new JLabel(new ImageIcon(ikoner));
             panel.add(l1);
-            JCheckBox checkbox = new JCheckBox("",true);
             IconController controller = new IconController(icons.get(i));
-            MapIcon.setIconState(icons.get(i), true);
-            checkbox.addItemListener(controller);
-            checkbox.addComponentListener(controller);
-            panel.add(checkbox);
-            panel.addComponentListener(controller);
-            controllers.add(controller);
+            if (icons.get(i).equals(MapIcon.getIconURLs().get("restaurantIcon")) ||
+                    icons.get(i).equals(MapIcon.getIconURLs().get("pubIcon"))||
+                    icons.get(i).equals(MapIcon.getIconURLs().get("toiletIcon")) ||
+                    icons.get(i).equals(MapIcon.getIconURLs().get("7elevenIcon")) ||
+                    icons.get(i).equals(MapIcon.getIconURLs().get("cafeIcon"))) {
+                MapIcon.setIconState(icons.get(i), false);
+                JCheckBox checkboxx = new JCheckBox("", false);
+                checkboxx.addItemListener(controller);
+                checkboxx.addComponentListener(controller);
+                panel.add(checkboxx);
+                panel.addComponentListener(controller);
+                controllers.add(controller);
+            } else {
+                JCheckBox checkbox = new JCheckBox("", true);
+                MapIcon.setIconState(icons.get(i), true);
+                checkbox.addItemListener(controller);
+                checkbox.addComponentListener(controller);
+                panel.add(checkbox);
+                panel.addComponentListener(controller);
+                controllers.add(controller);
 
+            }
         }
-
     }
 
     //for all IconControllers adjust the view
-    public void addObserverToIcons(View v){
-        for(IconController con : controllers){
+    public void addObserverToIcons(View v) {
+        for (IconController con : controllers) {
             con.setView(v);
         }
 
     }
 
-    public void showIconPanel(){
+    public void showIconPanel() {
         boolean isVisible = isVisible();
         setVisible(!isVisible);
     }
-
 }
-
 
