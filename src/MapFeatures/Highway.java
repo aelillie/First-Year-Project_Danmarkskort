@@ -88,8 +88,7 @@ public class Highway extends MapFeature {
     }
 
     private double calcDist(Point2D v, Point2D w) {
-        return MapCalculator.haversineDist(v, w);
-
+        return MapCalculator.haversineDist(v, w); //returns km as unit
     }
 
     private double calcTime(double distance) {

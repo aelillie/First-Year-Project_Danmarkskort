@@ -784,14 +784,17 @@ public class View extends JFrame implements Observer {
 
     public void findShortestPath() {
         //Functions as a test when pressed "l"
+        System.out.println("");
+        System.out.println("Shortest path:");
         int source = 0;
         PathTree SPpathTree = new PathTree(model.getDiGraph(), source, destination, true);
         shortestPath = SPpathTree.pathTo(destination);
 
         double distance = SPpathTree.distTo(destination);
-        System.out.println("");
-        System.out.println("Shortest path:");
-        System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
+        if (distance < 1) {
+            distance *= 1000;
+            System.out.println("Distance: " + String.format("%.0f", distance) + " m");
+        } else System.out.println("Distance: " + String.format("%.2f", distance) + " km");
         double travelTime = 0;
         for (Edge e : shortestPath) {
             travelTime += e.travelTime();
@@ -814,7 +817,10 @@ public class View extends JFrame implements Observer {
         for (Edge e : fastestPath) {
             distance += e.distance();
         }
-        System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
+        if (distance < 1) {
+            distance *= 1000;
+            System.out.println("Distance: " + String.format("%.0f", distance) + " m");
+        } else System.out.println("Distance: " + String.format("%.2f", distance) + " km");
         System.out.println("Time: " + String.format("%5.2f", time) + " minutes");
         System.out.println("");
         repaint();
