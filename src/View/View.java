@@ -101,6 +101,7 @@ public class View extends JFrame implements Observer {
         pack();
         canvas.requestFocusInWindow();
         model.addObserver(this);
+        System.out.print(model.getOSMReader().getAddressList().size());
     }
 
     /**
@@ -691,10 +692,9 @@ public class View extends JFrame implements Observer {
         Insets x = getInsets();
         position.setLocation(position.getX(), position.getY()-x.top + x.bottom);
         Point2D coordinates = transformPoint(position);
-        Rectangle2D windowBounds = bounds.getBounds();
-        Rectangle2D mouseBox = new Rectangle2D.Double(coordinates.getX()- windowBounds.getWidth()/6,
-                coordinates.getY() - windowBounds.getHeight()/6,
-                windowBounds.getWidth()/3 , windowBounds.getHeight()/5);
+        Rectangle2D mouseBox = new Rectangle2D.Double(coordinates.getX()- 0.05,
+                coordinates.getY() - 0.05,
+                0.1 , 0.1);
         Collection<MapData> streets = model.getVisibleStreets(mouseBox, false);
         filterRoads(streets);  //remove all highways without names.
 
