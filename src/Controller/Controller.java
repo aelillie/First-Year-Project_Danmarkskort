@@ -129,6 +129,10 @@ public class Controller extends MouseAdapter implements ActionListener {
                         view.toggleGrid();
                         view.repaint();
                         break;
+                    case 'p':
+                        view.toggleGraph();
+                        view.repaint();
+                        break;
 
                 }
                 if (e.getKeyCode() == KeyEvent.VK_UP) {

@@ -69,38 +69,17 @@ public class Highway extends MapFeature {
     public void assignEdges(List<Point2D> points) {
         Vertices vertices = Model.getModel().getVertices();
         for (int i = 0; i + 1 < points.size(); i++) {
-            switch (oneWay) {
-                case "no": { //Edge(s) in its order of appearance in .osm
-                    Point2D v = points.get(i);
-                    Point2D w = points.get(i + 1);
-                    Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
-                    edge.setTravelTime(maxspeed);
-                    edges.add(edge);
-                    edge.createEdge(v, w);
-                    break;
-                }
-                case "yes": { //Edge(s) in its order of appearance in .osm (one way)
-                    Point2D v = points.get(i);
-                    Point2D w = points.get(i + 1);
-                    Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
-                    edge.setTravelTime(maxspeed);
-                    edge.setOneWay(true);
-                    edges.add(edge);
-                    edge.createEdge(v, w);
-                    break;
-                }
-                default: { //Edge(s) in its reverse order of appearance in .osm
-                    assert oneWay.equals("-1");
-                    Point2D v = points.get(i + 1);
-                    Point2D w = points.get(i);
-                    Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
-                    edge.setTravelTime(maxspeed);
-                    edge.setOneWayReverse(true);
-                    edges.add(edge);
-                    edge.createEdge(v, w);
-                    break;
-                }
-            }
+            Point2D v = points.get(i);
+            Point2D w = points.get(i + 1);
+            Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
+            edge.setTravelTime(maxspeed);
+            if(oneWay.equals("yes"))
+                edge.setOneWay(true);
+            else if(oneWay.endsWith("-1"))
+                edge.setOneWayReverse(true);
+            edges.add(edge);
+            edge.createEdge(v, w);
+
         }
     }
 

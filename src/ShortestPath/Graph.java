@@ -55,8 +55,8 @@ public class Graph implements Serializable{
 
     private void addEdge(Highway way) {
         for (Edge e : way.edges()) {
-            int v = e.v();
-            int w = e.w();
+            int v = e.either();
+            int w = e.other(v);
             validateVertex(v);
             validateVertex(w);
             if (e.isOneWay()) {

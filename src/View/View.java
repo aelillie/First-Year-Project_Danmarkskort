@@ -3,6 +3,7 @@ package View;
 import Controller.SearchResultMouseHandler;
 import MapFeatures.Bounds;
 import MapFeatures.Highway;
+import MapFeatures.Railway;
 import MapFeatures.Route;
 import Model.*;
 import QuadTree.QuadTree;
@@ -28,7 +29,10 @@ public class View extends JFrame implements Observer {
     private AffineTransform transform;
     private Highway nearestNeighbor;
     private CanvasBounds bounds;
-    private boolean antialias = true, showGrid = false;
+    private boolean antialias = true, showGrid = false, graph = false;
+    public void toggleGraph(){
+        graph = !graph;
+    }
     private Point dragEndScreen, dragStartScreen;
     private int zoomLevel;
     private int zoomFactor;
@@ -717,15 +721,15 @@ public class View extends JFrame implements Observer {
     }
 
     public void findRoute(Point2D startPoint, Point2D endPoint)throws NoninvertibleTransformException{
-        Rectangle2D windowBounds = bounds.getBounds();
-        Rectangle2D startBox = new Rectangle2D.Double(startPoint.getX(),
-                startPoint.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
 
-        Rectangle2D endBox = new Rectangle2D.Double(endPoint.getX(),
-                endPoint.getY(), windowBounds.getWidth()/5 , windowBounds.getHeight()/5);
+        Rectangle2D startBox = new Rectangle2D.Double(startPoint.getX()-0.045,
+                startPoint.getY()-0.045, 0.09 , 0.09);
+
+        Rectangle2D endBox = new Rectangle2D.Double(endPoint.getX()-0.045,
+                endPoint.getY()-0.45, 0.09 , 0.09);
 
         Highway startWay = findNearestHighway(startPoint, model.getVisibleStreets(startBox, false));
-        System.out.print(startWay.getValueName());
+
         int startPointIndex = findVertexIndex(startPoint, startWay);
         Highway endWay = findNearestHighway(endPoint, model.getVisibleStreets(endBox, false));
         int endPointIndex = findVertexIndex(endPoint, endWay);
@@ -755,6 +759,10 @@ public class View extends JFrame implements Observer {
         System.out.println("Shortest path:");
         System.out.println("Distance: " + String.format("%5.2f", distance) + " km");
         double travelTime = 0;
+        if(!SPpathTree.hasPathTo(destination)) {
+            System.out.println("NO PATH WAS FOUND");
+            return;
+        }
         for (Edge e : shortestPath) {
             travelTime += e.travelTime();
         }
@@ -965,6 +973,36 @@ public class View extends JFrame implements Observer {
                 }
             }
 
+
+            //Justing drawing the of vertices and edges
+            if(graph) {
+                for (MapFeature street : mapFStreets) {
+                    if (!(street instanceof Highway)) continue;
+                    Highway streetedge = (Highway) street;
+                    Iterable<Edge> edges = streetedge.edges();
+                    if (edges == null) continue;
+                    Iterator<Edge> it = edges.iterator();
+                    g.setStroke(new BasicStroke(0.0001f));
+                    g.setPaint(Color.CYAN);
+                    while (it.hasNext()) {
+                        Edge e = it.next();
+                        if (e.isOneWay())
+                            g.setPaint(Color.orange);
+                        else if (e.isOneWayReverse())
+                            g.setPaint(Color.PINK);
+                        g.draw(e.getWay());
+                    }
+
+                    List<Point2D> points = streetedge.getPoints();
+                    for(Point2D p : points){
+                        g.setPaint(Color.yellow);
+                        g.draw(new Rectangle2D.Double(p.getX(), p.getY(), 0.000005, 0.000005));
+                    }
+
+
+                }
+            }
+
             //TODO: Test of shortest path
             if (shortestPath != null) {
                 g.setColor(DrawAttribute.cl_darkorange);
@@ -1007,6 +1045,9 @@ public class View extends JFrame implements Observer {
             Rectangle2D windowBounds = bounds.getBounds();
             g.draw(windowBounds);
             scalebar = new Scalebar(g, zoomLevel, View.this, transform);
+
+
+
 
             paintNeighbor(g);
 
