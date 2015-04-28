@@ -69,7 +69,6 @@ public class Highway extends MapFeature {
     public void assignEdges(List<Point2D> points) {
         Vertices vertices = Model.getModel().getVertices();
         for (int i = 0; i + 1 < points.size(); i++) {
-
             Point2D v = points.get(i);
             Point2D w = points.get(i + 1);
             Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), calcDist(v, w));
