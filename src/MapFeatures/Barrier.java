@@ -16,13 +16,13 @@ public class Barrier extends MapFeature{
         this.isArea = isArea;
     }
     @Override
-    public void setPreDefValues() {
-        super.setPreDefValues();
+    public void setPreDefLayerValues() {
+        super.setPreDefLayerValues();
         if(value.equals("kerb")) layer_value = 33;
     }
 
     @Override
-    public void setValueAttributes() {
+    public void setValueNames() {
         if(value.equals("hence")) setValueName(ValueName.HENCE);
         if(value.equals("fence")) setValueName(ValueName.FENCE);
         if(value.equals("kerb")) setValueName(ValueName.KERB);

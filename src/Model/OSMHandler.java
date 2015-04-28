@@ -344,7 +344,7 @@ public class OSMHandler extends DefaultHandler {
                 PathCreater.connectCoastlines(bbox);
                 vertices.createVertexIndex();
                 diGraph.initialize(vertices.V());
-                diGraph.addEdges(streetEdges());
+                diGraph.addEdges(highways());
                 wayId_longMap.clear(); //sets key and value arrays to point to null
                 node_longMap.clear();
                 keyValue_map.clear();
@@ -353,7 +353,7 @@ public class OSMHandler extends DefaultHandler {
         }
     }
 
-    private Collection<Highway> streetEdges() {
+    private Collection<Highway> highways() {
         Collection<MapData> mapData = streetTree.query2D(bbox, false);
         Collection<Highway> highways = (Collection<Highway>)(Collection<?>) mapData;
         return highways;

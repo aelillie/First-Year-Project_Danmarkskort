@@ -15,13 +15,13 @@ public class Place extends MapFeature {
     }
 
     @Override
-    public void setPreDefValues() {
-        super.setPreDefValues();
+    public void setPreDefLayerValues() {
+        super.setPreDefLayerValues();
         layer_value = 49;
     }
 
     @Override
-    public void setValueAttributes() {
+    public void setValueNames() {
         if (value.equals("island")) {
             isArea = true;
             setValueName(ValueName.ISLAND);

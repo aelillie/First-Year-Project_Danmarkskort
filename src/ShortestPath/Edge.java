@@ -16,6 +16,9 @@ public class Edge implements Serializable {
     private double distance; //edge's distance
     private Path2D edgePath;
     private double travelTime; //min pr. distance
+    private boolean walkAble = false;
+    private boolean bikeAble = false;
+    private boolean driveAble = false;
 
     /**
      * Initializes a directed edge from vertex <tt>v</tt> to vertex <tt>w</tt> with
@@ -125,5 +128,17 @@ public class Edge implements Serializable {
 
     public Path2D getEdgePath() {
         return edgePath;
+    }
+
+    public boolean isWalkAble() {
+        return walkAble;
+    }
+
+    public boolean isBikeAble() {
+        return bikeAble;
+    }
+
+    public boolean isDriveAble() {
+        return driveAble;
     }
 }

@@ -15,12 +15,12 @@ public class ManMade extends MapFeature{
     }
 
     @Override
-    public void setPreDefValues() {
-        super.setPreDefValues();
+    public void setPreDefLayerValues() {
+        super.setPreDefLayerValues();
     }
 
     @Override
-    public void setValueAttributes() {
+    public void setValueNames() {
         setValueName(ValueName.MANMADE);
     }
 

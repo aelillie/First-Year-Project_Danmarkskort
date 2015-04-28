@@ -18,6 +18,7 @@ public class Highway extends MapFeature {
     private List<Edge> edges = new ArrayList<>();
     private String oneWay;
     private double maxspeed;
+    private boolean driveAble, bikeAble, walkAble;
 
     public Highway() {}
 
@@ -45,6 +46,9 @@ public class Highway extends MapFeature {
             case "motorway":
                 maxspeed = 130.0;
                 break;
+            case "trunk":
+                maxspeed = 80.0;
+                break;
             case "primary":
                 maxspeed = 80.0;
                 break;
@@ -56,6 +60,30 @@ public class Highway extends MapFeature {
                 break;
             case "unclassified":
                 maxspeed = 80.0;
+                break;
+            case "living_street":
+                maxspeed = 15.0;
+                break;
+            case "pedestrian":
+                maxspeed = 5.0;
+                break;
+            case "track":
+                maxspeed = 5.0;
+                break;
+            case "footway":
+                maxspeed = 5.0;
+                break;
+            case "cycleway":
+                maxspeed = 15.0;
+                break;
+            case "bridleway":
+                maxspeed = 15.0;
+                break;
+            case "steps":
+                maxspeed = 3.0;
+                break;
+            case "path":
+                maxspeed = 5.0;
                 break;
             default:
                 maxspeed = 50.0;
@@ -100,8 +128,8 @@ public class Highway extends MapFeature {
     }
 
     @Override
-    public void setPreDefValues() {
-        super.setPreDefValues();
+    public void setPreDefLayerValues() {
+        super.setPreDefLayerValues();
         if (value.equals("motorway") || value.equals("motorway_link")) layer_value = 17;
         else if (value.equals("trunk") || value.equals("trunk_link")) layer_value = 16;
         else if (value.equals("primary") || value.equals("primay_link")) layer_value = 15;
@@ -112,7 +140,7 @@ public class Highway extends MapFeature {
     }
 
     @Override
-    public void setValueAttributes() {
+    public void setValueNames() {
         if (value.equals("motorway") || value.equals("motorway_link")) setValueName(ValueName.MOTORWAY);
         else if (value.equals("trunk") || value.equals("trunk_link")) setValueName(ValueName.TRUNK);
         else if (value.equals("primary") || value.equals("primay_link")) setValueName(ValueName.PRIMARY);
@@ -124,7 +152,6 @@ public class Highway extends MapFeature {
         else if (value.equals("living_street")) setValueName(ValueName.LIVING_STREET);
         else if (value.equals("pedestrian")) setValueName(ValueName.PEDESTRIAN);
         else if (value.equals("track")) setValueName(ValueName.TRACK);
-        //else if (value.equals("bus_guideway")) setValueName(ValueName.BUS_GUIDEWAY);
         else if (value.equals("road")) setValueName(ValueName.ROAD);
         else if (value.equals("footway") && isArea) setValueName(ValueName.FOOTWAY_AREA);
         else if (value.equals("footway")) setValueName(ValueName.FOOTWAY);

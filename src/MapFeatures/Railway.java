@@ -15,12 +15,12 @@ public class Railway extends MapFeature {
     }
 
     @Override
-    public void setPreDefValues() {
-        super.setPreDefValues();
+    public void setPreDefLayerValues() {
+        super.setPreDefLayerValues();
     }
 
     @Override
-    public void setValueAttributes() {
+    public void setValueNames() {
         if (value.equals("rail")) setValueName(ValueName.RAIL);
         else if (value.equals("light_rail")) setValueName(ValueName.LIGHT_RAIL);
         else if (value.equals("subway")) setValueName(ValueName.SUBWAY);

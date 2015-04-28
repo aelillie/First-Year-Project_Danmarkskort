@@ -15,15 +15,15 @@ public class Multipolygon extends MapFeature {
     }
 
     @Override
-    public void setPreDefValues() {
-        super.setPreDefValues();
+    public void setPreDefLayerValues() {
+        super.setPreDefLayerValues();
         if (value.equals("islet")) layer_value = 49;
         if (value.equals("building")) layer_value = 35;
         else layer_value = 0;
     }
 
     @Override
-    public void setValueAttributes() {
+    public void setValueNames() {
         if(value.equals("building")) {
             isArea = true;
             setValueName(ValueName.BUILDING);

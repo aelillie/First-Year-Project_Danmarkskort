@@ -18,8 +18,8 @@ public class Coastline extends MapFeature {
     }
 
     @Override
-    public void setPreDefValues() {
-        super.setPreDefValues();
+    public void setPreDefLayerValues() {
+        super.setPreDefLayerValues();
     }
 
     public void setEnd(Point2D newEnd){
@@ -37,7 +37,7 @@ public class Coastline extends MapFeature {
     public void setStart(Point2D newStart) {start = newStart;}
 
     @Override
-    public void setValueAttributes(){
+    public void setValueNames(){
         setValueName(ValueName.COASTLINE);
     }
 

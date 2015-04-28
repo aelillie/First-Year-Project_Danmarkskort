@@ -8,6 +8,7 @@ import Model.*;
 import QuadTree.QuadTree;
 import ShortestPath.Edge;
 import ShortestPath.PathTree;
+import sun.misc.FpUtils;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -749,8 +750,17 @@ public class View extends JFrame implements Observer {
         int endPointIndex = findVertexIndex(endPoint, endWay);
 
         //Find shortest Path.
-        PathTree shortestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex, true);
-        PathTree fastestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex, false);
+        PathTree shortestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex);
+        shortestTree.useShortestPath(true);
+        shortestTree.initiate();
+        /*
+        if (CARBUTTON.isPressed) shortestTree.useCarRoute();
+        else if (BIKEBUTTON.isPressed) shortestTree.useBikeRoute();
+        else if (WALKBUTTON.isPressed) shortestTree.useWalkRoute();
+         */
+        PathTree fastestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex);
+        fastestTree.useShortestPath(false);
+        fastestTree.initiate();
 
         if(shortestTree.hasPathTo(endPointIndex) && fastestTree.hasPathTo(endPointIndex)){
             shortestPath = shortestTree.pathTo(endPointIndex);
@@ -787,7 +797,10 @@ public class View extends JFrame implements Observer {
         System.out.println("");
         System.out.println("Shortest path:");
         int source = 0;
-        PathTree SPpathTree = new PathTree(model.getDiGraph(), source, destination, true);
+        PathTree SPpathTree = new PathTree(model.getDiGraph(), source, destination);
+        SPpathTree.useShortestPath(true);
+        SPpathTree.useBikeRoute();
+        SPpathTree.initiate();
         shortestPath = SPpathTree.pathTo(destination);
 
         double distance = SPpathTree.distTo(destination);
@@ -807,7 +820,10 @@ public class View extends JFrame implements Observer {
     public void findFastestPath() {
         //Functions as a test when pressed "f"
         int source = 0;
-        PathTree FPpathTree = new PathTree(model.getDiGraph(), source, destination, false);
+        PathTree FPpathTree = new PathTree(model.getDiGraph(), source, destination);
+        FPpathTree.useShortestPath(false);
+        FPpathTree.useBikeRoute();
+        FPpathTree.initiate();
         fastestPath = FPpathTree.pathTo(destination);
 
         double time = FPpathTree.timeTo(destination);

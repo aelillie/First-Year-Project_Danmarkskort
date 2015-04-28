@@ -4,9 +4,16 @@ import java.util.Stack;
 
 public class PathTree {
 
+    private EdgeWeightedDigraph G;
+    private int s; //source
+    private int d; //destination
     private double[] valueTo;          // valueTo[v] = distance  of shortest s->v path
     private Edge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
     private IndexMinPQ<Double> pq;    // priority queue of vertices
+    private boolean shortestPath = true;
+    private boolean walkRoute, carRoute, bikeRoute;
+
+
 
     /**
      * Computes a shortest paths tree from <tt>s</tt> to every other vertex in
@@ -17,45 +24,79 @@ public class PathTree {
      * @throws IllegalArgumentException if an edge distance is negative
      * @throws IllegalArgumentException unless 0 &le; <tt>s</tt> &le; <tt>V</tt> - 1
      */
-    public PathTree(EdgeWeightedDigraph G, int s, int d, boolean shortestPath) {
+    public PathTree(EdgeWeightedDigraph G, int s, int d) {
         for (Edge e : G.edges()) {
             if (e.distance() < 0)
                 throw new IllegalArgumentException("edge " + e + " has negative distance");
         }
+        this.G = G;
+        this.s = s;
+        this.d = d;
+    }
 
+    public void initiate() {
         valueTo = new double[G.V()];
         edgeTo = new Edge[G.V()];
         for (int v = 0; v < G.V(); v++)
             valueTo[v] = Double.POSITIVE_INFINITY; //infinite distance to all vertices
         valueTo[s] = 0.0; //distance 0 to self
 
-        // relax vertices in order of distance/travel time from s
-        pq = new IndexMinPQ<>(G.V());
-        pq.insert(s, valueTo[s]);
-        if (shortestPath) {
-            while (!pq.isEmpty()) {
-                int v = pq.delMin();
-                for (Edge e : G.adj(v)) {
-                    relaxDistance(e);
-                }
-                if(v == d)
-                    break;
-            }
-        } else {
-            while (!pq.isEmpty()) {
-                int v = pq.delMin();
-                for (Edge e : G.adj(v)) {
-                    relaxTime(e);
-                }
-                if(v == d)
-                    break;
-            }
-        }
+        if (bikeRoute) relaxBikeRoute();
+        else if (carRoute) relaxCarRoute();
+        else if (walkRoute) relaxWalkRoute();
+        else relaxCarRoute();
 
         // check optimality conditions
         assert check(G, s);
     }
 
+    private void relaxBikeRoute() {
+        // relax vertices in order of distance/travel time from s
+        pq = new IndexMinPQ<>(G.V());
+        pq.insert(s, valueTo[s]);
+        while (!pq.isEmpty()) {
+            int v = pq.delMin();
+            for (Edge e : G.adj(v)) {
+                if (!e.isBikeAble()) continue;
+                if (!shortestPath) relaxTime(e); //fastest path
+                else relaxDistance(e); //shortest path
+            }
+            if(v == d) //found destination, stop relaxing edges
+                break;
+        }
+    }
+
+    private void relaxCarRoute() {
+        // relax vertices in order of distance/travel time from s
+        pq = new IndexMinPQ<>(G.V());
+        pq.insert(s, valueTo[s]);
+        while (!pq.isEmpty()) {
+            int v = pq.delMin();
+            for (Edge e : G.adj(v)) {
+                if (!e.isDriveAble()) continue;
+                if (!shortestPath) relaxTime(e); //fastest path
+                else relaxDistance(e); //shortest path
+            }
+            if(v == d) //found destination, stop relaxing edges
+                break;
+        }
+    }
+
+    private void relaxWalkRoute() {
+        // relax vertices in order of distance/travel time from s
+        pq = new IndexMinPQ<>(G.V());
+        pq.insert(s, valueTo[s]);
+        while (!pq.isEmpty()) {
+            int v = pq.delMin();
+            for (Edge e : G.adj(v)) {
+                if (!e.isWalkAble()) continue;
+                if (!shortestPath) relaxTime(e); //fastest path
+                else relaxDistance(e); //shortest path
+            }
+            if(v == d) //found destination, stop relaxing edges
+                break;
+        }
+    }
 
     // relax edge e and update pq if changed
     private void relaxDistance(Edge e) {
@@ -167,5 +208,24 @@ public class PathTree {
         }
         return true;
     }
+    public void useShortestPath(boolean use) {
+        shortestPath = use;
+    }
 
+    public void useWalkRoute() {
+        walkRoute = true;
+        carRoute = false;
+        bikeRoute = false;
+    }
+
+    public void useCarRoute() {
+        walkRoute = false;
+        carRoute = true;
+        bikeRoute = false;
+    }
+    public void useBikeRoute() {
+        walkRoute = false;
+        carRoute = false;
+        bikeRoute = true;
+    }
 }
