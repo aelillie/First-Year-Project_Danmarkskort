@@ -22,6 +22,8 @@ public class RouteView extends JPanel{
     private Map<JButton,ImageIcon> iconWhiteEquivalenceMap;
     private Map<JButton, ImageIcon> iconBlackEquivalenceMap;
     private ImageIcon carOptionIcon, walkingOptionIcon,bicycleOptionIcon;
+    private RoutePanelController rp;
+    private HashMap<JButton,Boolean> buttonDownMap = new HashMap<>();
 
     /**
      * Creates a panel used for getting a path from A to B in the program
@@ -33,39 +35,42 @@ public class RouteView extends JPanel{
         setOpaque(true);
         setBackground(Color.WHITE);
         this.view = view;
-        setBorder(new MatteBorder(1, 1, 1, 1, new Color(161, 161, 161)));
+        setBorder(new MatteBorder(1, 1, 1, 1, DrawAttribute.borderColor));
         setLayout(new BorderLayout());
         makeFindRoutePanel();
         add(startEndAddressPanel, BorderLayout.CENTER);
-        RoutePanelController rp = new RoutePanelController(this,model);
+        rp = new RoutePanelController(this,model,buttonDownMap);
 
     }
+
+
 
     private void makeFindRoutePanel(){
         JPanel transportTypePanel = new JPanel();
         transportTypePanel.setBackground(Color.WHITE);
         transportTypePanel.setBounds(20, 200, 342, 50);
         transportTypePanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-        transportTypePanel.setBorder(new MatteBorder(0,0,1,0, new Color(161, 161, 161)));
+        transportTypePanel.setBorder(new MatteBorder(0,0,1,0, DrawAttribute.borderColor));
+
 
         carOptionIcon = new ImageIcon(this.getClass().getResource("/data/carOptionIcon.png"));
-        carButton = new JButton("Car",carOptionIcon);
+        carButton = new JButton("Car",new ImageIcon(this.getClass().getResource("/data/carOptionIconWhite.png")));
         carButton.setFocusable(false);
-        carButton.setForeground(new Color(114, 114, 114));
-        carButton.setBackground(Color.WHITE);
+        carButton.setForeground(Color.WHITE);
+        carButton.setBackground(DrawAttribute.buttonDown);
         carButton.setActionCommand("car");
 
         bicycleOptionIcon = new ImageIcon(this.getClass().getResource("/data/bicycleOptionIcon.png"));
         bicycleButton = new JButton("Bicycle",bicycleOptionIcon);
         bicycleButton.setFocusable(false);
-        bicycleButton.setForeground(new Color(114, 114, 114));
+        bicycleButton.setForeground(DrawAttribute.buttonDown);
         bicycleButton.setBackground(Color.WHITE);
         bicycleButton.setActionCommand("bicycle");
 
         walkingOptionIcon = new ImageIcon(this.getClass().getResource("/data/walkingOptionIcon.png"));
         footButton = new JButton("By foot",walkingOptionIcon);
         footButton.setFocusable(false);
-        footButton.setForeground(new Color(114, 114, 114));
+        footButton.setForeground(DrawAttribute.buttonDown);
         footButton.setBackground(Color.WHITE);
         footButton.setActionCommand("walking");
 
@@ -79,7 +84,15 @@ public class RouteView extends JPanel{
         createIconEquivalenceMap();
 
         add(transportTypePanel, BorderLayout.NORTH);
+        setMouseDownMap();
+    }
 
+
+    private void setMouseDownMap(){
+        buttonDownMap = new HashMap<>();
+        buttonDownMap.put(carButton,true);
+        buttonDownMap.put(bicycleButton,false);
+        buttonDownMap.put(footButton,false);
     }
 
     private void makeStartEndAddressPanel(){
@@ -194,8 +207,6 @@ public class RouteView extends JPanel{
         iconBlackEquivalenceMap.put(footButton,walkingOptionIcon);
     }
 
-
-
     public void changeButtonAppearence(JButton button, boolean buttonDown){
         ImageIcon newIcon;
         if(buttonDown){
@@ -236,4 +247,10 @@ public class RouteView extends JPanel{
     public JButton getEndClearButton(){ return clearButtonEnd;}
 
     public View getView() { return view;}
+
+    public HashMap<JButton, Boolean> getButtonDownMap() {
+        return buttonDownMap;
+    }
+
+
 }
