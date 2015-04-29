@@ -757,7 +757,7 @@ public class View extends JFrame implements Observer {
             boolean isPressed = buttonMap.get(button);
             if (button.equals(routePanel.getBicycleButton()) && isPressed) shortestTree.useBikeRoute();
             else if (button.equals(routePanel.getFootButton()) && isPressed) shortestTree.useWalkRoute();
-            else shortestTree.useCarRoute();
+            else if (button.equals(routePanel.getCarButton()) && isPressed) shortestTree.useCarRoute();
         }
         shortestTree.initiate();
 
@@ -768,7 +768,7 @@ public class View extends JFrame implements Observer {
             boolean isPressed = buttonMap.get(button);
             if (button.equals(routePanel.getBicycleButton()) && isPressed) fastestTree.useBikeRoute();
             else if (button.equals(routePanel.getFootButton()) && isPressed) fastestTree.useWalkRoute();
-            else fastestTree.useCarRoute();
+            else if (button.equals(routePanel.getCarButton()) && isPressed) fastestTree.useCarRoute();
         }
         fastestTree.initiate();
         if(shortestTree.hasPathTo(endPointIndex) && fastestTree.hasPathTo(endPointIndex)){
@@ -822,7 +822,7 @@ public class View extends JFrame implements Observer {
             boolean isPressed = buttonMap.get(button);
             if (button.equals(routePanel.getBicycleButton()) && isPressed) SPpathTree.useBikeRoute();
             else if (button.equals(routePanel.getFootButton()) && isPressed) SPpathTree.useWalkRoute();
-            else SPpathTree.useCarRoute();
+            else if (button.equals(routePanel.getCarButton()) && isPressed) SPpathTree.useCarRoute();
         }
         SPpathTree.initiate();
         shortestPath = SPpathTree.pathTo(destination);
@@ -855,7 +855,7 @@ public class View extends JFrame implements Observer {
             boolean isPressed = buttonMap.get(button);
             if (button.equals(routePanel.getBicycleButton()) && isPressed) FPpathTree.useBikeRoute();
             else if (button.equals(routePanel.getFootButton()) && isPressed) FPpathTree.useWalkRoute();
-            else FPpathTree.useCarRoute();
+            else if (button.equals(routePanel.getCarButton()) && isPressed) FPpathTree.useCarRoute();
         }
         FPpathTree.initiate();
         fastestPath = FPpathTree.pathTo(destination);
