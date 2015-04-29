@@ -16,13 +16,13 @@ public class Landuse extends MapFeature {
     }
 
     @Override
-    public void setPreDefValues() {
-        super.setPreDefValues();
+    public void setPreDefLayerValues() {
+        super.setPreDefLayerValues();
         if (value.equals("basin")) layer_value = 42;
     }
 
     @Override
-    public void setValueAttributes() {
+    public void setValueName() {
         if(value.equals("cemetery")) setValueName(ValueName.CEMETERY);
         else if(value.equals("construction")) setValueName(ValueName.CONSTRUCTION);
         else if(value.equals("grass")) {

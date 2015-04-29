@@ -20,9 +20,9 @@ public abstract class MapFeature implements Serializable, MapData {
     public MapFeature(Path2D way, int layer_value, String value) {
         this.way = way;
         this.layer_value = layer_value;
-        this.value = value;
-        setPreDefValues();
-        setValueAttributes();
+        this.value = value.intern();
+        setPreDefLayerValues();
+        setValueName();
     }
 
     public MapFeature() {
@@ -34,7 +34,7 @@ public abstract class MapFeature implements Serializable, MapData {
      * Predefined layer values getIndex their values multiplied
      * by a factor 10
      */
-    public void setPreDefValues() {
+    public void setPreDefLayerValues() {
         if (layer_value == -5) layer_value = -50;
         else if (layer_value == -4) layer_value = -40;
         else if (layer_value == -3) layer_value = -30;
@@ -52,7 +52,7 @@ public abstract class MapFeature implements Serializable, MapData {
      * When instances are created this method is
      * called to set the ValueName of the object
      */
-    public abstract void setValueAttributes(); //Every new map feature calls this method to set specific attributes
+    public abstract void setValueName(); //Every new map feature calls this method to set specific attributes
 
     @Override
     public String toString() {
