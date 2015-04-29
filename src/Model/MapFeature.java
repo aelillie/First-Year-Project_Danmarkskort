@@ -10,7 +10,7 @@ import java.io.Serializable;
  * whether the map feature is an area or not.
  */
 public abstract class MapFeature implements Serializable, MapData {
-    private static final long serialVersionUID = 16;
+    public static final long serialVersionUID = 16;
     protected Path2D way;
     protected int layer_value;
     protected String value;

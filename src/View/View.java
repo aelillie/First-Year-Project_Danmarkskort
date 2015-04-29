@@ -569,7 +569,9 @@ public class View extends JFrame implements Observer {
     public void wheelZoom(MouseWheelEvent e) {
         try {
             int wheelRotation = e.getWheelRotation();
+            Insets x = getInsets();
             Point p = e.getPoint();
+            p.setLocation(p.getX() , p.getY()-x.top + x.bottom);
             if (wheelRotation > 0 && zoomLevel != 0) {
                 //point2d before zoom
                 Point2D p1 = transformPoint(p);
@@ -966,7 +968,7 @@ public class View extends JFrame implements Observer {
 
         Line2D closestLine = null;
         for(Edge edge : edges){
-            Path2D segment = edge.getEdgePath();
+            Line2D segment = edge.getEdgePath();
             double[] points = new double[6];
             PathIterator pI = segment.getPathIterator(new AffineTransform());
             pI.currentSegment(points);
