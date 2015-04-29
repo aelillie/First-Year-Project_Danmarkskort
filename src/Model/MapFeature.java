@@ -20,7 +20,7 @@ public abstract class MapFeature implements Serializable, MapData {
     public MapFeature(Path2D way, int layer_value, String value) {
         this.way = way;
         this.layer_value = layer_value;
-        this.value = value;
+        this.value = value.intern();
         setPreDefValues();
         setValueAttributes();
     }

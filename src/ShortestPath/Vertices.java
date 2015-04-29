@@ -56,4 +56,9 @@ public class Vertices implements Serializable {
     public Point2D getVertex(int index) {
         return vertex_index[index];
     }
+
+    public void clearMap(){
+
+        vertex_map.clear();
+    }
 }

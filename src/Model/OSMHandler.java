@@ -348,6 +348,7 @@ public class OSMHandler extends DefaultHandler {
                 wayId_longMap.clear(); //sets key and value arrays to point to null
                 node_longMap.clear();
                 keyValue_map.clear();
+                vertices.clearMap();
                 break;
 
         }
