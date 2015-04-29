@@ -16,13 +16,13 @@ public class Amenity extends MapFeature {
     }
 
     @Override
-    public void setPreDefValues() {
-        super.setPreDefValues();
+    public void setPreDefLayerValues() {
+        super.setPreDefLayerValues();
         if (value.equals("fountain")) layer_value = 45;
     }
 
     @Override
-    public void setValueAttributes() {
+    public void setValueName() {
         if(value.equals("parking")) setValueName(ValueName.PARKING);
         else if(value.equals("university") && isBuilding ) setValueName(ValueName.UNIVERSITY);
         else if(value.equals("school") && isBuilding ) setValueName(ValueName.SCHOOL);

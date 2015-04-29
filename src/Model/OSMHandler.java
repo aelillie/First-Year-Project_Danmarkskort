@@ -2,7 +2,7 @@ package Model;
 
 import MapFeatures.*;
 import QuadTree.QuadTree;
-import ShortestPath.EdgeWeightedDigraph;
+import ShortestPath.Graph;
 import ShortestPath.Vertices;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
@@ -21,7 +21,7 @@ public class OSMHandler extends DefaultHandler {
     private Map<String, String> keyValue_map; //relation between the keys and values in the XML file
     private LongHashMap<Point2D> node_longMap; //Relation between a nodes' id and coordinates
     private LongHashMap<Path2D> wayId_longMap; //Map of ways and their id's
-    private EdgeWeightedDigraph diGraph;
+    private Graph diGraph;
     private Vertices vertices;
 
     //Contains relevant places parsed as address objects linked to their coordinate.
@@ -56,7 +56,7 @@ public class OSMHandler extends DefaultHandler {
         streetMap = new HashMap<>();
         boundaryMap = new HashMap<>();
         vertices = new Vertices();
-        diGraph = new EdgeWeightedDigraph();
+        diGraph = new Graph();
     }
 
     /**
@@ -215,8 +215,9 @@ public class OSMHandler extends DefaultHandler {
                     //quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary"))); //Appears in <relation
 
                 }
-                else if (keyValue_map.containsKey("highway")) {
+                else if (keyValue_map.containsKey("highway") && !keyValue_map.get("highway").equals("proposed")) {
                     Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"), keyValue_map.get("maxspeed"));
+                    highway.setRouteType(keyValue_map);
                     streetTree.insert(highway);
                     if(keyValue_map.containsKey("oneway")) highway.setOneWay(keyValue_map.get("oneway"));
                     else highway.setOneWay("no");
@@ -224,7 +225,9 @@ public class OSMHandler extends DefaultHandler {
                     highway.assignEdges(wayCoords);
                 }
                 else if (keyValue_map.containsKey("place")) naturalTree.insert(new Place(way, fetchOSMLayer(), keyValue_map.get("place")));
-                else if (keyValue_map.containsKey("railway")) railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
+                else if (keyValue_map.containsKey("railway"))
+                    if (keyValue_map.containsKey("construction") && keyValue_map.get("construction").equals("yes"));
+                    else railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  railwayTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
                 if (keyValue_map.containsKey("name")) {
                     String name= keyValue_map.get("name").toLowerCase().trim();
@@ -348,6 +351,7 @@ public class OSMHandler extends DefaultHandler {
                 wayId_longMap.clear(); //sets key and value arrays to point to null
                 node_longMap.clear();
                 keyValue_map.clear();
+                vertices.clearMap();
                 break;
 
         }
@@ -483,13 +487,13 @@ public class OSMHandler extends DefaultHandler {
     }
 
 
-    public EdgeWeightedDigraph getDiGraph() {
+    public Graph getDiGraph() {
         return diGraph;
     }
 
     public QuadTree getRailwayTree() {return railwayTree; }
 
-    public void setDiGraph(EdgeWeightedDigraph diGraph) {
+    public void setDiGraph(Graph diGraph) {
         this.diGraph = diGraph;
     }
 
