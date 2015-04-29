@@ -16,6 +16,7 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 
@@ -38,7 +39,7 @@ public class View extends JFrame implements Observer {
     private Scalebar scalebar;
     private int checkOut = 1, checkIn = 0;
     private JTextField searchArea;
-    private JButton searchButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton, optionsButton, mapTypeButton;
+    private JButton searchButton,closeDirectionListButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton, optionsButton, mapTypeButton;
     private MapMenu mapMenu;
     private RouteView routePanel;
     private MapTypePanel mapTypePanel = new MapTypePanel(this);
@@ -48,7 +49,10 @@ public class View extends JFrame implements Observer {
     private JScrollPane resultStartPane = new JScrollPane();
     private JScrollPane resultEndPane = new JScrollPane();
     private JScrollPane routeInstructionPane = new JScrollPane();
+    private JScrollPane directionPane = new JScrollPane();
     private JList<Address> addressSearchResults;
+    private JList<String> directionStringList;
+    private JPanel closeDirectionList;
 
     private int destination;
 
@@ -209,8 +213,8 @@ public class View extends JFrame implements Observer {
         layer.add(resultEndPane, new Integer(3));
         layer.add(iconPanel, new Integer(3));
         layer.add(optionsPanel, new Integer(2));
-        layer.add(routeInstructionPane,new Integer(2));
-
+        layer.add(directionPane, new Integer(2));
+        layer.add(closeDirectionList, new Integer(3));
     }
 
     private void makeComponents() {
@@ -229,7 +233,25 @@ public class View extends JFrame implements Observer {
         makeShowRoutePanelButton();
         makeFullscreenButton();
         makeMapTypeButton();
+        makeCloseDirectionListPanel();
         //makeResultPane();
+    }
+
+    public void makeCloseDirectionListPanel(){
+        closeDirectionList = new JPanel();
+        closeDirectionList.setVisible(false);
+        closeDirectionList.setBounds(26, 280, 400, 20);
+        closeDirectionList.setOpaque(true);
+        closeDirectionList.setBackground(DrawAttribute.fadeblack);
+        closeDirectionList.setLayout(new BoxLayout(closeDirectionList, BoxLayout.LINE_AXIS));
+        closeDirectionList.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
+
+        closeDirectionListButton = new JButton(new ImageIcon(this.getClass().getResource("/data/resetButtonWhiteIcon.png")));
+        closeDirectionListButton.setOpaque(false);
+        closeDirectionListButton.setBackground(DrawAttribute.fadeblack);
+        closeDirectionListButton.setActionCommand("closeDirectionList");
+        closeDirectionList.add(closeDirectionListButton);
+
     }
 
     public void changeToStandard(){
@@ -247,8 +269,39 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
-    public void addToResultPane(Iterable<Edge> path){
+    public void processRouteplanStrings(ArrayList<String> streetList, HashMap<String,Double> streetLengthMap){
+        String[] directions = new String[streetList.size()+1];
+        int directionCount = 0;
+        for (int i = streetList.size(); --i >= 0;){
+            String street = streetList.get(i);
+            double dist = streetLengthMap.get(street)*1000;
+            String distString;
+            if(dist < 1000) { //If the distance is less than a kilometer, display it in meters, otherwise display it in kilometers
+                distString = new DecimalFormat("####").format(dist) + " m";
+            } else {
+                distString = new DecimalFormat("##.##").format(dist) + " km";
+            }
+            String direction = "Follow " + street + " for " + distString;
+            if(street.trim().equals("")){
+                if(i != 0) direction = "Continue for " + distString + " untill you reach " + streetList.get(i-1);
+                else direction = "Continue for " + distString + " untill you reach your destination.";
+            }
+            directions[directionCount] = direction;
+            directionCount++;
+        }
+        directions[directionCount] = "You have reached your destination.";
+        addToDirectionPane(directions);
+    }
 
+    public void addToDirectionPane(String[] directionArray){
+        directionStringList = new JList<>(directionArray);
+        directionPane.setVisible(true);
+        directionPane.setViewportView(directionStringList);
+        directionPane.setBounds(26, 300, 400, 200);
+        directionPane.setBorder(new MatteBorder(1, 1, 1, 1, Color.DARK_GRAY));
+        directionPane.getViewport().setBackground(Color.WHITE);
+        directionPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+        closeDirectionList.setVisible(true);
 
     }
 
@@ -382,6 +435,7 @@ public class View extends JFrame implements Observer {
 
     public void showRoutePanel() {
         routePanel.showRoutePanel();
+        if(!routePanel.isVisible()) closeDirectionList();
         if(mapTypePanel.isVisible()) mapTypePanel.setVisible(false);
         if(optionsPanel.isVisible()) {
             optionsPanel.setVisible(false);
@@ -396,8 +450,13 @@ public class View extends JFrame implements Observer {
             optionsPanel.setVisible(false);
             if(iconPanel.isVisible()) iconPanel.setVisible(false);
         }
-        if(routePanel.isVisible()) routePanel.setVisible(false);
+        if(routePanel.isVisible()) routePanel.setVisible(false); closeDirectionList();
         canvas.repaint();
+    }
+
+    public void closeDirectionList(){
+        closeDirectionList.setVisible(false);
+        directionPane.setVisible(false);
     }
 
     public void showIconPanel(){
@@ -409,7 +468,7 @@ public class View extends JFrame implements Observer {
         optionsPanel.showOptionsPanel();
         if(!optionsPanel.isVisible() && iconPanel.isVisible()) iconPanel.setVisible(false);
         if(optionsPanel.isVisible()&& mapTypePanel.isVisible()) mapTypePanel.setVisible(false);
-        if(routePanel.isVisible()) routePanel.setVisible(false);
+        if(routePanel.isVisible()) routePanel.setVisible(false); closeDirectionList();
         canvas.repaint();
     }
 
@@ -788,9 +847,29 @@ public class View extends JFrame implements Observer {
         } else System.out.println("Distance: " + String.format("%.2f", distance) + " km");
         double travelTime = 0;
         if(shortestPath == null) return;
+        HashMap<String, Double> streetLengthMap = new HashMap<>();
+        ArrayList<String> streetList = new ArrayList<>();
         for (Edge e : shortestPath) {
-            travelTime += e.travelTime();
+            if (shortestTree.isWalkRoute())
+                travelTime += e.walkTime();
+            else if (shortestTree.isBikeRoute())
+                travelTime += e.bikeTime();
+            else
+                travelTime += e.travelTime();
+            String streetname = e.highway().getStreetName();
+            if(streetname == null) streetname = " ";
+            Double dist = streetLengthMap.get(streetname);
+
+            if(dist == null){
+                streetLengthMap.put(streetname, e.distance());
+                streetList.add(streetname);
+            } else {
+                streetLengthMap.put(streetname,dist+e.distance());
+            }
         }
+
+        processRouteplanStrings(streetList,streetLengthMap);
+
         System.out.println("Time: " + String.format("%.2f", travelTime) + " minutes\n");
 
         //Fastest path
@@ -818,6 +897,7 @@ public class View extends JFrame implements Observer {
         PathTree SPpathTree = new PathTree(model.getDiGraph(), source, destination);
         SPpathTree.useShortestPath(true);
         HashMap<JButton, Boolean> buttonMap = routePanel.getButtonDownMap();
+
         for (JButton button : buttonMap.keySet()) {
             boolean isPressed = buttonMap.get(button);
             if (button.equals(routePanel.getBicycleButton()) && isPressed) SPpathTree.useBikeRoute();
@@ -838,7 +918,12 @@ public class View extends JFrame implements Observer {
             return;
         }
         for (Edge e : shortestPath) {
-            travelTime += e.travelTime();
+            if (SPpathTree.isWalkRoute())
+                travelTime += e.walkTime();
+            else if (SPpathTree.isBikeRoute())
+                travelTime += e.bikeTime();
+            else
+                travelTime += e.travelTime();
         }
         System.out.println("Time: " + String.format("%5.2f", travelTime) + " minutes");
         System.out.println("");
@@ -1273,6 +1358,8 @@ public class View extends JFrame implements Observer {
     public JScrollPane getResultEndPane() {return resultEndPane;}
 
     public JScrollPane getResultStartPane() {return resultStartPane;}
+
+    public JButton getCloseDirectionListButton(){ return closeDirectionListButton;}
 
     public void setShortestPath(Iterable<Edge> it ) { shortestPath = it; }
     public void setFastestPath(Iterable<Edge> it ) { fastestPath = it; }
