@@ -37,7 +37,9 @@ public class ShortestPathTest {
     public void findPath(){
         Graph g = m.getDiGraph();
 
-        PathTree pS = new PathTree(g,start, end, true);
+        PathTree pS = new PathTree(g,start, end);
+        pS.useShortestPath(true);
+        pS.initiate();
 
         Assert.assertEquals(true, pS.hasPathTo(end));
 
@@ -51,9 +53,12 @@ public class ShortestPathTest {
         Graph g = m.getDiGraph();
 
         //Create one pathTree for shortest route and for fastest
-        PathTree pS = new PathTree(g, start, end, true);
-        PathTree pF = new PathTree(g, start, end, false);
-
+        PathTree pS = new PathTree(g, start, end);
+        pS.useShortestPath(true);
+        pS.initiate();
+        PathTree pF = new PathTree(g, start, end);
+        pF.useShortestPath(false);
+        pF.initiate();
         //can they both find a path?
         Assert.assertTrue(pF.hasPathTo(end));
         Assert.assertTrue(pS.hasPathTo(end));
