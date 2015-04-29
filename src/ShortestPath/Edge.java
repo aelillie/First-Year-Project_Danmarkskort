@@ -1,5 +1,6 @@
 package ShortestPath;
 
+import MapFeatures.Highway;
 import Model.PathCreater;
 
 import java.awt.geom.Path2D;
@@ -16,8 +17,9 @@ public class Edge implements Serializable {
     private double distance; //edge's distance
     private Path2D edgePath;
     private double travelTime; //min pr. distance
-    private boolean oneWay = false;
-    private boolean oneWayReverse = false;
+    private boolean oneWay;
+    private boolean oneWayReverse;
+    private Highway highway;
 
     /**
      * Initializes a directed edge from vertex <tt>v</tt> to vertex <tt>w</tt> with
@@ -30,7 +32,7 @@ public class Edge implements Serializable {
      *                                             is a negative integer
      * @throws IllegalArgumentException            if <tt>distance</tt> is <tt>NaN</tt>
      */
-    public Edge(int v, int w, double distance, double travelTime, Path2D edgePath) {
+    public Edge(int v, int w, double distance, double travelTime, Path2D edgePath, Highway highway) {
         if (v < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
         if (w < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
         if (Double.isNaN(distance)) throw new IllegalArgumentException("Weight is NaN");
@@ -39,6 +41,7 @@ public class Edge implements Serializable {
         this.distance = distance;
         this.travelTime = travelTime;
         this.edgePath = edgePath;
+        this.highway = highway;
     }
 
     /**
@@ -97,12 +100,6 @@ public class Edge implements Serializable {
         else throw new IllegalArgumentException("Illegal endpoint");
     }
 
-    public boolean canGoTo(int that) {
-        if (that == v && oneWay) return false; //if edge is one way reversed or undirected
-        else if (that == w && oneWayReverse) return false; //if edge is one way or undirected
-        else return true; //if edge is not a one way
-    }
-
 
     /**
      * Returns a string representation of the directed edge.
@@ -152,5 +149,9 @@ public class Edge implements Serializable {
 
     public boolean isOneWayReverse() {
         return oneWayReverse;
+    }
+
+    public Highway highway() {
+        return highway;
     }
 }

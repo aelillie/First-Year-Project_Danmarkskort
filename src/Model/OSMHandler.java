@@ -217,6 +217,7 @@ public class OSMHandler extends DefaultHandler {
                 }
                 else if (keyValue_map.containsKey("highway")) {
                     Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"), keyValue_map.get("maxspeed"));
+                    highway.setRouteType(keyValue_map);
                     streetTree.insert(highway);
                     if(keyValue_map.containsKey("oneway")) highway.setOneWay(keyValue_map.get("oneway"));
                     else highway.setOneWay("no");

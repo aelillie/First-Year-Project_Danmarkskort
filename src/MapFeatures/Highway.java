@@ -11,13 +11,16 @@ import Model.PathCreater;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Highway extends MapFeature {
     private String streetName;
     private List<Edge> edges = new ArrayList<>();
     private String oneWay;
     private double maxspeed;
+    private boolean driveAble, bikeAble, walkAble;
 
     public Highway() {}
 
@@ -45,6 +48,9 @@ public class Highway extends MapFeature {
             case "motorway":
                 maxspeed = 130.0;
                 break;
+            case "trunk":
+                maxspeed = 80.0;
+                break;
             case "primary":
                 maxspeed = 80.0;
                 break;
@@ -57,6 +63,30 @@ public class Highway extends MapFeature {
             case "unclassified":
                 maxspeed = 80.0;
                 break;
+            case "living_street":
+                maxspeed = 15.0;
+                break;
+            case "pedestrian":
+                maxspeed = 5.0;
+                break;
+            case "track":
+                maxspeed = 5.0;
+                break;
+            case "footway":
+                maxspeed = 5.0;
+                break;
+            case "cycleway":
+                maxspeed = 15.0;
+                break;
+            case "bridleway":
+                maxspeed = 15.0;
+                break;
+            case "steps":
+                maxspeed = 3.0;
+                break;
+            case "path":
+                maxspeed = 5.0;
+                break;
             default:
                 maxspeed = 50.0;
                 break;
@@ -68,7 +98,7 @@ public class Highway extends MapFeature {
      * Create edges between all points in the way for the current highway
      */
     public void assignEdges(List<Point2D> points) {
-        Vertices vertices = Model.getModel().getVertices();
+        Vertices V = Model.getModel().getVertices();
         for (int i = 0; i + 1 < points.size(); i++) {
             Point2D v;
             Point2D w;
@@ -80,7 +110,7 @@ public class Highway extends MapFeature {
                 w = points.get(i+1);
             }
             double distance = calcDist(v, w);
-            Edge edge = new Edge(vertices.getIndex(v), vertices.getIndex(w), distance, calcTime(distance), edgePath(v,w));
+            Edge edge = new Edge(V.getIndex(v), V.getIndex(w), distance, calcTime(distance), edgePath(v,w), this);
             if(oneWay.equals("yes"))
                 edge.setOneWay(true);
             if(oneWay.equals("-1"))
@@ -102,8 +132,8 @@ public class Highway extends MapFeature {
     }
 
     @Override
-    public void setPreDefValues() {
-        super.setPreDefValues();
+    public void setPreDefLayerValues() {
+        super.setPreDefLayerValues();
         if (value.equals("motorway") || value.equals("motorway_link")) layer_value = 17;
         else if (value.equals("trunk") || value.equals("trunk_link")) layer_value = 16;
         else if (value.equals("primary") || value.equals("primay_link")) layer_value = 15;
@@ -114,7 +144,7 @@ public class Highway extends MapFeature {
     }
 
     @Override
-    public void setValueAttributes() {
+    public void setValueName() {
         if (value.equals("motorway") || value.equals("motorway_link")) setValueName(ValueName.MOTORWAY);
         else if (value.equals("trunk") || value.equals("trunk_link")) setValueName(ValueName.TRUNK);
         else if (value.equals("primary") || value.equals("primay_link")) setValueName(ValueName.PRIMARY);
@@ -178,5 +208,28 @@ public class Highway extends MapFeature {
                 oneWay = "no"; //one way not present
                 break;
         }
+    }
+
+    /**
+     * Determines whether you can walk, ride a bike and/or drive on this highway
+     * @param kv_map The key value map references from the OSM handler
+     */
+    public void setRouteType(Map<String, String> kv_map) {
+        walkAble = !kv_map.containsKey("foot") || kv_map.get("foot").equals("yes");
+        bikeAble = !kv_map.containsKey("bicycle") || kv_map.get("bicycle").equals("yes");
+        driveAble = !value.equals("pedestrian") && !value.equals("footway") && !value.equals("cycleway") &&
+                !value.equals("bridleway") && !value.equals("steps") && !value.equals("path");
+    }
+
+    public boolean isDriveAble() {
+        return driveAble;
+    }
+
+    public boolean isBikeAble() {
+        return bikeAble;
+    }
+
+    public boolean isWalkAble() {
+        return walkAble;
     }
 }

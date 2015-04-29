@@ -15,13 +15,13 @@ public class Natural extends MapFeature {
     }
 
     @Override
-    public void setPreDefValues() {
-        super.setPreDefValues();
+    public void setPreDefLayerValues() {
+        super.setPreDefLayerValues();
         if (value.equals("water")) layer_value = 6;
     }
 
     @Override
-    public void setValueAttributes() {
+    public void setValueName() {
         if (value.equals("wood")) setValueName(ValueName.WOOD);
         else if (value.equals("scrub")) setValueName(ValueName.SCRUB);
         else if (value.equals("heath")) setValueName(ValueName.HEATH);

@@ -13,12 +13,12 @@ public class Waterway extends MapFeature {
     }
 
     @Override
-    public void setPreDefValues() {
-        super.setPreDefValues();
+    public void setPreDefLayerValues() {
+        super.setPreDefLayerValues();
     }
 
     @Override
-    public void setValueAttributes() {
+    public void setValueName() {
         if (value.equals("riverbank")) setValueName(ValueName.RIVERBANK);
         else if (value.equals("stream")) setValueName(ValueName.STREAM);
         else if (value.equals("canal")) setValueName(ValueName.CANAL);

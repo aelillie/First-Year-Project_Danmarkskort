@@ -44,10 +44,6 @@ public class Graph implements Serializable{
 
     public void addEdges(Collection<Highway> highways) {
         for (Highway highway : highways) {
-            String value = highway.getValue();
-            if(value.equals("footway") || value.equals("cycleway") || value.equals("steps") ||
-                    value.equals("path") || value.equals("bridleway"))
-                continue;
             addEdge(highway);
         }
     }
