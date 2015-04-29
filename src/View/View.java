@@ -789,7 +789,12 @@ public class View extends JFrame implements Observer {
         double travelTime = 0;
         if(shortestPath == null) return;
         for (Edge e : shortestPath) {
-            travelTime += e.travelTime();
+            if (shortestTree.isWalkRoute())
+                travelTime += e.walkTime();
+            else if (shortestTree.isBikeRoute())
+                travelTime += e.bikeTime();
+            else
+                travelTime += e.travelTime();
         }
         System.out.println("Time: " + String.format("%.2f", travelTime) + " minutes\n");
 
@@ -818,6 +823,7 @@ public class View extends JFrame implements Observer {
         PathTree SPpathTree = new PathTree(model.getDiGraph(), source, destination);
         SPpathTree.useShortestPath(true);
         HashMap<JButton, Boolean> buttonMap = routePanel.getButtonDownMap();
+
         for (JButton button : buttonMap.keySet()) {
             boolean isPressed = buttonMap.get(button);
             if (button.equals(routePanel.getBicycleButton()) && isPressed) SPpathTree.useBikeRoute();
@@ -838,7 +844,12 @@ public class View extends JFrame implements Observer {
             return;
         }
         for (Edge e : shortestPath) {
-            travelTime += e.travelTime();
+            if (SPpathTree.isWalkRoute())
+                travelTime += e.walkTime();
+            else if (SPpathTree.isBikeRoute())
+                travelTime += e.bikeTime();
+            else
+                travelTime += e.travelTime();
         }
         System.out.println("Time: " + String.format("%5.2f", travelTime) + " minutes");
         System.out.println("");

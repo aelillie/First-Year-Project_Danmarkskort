@@ -58,7 +58,7 @@ public class PathTree {
             int v = pq.delMin();
             for (Edge e : G.adj(v)) {
                 if (!e.highway().isBikeAble()) continue;
-                if (!shortestPath) relaxTime(e, v); //fastest path
+                if(!shortestPath) relaxDistance(e, v);
                 else relaxDistance(e, v); //shortest path
             }
             if(v == d) //found destination, stop relaxing edges
@@ -93,7 +93,7 @@ public class PathTree {
             int v = pq.delMin();
             for (Edge e : G.adj(v)) {
                 if (!e.highway().isWalkAble()) continue;
-                if (!shortestPath) relaxTime(e, v); //fastest path
+                if(!shortestPath) relaxDistance(e, v);
                 else relaxDistance(e, v); //shortest path
             }
             if(v == d) //found destination, stop relaxing edges
@@ -112,9 +112,14 @@ public class PathTree {
         if (valueTo[w] > valueTo[v] + e.distance()) {
             valueTo[w] = valueTo[v] + e.distance();
             edgeTo[w] = e;
-            if (pq.contains(w)) pq.decreaseKey(w, valueTo[w]);
-            else                pq.insert(w, valueTo[w]);
+            if (pq.contains(w)) pq.decreaseKey(w, valueTo[w] + h(w));
+            else                pq.insert(w, valueTo[w] + h(w));
         }
+    }
+
+    private double h(int i) {
+        //TODO: A*
+        return 0.0;
     }
 
     private void relaxTime(Edge e, int v) {
@@ -248,4 +253,15 @@ public class PathTree {
         bikeRoute = true;
     }
 
+    public boolean isWalkRoute() {
+        return walkRoute;
+    }
+
+    public boolean isCarRoute() {
+        return carRoute;
+    }
+
+    public boolean isBikeRoute() {
+        return bikeRoute;
+    }
 }

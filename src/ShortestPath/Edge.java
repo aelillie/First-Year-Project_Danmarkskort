@@ -154,4 +154,12 @@ public class Edge implements Serializable {
     public Highway highway() {
         return highway;
     }
+
+    public double walkTime() {
+        return (distance/5.0)*60;
+    }
+
+    public double bikeTime() {
+        return (distance/15.0)*60;
+    }
 }
