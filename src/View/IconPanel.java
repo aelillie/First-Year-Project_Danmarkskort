@@ -36,7 +36,6 @@ public class IconPanel extends JScrollPane {
         icons = MapIcon.getIcons();
         for (int i = 0; i < icons.size(); i++) {
             URL iconPath = icons.get(i);
-            System.out.println(iconPath);
             JLabel l1 = new JLabel(new ImageIcon(iconPath));
             panel.add(l1);
             IconController controller = new IconController(icons.get(i));
