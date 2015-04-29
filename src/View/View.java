@@ -47,6 +47,7 @@ public class View extends JFrame implements Observer {
     private JScrollPane resultPane = new JScrollPane();
     private JScrollPane resultStartPane = new JScrollPane();
     private JScrollPane resultEndPane = new JScrollPane();
+    private JScrollPane routeInstructionPane = new JScrollPane();
     private JList<Address> addressSearchResults;
 
     private int destination;
@@ -208,6 +209,7 @@ public class View extends JFrame implements Observer {
         layer.add(resultEndPane, new Integer(3));
         layer.add(iconPanel, new Integer(3));
         layer.add(optionsPanel, new Integer(2));
+        layer.add(routeInstructionPane,new Integer(2));
 
     }
 
@@ -245,6 +247,10 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
+    public void addToResultPane(Iterable<Edge> path){
+
+
+    }
 
     public void addToResultPane(Address[] resultArray){
         addressSearchResults = new JList<>(resultArray);

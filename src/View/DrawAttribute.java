@@ -150,6 +150,9 @@ public class DrawAttribute {
     public static Color cl_purple = new Color(170,144,158);
     public static Color cl_whiteblue = new Color(115,193,237);
 
+    public static Color buttonDown = new Color(114, 114, 114);
+    public static Color borderColor = new Color(161, 161, 161);
+
     public static Color[] colors = new Color[] {lightblue, lightgreen, darkgreen, lightyellow, darkblue, lightgrey, neongreen, babyred, lightred,
                                                 grey, white, bloodred, red, skincolor, bluegreen, orange, pink, sand, whiteblue, greenblue, whitegreen, brown};
     public static Stroke[] basicStrokes = new Stroke[]{s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11,s12, s13, s14, s15};
