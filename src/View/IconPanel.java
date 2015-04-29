@@ -2,12 +2,9 @@ package View;
 
 import Controller.IconController;
 import Model.MapIcon;
-import Model.MapIcon;
 
 import javax.swing.*;
-import javax.swing.border.MatteBorder;
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -38,8 +35,9 @@ public class IconPanel extends JScrollPane {
     public void addIcons() {
         icons = MapIcon.getIcons();
         for (int i = 0; i < icons.size(); i++) {
-            String ikoner = icons.get(i).getFile();
-            JLabel l1 = new JLabel(new ImageIcon(ikoner));
+            URL iconPath = icons.get(i);
+            System.out.println(iconPath);
+            JLabel l1 = new JLabel(new ImageIcon(iconPath));
             panel.add(l1);
             IconController controller = new IconController(icons.get(i));
             if (icons.get(i).equals(MapIcon.getIconURLs().get("restaurantIcon")) ||

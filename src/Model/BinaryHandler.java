@@ -34,27 +34,33 @@ public class BinaryHandler{
 
         out.writeObject(model.getOSMReader().getAddressMap());
         loadingScreen.updateLoadBar(20);
+
         out.writeObject(model.getOSMReader().getStreetMap());
         loadingScreen.updateLoadBar(35);
+
         out.writeObject(model.getOSMReader().getBoundaryMap());
         loadingScreen.updateLoadBar(40);
+
         out.writeObject(model.getOSMReader().getAddressList());
         loadingScreen.updateLoadBar(50);
 
         out.writeObject(model.getDiGraph());
         loadingScreen.updateLoadBar(60);
+
         out.writeObject(model.getVertices());
         loadingScreen.updateLoadBar(65);
+
         List<QuadTree> qT = model.getQuadTrees();
 
         out.writeObject(qT);
+
         loadingScreen.updateLoadBar(90);
 
         out.writeObject(model.getCoastlines());
 
 
         loadingScreen.updateLoadBar(100);
-        out.flush();
+        out.reset();
         out.close();
 
         System.out.print(filename + " saved");
@@ -115,9 +121,6 @@ public class BinaryHandler{
         loadingScreen.updateLoadBar(100);
     }
 
-    public void saveFiles(String savefile)throws IOException{
 
-        save(savefile);
-    }
 
 }
