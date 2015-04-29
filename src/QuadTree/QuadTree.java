@@ -166,7 +166,6 @@ public class QuadTree implements Serializable{
     public Collection<MapData> query2D(Shape rect, boolean sorted) {
         Collection<MapData> values;
         if(sorted){
-            //values = new HashSet<>();
             values = new TreeSet<>(new Comparator<MapData>() {
                 @Override
                 /**
@@ -181,7 +180,7 @@ public class QuadTree implements Serializable{
                 }
             });
         }else {
-            values = new HashSet<>();
+            values = new ArrayList<>();
         }
 
         if(rect != null)

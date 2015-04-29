@@ -1,16 +1,14 @@
 package Controller;
 
 import Model.MapIcon;
-import View.IconPanel;
+import View.View;
 
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
-import java.net.SocketPermission;
 import java.net.URL;
 import java.util.Observable;
-import View.View;
 
 
 public class IconController extends Observable implements ComponentListener, ItemListener {
@@ -20,7 +18,10 @@ public class IconController extends Observable implements ComponentListener, Ite
     //add'er view for at få tilgang til update()
     private View v;
 
-
+    /**
+     * Tells MapIcon which icons should be drawn.
+     * @param number
+     */
     public IconController(URL number) {
         this.number = number;
     }
