@@ -1080,18 +1080,19 @@ public class View extends JFrame implements Observer {
             //TODO: Test of shortest path
             if (shortestPath != null) {
                 g.setColor(DrawAttribute.cl_darkorange);
-                g.setStroke(new BasicStroke(0.00010f));
+                g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
                 for (Edge e : shortestPath) {
                     g.draw(e.getEdgePath());
                 }
             }
             if (fastestPath != null) {
-                g.setColor(DrawAttribute.lightblue);
-                g.setStroke(new BasicStroke(0.00010f));
+                g.setColor(DrawAttribute.lightgreen);
+                g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
                 for (Edge e : fastestPath) {
                     g.draw(e.getEdgePath());
                 }
             }
+
             g.setColor(Color.BLACK);
             g.setStroke(new BasicStroke(0.0005f));
 
