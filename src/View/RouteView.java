@@ -35,7 +35,7 @@ public class RouteView extends JPanel{
         setOpaque(true);
         setBackground(Color.WHITE);
         this.view = view;
-        setBorder(new MatteBorder(1, 1, 1, 1, new Color(161, 161, 161)));
+        setBorder(new MatteBorder(1, 1, 1, 1, DrawAttribute.borderColor));
         setLayout(new BorderLayout());
         makeFindRoutePanel();
         add(startEndAddressPanel, BorderLayout.CENTER);
@@ -50,27 +50,27 @@ public class RouteView extends JPanel{
         transportTypePanel.setBackground(Color.WHITE);
         transportTypePanel.setBounds(20, 200, 342, 50);
         transportTypePanel.setLayout(new FlowLayout(FlowLayout.LEADING));
-        transportTypePanel.setBorder(new MatteBorder(0,0,1,0, new Color(161, 161, 161)));
+        transportTypePanel.setBorder(new MatteBorder(0,0,1,0, DrawAttribute.borderColor));
 
 
         carOptionIcon = new ImageIcon(this.getClass().getResource("/data/carOptionIcon.png"));
         carButton = new JButton("Car",new ImageIcon(this.getClass().getResource("/data/carOptionIconWhite.png")));
         carButton.setFocusable(false);
         carButton.setForeground(Color.WHITE);
-        carButton.setBackground(new Color(114, 114, 114));
+        carButton.setBackground(DrawAttribute.buttonDown);
         carButton.setActionCommand("car");
 
         bicycleOptionIcon = new ImageIcon(this.getClass().getResource("/data/bicycleOptionIcon.png"));
         bicycleButton = new JButton("Bicycle",bicycleOptionIcon);
         bicycleButton.setFocusable(false);
-        bicycleButton.setForeground(new Color(114, 114, 114));
+        bicycleButton.setForeground(DrawAttribute.buttonDown);
         bicycleButton.setBackground(Color.WHITE);
         bicycleButton.setActionCommand("bicycle");
 
         walkingOptionIcon = new ImageIcon(this.getClass().getResource("/data/walkingOptionIcon.png"));
         footButton = new JButton("By foot",walkingOptionIcon);
         footButton.setFocusable(false);
-        footButton.setForeground(new Color(114, 114, 114));
+        footButton.setForeground(DrawAttribute.buttonDown);
         footButton.setBackground(Color.WHITE);
         footButton.setActionCommand("walking");
 
@@ -206,12 +206,6 @@ public class RouteView extends JPanel{
         iconBlackEquivalenceMap.put(bicycleButton,bicycleOptionIcon);
         iconBlackEquivalenceMap.put(footButton,walkingOptionIcon);
     }
-
-    private ImageIcon getButtonIcon(JButton button, boolean buttonDown){
-        if(buttonDown) return iconBlackEquivalenceMap.get(button);
-        else return iconWhiteEquivalenceMap.get(button);
-    }
-
 
     public void changeButtonAppearence(JButton button, boolean buttonDown){
         ImageIcon newIcon;
