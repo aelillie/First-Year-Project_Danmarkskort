@@ -807,6 +807,9 @@ public class View extends JFrame implements Observer {
         System.out.println("Shortest path:");
         int source = 0;
         PathTree SPpathTree = new PathTree(model.getDiGraph(), source, destination);
+        SPpathTree.useShortestPath(true);
+        SPpathTree.useCarRoute();
+        SPpathTree.initiate();
         shortestPath = SPpathTree.pathTo(destination);
 
         double distance = SPpathTree.distTo(destination);
@@ -831,6 +834,9 @@ public class View extends JFrame implements Observer {
         //Functions as a test when pressed "f"
         int source = 0;
         PathTree FPpathTree = new PathTree(model.getDiGraph(), source, destination);
+        FPpathTree.useShortestPath(false);
+        FPpathTree.useCarRoute();
+        FPpathTree.initiate();
         fastestPath = FPpathTree.pathTo(destination);
 
         double time = FPpathTree.timeTo(destination);

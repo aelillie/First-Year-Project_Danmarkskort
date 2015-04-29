@@ -11,7 +11,9 @@ import Model.PathCreater;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Highway extends MapFeature {
     private String streetName;
@@ -206,6 +208,17 @@ public class Highway extends MapFeature {
                 oneWay = "no"; //one way not present
                 break;
         }
+    }
+
+    /**
+     * Determines whether you can walk, ride a bike and/or drive on this highway
+     * @param kv_map The key value map references from the OSM handler
+     */
+    public void setRouteType(Map<String, String> kv_map) {
+        walkAble = !kv_map.containsKey("foot") || kv_map.get("foot").equals("yes");
+        bikeAble = !kv_map.containsKey("bicycle") || kv_map.get("bicycle").equals("yes");
+        driveAble = !value.equals("pedestrian") && !value.equals("footway") && !value.equals("cycleway") &&
+                !value.equals("bridleway") && !value.equals("steps") && !value.equals("path");
     }
 
     public boolean isDriveAble() {

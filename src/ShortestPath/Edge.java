@@ -100,12 +100,6 @@ public class Edge implements Serializable {
         else throw new IllegalArgumentException("Illegal endpoint");
     }
 
-    public boolean canGoTo(int that) {
-        if (that == v && oneWay) return false; //if edge is one way reversed or undirected
-        else if (that == w && oneWayReverse) return false; //if edge is one way or undirected
-        else return true; //if edge is not a one way
-    }
-
 
     /**
      * Returns a string representation of the directed edge.
