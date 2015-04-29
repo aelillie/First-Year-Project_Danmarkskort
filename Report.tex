@@ -17,13 +17,21 @@ Denne rapport er udarbejdet af gruppe G i foråret 2015 i forbindelse med kurset
 Under udarbejdelse af et softwaresystem, der behandler samt visualiserer geografisk data, er der flere situationer, der skal overvejes. Der kan udtænkes flere scenarier, som en bruger af programmet vil kunne efterspørge med henblik på søgning, navigation, ruteplanlægning og visualisering. 
 
 \subsection{Navigation og ruteplanlægning}
-En af de hyppigste og vigtigste opgaver, som det ovenfor beskrevne  system skal kunne løse, er blandt andet at tillade søgning på lokationer og specificere en valgt lokations placering  visuelt i programmet. Herunder er det et hyppigt scenarie, at brugeren ønsker rutevejledning fra vedkommendes nuværende placering til en valgt adresse, og programmet skal derfor kunne præsentere en rutevejledning fra A til B. Hvis brugeren ønsker rutevejledning, skal det også være muligt at vælge hvilken slags transportform, der skal benyttes, f.eks. bil, cykel eller gåben. 
+En af de vigtigste opgaver, som det ovenfor beskrevne  system skal kunne løse, er blandt andet at tillade søgning på lokationer og specificere en valgt lokations placering  visuelt i programmet. Herunder er det et hyppigt scenarie, at brugeren ønsker rutevejledning fra vedkommendes nuværende placering til en valgt adresse, og programmet skal derfor kunne præsentere en rutevejledning fra A til B. Hvis brugeren ønsker rutevejledning, skal det også være muligt at vælge hvilken slags transportform, der skal benyttes, f.eks. bil, cykel eller gåben. 
 Programmet skal foreslå den hurtigste rute afhængigt af den valgte transportform, eksempelvis er det ofte hurtigst at køre på motorvej, hvis man er i bil, men når man er på cykel eller gang, skal motorvejene ikke inkluderes i ruten.
 
 \subsection{Visualisering}
-
+DERP DERP
 
 \section{Problemanalyse}
+
+\subsection{Adresseobjekter}
+Alle adresser indeholdt i .osm-filerne, der loades og processeres af programmet, gemmes som instanser af typen Address. En sådan instans indeholder al information omkring en given lokalitet i felter af typen String, eksempelvis vejnavn, husnummer, postnummer osv. I løbet af projektet erfarede vi, at adresseobjekterne krævede uhensigtsmæssige mængder af hukommelse grundet deres felter, som til at starte med indeholdte referencer til unikke strenge. For at reducere antallet af string objekter, valgte vi at benytte Javas indbyggede metode intern() til at foretage string interning. String interning (også kaldet string pool) reducerer hukommelsesforbruget ved kun at gemme én kopi af hver unikke string. Ved brug af denne teknik oprettes der således ikke flere strings for f.eks. vejnavn og postnummer, idet alle adresse objekter, der ligger på den samme vej eller i samme by vil referere til det samme string objekt i deres felter. Oprettelsen af adresseobjekter bliver således gjort betydeligt mere hukommelsesbesparende men på bekostning af, at det kræver mere tid, når adresseobjektet bliver oprettet, og string interning bliver benyttet\footnote{http://en.wikipedia.org/wiki/String\_interning}.
+
+\subsection{Adresseparser}
+Når der indtastes i søgefeltet / rutesøgningen, sendes den indtastede string til adresseparseren, som har til formål at godkende stringen og opdele den i vejnavn, husnummer, postnummer og by. Derved kan der søges gennem adresselisten efter den specifikke adresse. Adresseparseren benytter sig af regex (regular expressions), som er en sekvens af karakterer der former et såkaldt searchpattern. Med andre ord definerer vi f.eks. at et vejnavn, kun kan bestå af et bestemt sæt bogstaver og symboler og at et postnummer skal bestå af præcis 4 tal. Når disse sættes sammen i et pattern udgør de en hel adresse . Parseren søger altså gennem en liste af disse patterns, og hvis input stringen matcher et pattern, opbygger den en ny string, som så kan bruges videre i adressesøgningen.
+
+\subsection{Adressesøgning}
 
 
 \end{document}

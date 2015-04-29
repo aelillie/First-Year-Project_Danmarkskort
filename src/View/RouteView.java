@@ -22,6 +22,8 @@ public class RouteView extends JPanel{
     private Map<JButton,ImageIcon> iconWhiteEquivalenceMap;
     private Map<JButton, ImageIcon> iconBlackEquivalenceMap;
     private ImageIcon carOptionIcon, walkingOptionIcon,bicycleOptionIcon;
+    private RoutePanelController rp;
+    private HashMap<JButton,Boolean> buttonDownMap = new HashMap<>();
 
     /**
      * Creates a panel used for getting a path from A to B in the program
@@ -37,9 +39,11 @@ public class RouteView extends JPanel{
         setLayout(new BorderLayout());
         makeFindRoutePanel();
         add(startEndAddressPanel, BorderLayout.CENTER);
-        RoutePanelController rp = new RoutePanelController(this,model);
+        rp = new RoutePanelController(this,model,buttonDownMap);
 
     }
+
+
 
     private void makeFindRoutePanel(){
         JPanel transportTypePanel = new JPanel();
@@ -48,11 +52,12 @@ public class RouteView extends JPanel{
         transportTypePanel.setLayout(new FlowLayout(FlowLayout.LEADING));
         transportTypePanel.setBorder(new MatteBorder(0,0,1,0, new Color(161, 161, 161)));
 
+
         carOptionIcon = new ImageIcon(this.getClass().getResource("/data/carOptionIcon.png"));
-        carButton = new JButton("Car",carOptionIcon);
+        carButton = new JButton("Car",new ImageIcon(this.getClass().getResource("/data/carOptionIconWhite.png")));
         carButton.setFocusable(false);
-        carButton.setForeground(new Color(114, 114, 114));
-        carButton.setBackground(Color.WHITE);
+        carButton.setForeground(Color.WHITE);
+        carButton.setBackground(new Color(114, 114, 114));
         carButton.setActionCommand("car");
 
         bicycleOptionIcon = new ImageIcon(this.getClass().getResource("/data/bicycleOptionIcon.png"));
@@ -79,7 +84,15 @@ public class RouteView extends JPanel{
         createIconEquivalenceMap();
 
         add(transportTypePanel, BorderLayout.NORTH);
+        setMouseDownMap();
+    }
 
+
+    private void setMouseDownMap(){
+        buttonDownMap = new HashMap<>();
+        buttonDownMap.put(carButton,true);
+        buttonDownMap.put(bicycleButton,false);
+        buttonDownMap.put(footButton,false);
     }
 
     private void makeStartEndAddressPanel(){
@@ -194,6 +207,10 @@ public class RouteView extends JPanel{
         iconBlackEquivalenceMap.put(footButton,walkingOptionIcon);
     }
 
+    private ImageIcon getButtonIcon(JButton button, boolean buttonDown){
+        if(buttonDown) return iconBlackEquivalenceMap.get(button);
+        else return iconWhiteEquivalenceMap.get(button);
+    }
 
 
     public void changeButtonAppearence(JButton button, boolean buttonDown){
