@@ -247,4 +247,10 @@ public class RouteView extends JPanel{
     public JButton getEndClearButton(){ return clearButtonEnd;}
 
     public View getView() { return view;}
+
+    public HashMap<JButton, Boolean> getButtonDownMap() {
+        return buttonDownMap;
+    }
+
+
 }

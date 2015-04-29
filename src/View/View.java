@@ -752,22 +752,25 @@ public class View extends JFrame implements Observer {
         PathTree shortestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex);
         shortestTree.useShortestPath(true);
         shortestTree.useCarRoute();
+        HashMap<JButton, Boolean> buttonMap = routePanel.getButtonDownMap();
+        for (JButton button : buttonMap.keySet()) {
+            boolean isPressed = buttonMap.get(button);
+            if (button.equals(routePanel.getBicycleButton()) && isPressed) shortestTree.useBikeRoute();
+            else if (button.equals(routePanel.getFootButton()) && isPressed) shortestTree.useWalkRoute();
+            else shortestTree.useCarRoute();
+        }
         shortestTree.initiate();
-        /*
-        if (CARBUTTON.isPressed) shortestTree.useCarRoute();
-        else if (BIKEBUTTON.isPressed) shortestTree.useBikeRoute();
-        else if (WALKBUTTON.isPressed) shortestTree.useWalkRoute();
-         */
+
         PathTree fastestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex);
         fastestTree.useShortestPath(false);
         fastestTree.useCarRoute();
+        for (JButton button : buttonMap.keySet()) {
+            boolean isPressed = buttonMap.get(button);
+            if (button.equals(routePanel.getBicycleButton()) && isPressed) fastestTree.useBikeRoute();
+            else if (button.equals(routePanel.getFootButton()) && isPressed) fastestTree.useWalkRoute();
+            else fastestTree.useCarRoute();
+        }
         fastestTree.initiate();
-        /*
-        if (CARBUTTON.isPressed) fastestTree.useCarRoute();
-        else if (BIKEBUTTON.isPressed) fastestTree.useBikeRoute();
-        else if (WALKBUTTON.isPressed) fastestTree.useWalkRoute();
-         */
-
         if(shortestTree.hasPathTo(endPointIndex) && fastestTree.hasPathTo(endPointIndex)){
             shortestPath = shortestTree.pathTo(endPointIndex);
             fastestPath = fastestTree.pathTo(endPointIndex);
@@ -814,7 +817,13 @@ public class View extends JFrame implements Observer {
         int source = 0;
         PathTree SPpathTree = new PathTree(model.getDiGraph(), source, destination);
         SPpathTree.useShortestPath(true);
-        SPpathTree.useCarRoute();
+        HashMap<JButton, Boolean> buttonMap = routePanel.getButtonDownMap();
+        for (JButton button : buttonMap.keySet()) {
+            boolean isPressed = buttonMap.get(button);
+            if (button.equals(routePanel.getBicycleButton()) && isPressed) SPpathTree.useBikeRoute();
+            else if (button.equals(routePanel.getFootButton()) && isPressed) SPpathTree.useWalkRoute();
+            else SPpathTree.useCarRoute();
+        }
         SPpathTree.initiate();
         shortestPath = SPpathTree.pathTo(destination);
 
@@ -841,7 +850,13 @@ public class View extends JFrame implements Observer {
         int source = 0;
         PathTree FPpathTree = new PathTree(model.getDiGraph(), source, destination);
         FPpathTree.useShortestPath(false);
-        FPpathTree.useCarRoute();
+        HashMap<JButton, Boolean> buttonMap = routePanel.getButtonDownMap();
+        for (JButton button : buttonMap.keySet()) {
+            boolean isPressed = buttonMap.get(button);
+            if (button.equals(routePanel.getBicycleButton()) && isPressed) FPpathTree.useBikeRoute();
+            else if (button.equals(routePanel.getFootButton()) && isPressed) FPpathTree.useWalkRoute();
+            else FPpathTree.useCarRoute();
+        }
         FPpathTree.initiate();
         fastestPath = FPpathTree.pathTo(destination);
 
