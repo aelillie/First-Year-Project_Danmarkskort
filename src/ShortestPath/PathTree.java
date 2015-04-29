@@ -82,6 +82,9 @@ public class PathTree {
         }
     }
 
+        // check optimality conditions
+
+        //assert(check(G, s));
     private void relaxWalkRoute() {
         // relax vertices in order of distance/travel time from s
         pq = new IndexMinPQ<>(G.V());

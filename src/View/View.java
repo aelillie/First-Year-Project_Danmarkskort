@@ -3,7 +3,6 @@ package View;
 import Controller.SearchResultMouseHandler;
 import MapFeatures.Bounds;
 import MapFeatures.Highway;
-import MapFeatures.Railway;
 import MapFeatures.Route;
 import Model.*;
 import QuadTree.QuadTree;
@@ -695,10 +694,9 @@ public class View extends JFrame implements Observer {
         Insets x = getInsets();
         position.setLocation(position.getX(), position.getY()-x.top + x.bottom);
         Point2D coordinates = transformPoint(position);
-        Rectangle2D windowBounds = bounds.getBounds();
-        Rectangle2D mouseBox = new Rectangle2D.Double(coordinates.getX()- windowBounds.getWidth()/6,
-                coordinates.getY() - windowBounds.getHeight()/6,
-                windowBounds.getWidth()/3 , windowBounds.getHeight()/5);
+        Rectangle2D mouseBox = new Rectangle2D.Double(coordinates.getX()-0.05,
+                coordinates.getY() -0.05,
+                0.1 , 0.1);
         Collection<MapData> streets = model.getVisibleStreets(mouseBox, false);
         filterRoads(streets);  //remove all highways without names.
 
@@ -845,6 +843,10 @@ public class View extends JFrame implements Observer {
         System.out.println("");
         System.out.println("Fastest path:");
         double distance = 0;
+        if(!FPpathTree.hasPathTo(destination)) {
+            System.out.println("NO PATH FOUND");
+            return;
+        }
         for (Edge e : fastestPath) {
             distance += e.distance();
         }
