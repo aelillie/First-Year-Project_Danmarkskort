@@ -54,9 +54,11 @@ public class ShortestPathTest {
 
         //Create one pathTree for shortest route and for fastest
         PathTree pS = new PathTree(g, start, end);
+        pS.useCarRoute();
         pS.useShortestPath(true);
         pS.initiate();
         PathTree pF = new PathTree(g, start, end);
+        pF.useCarRoute();
         pF.useShortestPath(false);
         pF.initiate();
         //can they both find a path?
