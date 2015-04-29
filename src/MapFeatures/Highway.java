@@ -18,6 +18,7 @@ public class Highway extends MapFeature {
     private List<Edge> edges = new ArrayList<>();
     private String oneWay;
     private double maxspeed;
+    private boolean driveAble, bikeAble, walkAble;
 
     public Highway() {}
 
@@ -205,5 +206,17 @@ public class Highway extends MapFeature {
                 oneWay = "no"; //one way not present
                 break;
         }
+    }
+
+    public boolean isDriveAble() {
+        return driveAble;
+    }
+
+    public boolean isBikeAble() {
+        return bikeAble;
+    }
+
+    public boolean isWalkAble() {
+        return walkAble;
     }
 }

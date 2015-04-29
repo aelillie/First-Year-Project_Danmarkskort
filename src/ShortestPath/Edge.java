@@ -17,8 +17,8 @@ public class Edge implements Serializable {
     private double distance; //edge's distance
     private Path2D edgePath;
     private double travelTime; //min pr. distance
-    private boolean oneWay = false;
-    private boolean oneWayReverse = false;
+    private boolean oneWay;
+    private boolean oneWayReverse;
     private Highway highway;
 
     /**
