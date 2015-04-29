@@ -23,7 +23,10 @@ public class Landuse extends MapFeature {
 
     @Override
     public void setValueName() {
-        if(value.equals("cemetery")) setValueName(ValueName.CEMETERY);
+        if(value.equals("cemetery")) {
+            isArea = true;
+            setValueName(ValueName.CEMETERY);
+        }
         else if(value.equals("construction")) setValueName(ValueName.CONSTRUCTION);
         else if(value.equals("grass")) {
             isArea = true;

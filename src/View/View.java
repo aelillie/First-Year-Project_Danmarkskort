@@ -36,11 +36,9 @@ public class View extends JFrame implements Observer {
     private Point dragEndScreen, dragStartScreen;
     private int zoomLevel;
     private int zoomFactor;
-    private Scalebar scalebar;
     private int checkOut = 1, checkIn = 0;
     private JTextField searchArea;
-    private JButton searchButton,closeDirectionListButton, zoomInButton, zoomOutButton, loadButton, fullscreenButton, showRoutePanelButton, optionsButton, mapTypeButton;
-    private MapMenu mapMenu;
+    private JButton searchButton,closeDirectionListButton, zoomInButton, zoomOutButton, fullscreenButton, showRoutePanelButton, optionsButton, mapTypeButton;
     private RouteView routePanel;
     private MapTypePanel mapTypePanel = new MapTypePanel(this);
     private IconPanel iconPanel = new IconPanel();
@@ -48,10 +46,8 @@ public class View extends JFrame implements Observer {
     private JScrollPane resultPane = new JScrollPane();
     private JScrollPane resultStartPane = new JScrollPane();
     private JScrollPane resultEndPane = new JScrollPane();
-    private JScrollPane routeInstructionPane = new JScrollPane();
     private JScrollPane directionPane = new JScrollPane();
     private JList<Address> addressSearchResults;
-    private JList<String> directionStringList;
     private JPanel closeDirectionList;
 
     private int destination;
@@ -283,8 +279,8 @@ public class View extends JFrame implements Observer {
             }
             String direction = "Follow " + street + " for " + distString;
             if(street.trim().equals("")){
-                if(i != 0) direction = "Continue for " + distString + " untill you reach " + streetList.get(i-1);
-                else direction = "Continue for " + distString + " untill you reach your destination.";
+                if(i != 0) direction = "Continue for " + distString + " until you reach " + streetList.get(i-1);
+                else direction = "Continue for " + distString + " until you reach your destination.";
             }
             directions[directionCount] = direction;
             directionCount++;
@@ -294,7 +290,7 @@ public class View extends JFrame implements Observer {
     }
 
     public void addToDirectionPane(String[] directionArray){
-        directionStringList = new JList<>(directionArray);
+        JList<String> directionStringList = new JList<>(directionArray);
         directionPane.setVisible(true);
         directionPane.setViewportView(directionStringList);
         directionPane.setBounds(26, 300, 400, 200);
@@ -803,9 +799,9 @@ public class View extends JFrame implements Observer {
 
         Highway startWay = findNearestHighway(startPoint, model.getVisibleStreets(startBox, false));
 
-        int startPointIndex = findVertexIndex(startPoint, startWay);
+        int startPointIndex = findClosestVertex(startPoint, startWay);
         Highway endWay = findNearestHighway(endPoint, model.getVisibleStreets(endBox, false));
-        int endPointIndex = findVertexIndex(endPoint, endWay);
+        int endPointIndex = findClosestVertex(endPoint, endWay);
 
         //Find shortest Path.
         PathTree shortestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex);
@@ -850,12 +846,10 @@ public class View extends JFrame implements Observer {
         HashMap<String, Double> streetLengthMap = new HashMap<>();
         ArrayList<String> streetList = new ArrayList<>();
         for (Edge e : shortestPath) {
-            if (shortestTree.isWalkRoute())
-                travelTime += e.walkTime();
-            else if (shortestTree.isBikeRoute())
-                travelTime += e.bikeTime();
-            else
-                travelTime += e.travelTime();
+            if (shortestTree.isWalkRoute()) travelTime += e.walkTime();
+            else if (shortestTree.isBikeRoute()) travelTime += e.bikeTime();
+            else travelTime += e.driveTime();
+
             String streetname = e.highway().getStreetName();
             if(streetname == null) streetname = " ";
             Double dist = streetLengthMap.get(streetname);
@@ -882,7 +876,7 @@ public class View extends JFrame implements Observer {
         double fastTime = 0;
         if(fastestPath == null) return;
         for (Edge e : fastestPath) {
-            fastTime += e.travelTime();
+            fastTime += e.driveTime();
         }
         System.out.println("Time: " + String.format("%.2f", fastTime) + " minutes");
 
@@ -923,7 +917,7 @@ public class View extends JFrame implements Observer {
             else if (SPpathTree.isBikeRoute())
                 travelTime += e.bikeTime();
             else
-                travelTime += e.travelTime();
+                travelTime += e.driveTime();
         }
         System.out.println("Time: " + String.format("%5.2f", travelTime) + " minutes");
         System.out.println("");
@@ -966,7 +960,7 @@ public class View extends JFrame implements Observer {
     }
 
 
-    private int findVertexIndex(Point2D chosenPoint, Highway way){
+    private int findClosestVertex(Point2D chosenPoint, Highway way){
         List<Edge> edges = way.getEdges();
         Edge closestEdge = null;
 
@@ -1183,7 +1177,6 @@ public class View extends JFrame implements Observer {
                 }
             }
 
-            //TODO: Test of shortest path
             if (shortestPath != null) {
                 g.setColor(DrawAttribute.cl_darkorange);
                 g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
@@ -1223,7 +1216,7 @@ public class View extends JFrame implements Observer {
 
             Rectangle2D windowBounds = bounds.getBounds();
             g.draw(windowBounds);
-            scalebar = new Scalebar(g, zoomLevel, View.this, transform);
+            Scalebar scalebar = new Scalebar(g, zoomLevel, View.this, transform);
 
 
 
@@ -1342,8 +1335,6 @@ public class View extends JFrame implements Observer {
     }
 
     public JButton getShowRoutePanelButton() { return showRoutePanelButton;}
-
-    public JButton getLoadButton(){ return loadButton;}
 
     public JButton getOptionsButton(){ return optionsButton;}
 

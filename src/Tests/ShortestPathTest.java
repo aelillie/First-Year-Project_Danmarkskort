@@ -69,7 +69,7 @@ public class ShortestPathTest {
         Iterable<Edge> edges = pS.pathTo(end);
         double time = 0;
         for(Edge e : edges)
-            time += e.travelTime();
+            time += e.driveTime();
 
         //Fastest path should find a faster path
         Assert.assertTrue(pF.timeTo(end) < time);

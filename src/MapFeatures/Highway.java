@@ -141,6 +141,7 @@ public class Highway extends MapFeature {
         else if (value.equals("tertiary") || value.equals("tertiary_link")) layer_value = 13;
         else if (value.equals("residential")) layer_value = 12;
         else if (value.equals("footway") && isArea) layer_value = 11;
+        else if (value.equals("path") && isArea) layer_value = 11;
     }
 
     @Override
@@ -175,15 +176,15 @@ public class Highway extends MapFeature {
     }
 
     public int getVertex(int i) {
-        return edges.get(i).getV();
+        return edges.get(i).v();
     }
 
     public List<Point2D> getPoints() {
         Vertices vertices = Model.getModel().getVertices();
         List<Point2D> localVertices = new ArrayList<>();
-        localVertices.add(vertices.getVertex(edges.get(0).getV()));
+        localVertices.add(vertices.getVertex(edges.get(0).v()));
         for (Edge e : edges) {
-            localVertices.add(vertices.getVertex(e.getW()));
+            localVertices.add(vertices.getVertex(e.w()));
         }
         return  localVertices;
     }
@@ -192,10 +193,6 @@ public class Highway extends MapFeature {
         return streetName;
     }
 
-    public String isOneWay() {
-        return oneWay;
-    }
-    
     public void setOneWay(String value) {
         switch (value) {
             case "yes":
