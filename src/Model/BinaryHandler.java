@@ -54,8 +54,9 @@ public class BinaryHandler{
 
 
         loadingScreen.updateLoadBar(100);
-
+        out.flush();
         out.close();
+
         System.out.print(filename + " saved");
 
     }
@@ -107,7 +108,10 @@ public class BinaryHandler{
         List<Coastline> coasts = model.getCoastlines();
         coasts.addAll((List<Coastline>) in.readObject());
         loadingScreen.updateLoadBar(99);
+
+
         in.close();
+
         loadingScreen.updateLoadBar(100);
     }
 
