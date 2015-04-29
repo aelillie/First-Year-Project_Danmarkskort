@@ -745,6 +745,7 @@ public class View extends JFrame implements Observer {
         //Find shortest Path.
         PathTree shortestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex);
         shortestTree.useShortestPath(true);
+        shortestTree.useCarRoute();
         shortestTree.initiate();
         /*
         if (CARBUTTON.isPressed) shortestTree.useCarRoute();
@@ -753,6 +754,7 @@ public class View extends JFrame implements Observer {
          */
         PathTree fastestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex);
         fastestTree.useShortestPath(false);
+        fastestTree.useCarRoute();
         fastestTree.initiate();
         /*
         if (CARBUTTON.isPressed) fastestTree.useCarRoute();
