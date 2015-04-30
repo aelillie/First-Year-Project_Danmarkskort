@@ -289,6 +289,7 @@ public class View extends JFrame implements Observer {
         addToDirectionPane(directions);
     }
 
+    
     public void addToDirectionPane(String[] directionArray){
         JList<String> directionStringList = new JList<>(directionArray);
         directionPane.setVisible(true);
