@@ -11,12 +11,12 @@ import java.io.Serializable;
 /**
  * Created by Anders on 22-04-2015.
  */
-public class Edge implements Serializable {
+public class Edge extends Line2D.Float implements Serializable {
     private static final long serialVersionUID = 128;
     private int v;
     private int w;
     private double distance; //edge's distance
-    private Line2D edgePath;
+    //private Line2D edgePath;
     private boolean oneWay;
     private boolean oneWayReverse;
     private Highway highway;
@@ -33,13 +33,14 @@ public class Edge implements Serializable {
      * @throws IllegalArgumentException            if <tt>distance</tt> is <tt>NaN</tt>
      */
     public Edge(int v, int w, double distance, Line2D edgePath, Highway highway) {
+        setLine(edgePath);
         if (v < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
         if (w < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
-        if (Double.isNaN(distance)) throw new IllegalArgumentException("Weight is NaN");
+        //if (Double.isNaN(distance)) throw new IllegalArgumentException("Weight is NaN");
         this.v = v;
         this.w = w;
         this.distance = distance;
-        this.edgePath = edgePath;
+        //this.edgePath = edgePath;
         this.highway = highway;
     }
 
@@ -107,9 +108,9 @@ public class Edge implements Serializable {
         else throw new IllegalArgumentException("Illegal endpoint");
     }
 
-    public Line2D getEdgePath() {
+   /* public Line2D getEdgePath() {
         return edgePath;
-    }
+    }*/
 
     public void setOneWay(boolean isOneWay) {
         oneWay = isOneWay;
