@@ -1259,7 +1259,7 @@ public class View extends JFrame implements Observer {
             Collection < MapData > streets = model.getVisibleStreets(windowBounds, sorted);
             mapFStreets = (Collection<MapFeature>)(Collection<?>) streets;
 
-            if(zoomLevel > 11){
+            if(zoomLevel > 9){
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleRailways(windowBounds, sorted));
 
             }
