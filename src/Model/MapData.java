@@ -10,4 +10,6 @@ public interface MapData {
 
     public int getLayerVal();
 
+    public boolean equals(Object o);
+
 }

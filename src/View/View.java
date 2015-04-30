@@ -289,7 +289,7 @@ public class View extends JFrame implements Observer {
         addToDirectionPane(directions);
     }
 
-    
+
     public void addToDirectionPane(String[] directionArray){
         JList<String> directionStringList = new JList<>(directionArray);
         directionPane.setVisible(true);
@@ -1199,9 +1199,11 @@ public class View extends JFrame implements Observer {
                 }
             }
             g.setColor(Color.BLACK);
-
-            Rectangle2D windowBounds = bounds.getBounds();
-            g.draw(windowBounds);
+            if(bounds.testmode()) {
+                Rectangle2D windowBounds = bounds.getBounds();
+                g.draw(windowBounds);
+            }
+            
             Scalebar scalebar = new Scalebar(g, zoomLevel, View.this, transform);
 
             paintNeighbor(g);

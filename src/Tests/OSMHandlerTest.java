@@ -42,12 +42,12 @@ public class OSMHandlerTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        streetList = m.getVisibleStreets(new Rectangle2D.Float(0, 0, 500, 500), false);
-        buildingList = m.getVisibleBuildings(new Rectangle2D.Float(0, 0, 500, 500), false);
-        iconList = m.getVisibleIcons(new Rectangle2D.Float(0, 0, 500, 500), false);
-        naturalList = m.getVisibleNatural(new Rectangle2D.Float(0, 0, 500, 500), false);
+        streetList = m.getVisibleStreets(new Rectangle2D.Float(0, 0, 500, 500), true);
+        buildingList = m.getVisibleBuildings(new Rectangle2D.Float(0, 0, 500, 500), true);
+        iconList = m.getVisibleIcons(new Rectangle2D.Float(0, 0, 500, 500), true);
+        naturalList = m.getVisibleNatural(new Rectangle2D.Float(0, 0, 500, 500), true);
         mapFeatureList.addAll(streetList);
-        mapFeatureList.addAll(m.getVisibleRailways(new Rectangle2D.Float(0,0,500,500), false));
+        mapFeatureList.addAll(m.getVisibleRailways(new Rectangle2D.Float(0,0,500,500), true));
         mapFeatureList.addAll(buildingList);
         mapFeatureList.addAll(naturalList);
     }
