@@ -21,16 +21,14 @@ public class QuadTree implements Serializable{
         Double x, y;                                // x- and y- coordinates
         Double width, height;
         Node NW, NE, SE, SW;                   // four subtrees
-        MapData[] value;
-        int N = 0;
-
+        HashSet<MapData> value;
 
         Node(Double x, Double y, Double width, Double height) {
             this.x = x;
             this.y = y;
             this.width = width/2;
             this.height = height/2;
-            value = new MapData[cap/8 + 1];
+            value = new HashSet<>();
 
 
         }
@@ -41,16 +39,16 @@ public class QuadTree implements Serializable{
         public void subDivide(){
             Double newWidth = width/2;
             Double newHeight = height/2;
-            MapData[] tmp = value;
-            value = null;
+
+
             NW = new Node(x - newWidth , y -  newHeight, width, height);
             NE = new Node(x + newWidth, y - newHeight, width, height);
             SE = new Node(x + newWidth, y + newHeight, width, height);
             SW = new Node(x - newWidth ,y + newHeight, width, height);
 
-            for(int i = 0; i < N; i++)
-                insertAgain(tmp[i], this);
-
+            for(MapData mp : value)
+                insertAgain(mp, this);
+            value = null;
         }
 
         /**
@@ -58,21 +56,11 @@ public class QuadTree implements Serializable{
          * @param values - Value to be stored in node
          */
         public void addvalue(MapData values){
-            if(N == cap){
+            if(value.size() == cap){
                 subDivide();
                 insert(values);
-
-                N = 0;
-            }else if(N == value.length) {
-                MapData[] temp = new MapData[value.length*2];
-                for (int i = 0; i < N; i++) {
-                    temp[i] = value[i];
-                }
-                value = temp;
-                value[N++] = values;
-
             }else
-                value[N++] = values;
+                value.add(values);
 
         }
 
@@ -234,9 +222,8 @@ public class QuadTree implements Serializable{
         Double xmax = rect.getMaxX();
         Double ymax = rect.getMaxY();
         if (rect.intersects(h.getRect()) || rect.contains(h.x, h.y))
-            if(h.N != 0) {
-                for(int i = 0; i < h.N; i++)
-                    values.add(h.value[i]);
+            if(h.value != null) {
+                values.addAll(h.value);
             }
         //Recursive calls. Checking what nodes to search in.
         if ( less(xmin, h.x) &&  less(ymin, h.y)) query2D(h.NW, rect, values);

@@ -87,7 +87,7 @@ public class QuadTreeTest {
         Collection<MapData> Data = quadTree.query2D(new Rectangle2D.Float(51,1,100,49), true);
 
         assertTrue(!Data.isEmpty());
-        //assertEquals(1500, Data.size());
+        assertEquals(3370, Data.size());
         assertEquals(quadTree.getNodeRects().size(), 9);
 
 
@@ -99,8 +99,8 @@ public class QuadTreeTest {
         ArrayList<Point2D> points = new ArrayList<>();
         Random r = new Random();
         Rectangle2D testBox = new Rectangle2D.Float(0,0,200,200);
-        quadTree = new QuadTree(testBox,1000);
-        for(int i = 0; i < 5000; i++){
+        quadTree = new QuadTree(testBox,2000);
+        for(int i = 0; i < 10000; i++){
             if(r.nextBoolean()) {
                 points.clear();
                 points.add(new Point2D.Float((i * 4 % 200) + 50, i % 200));
@@ -110,6 +110,7 @@ public class QuadTreeTest {
                 quadTree.insert(new MapIcon(new Point2D.Float((i * 4 % 200) + 50, i % 200), "busIcon"));
             }
         }
+
 
 
     }
@@ -132,7 +133,7 @@ public class QuadTreeTest {
         }
 
         Collection<MapData> data = quadTree.query2D(new Rectangle2D.Float(0,0,500,500), false);
-
+        System.out.print(data.size());
     }
 
 }

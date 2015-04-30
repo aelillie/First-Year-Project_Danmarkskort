@@ -1203,7 +1203,7 @@ public class View extends JFrame implements Observer {
                 Rectangle2D windowBounds = bounds.getBounds();
                 g.draw(windowBounds);
             }
-            
+
             Scalebar scalebar = new Scalebar(g, zoomLevel, View.this, transform);
 
             paintNeighbor(g);
