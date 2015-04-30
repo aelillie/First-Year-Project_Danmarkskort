@@ -3,6 +3,7 @@ package ShortestPath;
 import MapFeatures.Highway;
 import Model.PathCreater;
 
+import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
@@ -10,13 +11,12 @@ import java.io.Serializable;
 /**
  * Created by Anders on 22-04-2015.
  */
-public class Edge implements Serializable {
+public class Edge extends Line2D.Float implements Serializable {
     private static final long serialVersionUID = 128;
     private int v;
     private int w;
     private double distance; //edge's distance
-    private Path2D edgePath;
-    private double travelTime; //min pr. distance
+    //private Line2D edgePath;
     private boolean oneWay;
     private boolean oneWayReverse;
     private Highway highway;
@@ -32,15 +32,15 @@ public class Edge implements Serializable {
      *                                             is a negative integer
      * @throws IllegalArgumentException            if <tt>distance</tt> is <tt>NaN</tt>
      */
-    public Edge(int v, int w, double distance, double travelTime, Path2D edgePath, Highway highway) {
+    public Edge(int v, int w, double distance, Line2D edgePath, Highway highway) {
+        setLine(edgePath);
         if (v < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
         if (w < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
-        if (Double.isNaN(distance)) throw new IllegalArgumentException("Weight is NaN");
+        //if (Double.isNaN(distance)) throw new IllegalArgumentException("Weight is NaN");
         this.v = v;
         this.w = w;
         this.distance = distance;
-        this.travelTime = travelTime;
-        this.edgePath = edgePath;
+        //this.edgePath = edgePath;
         this.highway = highway;
     }
 
@@ -66,7 +66,7 @@ public class Edge implements Serializable {
      * @return the driving time of the edge
      */
     public double driveTime() {
-        return travelTime;
+        return (distance/highway.getMaxspeed())*60;
     }
 
     /**
@@ -108,9 +108,9 @@ public class Edge implements Serializable {
         else throw new IllegalArgumentException("Illegal endpoint");
     }
 
-    public Path2D getEdgePath() {
+   /* public Line2D getEdgePath() {
         return edgePath;
-    }
+    }*/
 
     public void setOneWay(boolean isOneWay) {
         oneWay = isOneWay;

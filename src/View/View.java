@@ -289,6 +289,7 @@ public class View extends JFrame implements Observer {
         addToDirectionPane(directions);
     }
 
+    
     public void addToDirectionPane(String[] directionArray){
         JList<String> directionStringList = new JList<>(directionArray);
         directionPane.setVisible(true);
@@ -569,7 +570,9 @@ public class View extends JFrame implements Observer {
     public void wheelZoom(MouseWheelEvent e) {
         try {
             int wheelRotation = e.getWheelRotation();
+            Insets x = getInsets();
             Point p = e.getPoint();
+            p.setLocation(p.getX() , p.getY()-x.top + x.bottom);
             if (wheelRotation > 0 && zoomLevel != 0) {
                 //point2d before zoom
                 Point2D p1 = transformPoint(p);
@@ -964,33 +967,16 @@ public class View extends JFrame implements Observer {
         List<Edge> edges = way.getEdges();
         Edge closestEdge = null;
 
-        Line2D closestLine = null;
         for(Edge edge : edges){
-            Path2D segment = edge.getEdgePath();
-            double[] points = new double[6];
-            PathIterator pI = segment.getPathIterator(new AffineTransform());
-            pI.currentSegment(points);
-            Point2D p1 = new Point2D.Double(points[0], points[1]);
-            pI.next();
-            while(!pI.isDone()) {
-                pI.currentSegment(points);
-                Point2D p2 = new Point2D.Double(points[0], points[1]);
-
-                Line2D path = new Line2D.Double(p1, p2);
-                p1 = p2;
-                pI.next();
-                if (closestLine == null) {
-                    closestLine = path;
-                    closestEdge = edge;
-                }
-                else if (closestLine.ptSegDist(chosenPoint) > path.ptSegDist(chosenPoint)) {
-                    closestLine = path;
-                    closestEdge = edge;
-                }
+            if (closestEdge == null) {
+                closestEdge = edge;
+            }
+            else if (closestEdge.ptSegDist(chosenPoint) > edge.ptSegDist(chosenPoint)) {
+                closestEdge = edge;
             }
 
         }
-
+        if(closestEdge == null) return 0;
         return closestEdge.either();
     }
 
@@ -1158,7 +1144,7 @@ public class View extends JFrame implements Observer {
                             g.setPaint(Color.orange);
                         else if (e.isOneWayReverse())
                             g.setPaint(Color.PINK);
-                        g.draw(e.getEdgePath());
+                        g.draw(e);
                     }
 
 
@@ -1181,14 +1167,14 @@ public class View extends JFrame implements Observer {
                 g.setColor(DrawAttribute.cl_darkorange);
                 g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
                 for (Edge e : shortestPath) {
-                    g.draw(e.getEdgePath());
+                    g.draw(e);
                 }
             }
             if (fastestPath != null) {
                 g.setColor(DrawAttribute.lightgreen);
                 g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
                 for (Edge e : fastestPath) {
-                    g.draw(e.getEdgePath());
+                    g.draw(e);
                 }
             }
 
@@ -1217,9 +1203,6 @@ public class View extends JFrame implements Observer {
             Rectangle2D windowBounds = bounds.getBounds();
             g.draw(windowBounds);
             Scalebar scalebar = new Scalebar(g, zoomLevel, View.this, transform);
-
-
-
 
             paintNeighbor(g);
 

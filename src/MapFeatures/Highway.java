@@ -8,6 +8,7 @@ import ShortestPath.Vertices;
 import Model.MapCalculator;
 import Model.PathCreater;
 
+import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
@@ -18,7 +19,6 @@ import java.util.Map;
 public class Highway extends MapFeature {
     private String streetName;
     private List<Edge> edges = new ArrayList<>();
-    private String oneWay;
     private double maxspeed;
     private boolean driveAble, bikeAble, walkAble;
 
@@ -97,7 +97,7 @@ public class Highway extends MapFeature {
     /**
      * Create edges between all points in the way for the current highway
      */
-    public void assignEdges(List<Point2D> points) {
+    public void assignEdges(List<Point2D> points, String oneWay) {
         Vertices V = Model.getModel().getVertices();
         for (int i = 0; i + 1 < points.size(); i++) {
             Point2D v;
@@ -110,13 +110,15 @@ public class Highway extends MapFeature {
                 w = points.get(i+1);
             }
             double distance = calcDist(v, w);
-            Edge edge = new Edge(V.getIndex(v), V.getIndex(w), distance, calcTime(distance), edgePath(v,w), this);
+            Edge edge = new Edge(V.getIndex(v), V.getIndex(w), distance, edgePath(v,w), this);
             if(oneWay.equals("yes"))
                 edge.setOneWay(true);
             if(oneWay.equals("-1"))
                 edge.setOneWayReverse(true);
             edges.add(edge);
         }
+
+
     }
 
     private double calcDist(Point2D v, Point2D w) {
@@ -127,7 +129,7 @@ public class Highway extends MapFeature {
         return (distance/maxspeed)*60;
     }
 
-    private Path2D edgePath(Point2D point1, Point2D point2) {
+    private Line2D edgePath(Point2D point1, Point2D point2) {
         return PathCreater.createWay(point1, point2);
     }
 
@@ -193,7 +195,7 @@ public class Highway extends MapFeature {
         return streetName;
     }
 
-    public void setOneWay(String value) {
+    /*public void setOneWay(String value) {
         switch (value) {
             case "yes":
                 oneWay = "yes"; //one way in normal direction
@@ -205,7 +207,7 @@ public class Highway extends MapFeature {
                 oneWay = "no"; //one way not present
                 break;
         }
-    }
+    }*/
 
     /**
      * Determines whether you can walk, ride a bike and/or drive on this highway
@@ -229,4 +231,6 @@ public class Highway extends MapFeature {
     public boolean isWalkAble() {
         return walkAble;
     }
+
+    public double getMaxspeed(){return  maxspeed;}
 }
