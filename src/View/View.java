@@ -762,7 +762,7 @@ public class View extends JFrame implements Observer {
                 coordinates.getY() -0.005,
                 0.01 , 0.01);
         Collection<MapData> streets = model.getVisibleStreets(mouseBox, false);
-        streets.addAll(model.getVisibleStreets(mouseBox,false));
+        streets.addAll(model.getVisibleBigRoads(mouseBox,false));
         filterRoads(streets);  //remove all highways without names.
 
 
