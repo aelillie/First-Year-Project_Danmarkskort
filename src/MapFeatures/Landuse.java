@@ -27,6 +27,10 @@ public class Landuse extends MapFeature {
             isArea = true;
             setValueName(ValueName.CEMETERY);
         }
+        else if(value.equals("forest")) {
+            isArea = true;
+            setValueName(ValueName.FOREST);
+        }
         else if(value.equals("construction")) setValueName(ValueName.CONSTRUCTION);
         else if(value.equals("grass")) {
             isArea = true;

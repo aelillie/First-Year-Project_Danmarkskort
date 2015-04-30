@@ -23,7 +23,10 @@ public class Amenity extends MapFeature {
 
     @Override
     public void setValueName() {
-        if(value.equals("parking")) setValueName(ValueName.PARKING);
+        if(value.equals("parking")) {
+            isArea = true;
+            setValueName(ValueName.PARKING);
+        }
         else if(value.equals("university") && isBuilding ) setValueName(ValueName.UNIVERSITY);
         else if(value.equals("school") && isBuilding ) setValueName(ValueName.SCHOOL);
         else if(value.equals("university") || value.equals("school") && !isBuilding) {
