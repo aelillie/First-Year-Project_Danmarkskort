@@ -86,4 +86,29 @@ public abstract class MapFeature implements Serializable, MapData {
     public Class getClassType(){
         return this.getClass().getSuperclass();
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MapFeature)) return false;
+
+        MapFeature that = (MapFeature) o;
+
+        if (layer_value != that.layer_value) return false;
+        if (way != null ? !way.equals(that.way) : that.way != null) return false;
+        if (value != null ? !value.equals(that.value) : that.value != null) return false;
+        if (isArea != null ? !isArea.equals(that.isArea) : that.isArea != null) return false;
+        return valueName == that.valueName;
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = way != null ? way.hashCode() : 0;
+        result = 31 * result + layer_value;
+        result = 31 * result + (value != null ? value.hashCode() : 0);
+        result = 31 * result + (isArea != null ? isArea.hashCode() : 0);
+        result = 31 * result + (valueName != null ? valueName.hashCode() : 0);
+        return result;
+    }
 }

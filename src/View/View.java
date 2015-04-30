@@ -275,7 +275,7 @@ public class View extends JFrame implements Observer {
             if(dist < 1000) { //If the distance is less than a kilometer, display it in meters, otherwise display it in kilometers
                 distString = new DecimalFormat("####").format(dist) + " m";
             } else {
-                distString = new DecimalFormat("##.##").format(dist) + " km";
+                distString = new DecimalFormat("##.##").format(dist/1000) + " km";
             }
             String direction = "Follow " + street + " for " + distString;
             if(street.trim().equals("")){
@@ -289,7 +289,7 @@ public class View extends JFrame implements Observer {
         addToDirectionPane(directions);
     }
 
-    
+
     public void addToDirectionPane(String[] directionArray){
         JList<String> directionStringList = new JList<>(directionArray);
         directionPane.setVisible(true);
@@ -1199,9 +1199,11 @@ public class View extends JFrame implements Observer {
                 }
             }
             g.setColor(Color.BLACK);
+            if(bounds.testmode()) {
+                Rectangle2D windowBounds = bounds.getBounds();
+                g.draw(windowBounds);
+            }
 
-            Rectangle2D windowBounds = bounds.getBounds();
-            g.draw(windowBounds);
             Scalebar scalebar = new Scalebar(g, zoomLevel, View.this, transform);
 
             paintNeighbor(g);

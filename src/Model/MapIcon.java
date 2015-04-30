@@ -221,5 +221,28 @@ public class MapIcon implements Serializable, MapData {
     public int getLayerVal(){
         return 100;
     }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (!(o instanceof MapIcon)) return false;
+
+        MapIcon mapIcon = (MapIcon) o;
+
+        if (img != null ? !img.equals(mapIcon.img) : mapIcon.img != null) return false;
+        if (!coord.equals(mapIcon.coord)) return false;
+        if (imgPath != null ? !imgPath.equals(mapIcon.imgPath) : mapIcon.imgPath != null) return false;
+        return !(type != null ? !type.equals(mapIcon.type) : mapIcon.type != null);
+
+    }
+
+    @Override
+    public int hashCode() {
+        int result = img != null ? img.hashCode() : 0;
+        result = 31 * result + coord.hashCode();
+        result = 31 * result + (imgPath != null ? imgPath.hashCode() : 0);
+        result = 31 * result + (type != null ? type.hashCode() : 0);
+        return result;
+    }
 }
 
