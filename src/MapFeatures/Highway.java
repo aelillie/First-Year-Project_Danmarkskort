@@ -214,8 +214,10 @@ public class Highway extends MapFeature {
      * @param kv_map The key value map references from the OSM handler
      */
     public void setRouteType(Map<String, String> kv_map) {
-        walkAble = !kv_map.containsKey("foot") || kv_map.get("foot").equals("yes");
-        bikeAble = !kv_map.containsKey("bicycle") || kv_map.get("bicycle").equals("yes");
+        walkAble = (!kv_map.containsKey("foot") || kv_map.get("foot").equals("yes")) &&
+                ( !kv_map.get("highway").equals("motorway") && !kv_map.get("highway").equals("trunk"));
+        bikeAble = !kv_map.containsKey("bicycle") || kv_map.get("bicycle").equals("yes") &&
+                ( !kv_map.get("highway").equals("motorway") && !kv_map.get("highway").equals("trunk"));
         driveAble = !value.equals("pedestrian") && !value.equals("footway") && !value.equals("cycleway") &&
                 !value.equals("bridleway") && !value.equals("steps") && !value.equals("path");
     }

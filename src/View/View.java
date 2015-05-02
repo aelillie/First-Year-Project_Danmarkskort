@@ -758,10 +758,11 @@ public class View extends JFrame implements Observer {
         Insets x = getInsets();
         position.setLocation(position.getX(), position.getY()-x.top + x.bottom);
         Point2D coordinates = transformPoint(position);
-        Rectangle2D mouseBox = new Rectangle2D.Double(coordinates.getX()-0.05,
-                coordinates.getY() -0.05,
-                0.1 , 0.1);
+        Rectangle2D mouseBox = new Rectangle2D.Double(coordinates.getX()-0.005,
+                coordinates.getY() -0.005,
+                0.01 , 0.01);
         Collection<MapData> streets = model.getVisibleStreets(mouseBox, false);
+        streets.addAll(model.getVisibleBigRoads(mouseBox,false));
         filterRoads(streets);  //remove all highways without names.
 
 
@@ -794,16 +795,22 @@ public class View extends JFrame implements Observer {
      */
     public void findRoute(Point2D startPoint, Point2D endPoint)throws NoninvertibleTransformException{
 
-        Rectangle2D startBox = new Rectangle2D.Double(startPoint.getX()-0.045,
-                startPoint.getY()-0.045, 0.09 , 0.09);
+        Rectangle2D startBox = new Rectangle2D.Double(startPoint.getX()-0.005,
+                startPoint.getY()-0.005, 0.01 , 0.01);
 
-        Rectangle2D endBox = new Rectangle2D.Double(endPoint.getX()-0.045,
-                endPoint.getY()-0.045, 0.09 , 0.09);
+        Rectangle2D endBox = new Rectangle2D.Double(endPoint.getX()-0.005,
+                endPoint.getY()-0.005, 0.01 , 0.01);
 
-        Highway startWay = findNearestHighway(startPoint, model.getVisibleStreets(startBox, false));
-
+        //Extract all streets around the start address and find the closest vertex
+        Collection<MapData> streets = model.getVisibleBigRoads(startBox, false);
+        streets.addAll(model.getVisibleStreets(startBox,false));
+        Highway startWay = findNearestHighway(startPoint, streets);
         int startPointIndex = findClosestVertex(startPoint, startWay);
-        Highway endWay = findNearestHighway(endPoint, model.getVisibleStreets(endBox, false));
+
+        //Extract all streets around the end address and find the closest vertex
+        streets = model.getVisibleBigRoads(endBox, false);
+        streets.addAll(model.getVisibleStreets(endBox, false));
+        Highway endWay = findNearestHighway(endPoint, streets);
         int endPointIndex = findClosestVertex(endPoint, endWay);
 
         //Find shortest Path.
@@ -817,6 +824,7 @@ public class View extends JFrame implements Observer {
             else if (button.equals(routePanel.getFootButton()) && isPressed) shortestTree.useWalkRoute();
             else if (button.equals(routePanel.getCarButton()) && isPressed) shortestTree.useCarRoute();
         }
+
         shortestTree.initiate();
 
         PathTree fastestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex);
@@ -1241,8 +1249,11 @@ public class View extends JFrame implements Observer {
                 sorted = true;
             else sorted = false;
 
-            Collection < MapData > streets = model.getVisibleStreets(windowBounds, sorted);
-            mapFStreets = (Collection<MapFeature>)(Collection<?>) streets;
+            Collection < MapData > bigRoads = model.getVisibleBigRoads(windowBounds, sorted);
+            mapFStreets = (Collection<MapFeature>)(Collection<?>) bigRoads;
+
+            if(zoomLevel >= 8)
+                mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleStreets(windowBounds,sorted));
 
             if(zoomLevel > 9){
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleRailways(windowBounds, sorted));
