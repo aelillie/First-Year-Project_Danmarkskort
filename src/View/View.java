@@ -265,11 +265,35 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
-    public void processRouteplanStrings(ArrayList<String> streetList, HashMap<String,Double> streetLengthMap){
+    public void processRouteplanStrings(ArrayList<String> streetList, HashMap<String,Double> streetLengthMap, HashMap<String,List<Edge>> streetToEdgesMap){
         String[] directions = new String[streetList.size()+1];
         int directionCount = 0;
         for (int i = streetList.size(); --i >= 0;){
             String street = streetList.get(i);
+
+            /*List<Edge> streetInEdges = streetToEdgesMap.get(street);
+            Edge endEdge = streetInEdges.get(streetInEdges.size()-1);
+            Point2D startPoint = new Point2D.Double(endEdge.getX1(),endEdge.getY1());
+            Point2D endPoint = new Point2D.Double(endEdge.getX2(),endEdge.getY2());
+            Point2D vector = new Point2D.Double(endPoint.getX()-startPoint.getX(),endPoint.getY()-startPoint.getY());
+
+            double determinant = 0;
+            double dotProduct = 0;
+            if(i != 0){
+                System.out.println("\n"+street);
+                List<Edge> nextStreetInEdges = streetToEdgesMap.get(streetList.get(i-1));
+                Point2D destination = new Point2D.Double(nextStreetInEdges.get(nextStreetInEdges.size()-1).getX2(),nextStreetInEdges.get(nextStreetInEdges.size()-1).getY2());
+                System.out.println("Destination: " + streetList.get(i-1));
+
+                determinant = vector.getX()*destination.getY()-vector.getY()*destination.getX();
+                dotProduct = vector.getX()*destination.getX()+vector.getY()*destination.getY();
+                System.out.println("Determinant: " + determinant);
+                System.out.println("Dotproduct: " + dotProduct);
+                if(determinant < 0) System.out.println("It is to the left");
+                else if (determinant > 0) System.out.println("It is to the right");
+            }*/
+
+
             double dist = streetLengthMap.get(street)*1000;
             String distString;
             if(dist < 1000) { //If the distance is less than a kilometer, display it in meters, otherwise display it in kilometers
@@ -278,6 +302,7 @@ public class View extends JFrame implements Observer {
                 distString = new DecimalFormat("##.##").format(dist/1000) + " km";
             }
             String direction = "Follow " + street + " for " + distString;
+            //String turnDirection =
             if(street.trim().equals("")){
                 if(i != 0) direction = "Continue for " + distString + " until you reach " + streetList.get(i-1);
                 else direction = "Continue for " + distString + " until you reach your destination.";
@@ -787,6 +812,18 @@ public class View extends JFrame implements Observer {
         }
     }
 
+    private void addToEdgeMap(String s, Edge e, Map<String,List<Edge>> edgeMap){
+        List<Edge> currentStreet = edgeMap.get(s);
+        if(currentStreet == null) {
+            List<Edge> newStreet = new ArrayList<>();
+            newStreet.add(e);
+            edgeMap.put(s,newStreet);
+        } else {
+            currentStreet.add(e);
+        }
+
+    }
+
     /**
      * Finds shortest path between 2 points.
      * @param startPoint - Coordinates of start Address
@@ -826,14 +863,18 @@ public class View extends JFrame implements Observer {
         double travelTime = 0;
         if(shortestPath == null) return;
         HashMap<String, Double> streetLengthMap = new HashMap<>();
+        HashMap<String,List<Edge>> streetEdgeMap = new HashMap<>();
         ArrayList<String> streetList = new ArrayList<>();
         for (Edge e : shortestPath) {
             if (shortestTree.isWalkRoute()) travelTime += e.walkTime();
             else if (shortestTree.isBikeRoute()) travelTime += e.bikeTime();
             else travelTime += e.driveTime();
 
+            //For routeplan string processing
             String streetname = e.highway().getStreetName();
             if(streetname == null) streetname = " ";
+
+            addToEdgeMap(streetname,e,streetEdgeMap);
             Double dist = streetLengthMap.get(streetname);
 
             if(dist == null){
@@ -844,7 +885,7 @@ public class View extends JFrame implements Observer {
             }
         }
 
-        processRouteplanStrings(streetList,streetLengthMap);
+        processRouteplanStrings(streetList,streetLengthMap, streetEdgeMap);
 
         System.out.println("Time: " + String.format("%.2f", travelTime) + " minutes\n");
 
@@ -1213,7 +1254,6 @@ public class View extends JFrame implements Observer {
             g.fill(fullscreenArea);
             g.fill(mapTypeButtonArea);
             updateStreetName();
-
         }
 
         private void getData(){
