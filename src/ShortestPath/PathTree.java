@@ -1,5 +1,7 @@
 package ShortestPath;
 
+import java.util.ArrayDeque;
+import java.util.Deque;
 import java.util.Stack;
 
 public class PathTree {
@@ -163,9 +165,9 @@ public class PathTree {
      * @return a shortest path from the source vertex <tt>s</tt> to vertex <tt>v</tt>
      *    as an iterable of edges, and <tt>null</tt> if no such path
      */
-    public Iterable<Edge> pathTo(int v) {
+    public ArrayDeque<Edge> pathTo(int v) {
         if (!hasPathTo(v)) return null;
-        Stack<Edge> path = new Stack<>();
+        ArrayDeque<Edge> path = new ArrayDeque<>();
         int w = v;
         Edge e = edgeTo[v];
         while(e != null){

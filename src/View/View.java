@@ -54,8 +54,8 @@ public class View extends JFrame implements Observer {
 
     private Map<String,MapPointer> addressPointerMap = new HashMap<>();
 
-    private Iterable<Edge> shortestPath;
-    private Iterable<Edge> fastestPath;
+    private ArrayDeque<Edge> shortestPath;
+    private ArrayDeque<Edge> fastestPath;
 
     private boolean isFullscreen = false;
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -263,30 +263,6 @@ public class View extends JFrame implements Observer {
     public void changeToTransport(){
         drawAttributeManager.toggleTransportView();
         canvas.repaint();
-    }
-
-    public void processRouteplanStrings(ArrayList<String> streetList, HashMap<String,Double> streetLengthMap){
-        String[] directions = new String[streetList.size()+1];
-        int directionCount = 0;
-        for (int i = streetList.size(); --i >= 0;){
-            String street = streetList.get(i);
-            double dist = streetLengthMap.get(street)*1000;
-            String distString;
-            if(dist < 1000) { //If the distance is less than a kilometer, display it in meters, otherwise display it in kilometers
-                distString = new DecimalFormat("####").format(dist) + " m";
-            } else {
-                distString = new DecimalFormat("##.##").format(dist/1000) + " km";
-            }
-            String direction = "Follow " + street + " for " + distString;
-            if(street.trim().equals("")){
-                if(i != 0) direction = "Continue for " + distString + " until you reach " + streetList.get(i-1);
-                else direction = "Continue for " + distString + " until you reach your destination.";
-            }
-            directions[directionCount] = direction;
-            directionCount++;
-        }
-        directions[directionCount] = "You have reached your destination.";
-        addToDirectionPane(directions);
     }
 
 
@@ -666,8 +642,8 @@ public class View extends JFrame implements Observer {
     /**
      * Moves the canvas by a fixed amount using the Translate method.
      *
-     * @param dx
-     * @param dy
+     * @param dx - Delta x
+     * @param dy - Delta y
      */
     public void pan(double dx, double dy) {
         transform.preConcatenate(AffineTransform.getTranslateInstance(dx, dy));
@@ -795,52 +771,24 @@ public class View extends JFrame implements Observer {
      */
     public void findRoute(Point2D startPoint, Point2D endPoint)throws NoninvertibleTransformException{
 
-        Rectangle2D startBox = new Rectangle2D.Double(startPoint.getX()-0.005,
-                startPoint.getY()-0.005, 0.01 , 0.01);
+        //Get the two closes vertex Indexes
+        int startPointIndex = findClosestVertex(startPoint);
 
-        Rectangle2D endBox = new Rectangle2D.Double(endPoint.getX()-0.005,
-                endPoint.getY()-0.005, 0.01 , 0.01);
-
-        //Extract all streets around the start address and find the closest vertex
-        Collection<MapData> streets = model.getVisibleBigRoads(startBox, false);
-        streets.addAll(model.getVisibleStreets(startBox,false));
-        Highway startWay = findNearestHighway(startPoint, streets);
-        int startPointIndex = findClosestVertex(startPoint, startWay);
-
-        //Extract all streets around the end address and find the closest vertex
-        streets = model.getVisibleBigRoads(endBox, false);
-        streets.addAll(model.getVisibleStreets(endBox, false));
-        Highway endWay = findNearestHighway(endPoint, streets);
-        int endPointIndex = findClosestVertex(endPoint, endWay);
+        int endPointIndex = findClosestVertex(endPoint);
 
         //Find shortest Path.
         PathTree shortestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex);
         shortestTree.useShortestPath(true);
-        shortestTree.useCarRoute();
-        HashMap<JButton, Boolean> buttonMap = routePanel.getButtonDownMap();
-        for (JButton button : buttonMap.keySet()) {
-            boolean isPressed = buttonMap.get(button);
-            if (button.equals(routePanel.getBicycleButton()) && isPressed) shortestTree.useBikeRoute();
-            else if (button.equals(routePanel.getFootButton()) && isPressed) shortestTree.useWalkRoute();
-            else if (button.equals(routePanel.getCarButton()) && isPressed) shortestTree.useCarRoute();
-        }
-
-        shortestTree.initiate();
+        selectedTravelMethod(shortestTree);
 
         PathTree fastestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex);
         fastestTree.useShortestPath(false);
-        fastestTree.useCarRoute();
-        for (JButton button : buttonMap.keySet()) {
-            boolean isPressed = buttonMap.get(button);
-            if (button.equals(routePanel.getBicycleButton()) && isPressed) fastestTree.useBikeRoute();
-            else if (button.equals(routePanel.getFootButton()) && isPressed) fastestTree.useWalkRoute();
-            else if (button.equals(routePanel.getCarButton()) && isPressed) fastestTree.useCarRoute();
-        }
-        fastestTree.initiate();
+        selectedTravelMethod(fastestTree);
+
+
         if(shortestTree.hasPathTo(endPointIndex) && fastestTree.hasPathTo(endPointIndex)){
             shortestPath = shortestTree.pathTo(endPointIndex);
             fastestPath = fastestTree.pathTo(endPointIndex);
-
         }
 
 
@@ -854,28 +802,14 @@ public class View extends JFrame implements Observer {
         } else System.out.println("Distance: " + String.format("%.2f", distance) + " km");
         double travelTime = 0;
         if(shortestPath == null) return;
-        HashMap<String, Double> streetLengthMap = new HashMap<>();
-        ArrayList<String> streetList = new ArrayList<>();
         for (Edge e : shortestPath) {
             if (shortestTree.isWalkRoute()) travelTime += e.walkTime();
             else if (shortestTree.isBikeRoute()) travelTime += e.bikeTime();
             else travelTime += e.driveTime();
-
-            String streetname = e.highway().getStreetName();
-            if(streetname == null) streetname = " ";
-            Double dist = streetLengthMap.get(streetname);
-
-            if(dist == null){
-                streetLengthMap.put(streetname, e.distance());
-                streetList.add(streetname);
-            } else {
-                streetLengthMap.put(streetname,dist+e.distance());
-            }
         }
-
-        processRouteplanStrings(streetList,streetLengthMap);
-
         System.out.println("Time: " + String.format("%.2f", travelTime) + " minutes\n");
+        String[] directions = RoutePlaner.createRoutePlan(shortestPath);
+        addToDirectionPane(directions);
 
         //Fastest path
         System.out.println("Fastest Path from A to B");
@@ -894,6 +828,18 @@ public class View extends JFrame implements Observer {
         repaint();
     }
 
+    public void selectedTravelMethod(PathTree p){
+        p.useCarRoute();
+        HashMap<JButton, Boolean> buttonMap = routePanel.getButtonDownMap();
+        for (JButton button : buttonMap.keySet()) {
+            boolean isPressed = buttonMap.get(button);
+            if (button.equals(routePanel.getBicycleButton()) && isPressed) p.useBikeRoute();
+            else if (button.equals(routePanel.getFootButton()) && isPressed) p.useWalkRoute();
+            else if (button.equals(routePanel.getCarButton()) && isPressed) p.useCarRoute();
+        }
+        p.initiate();
+
+    }
     public void findShortestPath() {
         //Functions as a test when pressed "l"
         System.out.println("");
@@ -901,15 +847,9 @@ public class View extends JFrame implements Observer {
         int source = 0;
         PathTree SPpathTree = new PathTree(model.getDiGraph(), source, destination);
         SPpathTree.useShortestPath(true);
-        HashMap<JButton, Boolean> buttonMap = routePanel.getButtonDownMap();
+        selectedTravelMethod(SPpathTree);
 
-        for (JButton button : buttonMap.keySet()) {
-            boolean isPressed = buttonMap.get(button);
-            if (button.equals(routePanel.getBicycleButton()) && isPressed) SPpathTree.useBikeRoute();
-            else if (button.equals(routePanel.getFootButton()) && isPressed) SPpathTree.useWalkRoute();
-            else if (button.equals(routePanel.getCarButton()) && isPressed) SPpathTree.useCarRoute();
-        }
-        SPpathTree.initiate();
+
         shortestPath = SPpathTree.pathTo(destination);
 
         double distance = SPpathTree.distTo(destination);
@@ -940,16 +880,10 @@ public class View extends JFrame implements Observer {
         int source = 0;
         PathTree FPpathTree = new PathTree(model.getDiGraph(), source, destination);
         FPpathTree.useShortestPath(false);
-        HashMap<JButton, Boolean> buttonMap = routePanel.getButtonDownMap();
-        for (JButton button : buttonMap.keySet()) {
-            boolean isPressed = buttonMap.get(button);
-            if (button.equals(routePanel.getBicycleButton()) && isPressed) FPpathTree.useBikeRoute();
-            else if (button.equals(routePanel.getFootButton()) && isPressed) FPpathTree.useWalkRoute();
-            else if (button.equals(routePanel.getCarButton()) && isPressed) FPpathTree.useCarRoute();
-        }
-        FPpathTree.initiate();
-        fastestPath = FPpathTree.pathTo(destination);
 
+        selectedTravelMethod(FPpathTree);
+
+        fastestPath = FPpathTree.pathTo(destination);
         double time = FPpathTree.timeTo(destination);
         System.out.println("");
         System.out.println("Fastest path:");
@@ -971,7 +905,14 @@ public class View extends JFrame implements Observer {
     }
 
 
-    private int findClosestVertex(Point2D chosenPoint, Highway way){
+    private int findClosestVertex(Point2D chosenPoint)throws NoninvertibleTransformException{
+        Rectangle2D Box = new Rectangle2D.Double(chosenPoint.getX()-0.005,
+                chosenPoint.getY()-0.005, 0.01 , 0.01);
+
+        //Extract all streets around the address point and find the closest vertex
+        Collection<MapData> streets = model.getVisibleBigRoads(Box, false);
+        streets.addAll(model.getVisibleStreets(Box,false));
+        Highway way = findNearestHighway(chosenPoint, streets);
         List<Edge> edges = way.getEdges();
         Edge closestEdge = null;
 
@@ -1348,7 +1289,7 @@ public class View extends JFrame implements Observer {
 
     public JButton getCloseDirectionListButton(){ return closeDirectionListButton;}
 
-    public void setShortestPath(Iterable<Edge> it ) { shortestPath = it; }
-    public void setFastestPath(Iterable<Edge> it ) { fastestPath = it; }
+    public void setShortestPath(ArrayDeque<Edge> it ) { shortestPath = it; }
+    public void setFastestPath(ArrayDeque<Edge> it ) { fastestPath = it; }
 
 }
