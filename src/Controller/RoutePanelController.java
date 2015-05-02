@@ -51,8 +51,8 @@ public class RoutePanelController implements ActionListener{
 
     private void setScrollpaneBoundsAndIcon(){
         textfieldToBounds = new HashMap<>();
-        textfieldToBounds.put(startAddressField,new Rectangle(68,162,266,100));
-        textfieldToBounds.put(endAddressField, new Rectangle(68,205,266,100));
+        textfieldToBounds.put(startAddressField,new Rectangle(63,164,285,100));
+        textfieldToBounds.put(endAddressField, new Rectangle(63,206,285,100));
         textFieldToIconType = new HashMap<>();
         textFieldToIconType.put(startAddressField, "startPointIcon".intern());
         textFieldToIconType.put(endAddressField, "endPointIcon".intern());
