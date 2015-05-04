@@ -117,12 +117,6 @@ public class Controller extends MouseAdapter implements ActionListener {
                     case 's':
                         model.saveBin();
                         break;
-                    case 'l':
-                        view.findShortestPath();
-                        break;
-                    case 'f':
-                        view.findFastestPath();
-                        break;
                     case't':
                         view.toggleTestMode();
                         view.repaint();

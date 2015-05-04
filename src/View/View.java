@@ -731,52 +731,7 @@ public class View extends JFrame implements Observer {
         isFullscreen = !isFullscreen;
     }
 
-    /**
-     * Finds the Nearest Highway from the MousePosition using distance from point to lineSegment
-     * @param position Position of MousePointer
-     */
-    public Highway findNearestHighway(Point2D position, Collection<MapData> node)throws NoninvertibleTransformException{
 
-        MapFeature champion = null;
-        Line2D championLine = null;
-
-        for (MapData mp : node) {
-            if (mp instanceof Highway ) {
-                Highway highway = (Highway) mp;
-                double[] points = new double[6];
-
-                PathIterator pI = highway.getWay().getPathIterator(new AffineTransform());
-
-                pI.currentSegment(points);
-                Point2D p1 = new Point2D.Double(points[0], points[1]);
-                pI.next();
-                while(!pI.isDone()) {
-                    pI.currentSegment(points);
-                    Point2D p2 = new Point2D.Double(points[0], points[1]);
-
-                    Line2D path = new Line2D.Double(p1,p2);
-                    p1 = p2;
-                    pI.next();
-                    if(championLine == null) {
-                        championLine = path;
-                        champion = highway;
-                    }
-                    else if(path.ptSegDist(position) < championLine.ptSegDist(position)){
-                        champion = highway;
-                        championLine = path;
-
-                    }
-                }
-            }
-        }
-        nearestNeighbor = (Highway) champion;
-        //System.out.println("Street: " + nearestNeighbor.getStreetName() + " v: " + nearestNeighbor.getV() + " w: " + nearestNeighbor.getW() + " distance: " + nearestNeighbor.getDistance());
-        if (nearestNeighbor != null) {
-            destination = nearestNeighbor.getVertex(0);
-        }
-        repaint();
-        return (Highway) champion;
-    }
 
     public void findNearestToMouse(Point2D position) throws NoninvertibleTransformException{
         //Take insets into account when using mouseCoordinates.
@@ -906,7 +861,7 @@ public class View extends JFrame implements Observer {
         repaint();
     }
 
-    private void travelMethod(PathTree p){
+    public void travelMethod(PathTree p){
         p.useCarRoute();
         HashMap<JButton, Boolean> buttonMap = routePanel.getButtonDownMap();
         for (JButton button : buttonMap.keySet()) {
@@ -918,94 +873,6 @@ public class View extends JFrame implements Observer {
         p.initiate();
     }
 
-    public void findShortestPath() {
-        //Functions as a test when pressed "l"
-        System.out.println("");
-        System.out.println("Shortest path:");
-        int source = 0;
-        PathTree SPpathTree = new PathTree(model.getDiGraph(), source, destination);
-        SPpathTree.useShortestPath(true);
-        travelMethod(SPpathTree);
-
-        shortestPath = SPpathTree.pathTo(destination);
-
-        double distance = SPpathTree.distTo(destination);
-        if (distance < 1) {
-            distance *= 1000;
-            System.out.println("Distance: " + String.format("%.0f", distance) + " m");
-        } else System.out.println("Distance: " + String.format("%.2f", distance) + " km");
-        double travelTime = 0;
-        if(!SPpathTree.hasPathTo(destination)) {
-            System.out.println("NO PATH WAS FOUND");
-            return;
-        }
-        for (Edge e : shortestPath) {
-            if (SPpathTree.isWalkRoute())
-                travelTime += e.walkTime();
-            else if (SPpathTree.isBikeRoute())
-                travelTime += e.bikeTime();
-            else
-                travelTime += e.driveTime();
-        }
-        System.out.println("Time: " + String.format("%5.2f", travelTime) + " minutes");
-        System.out.println("");
-        repaint();
-    }
-
-    public void findFastestPath() {
-        //Functions as a test when pressed "f"
-        int source = 0;
-        PathTree FPpathTree = new PathTree(model.getDiGraph(), source, destination);
-        FPpathTree.useShortestPath(false);
-        travelMethod(FPpathTree);
-
-        fastestPath = FPpathTree.pathTo(destination);
-
-        double time = FPpathTree.timeTo(destination);
-        System.out.println("");
-        System.out.println("Fastest path:");
-        double distance = 0;
-        if(!FPpathTree.hasPathTo(destination)) {
-            System.out.println("NO PATH FOUND");
-            return;
-        }
-        for (Edge e : fastestPath) {
-            distance += e.distance();
-        }
-        if (distance < 1) {
-            distance *= 1000;
-            System.out.println("Distance: " + String.format("%.0f", distance) + " m");
-        } else System.out.println("Distance: " + String.format("%.2f", distance) + " km");
-        System.out.println("Time: " + String.format("%5.2f", time) + " minutes");
-        System.out.println("");
-        repaint();
-    }
-
-
-    private int findClosestVertex(Point2D chosenPoint)throws NoninvertibleTransformException{
-        Rectangle2D Box = new Rectangle2D.Double(chosenPoint.getX()-0.005,
-                chosenPoint.getY()-0.005, 0.01 , 0.01);
-
-
-        //Extract all streets around the start address and find the closest vertex
-        Collection<MapData> streets = model.getVisibleBigRoads(Box, false);
-        streets.addAll(model.getVisibleStreets(Box,false));
-        Highway way = findNearestHighway(chosenPoint, streets);
-        List<Edge> edges = way.getEdges();
-        Edge closestEdge = null;
-
-        for(Edge edge : edges){
-            if (closestEdge == null) {
-                closestEdge = edge;
-            }
-            else if (closestEdge.ptSegDist(chosenPoint) > edge.ptSegDist(chosenPoint)) {
-                closestEdge = edge;
-            }
-
-        }
-        if(closestEdge == null) return 0;
-        return closestEdge.either();
-    }
 
     /**
      * Opens the filechooser and returns a value.
