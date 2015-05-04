@@ -1,18 +1,18 @@
 package Controller;
 
 import Model.Address;
+import Model.Model;
 import View.RouteView;
 import View.View;
-import Model.Model;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class RoutePanelController implements ActionListener{
@@ -164,10 +164,16 @@ public class RoutePanelController implements ActionListener{
                 endPoint = null;
 
             if (startPoint != null && endPoint != null) {
-                System.out.println("Trying to find shortest path...");
-                try {
-                    view.findRoute(startPoint, endPoint);
-                }catch (NoninvertibleTransformException ex){}
+                if(routeTypeButtonDownMap.get(routeView.getFastestPathButton())) {
+
+                    System.out.println("Trying to find Fastest path...");
+                    view.findFastestRoute(startPoint, endPoint);
+                }else if(routeTypeButtonDownMap.get(routeView.getShortestPathButton())){
+                    System.out.println("Tryin to find Shortest path...");
+                    view.findShortestRoute(startPoint, endPoint);
+
+                }else view.findFastestRoute(startPoint, endPoint);
+
             }
         }
 
@@ -199,10 +205,12 @@ public class RoutePanelController implements ActionListener{
             startAddressField.setText(null);
             view.setShortestPath(null);
             view.setFastestPath(null);
+            view.clearDirectionPane();
         } else if (command == "clearEndField") {
             endAddressField.setText(null);
             view.setShortestPath(null);
             view.setFastestPath(null);
+            view.clearDirectionPane();
         } else if (command == "shortestPath"){
             setRouteTypeButtonBoolean(routeView.getShortestPathButton());
         } else if (command == "fastestPath"){
