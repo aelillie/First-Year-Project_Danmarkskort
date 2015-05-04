@@ -1,9 +1,9 @@
 package Tests;
 
 import Model.Model;
-import ShortestPath.Edge;
-import ShortestPath.Graph;
-import ShortestPath.PathTree;
+import Model.ShortestPath.Edge;
+import Model.ShortestPath.Graph;
+import Model.ShortestPath.PathTree;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;

@@ -1,6 +1,6 @@
 package Model;
 
-import ShortestPath.Edge;
+import Model.ShortestPath.Edge;
 
 import java.text.DecimalFormat;
 import java.util.ArrayList;

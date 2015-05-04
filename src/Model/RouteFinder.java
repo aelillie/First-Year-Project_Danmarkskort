@@ -1,9 +1,9 @@
 package Model;
 
-import MapFeatures.Highway;
-import ShortestPath.Edge;
-import ShortestPath.PathTree;
-import ShortestPath.Vertices;
+import Model.MapFeatures.Highway;
+import Model.ShortestPath.Edge;
+import Model.ShortestPath.PathTree;
+import Model.ShortestPath.Vertices;
 
 import java.awt.geom.*;
 import java.util.Collection;

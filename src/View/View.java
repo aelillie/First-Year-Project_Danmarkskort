@@ -1,12 +1,12 @@
 package View;
 
 import Controller.SearchResultMouseHandler;
-import MapFeatures.Bounds;
-import MapFeatures.Highway;
-import MapFeatures.Route;
+import Model.MapFeatures.Bounds;
+import Model.MapFeatures.Highway;
+import Model.MapFeatures.Route;
 import Model.*;
-import QuadTree.QuadTree;
-import ShortestPath.Edge;
+import Model.QuadTree.QuadTree;
+import Model.ShortestPath.Edge;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
