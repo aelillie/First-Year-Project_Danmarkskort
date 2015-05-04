@@ -97,6 +97,7 @@ public class DrawAttribute {
 
     //Predefined colors to use.
     public static Color black = new Color(0, 0, 0);
+    public static Color purple = new Color(128,0,128);
     public static Color fadeblack = new Color(0,0,0,180);
     public static Color fadewhite = new Color(255,255,255,200);
     public static Color lightblue = new Color(70, 130, 180);
@@ -125,6 +126,9 @@ public class DrawAttribute {
     public static Color brown = new Color(139,69,19);
     public static Color lightbrown = new Color(194, 117, 37);
     public static Color ground = new Color(238,238,238);
+    public static Color teal = new Color(0,128,128);
+    public static Color moccasin = new Color(255, 228, 181);
+
 
     //Predefined colors for colorblind view
     public static Color cl_red = new Color(255, 0, 0);

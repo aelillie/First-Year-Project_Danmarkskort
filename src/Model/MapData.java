@@ -6,10 +6,10 @@ package Model;
  */
 public interface MapData {
 
-    public Class getClassType();
+    Class getClassType();
 
-    public int getLayerVal();
+    int getLayerVal();
 
-    public boolean equals(Object o);
+    boolean equals(Object o);
 
 }

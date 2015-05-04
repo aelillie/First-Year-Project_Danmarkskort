@@ -1,6 +1,6 @@
 package Tests;
 
-import MapFeatures.*;
+import Model.MapFeatures.*;
 import Model.MapFeature;
 import Model.PathCreater;
 import View.DrawAttribute;
