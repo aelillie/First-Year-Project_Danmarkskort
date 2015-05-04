@@ -101,7 +101,7 @@ public class Graph implements Serializable{
      * @return all edges in the edge-weighted graph as an Iterable.
      */
     public Iterable<Edge> edges() {
-        Bag<Edge> list = new Bag<>();
+        ArrayList<Edge> list = new ArrayList<>();
         for (int v = 0; v < V; v++) {
             int selfLoops = 0;
             for (Edge e : adj(v)) {
