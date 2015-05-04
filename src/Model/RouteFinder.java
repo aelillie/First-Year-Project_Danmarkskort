@@ -3,6 +3,7 @@ package Model;
 import MapFeatures.Highway;
 import ShortestPath.Edge;
 import ShortestPath.PathTree;
+import ShortestPath.Vertices;
 
 import java.awt.geom.*;
 import java.util.Collection;
@@ -18,11 +19,19 @@ public class RouteFinder {
     private Iterable<Edge> shortestPath, fastestPath;
     private boolean carPressed, bikePressed, walkPressed;
 
+    /**
+     * Finds the vertices closes to the points and saves them
+     * @param startPoint - Point2D
+     * @param endPoint - Point2D
+     */
     public RouteFinder(Point2D startPoint, Point2D endPoint) {
         startVertex = findClosestVertex(startPoint);
         endVertex = findClosestVertex(endPoint);
     }
 
+    /**
+     * Sets its field shortest path to the shortest path from startVertex to endVertex
+     */
     public void setShortestRoute() {
         //Find shortest Path.
         PathTree shortestTree = new PathTree(model.getDiGraph(), startVertex, endVertex);
@@ -35,10 +44,15 @@ public class RouteFinder {
             throw new IllegalArgumentException("No shortest path found for the given addresses.");
     }
 
-
+    /**
+     * sets its field fastest path to the shortest path from startVertex to endVertex
+     */
     public void setFastestRoute() {
         PathTree fastestTree = new PathTree(model.getDiGraph(), startVertex, endVertex);
         fastestTree.useShortestPath(false);
+
+        //Sets what travelType is chosen
+
         setTravelType(fastestTree);
         fastestTree.initiate();
         if(fastestTree.hasPathTo(endVertex))
@@ -109,12 +123,16 @@ public class RouteFinder {
         Collection<MapData> streets = model.getVisibleBigRoads(Box, false);
         streets.addAll(model.getVisibleStreets(Box,false));
         Highway way = null;
+
+        //Find closest highway to point
         filterRoads(streets);
         try {
             way = findNearestHighway(chosenPoint, streets);
         } catch (NoninvertibleTransformException e) {
             e.printStackTrace();
         }
+
+        //Find the closest vertex on the
         List<Edge> edges = way.getEdges();
         Edge closestEdge = null;
 
@@ -128,8 +146,14 @@ public class RouteFinder {
 
         }
         if(closestEdge == null) return 0;
-        return closestEdge.either();
+        Vertices vertices = model.getVertices();
+        if(vertices.getVertex(closestEdge.either()).distance(chosenPoint) >=
+                vertices.getVertex(closestEdge.other(closestEdge.either())).distance(chosenPoint))
+            return closestEdge.other(closestEdge.either());
+
+        else return closestEdge.either();
     }
+
 
     public void carPressed() {
         carPressed = true;
@@ -150,6 +174,8 @@ public class RouteFinder {
     }
 
     private void filterRoads(Collection<MapData> before) {
+
+        //Goes through a collection and removes unnecessary highways
         for (Iterator<MapData> it = before.iterator(); it.hasNext(); ) {
             Highway highway = (Highway) it.next();
             if (highway.getValue().equals("footway") || highway.getValue().equals("cycleway") ||
@@ -162,10 +188,18 @@ public class RouteFinder {
         }
     }
 
+    /**
+     * returns an Iterable of edges contained in the shortestPath
+     * @return - Iterable<Edge>
+     */
     public Iterable<Edge> getShortestPath(){
         return shortestPath;
     }
 
+    /**
+     * returns an Iterable of edges contained in the fastest Path.
+     * @return - Iterable
+     */
     public Iterable<Edge> getFastestPath(){
         return fastestPath;
     }

@@ -14,12 +14,20 @@ import java.util.Map;
 public class RoutePlanner {
     private Iterable<Edge> edges;
 
+    /**
+     * Sets up fields
+     * @param edges
+     */
     public RoutePlanner(Iterable<Edge> edges){
-        this.edges = edges;
-
-
+        if(edges != null)
+            this.edges = edges;
+        else throw new IllegalArgumentException("No path was given");
     }
 
+    /**
+     * GOes through the edges creating the direction-Strings
+     * @return - String[] of Directions.
+     */
     public String[] getDirections(){
 
         HashMap<String, Double> streetLengthMap = new HashMap<>();
