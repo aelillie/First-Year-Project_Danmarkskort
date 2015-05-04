@@ -126,12 +126,12 @@ public class OSMHandler extends DefaultHandler {
                 float maxlon = Float.parseFloat(atts.getValue("maxlon"));
                 Rectangle2D rect =  new Rectangle2D.Float(minlon, minlat, maxlon - minlon, maxlat - minlat);
                 bbox.setRect(rect);
-                streetTree = new QuadTree(bbox, 250);
-                bigRoadTree = new QuadTree(bbox, 100);
-                buildingTree = new QuadTree(bbox, 250);
+                streetTree = new QuadTree(bbox, 300);
+                bigRoadTree = new QuadTree(bbox, 150);
+                buildingTree = new QuadTree(bbox, 300);
                 iconTree = new QuadTree(bbox, 30);
-                naturalTree = new QuadTree(bbox, 175);
-                railwayTree = new QuadTree(bbox, 50);
+                naturalTree = new QuadTree(bbox, 225);
+                railwayTree = new QuadTree(bbox, 75);
 
 
 
