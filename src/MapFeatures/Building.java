@@ -16,14 +16,14 @@ public class Building extends MapFeature {
     }
 
     @Override
-    public void setPreDefValues() {
-        super.setPreDefValues();
+    public void setPreDefLayerValues() {
+        super.setPreDefLayerValues();
         if (value.equals("yes")) layer_value = 19;
     }
 
 
     @Override
-    public void setValueAttributes() {
+    public void setValueName() {
         setValueName(ValueName.BUILDING);
     }
 

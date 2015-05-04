@@ -2,7 +2,7 @@ package Model;
 
 import MapFeatures.Coastline;
 import QuadTree.QuadTree;
-import ShortestPath.EdgeWeightedDigraph;
+import ShortestPath.Graph;
 import ShortestPath.Vertices;
 
 import java.awt.geom.Path2D;
@@ -34,28 +34,35 @@ public class BinaryHandler{
 
         out.writeObject(model.getOSMReader().getAddressMap());
         loadingScreen.updateLoadBar(20);
+
         out.writeObject(model.getOSMReader().getStreetMap());
         loadingScreen.updateLoadBar(35);
+
         out.writeObject(model.getOSMReader().getBoundaryMap());
         loadingScreen.updateLoadBar(40);
+
         out.writeObject(model.getOSMReader().getAddressList());
         loadingScreen.updateLoadBar(50);
 
         out.writeObject(model.getDiGraph());
         loadingScreen.updateLoadBar(60);
+
         out.writeObject(model.getVertices());
         loadingScreen.updateLoadBar(65);
+
         List<QuadTree> qT = model.getQuadTrees();
 
         out.writeObject(qT);
+
         loadingScreen.updateLoadBar(90);
 
         out.writeObject(model.getCoastlines());
 
 
         loadingScreen.updateLoadBar(100);
-
+        out.reset();
         out.close();
+
         System.out.print(filename + " saved");
 
     }
@@ -90,7 +97,7 @@ public class BinaryHandler{
         model.getOSMReader().setAddressList((ArrayList<Address>) in.readObject());
 
         loadingScreen.updateLoadBar(55);
-        model.getOSMReader().setDiGraph((EdgeWeightedDigraph) in.readObject());
+        model.getOSMReader().setDiGraph((Graph) in.readObject());
         loadingScreen.updateLoadBar(65);
         model.getOSMReader().setVertices((Vertices) in.readObject());
 
@@ -107,13 +114,13 @@ public class BinaryHandler{
         List<Coastline> coasts = model.getCoastlines();
         coasts.addAll((List<Coastline>) in.readObject());
         loadingScreen.updateLoadBar(99);
+
+
         in.close();
+
         loadingScreen.updateLoadBar(100);
     }
 
-    public void saveFiles(String savefile)throws IOException{
 
-        save(savefile);
-    }
 
 }

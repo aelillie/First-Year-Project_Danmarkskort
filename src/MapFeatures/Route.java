@@ -15,12 +15,12 @@ public class Route extends MapFeature{
     }
 
     @Override
-    public void setPreDefValues() {
-        super.setPreDefValues();
+    public void setPreDefLayerValues() {
+        super.setPreDefLayerValues();
     }
 
     @Override
-    public void setValueAttributes() {
+    public void setValueName() {
         if(value.equals("ferry"))setValueName(ValueName.FERRY);
         else setValueName(ValueName.ROUTE);
     }

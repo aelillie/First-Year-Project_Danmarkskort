@@ -37,6 +37,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         view.getShowRoutePanelButton().addActionListener(this);
         view.getOptionsButton().addActionListener(this);
         view.getMapTypeButton().addActionListener(this);
+        view.getCloseDirectionListButton().addActionListener(this);
     }
 
     @Override
@@ -52,6 +53,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         else if (command.equals("findRoute"));
         else if (command.equals("showOptions")) showOptionsPanel();
         else if (command.equals("mapType")) view.showMapTypePanel();
+        else if (command.equals("closeDirectionList")) view.closeDirectionList();
     }
 
     private void showOptionsPanel(){
@@ -127,6 +129,10 @@ public class Controller extends MouseAdapter implements ActionListener {
                         break;
                     case 'g':
                         view.toggleGrid();
+                        view.repaint();
+                        break;
+                    case 'p':
+                        view.toggleGraph();
                         view.repaint();
                         break;
 

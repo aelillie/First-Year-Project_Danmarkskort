@@ -3,3 +3,4 @@ Created-By: IntelliJ IDEA
 Main-Class: Main
 Class-Path: .
 SplashScreen-Image: Cartoon_map.jpg
+

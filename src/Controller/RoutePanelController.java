@@ -28,7 +28,7 @@ public class RoutePanelController implements ActionListener{
     private Model model;
     private Point2D startPoint, endPoint;
 
-    private HashMap<JButton, Boolean> buttonDownMap;
+    private HashMap<JButton, Boolean> buttonDownMap, routeTypeButtonDownMap;
 
     /**
      * Controller for route panel.
@@ -45,14 +45,14 @@ public class RoutePanelController implements ActionListener{
         this.routeView = routeView;
         setScrollpaneBoundsAndIcon();
         setHandlers();
-        setMouseDownMap();
-
+        buttonDownMap = routeView.getButtonDownMap();
+        routeTypeButtonDownMap = routeView.getRouteTypeButtonDownMap();
     }
 
 
     private void setScrollpaneBoundsAndIcon(){
         textfieldToBounds = new HashMap<>();
-        textfieldToBounds.put(startAddressField,new Rectangle(68,162,266,100));
+        textfieldToBounds.put(startAddressField, new Rectangle(68, 162, 266, 100));
         textfieldToBounds.put(endAddressField, new Rectangle(68,205,266,100));
         textFieldToIconType = new HashMap<>();
         textFieldToIconType.put(startAddressField, "startPointIcon".intern());
@@ -65,6 +65,8 @@ public class RoutePanelController implements ActionListener{
         routeView.getCarButton().addActionListener(this);
         routeView.getBicycleButton().addActionListener(this);
         routeView.getFootButton().addActionListener(this);
+        routeView.getShortestPathButton().addActionListener(this);
+        routeView.getFastestPathButton().addActionListener(this);
 
         startAddressField.addKeyListener(new SearchFieldKeyHandler(startAddressField, startAddrScrollpane));
         endAddressField.addKeyListener(new SearchFieldKeyHandler(endAddressField, endAddrScrollpane));
@@ -76,13 +78,6 @@ public class RoutePanelController implements ActionListener{
         setInputChangeHandler(endAddressField,endAddrScrollpane);
         addFocusListener("Enter start address", startAddressField);
         addFocusListener("Enter end address", endAddressField);
-    }
-
-    private void setMouseDownMap(){
-        buttonDownMap = new HashMap<>();
-        buttonDownMap.put(routeView.getCarButton(),false);
-        buttonDownMap.put(routeView.getBicycleButton(),false);
-        buttonDownMap.put(routeView.getFootButton(),false);
     }
 
     private void addFocusListener(final String promptText, final JTextField textField){
@@ -112,7 +107,7 @@ public class RoutePanelController implements ActionListener{
         });
     }
 
-    private void setInputChangeHandler(final JTextField textField, final JScrollPane resultPane){
+    private void setInputChangeHandler(final JTextField textField, final JScrollPane resultPane) {
         textField.getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
@@ -175,14 +170,14 @@ public class RoutePanelController implements ActionListener{
         }
 
         else if (command == "car") {
-            setOtherButtons(routeView.getCarButton());
-            transportButtonDown(routeView.getCarButton());
+            setButtonsBoolean(routeView.getCarButton());
+            //transportButtonDown(routeView.getCarButton());
         } else if (command == "bicycle"){
-            setOtherButtons(routeView.getBicycleButton());
-            transportButtonDown(routeView.getBicycleButton());
+            setButtonsBoolean(routeView.getBicycleButton());
+            //transportButtonDown(routeView.getBicycleButton());
         } else if (command == "walking"){
-            setOtherButtons(routeView.getFootButton());
-            transportButtonDown(routeView.getFootButton());
+            setButtonsBoolean(routeView.getFootButton());
+            //transportButtonDown(routeView.getFootButton());
         } else if (command == "startAddressSearch"){
             Address[] results = addressSearch(2,startAddressField,startAddrScrollpane);
             if(results != null && results.length == 1) {
@@ -206,32 +201,52 @@ public class RoutePanelController implements ActionListener{
             endAddressField.setText(null);
             view.setShortestPath(null);
             view.setFastestPath(null);
+        } else if (command == "shortestPath"){
+            setRouteTypeButtonBoolean(routeView.getShortestPathButton());
+        } else if (command == "fastestPath"){
+            setRouteTypeButtonBoolean(routeView.getFastestPathButton());
         }
     }
 
-    public void transportButtonDown(JButton button){
-        //TODO: what to do on button down?
-        boolean isButtonDown = buttonDownMap.get(button);
-        routeView.changeButtonAppearence(button,isButtonDown);
-        buttonDownMap.put(button,!isButtonDown);
+    public void setRouteTypeButtonBoolean(JButton button){
+        boolean isButtonDown = routeTypeButtonDownMap.get(button);
+
+        JButton shortestPathButton = routeView.getShortestPathButton();
+        JButton fastestPathButton = routeView.getFastestPathButton();
+        if(!isButtonDown) {
+            transportButtonDown(button, routeTypeButtonDownMap);
+            if (button.equals(fastestPathButton)) {
+                if (routeTypeButtonDownMap.get(shortestPathButton)) transportButtonDown(shortestPathButton, routeTypeButtonDownMap);
+            } else if (button.equals(shortestPathButton)) {
+                if (routeTypeButtonDownMap.get(fastestPathButton)) transportButtonDown(fastestPathButton, routeTypeButtonDownMap);
+            }
+        }
     }
 
-    private void setOtherButtons(JButton button){
+    public void transportButtonDown(JButton button, HashMap<JButton, Boolean> map){
+        boolean isButtonDown = map.get(button);
+        routeView.changeButtonAppearence(button, isButtonDown);
+        map.put(button, !isButtonDown);
+    }
+
+    private void setButtonsBoolean(JButton button){
         JButton bicycleButton = routeView.getBicycleButton();
         JButton footButton = routeView.getFootButton();
         JButton carButton = routeView.getCarButton();
         boolean isButtonDown = buttonDownMap.get(button);
         if(!isButtonDown) {
+            routeView.changeButtonAppearence(button,isButtonDown);
             if (button.equals(bicycleButton)) {
-                if (buttonDownMap.get(footButton)) transportButtonDown(footButton);
-                if (buttonDownMap.get(carButton)) transportButtonDown(carButton);
+                if (buttonDownMap.get(footButton)) transportButtonDown(footButton, buttonDownMap);
+                if (buttonDownMap.get(carButton)) transportButtonDown(carButton,buttonDownMap);
             } else if (button.equals(routeView.getCarButton())) {
-                if (buttonDownMap.get(bicycleButton)) transportButtonDown(bicycleButton);
-                if (buttonDownMap.get(footButton)) transportButtonDown(footButton);
+                if (buttonDownMap.get(bicycleButton)) transportButtonDown(bicycleButton,buttonDownMap);
+                if (buttonDownMap.get(footButton)) transportButtonDown(footButton,buttonDownMap);
             } else if (button.equals(routeView.getFootButton())) {
-                if (buttonDownMap.get(carButton)) transportButtonDown(carButton);
-                if (buttonDownMap.get(bicycleButton)) transportButtonDown(bicycleButton);
+                if (buttonDownMap.get(carButton)) transportButtonDown(carButton,buttonDownMap);
+                if (buttonDownMap.get(bicycleButton)) transportButtonDown(bicycleButton,buttonDownMap);
             }
+            buttonDownMap.put(button,!isButtonDown);
         }
 
     }
@@ -290,5 +305,7 @@ public class RoutePanelController implements ActionListener{
             }
         }
     }
+
+    public HashMap<JButton, Boolean> getButtonDownMap(){ return buttonDownMap;}
 
 }

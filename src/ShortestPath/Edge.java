@@ -1,7 +1,9 @@
 package ShortestPath;
 
+import MapFeatures.Highway;
 import Model.PathCreater;
 
+import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
@@ -9,13 +11,15 @@ import java.io.Serializable;
 /**
  * Created by Anders on 22-04-2015.
  */
-public class Edge implements Serializable {
+public class Edge extends Line2D.Float implements Serializable {
     private static final long serialVersionUID = 128;
     private int v;
     private int w;
     private double distance; //edge's distance
-    private Path2D edgePath;
-    private double travelTime; //min pr. distance
+    //private Line2D edgePath;
+    private boolean oneWay;
+    private boolean oneWayReverse;
+    private Highway highway;
 
     /**
      * Initializes a directed edge from vertex <tt>v</tt> to vertex <tt>w</tt> with
@@ -28,46 +32,57 @@ public class Edge implements Serializable {
      *                                             is a negative integer
      * @throws IllegalArgumentException            if <tt>distance</tt> is <tt>NaN</tt>
      */
-    public Edge(int v, int w, double distance, double travelTime, Path2D edgePath) {
+    public Edge(int v, int w, double distance, Line2D edgePath, Highway highway) {
+        setLine(edgePath);
         if (v < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
         if (w < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
-        if (Double.isNaN(distance)) throw new IllegalArgumentException("Weight is NaN");
+        //if (Double.isNaN(distance)) throw new IllegalArgumentException("Weight is NaN");
         this.v = v;
         this.w = w;
         this.distance = distance;
-        this.travelTime = travelTime;
-        this.edgePath = edgePath;
+        //this.edgePath = edgePath;
+        this.highway = highway;
     }
 
-    /**
-     * Returns the tail vertex of the directed edge.
-     *
-     * @return the tail vertex of the directed edge
-     */
-    public int from() {
+    public int v(){
         return v;
     }
 
-    /**
-     * Returns the head vertex of the directed edge.
-     *
-     * @return the head vertex of the directed edge
-     */
-    public int to() {
+    public int w(){
         return w;
     }
 
     /**
-     * Returns the distance of the directed edge.
+     * Returns the distance of the edge.
      *
-     * @return the distance of the directed edge
+     * @return the distance of the edge
      */
     public double distance() {
         return distance;
     }
 
-    public double travelTime() {
-        return travelTime;
+    /**
+     * Returns the time of driving from either endpoint to the other
+     * @return the driving time of the edge
+     */
+    public double driveTime() {
+        return (distance/highway.getMaxspeed())*60;
+    }
+
+    /**
+     * Returns the time of walking from either endpoint to the other
+     * @return the walking time of the edge
+     */
+    public double walkTime() {
+        return (distance/5.0)*60;
+    }
+
+    /**
+     * Returns the time of biking from either endpoint to the other
+     * @return the biking time of the edge
+     */
+    public double bikeTime() {
+        return (distance/15.0)*60;
     }
 
     /**
@@ -93,37 +108,27 @@ public class Edge implements Serializable {
         else throw new IllegalArgumentException("Illegal endpoint");
     }
 
-    /**
-     * Returns a string representation of the directed edge.
-     *
-     * @return a string representation of the directed edge
-     */
-    public String toString() {
-        return v + "->" + w + " " + String.format("%5.2f", distance);
-    }
-
-    public int getV() {
-        return v;
-    }
-
-    public int getW() {
-        return w;
-    }
-
-    public void setV(int v) {
-        this.v = v;
-    }
-
-    public void setW(int w) {
-        this.w = w;
-    }
-
-    public void setDistance(double distance) {
-        this.distance = distance;
-    }
-
-
-    public Path2D getEdgePath() {
+   /* public Line2D getEdgePath() {
         return edgePath;
+    }*/
+
+    public void setOneWay(boolean isOneWay) {
+        oneWay = isOneWay;
+    }
+
+    public void setOneWayReverse(boolean isOneWayReverse) {
+        oneWayReverse = isOneWayReverse;
+    }
+
+    public boolean isOneWay() {
+        return oneWay;
+    }
+
+    public boolean isOneWayReverse() {
+        return oneWayReverse;
+    }
+
+    public Highway highway() {
+        return highway;
     }
 }
