@@ -779,98 +779,16 @@ public class View extends JFrame implements Observer {
 
     }
 
-    /**
-     * Finds shortest path between 2 points.
-     * @param startPoint - Coordinates of start Address
-     * @param endPoint - Coordinates of end address
-     * @throws NoninvertibleTransformException
-     */
-    public void findRoute(Point2D startPoint, Point2D endPoint)throws NoninvertibleTransformException{
 
-
-        int startPointIndex = findClosestVertex(startPoint);
-
-        int endPointIndex = findClosestVertex(endPoint);
-
-        //Find shortest Path.
-        PathTree shortestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex);
-        shortestTree.useShortestPath(true);
-        travelMethod(shortestTree);
-
-        PathTree fastestTree = new PathTree(model.getDiGraph(), startPointIndex, endPointIndex);
-        fastestTree.useShortestPath(false);
-        travelMethod(fastestTree);
-
-        if(shortestTree.hasPathTo(endPointIndex) && fastestTree.hasPathTo(endPointIndex)){
-            shortestPath = shortestTree.pathTo(endPointIndex);
-            fastestPath = fastestTree.pathTo(endPointIndex);
-
-        }
-
-        //Shortest path
-        System.out.println("");
-        System.out.println("Shortest path from A to B");
-        double distance = shortestTree.distTo(endPointIndex);
-        if (distance < 1) {
-            distance *= 1000;
-            System.out.println("Distance: " + String.format("%.0f", distance) + " m");
-        } else System.out.println("Distance: " + String.format("%.2f", distance) + " km");
-        double travelTime = 0;
-        if(shortestPath == null) return;
-        HashMap<String, Double> streetLengthMap = new HashMap<>();
-        HashMap<String,List<Edge>> streetEdgeMap = new HashMap<>();
-        ArrayList<String> streetList = new ArrayList<>();
-        for (Edge e : shortestPath) {
-            if (shortestTree.isWalkRoute()) travelTime += e.walkTime();
-            else if (shortestTree.isBikeRoute()) travelTime += e.bikeTime();
-            else travelTime += e.driveTime();
-
-            //For routeplan string processing
-            String streetname = e.highway().getStreetName();
-            if(streetname == null) streetname = " ";
-
-            addToEdgeMap(streetname,e,streetEdgeMap);
-            Double dist = streetLengthMap.get(streetname);
-
-            if(dist == null){
-                streetLengthMap.put(streetname, e.distance());
-                streetList.add(streetname);
-            } else {
-                streetLengthMap.put(streetname,dist+e.distance());
-            }
-        }
-
-        processRouteplanStrings(streetList,streetLengthMap, streetEdgeMap);
-
-        System.out.println("Time: " + String.format("%.2f", travelTime) + " minutes\n");
-
-        //Fastest path
-        System.out.println("Fastest Path from A to B");
-        double fastDist = fastestTree.distTo(endPointIndex);
-        if (distance < 1) {
-            fastDist *= 1000;
-            System.out.println("Distance: " + String.format("%.0f", fastDist) + " m");
-        } else System.out.println("Distance: " + String.format("%.2f", fastDist) + " km");
-        double fastTime = 0;
-        if(fastestPath == null) return;
-        for (Edge e : fastestPath) {
-            fastTime += e.driveTime();
-        }
-        System.out.println("Time: " + String.format("%.2f", fastTime) + " minutes");
-
-        repaint();
-    }
-
-    public void travelMethod(PathTree p){
-        p.useCarRoute();
+    private void travelMethod(RouteFinder routeFinder){
+        routeFinder.carPressed(); //by default
         HashMap<JButton, Boolean> buttonMap = routePanel.getButtonDownMap();
         for (JButton button : buttonMap.keySet()) {
             boolean isPressed = buttonMap.get(button);
-            if (button.equals(routePanel.getBicycleButton()) && isPressed) p.useBikeRoute();
-            else if (button.equals(routePanel.getFootButton()) && isPressed) p.useWalkRoute();
-            else if (button.equals(routePanel.getCarButton()) && isPressed) p.useCarRoute();
+            if (button.equals(routePanel.getBicycleButton()) && isPressed) routeFinder.bikePressed();
+            else if (button.equals(routePanel.getFootButton()) && isPressed) routeFinder.walkPressed();
+            else if (button.equals(routePanel.getCarButton()) && isPressed) routeFinder.carPressed();
         }
-        p.initiate();
     }
 
 

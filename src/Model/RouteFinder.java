@@ -6,10 +6,7 @@ import ShortestPath.PathTree;
 
 import javax.swing.*;
 import java.awt.geom.*;
-import java.util.Collection;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Created by Anders on 04-05-2015.
@@ -17,37 +14,38 @@ import java.util.Map;
 public class RouteFinder {
     private Model model = Model.getModel();
     private int startVertex, endVertex;
-    private Map<JButton, Boolean> buttonMap;
     private Iterable<Edge> shortestPath, fastestPath;
     private boolean carPressed, bikePressed, walkPressed;
 
-    public RouteFinder(Point2D startPoint, Point2D endPoint, Map<JButton, Boolean> buttonMap) {
+    public RouteFinder(Point2D startPoint, Point2D endPoint) {
         startVertex = findClosestVertex(startPoint);
         endVertex = findClosestVertex(endPoint);
-        this.buttonMap = buttonMap;
     }
 
     public void setShortestRoute() {
         //Find shortest Path.
         PathTree shortestTree = new PathTree(model.getDiGraph(), startVertex, endVertex);
         shortestTree.useShortestPath(true);
-        travelMethod(shortestTree);
+        setTravelType(shortestTree);
+        shortestTree.initiate();
+        if(shortestTree.hasPathTo(endVertex))
+            shortestPath = shortestTree.pathTo(endVertex);
+        else
+            throw new IllegalArgumentException("No shortest path found");
     }
+
 
     public void setFastestRoute() {
-
+        PathTree fastestTree = new PathTree(model.getDiGraph(), startVertex, endVertex);
+        fastestTree.useShortestPath(false);
+        setTravelType(fastestTree);
+        fastestTree.initiate();
+        if(fastestTree.hasPathTo(endVertex))
+            fastestPath = fastestTree.pathTo(endVertex);
+        else
+            throw new IllegalArgumentException("No fastest path found");
     }
 
-    private void travelMethod(PathTree p){
-        p.useCarRoute();
-        for (JButton button : buttonMap.keySet()) {
-            boolean isPressed = buttonMap.get(button);
-            if (button.equals(routePanel.getBicycleButton()) && isPressed) p.useBikeRoute();
-            else if (button.equals(routePanel.getFootButton()) && isPressed) p.useWalkRoute();
-            else if (button.equals(routePanel.getCarButton()) && isPressed) p.useCarRoute();
-        }
-        p.initiate();
-    }
 
     /**
      * Finds the Nearest Highway from the MousePosition using distance from point to lineSegment
