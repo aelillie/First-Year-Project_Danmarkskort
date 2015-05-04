@@ -226,7 +226,9 @@ public class OSMHandler extends DefaultHandler {
                     else
                         streetTree.insert(highway);
                     vertices.add(wayCoords); //create vertices for all points making up a way
-                    if(keyValue_map.containsKey("oneway")) highway.assignEdges(wayCoords, keyValue_map.get("oneway"));
+                    if (keyValue_map.containsKey("junction") && keyValue_map.get("junction").equals("roundabout"))
+                        highway.assignEdges(wayCoords, "yes");
+                    else if(keyValue_map.containsKey("oneway")) highway.assignEdges(wayCoords, keyValue_map.get("oneway"));
                     else highway.assignEdges(wayCoords,"no");
 
                     //highway.assignEdges(wayCoords);
