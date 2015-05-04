@@ -6,6 +6,7 @@ import View.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.awt.event.*;
 
 /**
@@ -85,7 +86,10 @@ public class SearchController extends MouseAdapter implements ActionListener {
             if(address == null) return null;
             Address[] results = model.searchForAddresses(address, type);
             if(results != null) view.addToResultPane(results);
-            else view.getResultPane().setVisible(false);
+            else {
+                view.addNoAddressesFoundMsg(new Rectangle(26, 52, 286, 100));
+                //view.getResultPane().setVisible(false);
+            }
             return results;
         }
     }

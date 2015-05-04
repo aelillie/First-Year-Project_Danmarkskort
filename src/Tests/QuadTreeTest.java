@@ -1,12 +1,12 @@
 package Tests;
 
-import MapFeatures.Building;
-import MapFeatures.Highway;
+import Model.MapFeatures.Building;
+import Model.MapFeatures.Highway;
 import Model.MapData;
 import Model.MapFeature;
 import Model.MapIcon;
 import Model.PathCreater;
-import QuadTree.QuadTree;
+import Model.QuadTree.QuadTree;
 import org.junit.Before;
 import org.junit.Test;
 

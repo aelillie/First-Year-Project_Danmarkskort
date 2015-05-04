@@ -1,7 +1,7 @@
 package Model;
 
-import MapFeatures.Bounds;
-import MapFeatures.Coastline;
+import Model.MapFeatures.Bounds;
+import Model.MapFeatures.Coastline;
 
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
