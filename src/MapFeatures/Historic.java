@@ -15,12 +15,12 @@ public class Historic extends MapFeature {
     }
 
     @Override
-    public void setPreDefValues() {
-        super.setPreDefValues();
+    public void setPreDefLayerValues() {
+        super.setPreDefLayerValues();
     }
 
     @Override
-    public void setValueAttributes() {
+    public void setValueName() {
         if(value.equals("archaeological_site")) setValueName(ValueName.ARCHAEOLOGICAL_SITE);
         else setValueName(ValueName.HISTORIC);
     }

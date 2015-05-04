@@ -123,6 +123,7 @@ public class DrawAttribute {
     public static Color greenblue = new Color(102,205,170);
     public static Color whitegreen = new Color(144,238,144);
     public static Color brown = new Color(139,69,19);
+    public static Color lightbrown = new Color(194, 117, 37);
     public static Color ground = new Color(238,238,238);
 
     //Predefined colors for colorblind view
@@ -149,6 +150,9 @@ public class DrawAttribute {
     public static Color cl_pink = new Color(228, 126, 173);
     public static Color cl_purple = new Color(170,144,158);
     public static Color cl_whiteblue = new Color(115,193,237);
+
+    public static Color buttonDown = new Color(114, 114, 114);
+    public static Color borderColor = new Color(161, 161, 161);
 
     public static Color[] colors = new Color[] {lightblue, lightgreen, darkgreen, lightyellow, darkblue, lightgrey, neongreen, babyred, lightred,
                                                 grey, white, bloodred, red, skincolor, bluegreen, orange, pink, sand, whiteblue, greenblue, whitegreen, brown};

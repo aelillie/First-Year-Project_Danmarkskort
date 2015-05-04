@@ -58,7 +58,6 @@ public class Vertices implements Serializable {
     }
 
     public void clearMap(){
-
-        vertex_map.clear();
+        vertex_map = null;
     }
 }

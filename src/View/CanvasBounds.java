@@ -51,10 +51,10 @@ public class CanvasBounds {
                     tmpRect.getHeight() * 0.5);
         }else {
             bounds = new Rectangle2D.Double(
-                    tmpRect.getX() - tmpRect.getWidth()/8,
-                    tmpRect.getY() - tmpRect.getHeight()/8,
-                    tmpRect.getWidth()* 1.25,
-                    tmpRect.getHeight() * 1.25);
+                    tmpRect.getX() ,
+                    tmpRect.getY() ,
+                    tmpRect.getWidth(),
+                    tmpRect.getHeight());
 
         }
     }
@@ -65,6 +65,8 @@ public class CanvasBounds {
     public void toggleTestMode(){
         testmode = !testmode;
     }
+
+    public boolean testmode(){return testmode;}
 
 
 }

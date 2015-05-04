@@ -21,16 +21,14 @@ public class QuadTree implements Serializable{
         Double x, y;                                // x- and y- coordinates
         Double width, height;
         Node NW, NE, SE, SW;                   // four subtrees
-        MapData[] value;
-        int N = 0;
-
+        HashSet<MapData> value;
 
         Node(Double x, Double y, Double width, Double height) {
             this.x = x;
             this.y = y;
             this.width = width/2;
             this.height = height/2;
-            value = new MapData[cap/8+1];
+            value = new HashSet<>();
 
 
         }
@@ -41,16 +39,16 @@ public class QuadTree implements Serializable{
         public void subDivide(){
             Double newWidth = width/2;
             Double newHeight = height/2;
-            MapData[] tmp = value;
-            value = null;
+
+
             NW = new Node(x - newWidth , y -  newHeight, width, height);
             NE = new Node(x + newWidth, y - newHeight, width, height);
             SE = new Node(x + newWidth, y + newHeight, width, height);
             SW = new Node(x - newWidth ,y + newHeight, width, height);
 
-            for(int i = 0; i < N; i++)
-                insert(tmp[i]);
-
+            for(MapData mp : value)
+                insertAgain(mp, this);
+            value = null;
         }
 
         /**
@@ -58,21 +56,11 @@ public class QuadTree implements Serializable{
          * @param values - Value to be stored in node
          */
         public void addvalue(MapData values){
-            if(N == cap){
+            if(value.size() == cap){
                 subDivide();
                 insert(values);
-
-                N = 0;
-            }else if(N == value.length) {
-                MapData[] temp = new MapData[value.length*2];
-                for (int i = 0; i < N; i++) {
-                    temp[i] = value[i];
-                }
-                value = temp;
-                value[N++] = values;
-
             }else
-                value[N++] = values;
+                value.add(values);
 
         }
 
@@ -109,7 +97,23 @@ public class QuadTree implements Serializable{
         else {
             MapFeature mF = (MapFeature) value;
             Rectangle2D rec = mF.getWay().getBounds2D();
-            insert(root, rec.getCenterX(), rec.getCenterY(), mF);
+            insertPath(root, rec.getX(), rec.getX() + rec.getWidth(), rec.getY(), rec.getY() + rec.getHeight(), mF);
+
+        }
+    }
+
+    public void insertAgain(MapData value, Node h) {
+
+        //First check what Type it is then use its coordinates to store it in the QuadTree
+        if(value.getClassType() == MapIcon.class) {
+            MapIcon mI = (MapIcon) value;
+            insert(h, mI.getPosition().getX(), mI.getPosition().getY(), value);
+
+        }
+        else {
+            MapFeature mF = (MapFeature) value;
+            Rectangle2D rec = mF.getWay().getBounds2D();
+            insertPath(h, rec.getX(), rec.getX() + rec.getWidth(), rec.getY(), rec.getY() + rec.getHeight(), mF);
 
         }
     }
@@ -136,25 +140,42 @@ public class QuadTree implements Serializable{
     }
 
     //TODO fix this.
-    private void insertPath(Node h, Path2D shape, MapData value){
-        if(h.NW != null) {
-            if (h.NW.getRect().contains(shape.getBounds2D())
-                    || shape.intersects(h.NW.getRect())) {
-                insertPath(h.NW, shape, value);
+    private void insertPath(Node h, Double minX, Double maxX, Double minY, Double maxY , MapData value){
+
+        if (less(minX, h.x) &&  less(minY, h.y)) {
+            if (h.NW == null){
+                h.addvalue(value);
+                return;
             }
-            if (h.SW.getRect().contains(shape.getBounds2D())
-                    || shape.intersects(h.SW.getRect())) {
-                insertPath(h.SW, shape, value);
+            else insertPath(h.NW, minX, maxX, minY, maxY, value);
+        }
+
+        if (less(minX, h.x) && !less(maxY, h.y)){
+            if(h.SW == null){
+                h.addvalue(value);
+                return;
             }
-            if (h.NE.getRect().contains(shape.getBounds2D())
-                    || shape.intersects(h.NE.getRect())) {
-                insertPath(h.NE, shape, value);
+            else insertPath(h.SW, minX, maxX, minY, maxY, value);
+        }
+
+
+        if (!less(maxX, h.x) &&  less(minY, h.y)){
+            if(h.NE == null){
+                h.addvalue(value);
+                return;
             }
-            if (h.SE.getRect().contains(shape.getBounds2D())
-                    || shape.intersects(h.SE.getRect())) {
-                insertPath(h.SE, shape, value);
+            else insertPath(h.NE, minX, maxX, minY, maxY, value);
+        }
+
+
+        if (!less(maxX, h.x) && !less(maxY, h.y)){
+            if(h.SE == null){
+                h.addvalue(value);
+                return;
             }
-        }else h.addvalue(value);
+            else insertPath(h.SE, minX, maxX, minY, maxY, value);
+        }
+
     }
 
 
@@ -174,7 +195,8 @@ public class QuadTree implements Serializable{
                  * is less than, equal to, or greater than the second.
                  */
                 public int compare(MapData o1, MapData o2) {
-                    if (o1.getLayerVal() < o2.getLayerVal()) return -1;
+                    if(o1.equals(o2)) return 0;
+                    else if (o1.getLayerVal() < o2.getLayerVal()) return -1;
                     else if (o1.getLayerVal() > o2.getLayerVal()) return 1;
                     return -1;
                 }
@@ -200,9 +222,8 @@ public class QuadTree implements Serializable{
         Double xmax = rect.getMaxX();
         Double ymax = rect.getMaxY();
         if (rect.intersects(h.getRect()) || rect.contains(h.x, h.y))
-            if(h.N != 0) {
-                for(int i = 0; i < h.N; i++)
-                    values.add(h.value[i]);
+            if(h.value != null) {
+                values.addAll(h.value);
             }
         //Recursive calls. Checking what nodes to search in.
         if ( less(xmin, h.x) &&  less(ymin, h.y)) query2D(h.NW, rect, values);

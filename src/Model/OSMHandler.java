@@ -2,7 +2,7 @@ package Model;
 
 import MapFeatures.*;
 import QuadTree.QuadTree;
-import ShortestPath.EdgeWeightedDigraph;
+import ShortestPath.Graph;
 import ShortestPath.Vertices;
 import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
@@ -21,15 +21,17 @@ public class OSMHandler extends DefaultHandler {
     private Map<String, String> keyValue_map; //relation between the keys and values in the XML file
     private LongHashMap<Point2D> node_longMap; //Relation between a nodes' id and coordinates
     private LongHashMap<Path2D> wayId_longMap; //Map of ways and their id's
-    private EdgeWeightedDigraph diGraph;
+    private Graph diGraph;
     private Vertices vertices;
+    private HashSet<String> bigRoads = new HashSet<>(Arrays.asList("motorway",
+            "trunk", "primary", "secondary", "tertiary"));
 
     //Contains relevant places parsed as address objects linked to their coordinate.
     private Map<Address, Point2D> addressMap;
     private Map<Address, List<Path2D>> streetMap;
     private Map<Address, Path2D> boundaryMap;
 
-    private QuadTree streetTree, buildingTree, iconTree, naturalTree, railwayTree;
+    private QuadTree streetTree, buildingTree, iconTree, naturalTree, railwayTree, bigRoadTree;
     private ArrayList<Address> addressList; //list of all the addresses in the .osm file
     private List<Long> memberReferences; //member referenced in a relation of ways
     private List<Point2D> wayCoords; //List of referenced coordinates used to make up a single way
@@ -56,7 +58,7 @@ public class OSMHandler extends DefaultHandler {
         streetMap = new HashMap<>();
         boundaryMap = new HashMap<>();
         vertices = new Vertices();
-        diGraph = new EdgeWeightedDigraph();
+        diGraph = new Graph();
     }
 
     /**
@@ -124,11 +126,12 @@ public class OSMHandler extends DefaultHandler {
                 float maxlon = Float.parseFloat(atts.getValue("maxlon"));
                 Rectangle2D rect =  new Rectangle2D.Float(minlon, minlat, maxlon - minlon, maxlat - minlat);
                 bbox.setRect(rect);
-                streetTree = new QuadTree(bbox, 225);
-                buildingTree = new QuadTree(bbox, 300);
+                streetTree = new QuadTree(bbox, 250);
+                bigRoadTree = new QuadTree(bbox, 100);
+                buildingTree = new QuadTree(bbox, 250);
                 iconTree = new QuadTree(bbox, 30);
-                naturalTree = new QuadTree(bbox, 200);
-                railwayTree = new QuadTree(bbox, 100);
+                naturalTree = new QuadTree(bbox, 175);
+                railwayTree = new QuadTree(bbox, 50);
 
 
 
@@ -215,16 +218,23 @@ public class OSMHandler extends DefaultHandler {
                     //quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary"))); //Appears in <relation
 
                 }
-                else if (keyValue_map.containsKey("highway")) {
+                else if (keyValue_map.containsKey("highway") && !keyValue_map.get("highway").equals("proposed")) {
                     Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"), keyValue_map.get("maxspeed"));
-                    streetTree.insert(highway);
-                    if(keyValue_map.containsKey("oneway")) highway.setOneWay(keyValue_map.get("oneway"));
-                    else highway.setOneWay("no");
+                    highway.setRouteType(keyValue_map);
+                    if(bigRoads.contains(keyValue_map.get("highway")))
+                        bigRoadTree.insert(highway);
+                    else
+                        streetTree.insert(highway);
                     vertices.add(wayCoords); //create vertices for all points making up a way
-                    highway.assignEdges(wayCoords);
+                    if(keyValue_map.containsKey("oneway")) highway.assignEdges(wayCoords, keyValue_map.get("oneway"));
+                    else highway.assignEdges(wayCoords,"no");
+
+                    //highway.assignEdges(wayCoords);
                 }
                 else if (keyValue_map.containsKey("place")) naturalTree.insert(new Place(way, fetchOSMLayer(), keyValue_map.get("place")));
-                else if (keyValue_map.containsKey("railway")) railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
+                else if (keyValue_map.containsKey("railway"))
+                    if (keyValue_map.containsKey("construction") && keyValue_map.get("construction").equals("yes"));
+                    else railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 else if (keyValue_map.containsKey("route"))  railwayTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
                 if (keyValue_map.containsKey("name")) {
                     String name= keyValue_map.get("name").toLowerCase().trim();
@@ -356,6 +366,7 @@ public class OSMHandler extends DefaultHandler {
 
     private Collection<Highway> streetEdges() {
         Collection<MapData> mapData = streetTree.query2D(bbox, false);
+        mapData.addAll(bigRoadTree.query2D(bbox, false));
         Collection<Highway> highways = (Collection<Highway>)(Collection<?>) mapData;
         return highways;
     }
@@ -427,6 +438,7 @@ public class OSMHandler extends DefaultHandler {
         quadTrees.add(buildingTree);
         quadTrees.add(iconTree);
         quadTrees.add(railwayTree);
+        quadTrees.add(bigRoadTree);
         return quadTrees;
     }
 
@@ -435,11 +447,15 @@ public class OSMHandler extends DefaultHandler {
     public LongHashMap<Point2D> getNodeMap(){return node_longMap;}
 
     public void setQuadTrees(List<QuadTree> quadTrees) {
+        if(quadTrees.size() != 6){
+            throw new IllegalArgumentException("List must contain the 6 QuadTrees");
+        }
         this.streetTree = quadTrees.get(0);
         this.naturalTree = quadTrees.get(1);
         this.buildingTree = quadTrees.get(2);
         this.iconTree = quadTrees.get(3);
         this.railwayTree = quadTrees.get(4);
+        this.bigRoadTree = quadTrees.get(5);
     }
 
     public Map<Address,Point2D> getAddressMap(){ return  addressMap;}
@@ -479,18 +495,19 @@ public class OSMHandler extends DefaultHandler {
         return naturalTree;
     }
 
+    public QuadTree getBigRoadTree(){ return bigRoadTree;}
+
     public Vertices getVertices() {
         return vertices;
     }
 
-
-    public EdgeWeightedDigraph getDiGraph() {
+    public Graph getDiGraph() {
         return diGraph;
     }
 
     public QuadTree getRailwayTree() {return railwayTree; }
 
-    public void setDiGraph(EdgeWeightedDigraph diGraph) {
+    public void setDiGraph(Graph diGraph) {
         this.diGraph = diGraph;
     }
 

@@ -3,12 +3,15 @@ package Model;
 import MapFeatures.Bounds;
 import MapFeatures.Coastline;
 
+import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
 
 public class PathCreater {
+
+
 
     /**
      * Appends multiple Paths and sets the windingrule
@@ -62,10 +65,8 @@ public class PathCreater {
      * @param point2
      * @return
      */
-    public static Path2D createWay(Point2D point1, Point2D point2) {
-        Path2D way = new Path2D.Float();
-        way.moveTo(point1.getX(), point1.getY());
-        way.lineTo(point2.getX(), point2.getY());
+    public static Line2D createWay(Point2D point1, Point2D point2) {
+        Line2D way = new Line2D.Float(point1, point2);
         return way;
     }
 

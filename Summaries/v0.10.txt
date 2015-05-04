@@ -1,0 +1,77 @@
+Group G v0.10
+==================
+
+Features added since v0.9:
+* Route finding from A to B (fastest and shortest) for car, walking and bike
+* Route description (without turn instructions)
+* More drawn map features
+* Lines at the Edge of screen doesn’t disappear when zoomed in close
+
+
+“Features” discovered/added since v0.9:
+* Transport map doesn’t run smoothly on Denmark visualization
+
+Time usage in man hours:
+* Route finding/shortest path			25 hours
+* Adding map features				2 hours
+* QuadTree					5 hours
+* Test						3 hours
+* Refactor					5 hours
+* Graph Display					2 hours
+* Report writing (including latex)		20 hours
+* Route description				10 hours
+
+Cumulative cost so far: (1h = DKK 625)
+Lectures:                	21.875,-
+Meetings:                	 7.187,-
+Code review:            	15.625,-
+"Homework":			15.625,-
+GUI				54.685,- 
+Code trimming:			 3.125,-
+Address search	 		43.125,-
+OSM layers			13.125,-
+Road names 		 	  8.125,-
+Binary save/load		  7.500,- 
+Visualisation 			29.250,-
+Restructuring 			47.500,- + 3.125,-
+Workshop			12.500,-
+Report writing			23.125,- + 12.500,-
+Coastlines		 	26.875,-
+Mercator projection 		 2.500,-
+Load files from program 	 4.375,-
+Self-contained jar		 9.375,-
+Zoomlevel 			 3.125,-
+Group presentations		12.500,-
+Maptypes			 1.875,- +1.250,-
+Scalebar			 6.250,-
+Tests 				18.750,-
+Quadtree                        18.125,- + 3125,-
+Strokewidth 			 5.000,-
+Nearest neighbor		 5.000,-
+LoadingScreen		 	 1.875,-
+Keybordnavigation		 3.125,-
+Shortest path			31.250,- + 18.750,-
+Route description		 6.250,-
+Extra Feature			 3.125,-
+
+
+
+Wishlist for RC1:
+* Toggle all icons on/off function
+* Description of distance and travel time for a found route and the choice of choosing between the fastest and the shortest route (/route description) for car route
+* Adjusted zoom levels
+* Custom made load picture (eg. a picture of our program’s Denmark visualization)
+* Tell if left or right turn on route description
+
+Feedback Request:
+* Is a route finding loading time of 3-5 seconds acceptable from one end of Denmark to the other?
+* How do we give instructions for turning left/right? The obvious thing is to calculate the angle between two vectors (somehow using the determinant/dotproduct), but the problem is, we don’t know where we are coming from because of the undirected edges implementation.
+* Should the shortest path handling be refactored to the Model package? Right now the algorithm is called from View, which both handles the input and output.
+
+
+
+
+
+
+
+
