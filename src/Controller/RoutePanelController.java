@@ -10,6 +10,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.util.HashMap;
 import java.util.Map;
@@ -205,11 +206,21 @@ public class RoutePanelController implements ActionListener{
             startAddressField.setText(null);
             view.setShortestPath(null);
             view.setFastestPath(null);
+            try {
+                view.setStartPoint(null);
+            }catch (NoninvertibleTransformException ex){
+                ex.printStackTrace();
+            }
             view.clearDirectionPane();
         } else if (command == "clearEndField") {
             endAddressField.setText(null);
             view.setShortestPath(null);
             view.setFastestPath(null);
+            try {
+                view.setEndPoint(null);
+            }catch (NoninvertibleTransformException ex){
+                ex.printStackTrace();
+            }
             view.clearDirectionPane();
         } else if (command == "shortestPath"){
             setRouteTypeButtonBoolean(routeView.getShortestPathButton());
