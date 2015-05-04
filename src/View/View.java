@@ -19,6 +19,7 @@ import java.util.*;
 import java.util.List;
 
 import static java.lang.Math.max;
+import static java.lang.Math.round;
 
 public class View extends JFrame implements Observer {
     public static final long serialVersionUID = 0;
@@ -48,8 +49,6 @@ public class View extends JFrame implements Observer {
     private JList<Address> addressSearchResults;
     private JPanel closeDirectionList, travelTimePanel;
     private JLabel travelTimeLabel;
-
-    private int destination;
 
     private Map<String,MapPointer> addressPointerMap = new HashMap<>();
 
@@ -249,9 +248,9 @@ public class View extends JFrame implements Observer {
 
         travelTimePanel = new JPanel();
         travelTimePanel.setOpaque(false);
-        travelTimePanel.setBounds(26,280,220,20);
+        travelTimePanel.setBounds(26,280,265,20);
         travelTimePanel.setVisible(false);
-        travelTimeLabel = new JLabel("Her skal tiden stå bla bla bla bla blabla");
+        travelTimeLabel = new JLabel();
         travelTimeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
         travelTimeLabel.setForeground(Color.WHITE);
         travelTimePanel.add(travelTimeLabel);
@@ -282,7 +281,6 @@ public class View extends JFrame implements Observer {
         directionPane.getViewport().setBackground(Color.WHITE);
         directionPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         closeDirectionList.setVisible(true);
-
     }
 
     public void addNoAddressesFoundMsg(Rectangle bounds){
@@ -704,6 +702,7 @@ public class View extends JFrame implements Observer {
             travelMethod(routeFinder);
             routeFinder.setFastestRoute();
             fastestPath = routeFinder.getFastestPath();
+            setTravelInfo(routeFinder);
         }catch(IllegalArgumentException e){
             addToDirectionPane(new String[]{e.getMessage()});
 
@@ -721,6 +720,7 @@ public class View extends JFrame implements Observer {
             travelMethod(routeFinder);
             routeFinder.setShortestRoute();
             shortestPath = routeFinder.getShortestPath();
+            setTravelInfo(routeFinder);
         }catch(IllegalArgumentException e){
             addToDirectionPane(new String[]{e.getMessage()});
         }
@@ -728,6 +728,17 @@ public class View extends JFrame implements Observer {
         addToDirectionPane(routePlanner.getDirections());
         repaint();
 
+    }
+
+    public void setTravelInfo(RouteFinder routeFinder) {
+        double travelTime = routeFinder.getTravelTime();
+        double travelDistance = routeFinder.getTravelDistance();
+        if (travelDistance < 1)  {
+            travelDistance *= 1000;
+            travelTimeLabel.setText(String.format("Travel time: %.2f minutes     Distance: %.0f m", travelTime, travelDistance  ));
+        } else
+        travelTimeLabel.setText(String.format("Travel time: %.2f minutes     Distance: %.2f km", travelTime, travelDistance  ));
+        travelTimePanel.setVisible(true);
     }
 
     public void findNearestToMouse(Point2D position) throws NoninvertibleTransformException{
@@ -768,6 +779,7 @@ public class View extends JFrame implements Observer {
     public void clearDirectionPane(){
         directionPane.setVisible(false);
         closeDirectionList.setVisible(false);
+        travelTimePanel.setVisible(false);
     }
 
 

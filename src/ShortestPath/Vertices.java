@@ -42,13 +42,6 @@ public class Vertices implements Serializable {
         return vertex_map.size();
     }
 
-    public void insertIndex(Point2D vertex) {
-        vertex_index[counter] = vertex;
-        counter++;
-        if (counter == Integer.MAX_VALUE) //Won't happen in this lifetime
-            throw new NumberFormatException("Integer limit reached");
-    }
-
     public int getIndex(Point2D vertex) {
         return vertex_map.get(vertex);
     }

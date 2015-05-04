@@ -18,6 +18,7 @@ public class RouteFinder {
     private int startVertex, endVertex;
     private Iterable<Edge> shortestPath, fastestPath;
     private boolean carPressed, bikePressed, walkPressed;
+    private double travelDistance, travelTime;
 
     /**
      * Finds the vertices closes to the points and saves them
@@ -29,6 +30,17 @@ public class RouteFinder {
         endVertex = findClosestVertex(endPoint);
     }
 
+    public void setTravelInfo(PathTree p) {
+        travelDistance = 0;
+        travelTime = 0;
+        for (Edge e : p.pathTo(endVertex)) {
+            travelDistance += e.distance();
+            if(p.isBikeRoute()) travelTime += e.bikeTime();
+            else if (p.isWalkRoute()) travelTime += e.walkTime();
+            else if (p.isCarRoute()) travelTime += e.driveTime();
+        }
+    }
+
     /**
      * Sets its field shortest path to the shortest path from startVertex to endVertex
      */
@@ -38,6 +50,7 @@ public class RouteFinder {
         shortestTree.useShortestPath(true);
         setTravelType(shortestTree);
         shortestTree.initiate();
+        setTravelInfo(shortestTree);
         if(shortestTree.hasPathTo(endVertex))
             shortestPath = shortestTree.pathTo(endVertex);
         else
@@ -55,6 +68,7 @@ public class RouteFinder {
 
         setTravelType(fastestTree);
         fastestTree.initiate();
+        setTravelInfo(fastestTree);
         if(fastestTree.hasPathTo(endVertex))
             fastestPath = fastestTree.pathTo(endVertex);
         else
@@ -202,5 +216,21 @@ public class RouteFinder {
      */
     public Iterable<Edge> getFastestPath(){
         return fastestPath;
+    }
+
+    /**
+     * Returns the travel distance for the current route
+     * @return travel distance
+     */
+    public double getTravelDistance() {
+        return travelDistance;
+    }
+
+    /**
+     * Returns the travel time for the current route
+     * @return travel time
+     */
+    public double getTravelTime() {
+        return travelTime;
     }
 }
