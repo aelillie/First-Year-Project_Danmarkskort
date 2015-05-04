@@ -1,18 +1,18 @@
 package Controller;
 
 import Model.Address;
+import Model.Model;
 import View.RouteView;
 import View.View;
-import Model.Model;
 
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
-import java.util.*;
+import java.util.HashMap;
+import java.util.Map;
 
 
 public class RoutePanelController implements ActionListener{
@@ -160,9 +160,8 @@ public class RoutePanelController implements ActionListener{
 
             if (startPoint != null && endPoint != null) {
                 System.out.println("Trying to find shortest path...");
-                try {
-                    view.findRoute(startPoint, endPoint);
-                }catch (NoninvertibleTransformException ex){}
+                view.findFastestRoute(startPoint, endPoint);
+
             }
         }
 

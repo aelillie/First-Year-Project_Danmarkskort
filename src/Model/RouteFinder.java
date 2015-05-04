@@ -6,6 +6,7 @@ import ShortestPath.PathTree;
 
 import java.awt.geom.*;
 import java.util.Collection;
+import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -31,7 +32,7 @@ public class RouteFinder {
         if(shortestTree.hasPathTo(endVertex))
             shortestPath = shortestTree.pathTo(endVertex);
         else
-            throw new IllegalArgumentException("No shortest path found");
+            throw new IllegalArgumentException("No shortest path found for the given addresses.");
     }
 
 
@@ -43,7 +44,7 @@ public class RouteFinder {
         if(fastestTree.hasPathTo(endVertex))
             fastestPath = fastestTree.pathTo(endVertex);
         else
-            throw new IllegalArgumentException("No fastest path found");
+            throw new IllegalArgumentException("No fastest path found for the given addresses.");
     }
 
     private void setTravelType(PathTree p){
@@ -108,6 +109,7 @@ public class RouteFinder {
         Collection<MapData> streets = model.getVisibleBigRoads(Box, false);
         streets.addAll(model.getVisibleStreets(Box,false));
         Highway way = null;
+        filterRoads(streets);
         try {
             way = findNearestHighway(chosenPoint, streets);
         } catch (NoninvertibleTransformException e) {
@@ -145,5 +147,26 @@ public class RouteFinder {
         carPressed = false;
         bikePressed = false;
         walkPressed = true;
+    }
+
+    private void filterRoads(Collection<MapData> before) {
+        for (Iterator<MapData> it = before.iterator(); it.hasNext(); ) {
+            Highway highway = (Highway) it.next();
+            if (highway.getValue().equals("footway") || highway.getValue().equals("cycleway") ||
+                    highway.getValue().equals("steps") ||
+                    highway.getValue().equals("path") ||
+                    highway.getValue().equals("bridleway")) {
+                it.remove();
+
+            }
+        }
+    }
+
+    public Iterable<Edge> getShortestPath(){
+        return shortestPath;
+    }
+
+    public Iterable<Edge> getFastestPath(){
+        return fastestPath;
     }
 }

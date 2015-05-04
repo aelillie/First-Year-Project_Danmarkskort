@@ -730,7 +730,32 @@ public class View extends JFrame implements Observer {
         isFullscreen = !isFullscreen;
     }
 
+    public void findFastestRoute(Point2D start, Point2D end){
+        try {
+            RouteFinder routeFinder = new RouteFinder(start, end);
+            travelMethod(routeFinder);
+            routeFinder.setFastestRoute();
+            fastestPath = routeFinder.getFastestPath();
+        }catch(IllegalArgumentException e){
+            addToDirectionPane(new String[]{e.getMessage()});
 
+        }
+        repaint();
+
+    }
+
+    public void findShortestRoute(Point2D start, Point2D end){
+        try {
+            RouteFinder routeFinder = new RouteFinder(start, end);
+            travelMethod(routeFinder);
+            routeFinder.setShortestRoute();
+            shortestPath = routeFinder.getShortestPath();
+        }catch(IllegalArgumentException e){
+            addToDirectionPane(new String[]{e.getMessage()});
+        }
+        repaint();
+
+    }
 
     public void findNearestToMouse(Point2D position) throws NoninvertibleTransformException{
         //Take insets into account when using mouseCoordinates.
@@ -741,7 +766,7 @@ public class View extends JFrame implements Observer {
                 coordinates.getY() -0.005,
                 0.01 , 0.01);
         Collection<MapData> streets = model.getVisibleStreets(mouseBox, false);
-        streets.addAll(model.getVisibleBigRoads(mouseBox,false));
+        streets.addAll(model.getVisibleBigRoads(mouseBox, false));
         filterRoads(streets);  //remove all highways without names.
 
 
