@@ -3,8 +3,8 @@ package Model.MapFeatures;
 import Model.MapFeature;
 import Model.Model;
 import Model.ValueName;
-import Model.ShortestPath.Edge;
-import Model.ShortestPath.Vertices;
+import Model.Path.Edge;
+import Model.Path.Vertices;
 import Model.MapCalculator;
 import Model.PathCreater;
 

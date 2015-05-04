@@ -1,4 +1,4 @@
-package Model.ShortestPath;
+package Model.Path;
 
 import java.io.Serializable;
 import java.util.Iterator;

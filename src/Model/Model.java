@@ -2,8 +2,8 @@ package Model;
 
 import Model.MapFeatures.Coastline;
 import Model.QuadTree.QuadTree;
-import Model.ShortestPath.Graph;
-import Model.ShortestPath.Vertices;
+import Model.Path.Graph;
+import Model.Path.Vertices;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 

@@ -1,4 +1,4 @@
-package Model.ShortestPath;
+package Model.Path;
 
 import Model.MapFeatures.Highway;
 

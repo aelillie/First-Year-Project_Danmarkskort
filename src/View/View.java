@@ -6,7 +6,7 @@ import Model.MapFeatures.Highway;
 import Model.MapFeatures.Route;
 import Model.*;
 import Model.QuadTree.QuadTree;
-import Model.ShortestPath.Edge;
+import Model.Path.Edge;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;

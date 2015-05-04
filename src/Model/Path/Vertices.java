@@ -1,4 +1,4 @@
-package Model.ShortestPath;
+package Model.Path;
 
 import java.awt.geom.Point2D;
 import java.io.Serializable;

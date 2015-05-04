@@ -1,4 +1,4 @@
-package Model.ShortestPath;
+package Model.Path;
 
 import java.util.Stack;
 
