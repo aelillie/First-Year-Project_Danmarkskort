@@ -17,13 +17,13 @@ public class RouteView extends JPanel{
     private JTextField startAddressField, endAddressField;
     private JPanel startEndAddressPanel;
     private JButton findRouteButton, clearButtonEnd, clearButtonStart;
-    private JButton carButton, bicycleButton, footButton;
+    private JButton carButton, bicycleButton, footButton, shortestPathButton, fastestPathButton;
     private View view;
     private Map<JButton,ImageIcon> iconWhiteEquivalenceMap;
     private Map<JButton, ImageIcon> iconBlackEquivalenceMap;
     private ImageIcon carOptionIcon, walkingOptionIcon,bicycleOptionIcon;
     private RoutePanelController rp;
-    private HashMap<JButton,Boolean> buttonDownMap = new HashMap<>();
+    private HashMap<JButton,Boolean> buttonDownMap, routeButtonDownMap = new HashMap<>();
 
     /**
      * Creates a panel used for getting a path from A to B in the program
@@ -39,7 +39,7 @@ public class RouteView extends JPanel{
         setLayout(new BorderLayout());
         makeFindRoutePanel();
         add(startEndAddressPanel, BorderLayout.CENTER);
-        rp = new RoutePanelController(this,model,buttonDownMap);
+        rp = new RoutePanelController(this,model);
 
     }
 
@@ -93,6 +93,10 @@ public class RouteView extends JPanel{
         buttonDownMap.put(carButton,true);
         buttonDownMap.put(bicycleButton,false);
         buttonDownMap.put(footButton,false);
+
+        routeButtonDownMap = new HashMap<>();
+        routeButtonDownMap.put(shortestPathButton, false);
+        routeButtonDownMap.put(fastestPathButton, true);
     }
 
     private void makeStartEndAddressPanel(){
@@ -181,6 +185,30 @@ public class RouteView extends JPanel{
         clearButtonEnd.setBackground(Color.WHITE);
         startEndAddressPanel.add(clearButtonEnd,c);
 
+        JPanel fastestShortestPanel = new JPanel();
+
+
+        fastestPathButton = new JButton("Fastest");
+        fastestPathButton.setBackground(Color.GRAY);
+        fastestPathButton.setForeground(Color.WHITE);
+        fastestPathButton.setFocusable(false);
+        fastestPathButton.setActionCommand("fastestPath");
+        fastestShortestPanel.add(fastestPathButton);
+
+        shortestPathButton = new JButton("Shortest");
+        shortestPathButton.setBackground(Color.WHITE);
+        shortestPathButton.setForeground(Color.GRAY);
+        shortestPathButton.setFocusable(false);
+        shortestPathButton.setActionCommand("shortestPath");
+        fastestShortestPanel.add(shortestPathButton);
+
+        c = new GridBagConstraints();
+        c.anchor = GridBagConstraints.LAST_LINE_START;
+        c.gridx = 0;
+        c.gridwidth = 2;
+        c.insets = new Insets(0,5,5,0);
+        startEndAddressPanel.add(fastestShortestPanel,c);
+
         findRouteButton = new JButton("Find route");
         findRouteButton.setBackground(Color.WHITE);
         findRouteButton.setFocusable(false);
@@ -211,14 +239,21 @@ public class RouteView extends JPanel{
         ImageIcon newIcon;
         if(buttonDown){
             newIcon = iconBlackEquivalenceMap.get(button);
-            button.setBackground(Color.WHITE);
-            button.setForeground(Color.GRAY);
             button.setIcon(newIcon);
         } else {
             newIcon = iconWhiteEquivalenceMap.get(button);
+            button.setIcon(newIcon);
+        }
+        changeButtonColor(button, buttonDown);
+    }
+
+    public void changeButtonColor(JButton button, boolean buttonDown){
+        if(buttonDown){
+            button.setBackground(Color.WHITE);
+            button.setForeground(Color.GRAY);
+        } else {
             button.setBackground(Color.GRAY);
             button.setForeground(Color.WHITE);
-            button.setIcon(newIcon);
         }
     }
 
@@ -246,11 +281,17 @@ public class RouteView extends JPanel{
 
     public JButton getEndClearButton(){ return clearButtonEnd;}
 
+    public JButton getFastestPathButton(){ return fastestPathButton;}
+
+    public JButton getShortestPathButton(){ return shortestPathButton;}
+
     public View getView() { return view;}
 
     public HashMap<JButton, Boolean> getButtonDownMap() {
         return buttonDownMap;
     }
+
+    public HashMap<JButton, Boolean> getRouteTypeButtonDownMap() { return routeButtonDownMap; }
 
 
 }
