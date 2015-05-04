@@ -7,7 +7,6 @@ import MapFeatures.Route;
 import Model.*;
 import QuadTree.QuadTree;
 import ShortestPath.Edge;
-import ShortestPath.PathTree;
 
 import javax.swing.*;
 import javax.swing.border.CompoundBorder;
@@ -746,7 +745,7 @@ public class View extends JFrame implements Observer {
         filterRoads(streets);  //remove all highways without names.
 
 
-        nearestNeighbor = findNearestHighway(coordinates, streets);
+        nearestNeighbor = RouteFinder.findNearestHighway(coordinates, streets);
     }
 
     private void filterRoads(Collection<MapData> before){

@@ -4,9 +4,9 @@ import MapFeatures.Highway;
 import ShortestPath.Edge;
 import ShortestPath.PathTree;
 
-import javax.swing.*;
 import java.awt.geom.*;
-import java.util.*;
+import java.util.Collection;
+import java.util.List;
 
 /**
  * Created by Anders on 04-05-2015.
@@ -46,12 +46,23 @@ public class RouteFinder {
             throw new IllegalArgumentException("No fastest path found");
     }
 
+    private void setTravelType(PathTree p){
+        if(carPressed)
+            p.useCarRoute();
+        else if(bikePressed)
+            p.useBikeRoute();
+        else if(walkPressed)
+            p.useWalkRoute();
+        else
+            p.useCarRoute();
+    }
+
 
     /**
      * Finds the Nearest Highway from the MousePosition using distance from point to lineSegment
      * @param position Position of MousePointer
      */
-    public Highway findNearestHighway(Point2D position, Collection<MapData> node)throws NoninvertibleTransformException{
+    public static Highway findNearestHighway(Point2D position, Collection<MapData> node)throws NoninvertibleTransformException{
 
         MapFeature champion = null;
         Line2D championLine = null;
