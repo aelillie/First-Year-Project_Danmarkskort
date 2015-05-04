@@ -681,6 +681,7 @@ public class View extends JFrame implements Observer {
     }
 
     public void findFastestRoute(Point2D start, Point2D end){
+        shortestPath = null;
         try {
             RouteFinder routeFinder = new RouteFinder(start, end);
             travelMethod(routeFinder);
@@ -697,6 +698,7 @@ public class View extends JFrame implements Observer {
     }
 
     public void findShortestRoute(Point2D start, Point2D end){
+        fastestPath = null;
         try {
             RouteFinder routeFinder = new RouteFinder(start, end);
             travelMethod(routeFinder);
@@ -725,6 +727,7 @@ public class View extends JFrame implements Observer {
 
 
         nearestNeighbor = RouteFinder.findNearestHighway(coordinates, streets);
+        repaint();
     }
 
     private void filterRoads(Collection<MapData> before){
@@ -745,7 +748,10 @@ public class View extends JFrame implements Observer {
         }
     }
 
-
+    public void clearDirectionPane(){
+        directionPane.setVisible(false);
+        closeDirectionList.setVisible(false);
+    }
 
 
     private void travelMethod(RouteFinder routeFinder){

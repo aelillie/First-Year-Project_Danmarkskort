@@ -53,7 +53,7 @@ public class RoutePanelController implements ActionListener{
     private void setScrollpaneBoundsAndIcon(){
         textfieldToBounds = new HashMap<>();
         textfieldToBounds.put(startAddressField, new Rectangle(68, 162, 266, 100));
-        textfieldToBounds.put(endAddressField, new Rectangle(68,205,266,100));
+        textfieldToBounds.put(endAddressField, new Rectangle(68, 205, 266, 100));
         textFieldToIconType = new HashMap<>();
         textFieldToIconType.put(startAddressField, "startPointIcon".intern());
         textFieldToIconType.put(endAddressField, "endPointIcon".intern());
@@ -162,8 +162,15 @@ public class RoutePanelController implements ActionListener{
                 endPoint = null;
 
             if (startPoint != null && endPoint != null) {
-                System.out.println("Trying to find shortest path...");
-                view.findFastestRoute(startPoint, endPoint);
+                if(routeTypeButtonDownMap.get(routeView.getFastestPathButton())) {
+
+                    System.out.println("Trying to find Fastest path...");
+                    view.findFastestRoute(startPoint, endPoint);
+                }else if(routeTypeButtonDownMap.get(routeView.getShortestPathButton())){
+                    System.out.println("Tryin to find Shortest path...");
+                    view.findShortestRoute(startPoint, endPoint);
+
+                }else view.findFastestRoute(startPoint, endPoint);
 
             }
         }
@@ -196,10 +203,12 @@ public class RoutePanelController implements ActionListener{
             startAddressField.setText(null);
             view.setShortestPath(null);
             view.setFastestPath(null);
+            view.clearDirectionPane();
         } else if (command == "clearEndField") {
             endAddressField.setText(null);
             view.setShortestPath(null);
             view.setFastestPath(null);
+            view.clearDirectionPane();
         } else if (command == "shortestPath"){
             setRouteTypeButtonBoolean(routeView.getShortestPathButton());
         } else if (command == "fastestPath"){
