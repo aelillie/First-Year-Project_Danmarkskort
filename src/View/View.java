@@ -184,6 +184,7 @@ public class View extends JFrame implements Observer {
                 if (searchArea.getText().isEmpty()) {
                     searchArea.setForeground(Color.GRAY);
                     searchArea.setText(promptText);
+                    resultPane.setVisible(false);
                 }
             }
 
@@ -323,6 +324,9 @@ public class View extends JFrame implements Observer {
         addToDirectionPane(directions);
     }
 
+    public void setAddressSearchResults(JList<Address> searchResults){
+        addressSearchResults = searchResults;
+    }
 
     public void addToDirectionPane(String[] directionArray){
         JList<String> directionStringList = new JList<>(directionArray);
@@ -338,8 +342,9 @@ public class View extends JFrame implements Observer {
 
     public void addNoAddressesFoundMsg(Rectangle bounds){
         String[] msgArray = new String[1];
-        msgArray[1] = "No addresses found";
+        msgArray[0] = "No addresses found";
         resultPane.setVisible(true);
+        resultPane.setBounds(bounds);
         resultPane.setViewportView(new JList<>(msgArray));
         resultPane.getViewport().setBackground(Color.WHITE);
         resultPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
