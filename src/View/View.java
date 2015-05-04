@@ -48,7 +48,8 @@ public class View extends JFrame implements Observer {
     private JScrollPane resultEndPane = new JScrollPane();
     private JScrollPane directionPane = new JScrollPane();
     private JList<Address> addressSearchResults;
-    private JPanel closeDirectionList;
+    private JPanel closeDirectionList, travelTimePanel;
+    private JLabel travelTimeLabel;
 
     private int destination;
 
@@ -211,6 +212,7 @@ public class View extends JFrame implements Observer {
         layer.add(optionsPanel, new Integer(2));
         layer.add(directionPane, new Integer(2));
         layer.add(closeDirectionList, new Integer(3));
+        layer.add(travelTimePanel, new Integer(4));
     }
 
     private void makeComponents() {
@@ -237,7 +239,6 @@ public class View extends JFrame implements Observer {
         closeDirectionList = new JPanel();
         closeDirectionList.setVisible(false);
         closeDirectionList.setBounds(26, 280, 400, 20);
-        closeDirectionList.setOpaque(true);
         closeDirectionList.setBackground(DrawAttribute.fadeblack);
         closeDirectionList.setLayout(new BoxLayout(closeDirectionList, BoxLayout.LINE_AXIS));
         closeDirectionList.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
@@ -248,6 +249,14 @@ public class View extends JFrame implements Observer {
         closeDirectionListButton.setActionCommand("closeDirectionList");
         closeDirectionList.add(closeDirectionListButton);
 
+        travelTimePanel = new JPanel();
+        travelTimePanel.setOpaque(false);
+        travelTimePanel.setBounds(26,280,220,20);
+        travelTimePanel.setVisible(false);
+        travelTimeLabel = new JLabel("Her skal tiden stå bla bla bla bla blabla");
+        travelTimeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
+        travelTimeLabel.setForeground(Color.WHITE);
+        travelTimePanel.add(travelTimeLabel);
     }
 
     public void changeToStandard(){
@@ -327,6 +336,15 @@ public class View extends JFrame implements Observer {
 
     }
 
+    public void addNoAddressesFoundMsg(Rectangle bounds){
+        String[] msgArray = new String[1];
+        msgArray[1] = "No addresses found";
+        resultPane.setVisible(true);
+        resultPane.setViewportView(new JList<>(msgArray));
+        resultPane.getViewport().setBackground(Color.WHITE);
+        resultPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
+    }
+
     public void addToResultPane(Address[] resultArray){
         addressSearchResults = new JList<>(resultArray);
         resultPane.setVisible(true);
@@ -382,7 +400,6 @@ public class View extends JFrame implements Observer {
         showRoutePanelButton.setBounds(20, 55, 100, 25);
         showRoutePanelButton.setBorder(BorderFactory.createMatteBorder(4, 1, 1, 1, Color.GRAY));
         showRoutePanelButton.setActionCommand("showRoutePanel");
-
     }
 
     public void addPointer(MapPointer mapPointer){
