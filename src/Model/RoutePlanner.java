@@ -27,39 +27,13 @@ public class RoutePlanner {
     }
 
 
-   /* public String[] getDirections(){
-
-        HashMap<String, Double> streetLengthMap = new HashMap<>();
-        HashMap<String,List<Edge>> streetEdgeMap = new HashMap<>();
-        ArrayList<String> streetList = new ArrayList<>();
-        for (Edge e : edges) {
-
-            //For routeplan string processing
-            String streetname = e.highway().getStreetName();
-            if(streetname == null) streetname = " ";
-
-            addToEdgeMap(streetname,e,streetEdgeMap);
-            Double dist = streetLengthMap.get(streetname);
-
-            if(dist == null){
-                streetLengthMap.put(streetname, e.distance());
-                streetList.add(streetname);
-            } else {
-                streetLengthMap.put(streetname,dist+e.distance());
-            }
-        }
-
-        return processRouteplanStrings(streetList,streetLengthMap, streetEdgeMap);
-
-    }*/
-
     /**
      * GOes through the edges creating the direction-Strings
      * @return - String[] of Directions.
      */
     public String[] getDirections(){
-        ArrayList<String> streetNames = new ArrayList<>();
-        ArrayList<List<Edge>> streetEdges = new ArrayList<>();
+        ArrayList<String> streetNames = new ArrayList<>();      //List of StreetNames
+        ArrayList<List<Edge>> streetEdges = new ArrayList<>();  //List of edges for each Street
         String prevName = null;
         int i = -1;
         for(Edge e : edges){
@@ -70,18 +44,21 @@ public class RoutePlanner {
                 streetName = "path";
             }
 
+            //Check if start of new Street
             if(prevName == null || !prevName.equals(streetName)){
+                //Create a list of edges for it.
                 streetNames.add(streetName);
                 List<Edge> streets = new ArrayList<>();
                 streets.add(e);
                 streetEdges.add(streets);
                 i++;
-
+            //else add the edge to the same streets list
             }else{
                 List<Edge> streets = streetEdges.get(i);
                 streets.add(e);
             }
 
+            //update prevStreetName
             prevName = streetName;
 
         }
@@ -90,17 +67,6 @@ public class RoutePlanner {
         return processRouteplanStrings(streetNames,streetEdges);
     }
 
-   /* private void addToEdgeMap(String s, Edge e, Map<String,List<Edge>> edgeMap){
-        List<Edge> currentStreet = edgeMap.get(s);
-        if(currentStreet == null) {
-            List<Edge> newStreet = new ArrayList<>();
-            newStreet.add(e);
-            edgeMap.put(s,newStreet);
-        } else {
-            currentStreet.add(e);
-        }
-
-    }*/
 
     private String[] processRouteplanStrings(ArrayList<String> streetNames, ArrayList<List<Edge>> streetEdges){
         String[] directions = new String[streetNames.size()+1];
@@ -112,29 +78,36 @@ public class RoutePlanner {
             List<Edge> edgesInStreets = streetEdges.get(i);
             Edge startEdge = edgesInStreets.get(edgesInStreets.size()-1);
             String turnD;
+
             if(endEdge == null){
                 turnD = "Follow ";
             }else{
+                //Create a vector (line) in the correct direction
                 Line2D vector = getDirectionVector(startEdge, endEdge);
+
+                //Find the outer Point for street turning at.
                 Point2D p = getOuterPoint(startEdge, endEdge);
-                double x = determinatOf2Vector(vector, p);
+
+                //Math Magic happens
+                double x = signumDeterminatOf2Vector(vector, p);
                 if(x > 0 ) {
-                    //System.out.println(x + " " + street);
                     turnD = "Turn left at ";
                 }else {
-                    //System.out.println(x + " " + street);
                     turnD = "Turn right at ";
                 }
             }
 
             endEdge = edgesInStreets.get(0);
 
+            //Distance of street found.
             double dist = 0;
             for(Edge e : edgesInStreets){
                 dist += e.distance();
             }
 
             dist *= 1000;
+
+            //Set all the information together for the user.
             String distString;
             if(dist < 1000) { //If the distance is less than a kilometer, display it in meters, otherwise display it in kilometers
                 distString = new DecimalFormat("####").format(dist) + " m";
@@ -161,7 +134,6 @@ public class RoutePlanner {
         int startW = start.w();
 
         if(startV == endW || startW == endW){
-
             return new Line2D.Float(end.getP1(), end.getP2());
         }else{
             return new Line2D.Float(end.getP2(),end.getP1());
@@ -182,6 +154,12 @@ public class RoutePlanner {
             return start.getP1();
         }
 
+
+    }
+
+    public static double signumDeterminatOf2Vector(Line2D vector, Point2D point){
+
+        return  Math.signum((vector.getX2()-vector.getX1())* (point.getY()-vector.getY1()) - (vector.getY2() - vector.getY1()) * (point.getX() - vector.getX1()));
 
     }
 
@@ -227,10 +205,10 @@ public class RoutePlanner {
         }
         directions[directionCount] = "You have reached your destination.";
         return directions;
-    }*/
+    }
 
 
-    /*List<Edge> streetInEdges = streetToEdgesMap.get(street);
+    List<Edge> streetInEdges = streetToEdgesMap.get(street);
             Edge endEdge = streetInEdges.get(streetInEdges.size()-1);
             Point2D startPoint = new Point2D.Double(endEdge.getX1(),endEdge.getY1());
             Point2D endPoint = new Point2D.Double(endEdge.getX2(),endEdge.getY2());
@@ -253,12 +231,45 @@ public class RoutePlanner {
             }*/
 
 
+   /* private void addToEdgeMap(String s, Edge e, Map<String,List<Edge>> edgeMap){
+        List<Edge> currentStreet = edgeMap.get(s);
+        if(currentStreet == null) {
+            List<Edge> newStreet = new ArrayList<>();
+            newStreet.add(e);
+            edgeMap.put(s,newStreet);
+        } else {
+            currentStreet.add(e);
+        }
 
-    public static double determinatOf2Vector(Line2D vector, Point2D point){
+    }*/
 
-        return  Math.signum((vector.getX2()-vector.getX1())* (point.getY()-vector.getY1()) - (vector.getY2() - vector.getY1()) * (point.getX() - vector.getX1()));
 
-    }
+   /* public String[] getDirections(){
+
+        HashMap<String, Double> streetLengthMap = new HashMap<>();
+        HashMap<String,List<Edge>> streetEdgeMap = new HashMap<>();
+        ArrayList<String> streetList = new ArrayList<>();
+        for (Edge e : edges) {
+
+            //For routeplan string processing
+            String streetname = e.highway().getStreetName();
+            if(streetname == null) streetname = " ";
+
+            addToEdgeMap(streetname,e,streetEdgeMap);
+            Double dist = streetLengthMap.get(streetname);
+
+            if(dist == null){
+                streetLengthMap.put(streetname, e.distance());
+                streetList.add(streetname);
+            } else {
+                streetLengthMap.put(streetname,dist+e.distance());
+            }
+        }
+
+        return processRouteplanStrings(streetList,streetLengthMap, streetEdgeMap);
+
+    }*/
+
 
 
 }
