@@ -2,6 +2,8 @@ package Model;
 
 import Model.Path.Edge;
 
+import java.awt.geom.Line2D;
+import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -113,12 +115,15 @@ public class RoutePlanner {
             if(endEdge == null){
                 turnD = "Follow ";
             }else{
-                if(angleBetween2Lines(startEdge,endEdge) > -1) {
-                    //System.out.println(angleBetween2Lines(startEdge, endEdge) + " " + street);
-                    turnD = "Turn right ";
-                }else {
-                    //System.out.println(angleBetween2Lines(startEdge, endEdge) + " " + street);
+                Line2D vector = getDirectionVector(startEdge, endEdge);
+                Point2D p = getOuterPoint(startEdge, endEdge);
+                double x = determinatOf2Vector(vector, p);
+                if(x > 0 ) {
+                    System.out.println(x + " " + street);
                     turnD = "Turn left ";
+                }else {
+                    System.out.println(x + " " + street);
+                    turnD = "Turn right ";
                 }
             }
 
@@ -147,6 +152,37 @@ public class RoutePlanner {
         }
         directions[directionCount] = "You have reached your destination.";
         return directions;
+    }
+
+    private Line2D getDirectionVector(Edge start, Edge end){
+        int endW = end.w();
+
+        int startV = start.v();
+        int startW = start.w();
+
+        if(startV == endW || startW == endW){
+
+            return new Line2D.Float(end.getP1(), end.getP2());
+        }else{
+            return new Line2D.Float(end.getP2(),end.getP1());
+        }
+
+
+    }
+
+    private Point2D getOuterPoint(Edge start, Edge end){
+        int endV = end.v();
+        int endW = end.w();
+
+        int startV = start.v();
+
+        if(startV == endW || startV == endV){
+            return start.getP2();
+        }else{
+            return start.getP1();
+        }
+
+
     }
 
     /*private String[] processRouteplanStrings(ArrayList<String> streetList, HashMap<String,Double> streetLengthMap, HashMap<String,List<Edge>> streetToEdgesMap){
@@ -217,13 +253,11 @@ public class RoutePlanner {
             }*/
 
 
-    public static double angleBetween2Lines(Edge line1, Edge line2)
-    {
-        double angle1 = Math.atan2(line1.getY1() - line1.getY2(),
-                line1.getX1() - line1.getX2());
-        double angle2 = Math.atan2(line2.getY1() - line2.getY2(),
-                line2.getX1() - line2.getX2());
-        return angle1-angle2;
+
+    public static double determinatOf2Vector(Line2D vector, Point2D point){
+
+        return  Math.signum((vector.getX2()-vector.getX1())* (point.getY()-vector.getY1()) - (vector.getY2() - vector.getY1()) * (point.getX() - vector.getX1()));
+
     }
 
 
