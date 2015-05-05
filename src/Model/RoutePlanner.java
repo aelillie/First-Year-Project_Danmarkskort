@@ -70,10 +70,49 @@ public class RoutePlanner {
     private String[] processRouteplanStrings(ArrayList<String> streetList, HashMap<String,Double> streetLengthMap, HashMap<String,List<Edge>> streetToEdgesMap){
         String[] directions = new String[streetList.size()+1];
         int directionCount = 0;
+
+        Edge endEdge = null;
         for (int i = streetList.size(); --i >= 0;){
             String street = streetList.get(i);
+            List<Edge> streetInEdges = streetToEdgesMap.get(street);
+            Edge startEdge = streetInEdges.get(0);
+            String turnD;
+            if(endEdge == null){
+                turnD = "Follow ";
+            }else{
+                if(angleBetween2Lines(startEdge,endEdge) > -1) {
+                    System.out.println(angleBetween2Lines(startEdge, endEdge) + " " + street);
+                    turnD = "Turn right ";
+                }else {
+                    System.out.println(angleBetween2Lines(startEdge, endEdge) + " " + street);
+                    turnD = "Turn left ";
+                }
+            }
 
-            /*List<Edge> streetInEdges = streetToEdgesMap.get(street);
+            endEdge = streetInEdges.get(streetInEdges.size()-1);
+
+            double dist = streetLengthMap.get(street)*1000;
+            String distString;
+            if(dist < 1000) { //If the distance is less than a kilometer, display it in meters, otherwise display it in kilometers
+                distString = new DecimalFormat("####").format(dist) + " m";
+            } else {
+                distString = new DecimalFormat("##.##").format(dist/1000) + " km";
+            }
+            String direction = turnD + street + " for " + distString;
+            //String turnDirection =
+            if(street.trim().equals("")){
+                if(i != 0) direction = "Continue for " + distString + " until you reach " + streetList.get(i-1);
+                else direction = "Continue for " + distString + " until you reach your destination.";
+            }
+            directions[directionCount] = direction;
+            directionCount++;
+        }
+        directions[directionCount] = "You have reached your destination.";
+        return directions;
+    }
+
+
+    /*List<Edge> streetInEdges = streetToEdgesMap.get(street);
             Edge endEdge = streetInEdges.get(streetInEdges.size()-1);
             Point2D startPoint = new Point2D.Double(endEdge.getX1(),endEdge.getY1());
             Point2D endPoint = new Point2D.Double(endEdge.getX2(),endEdge.getY2());
@@ -96,25 +135,12 @@ public class RoutePlanner {
             }*/
 
 
-            double dist = streetLengthMap.get(street)*1000;
-            String distString;
-            if(dist < 1000) { //If the distance is less than a kilometer, display it in meters, otherwise display it in kilometers
-                distString = new DecimalFormat("####").format(dist) + " m";
-            } else {
-                distString = new DecimalFormat("##.##").format(dist/1000) + " km";
-            }
-            String direction = "Follow " + street + " for " + distString;
-            //String turnDirection =
-            if(street.trim().equals("")){
-                if(i != 0) direction = "Continue for " + distString + " until you reach " + streetList.get(i-1);
-                else direction = "Continue for " + distString + " until you reach your destination.";
-            }
-            directions[directionCount] = direction;
-            directionCount++;
-        }
-        directions[directionCount] = "You have reached your destination.";
-        return directions;
+    public static double angleBetween2Lines(Edge line1, Edge line2)
+    {
+        double angle1 = Math.atan2(line1.getY1() - line1.getY2(),
+                line1.getX1() - line1.getX2());
+        double angle2 = Math.atan2(line2.getY1() - line2.getY2(),
+                line2.getX1() - line2.getX2());
+        return angle1-angle2;
     }
-
-
 }
