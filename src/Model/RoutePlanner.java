@@ -81,10 +81,10 @@ public class RoutePlanner {
                 turnD = "Follow ";
             }else{
                 if(angleBetween2Lines(startEdge,endEdge) > -1) {
-                    System.out.println(angleBetween2Lines(startEdge, endEdge) + " " + street);
+                    //System.out.println(angleBetween2Lines(startEdge, endEdge) + " " + street);
                     turnD = "Turn right ";
                 }else {
-                    System.out.println(angleBetween2Lines(startEdge, endEdge) + " " + street);
+                    //System.out.println(angleBetween2Lines(startEdge, endEdge) + " " + street);
                     turnD = "Turn left ";
                 }
             }
