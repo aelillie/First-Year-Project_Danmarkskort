@@ -15,7 +15,7 @@ public class RoutePlanner {
     private Iterable<Edge> edges;
 
     /**
-     * Sets up fields
+     * Sets up fields, is used to generate directions for a path using a list of edges.
      * @param edges
      */
     public RoutePlanner(Iterable<Edge> edges){
