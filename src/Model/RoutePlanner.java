@@ -119,11 +119,11 @@ public class RoutePlanner {
                 Point2D p = getOuterPoint(startEdge, endEdge);
                 double x = determinatOf2Vector(vector, p);
                 if(x > 0 ) {
-                    System.out.println(x + " " + street);
-                    turnD = "Turn left ";
+                    //System.out.println(x + " " + street);
+                    turnD = "Turn left at ";
                 }else {
-                    System.out.println(x + " " + street);
-                    turnD = "Turn right ";
+                    //System.out.println(x + " " + street);
+                    turnD = "Turn right at ";
                 }
             }
 
