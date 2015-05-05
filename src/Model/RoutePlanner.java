@@ -24,11 +24,8 @@ public class RoutePlanner {
         else throw new IllegalArgumentException("No path was given");
     }
 
-    /**
-     * GOes through the edges creating the direction-Strings
-     * @return - String[] of Directions.
-     */
-    public String[] getDirections(){
+
+   /* public String[] getDirections(){
 
         HashMap<String, Double> streetLengthMap = new HashMap<>();
         HashMap<String,List<Edge>> streetEdgeMap = new HashMap<>();
@@ -52,10 +49,46 @@ public class RoutePlanner {
 
         return processRouteplanStrings(streetList,streetLengthMap, streetEdgeMap);
 
+    }*/
 
+    /**
+     * GOes through the edges creating the direction-Strings
+     * @return - String[] of Directions.
+     */
+    public String[] getDirections(){
+        ArrayList<String> streetNames = new ArrayList<>();
+        ArrayList<List<Edge>> streetEdges = new ArrayList<>();
+        String prevName = null;
+        int i = -1;
+        for(Edge e : edges){
+
+            String streetName = e.highway().getStreetName();
+
+            if(streetName == null){
+                streetName = "path";
+            }
+
+            if(prevName == null || !prevName.equals(streetName)){
+                streetNames.add(streetName);
+                List<Edge> streets = new ArrayList<>();
+                streets.add(e);
+                streetEdges.add(streets);
+                i++;
+
+            }else{
+                List<Edge> streets = streetEdges.get(i);
+                streets.add(e);
+            }
+
+            prevName = streetName;
+
+        }
+
+
+        return processRouteplanStrings(streetNames,streetEdges);
     }
 
-    private void addToEdgeMap(String s, Edge e, Map<String,List<Edge>> edgeMap){
+   /* private void addToEdgeMap(String s, Edge e, Map<String,List<Edge>> edgeMap){
         List<Edge> currentStreet = edgeMap.get(s);
         if(currentStreet == null) {
             List<Edge> newStreet = new ArrayList<>();
@@ -65,9 +98,58 @@ public class RoutePlanner {
             currentStreet.add(e);
         }
 
+    }*/
+
+    private String[] processRouteplanStrings(ArrayList<String> streetNames, ArrayList<List<Edge>> streetEdges){
+        String[] directions = new String[streetNames.size()+1];
+        int directionCount = 0;
+
+        Edge endEdge = null;
+        for (int i = streetNames.size(); --i >= 0;){
+            String street = streetNames.get(i);
+            List<Edge> edgesInStreets = streetEdges.get(i);
+            Edge startEdge = edgesInStreets.get(edgesInStreets.size()-1);
+            String turnD;
+            if(endEdge == null){
+                turnD = "Follow ";
+            }else{
+                if(angleBetween2Lines(startEdge,endEdge) > -1) {
+                    System.out.println(angleBetween2Lines(startEdge, endEdge) + " " + street);
+                    turnD = "Turn right ";
+                }else {
+                    System.out.println(angleBetween2Lines(startEdge, endEdge) + " " + street);
+                    turnD = "Turn left ";
+                }
+            }
+
+            endEdge = edgesInStreets.get(0);
+
+            double dist = 0;
+            for(Edge e : edgesInStreets){
+                dist += e.distance();
+            }
+
+            dist *= 1000;
+            String distString;
+            if(dist < 1000) { //If the distance is less than a kilometer, display it in meters, otherwise display it in kilometers
+                distString = new DecimalFormat("####").format(dist) + " m";
+            } else {
+                distString = new DecimalFormat("##.##").format(dist/1000) + " km";
+            }
+            String direction = turnD + street + " for " + distString;
+            //String turnDirection =
+            if(street.trim().equals("")){
+                if(i != 0) direction = "Continue for " + distString + " until you reach " + streetNames.get(i-1);
+                else direction = "Continue for " + distString + " until you reach your destination.";
+            }
+            directions[directionCount] = direction;
+            directionCount++;
+        }
+        directions[directionCount] = "You have reached your destination.";
+        return directions;
     }
 
-    private String[] processRouteplanStrings(ArrayList<String> streetList, HashMap<String,Double> streetLengthMap, HashMap<String,List<Edge>> streetToEdgesMap){
+    /*private String[] processRouteplanStrings(ArrayList<String> streetList, HashMap<String,Double> streetLengthMap, HashMap<String,List<Edge>> streetToEdgesMap){
         String[] directions = new String[streetList.size()+1];
         int directionCount = 0;
 
@@ -109,7 +191,7 @@ public class RoutePlanner {
         }
         directions[directionCount] = "You have reached your destination.";
         return directions;
-    }
+    }*/
 
 
     /*List<Edge> streetInEdges = streetToEdgesMap.get(street);
@@ -143,4 +225,6 @@ public class RoutePlanner {
                 line2.getX1() - line2.getX2());
         return angle1-angle2;
     }
+
+
 }
