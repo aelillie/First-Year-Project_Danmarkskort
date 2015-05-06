@@ -97,7 +97,7 @@ public class BinaryHandler{
         model.getOSMReader().setAddressList((ArrayList<Address>) in.readObject());
 
         loadingScreen.updateLoadBar(55);
-        model.getOSMReader().setDiGraph((Graph) in.readObject());
+        model.getOSMReader().setGraph((Graph) in.readObject());
         loadingScreen.updateLoadBar(65);
         model.getOSMReader().setVertices((Vertices) in.readObject());
 

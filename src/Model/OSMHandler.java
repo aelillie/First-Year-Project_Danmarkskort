@@ -21,7 +21,7 @@ public class OSMHandler extends DefaultHandler {
     private Map<String, String> keyValue_map; //relation between the keys and values in the XML file
     private LongHashMap<Point2D> node_longMap; //Relation between a nodes' id and coordinates
     private LongHashMap<Path2D> wayId_longMap; //Map of ways and their id's
-    private Graph diGraph;
+    private Graph graph;
     private Vertices vertices;
     private HashSet<String> bigRoads = new HashSet<>(Arrays.asList("motorway",
             "trunk", "primary", "secondary", "tertiary"));
@@ -58,7 +58,7 @@ public class OSMHandler extends DefaultHandler {
         streetMap = new HashMap<>();
         boundaryMap = new HashMap<>();
         vertices = new Vertices();
-        diGraph = new Graph();
+        graph = new Graph();
     }
 
     /**
@@ -366,8 +366,8 @@ public class OSMHandler extends DefaultHandler {
                 System.out.printf("sorted all addresses, time: %d ms\n", (System.nanoTime() - time) / 1000000);
                 PathCreater.connectCoastlines(bbox);
                 vertices.createVertexIndex();
-                diGraph.initialize(vertices.V());
-                diGraph.addEdges(streetEdges());
+                graph.initialize(vertices.V());
+                graph.addEdges(streetEdges());
                 wayId_longMap.clear(); //sets key and value arrays to point to null
                 node_longMap.clear();
                 keyValue_map.clear();
@@ -515,14 +515,14 @@ public class OSMHandler extends DefaultHandler {
         return vertices;
     }
 
-    public Graph getDiGraph() {
-        return diGraph;
+    public Graph getGraph() {
+        return graph;
     }
 
     public QuadTree getRailwayTree() {return railwayTree; }
 
-    public void setDiGraph(Graph diGraph) {
-        this.diGraph = diGraph;
+    public void setGraph(Graph graph) {
+        this.graph = graph;
     }
 
     public void setVertices(Vertices vertices) {
