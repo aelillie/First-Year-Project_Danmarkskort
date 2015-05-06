@@ -7,5 +7,9 @@ import java.awt.geom.Point2D;
  */
 public class OSMNode extends Point2D.Float {
 
-    private int refCount;
+    public int refCount;
+
+    public OSMNode(float x, float y) {
+        super(x,y);
+    }
 }

@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class OSMHandler extends DefaultHandler {
     private Map<String, String> keyValue_map; //relation between the keys and values in the XML file
-    private LongHashMap<Point2D> node_longMap; //Relation between a nodes' id and coordinates
+    private LongHashMap<OSMNode> node_longMap; //Relation between a nodes' id and coordinates
     private LongHashMap<Path2D> wayId_longMap; //Map of ways and their id's
     private Graph graph;
     private Vertices vertices;
@@ -32,7 +32,7 @@ public class OSMHandler extends DefaultHandler {
     private QuadTree streetTree, buildingTree, iconTree, naturalTree, railwayTree, bigRoadTree;
     private ArrayList<Address> addressList; //list of all the addresses in the .osm file
     private List<Long> memberReferences; //member referenced in a relation of ways
-    private List<Point2D> wayCoords; //List of referenced coordinates used to make up a single way
+    private List<OSMNode> wayCoords; //List of referenced coordinates used to make up a single way
     private static List<Coastline> coastlines; //List of all of the coastlines to be drawn
 
     private Long wayId; //Id of the current way
@@ -40,7 +40,7 @@ public class OSMHandler extends DefaultHandler {
     //if a given feature is present:
     private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity, isStart, isOneWay;
     private String streetName, houseNumber,cityName, postCode; //address info
-    private Point2D startPoint, endPoint; //coastline start point and end point
+    private OSMNode startPoint, endPoint; //coastline start point and end point
     private Rectangle2D bbox = new Rectangle2D.Double();
 
 
@@ -49,7 +49,7 @@ public class OSMHandler extends DefaultHandler {
         memberReferences = new ArrayList<>();
         addressList = new ArrayList<>();
         wayCoords = new ArrayList<>();
-        node_longMap = new LongHashMap<Point2D>();
+        node_longMap = new LongHashMap<OSMNode>();
         keyValue_map = new HashMap<>();
         wayId_longMap = new LongHashMap<Path2D>();
         streetMap = new HashMap<>();
@@ -84,7 +84,7 @@ public class OSMHandler extends DefaultHandler {
                 lat = MapCalculator.latToY(lat); //transforming according to the Mercator projection
                 Double lon = Double.parseDouble(atts.getValue("lon"));
                 long id = Long.parseLong(atts.getValue("id"));
-                Point2D coord = new Point2D.Float(lon.floatValue(), lat.floatValue());
+                OSMNode coord = new OSMNode(lon.floatValue(), lat.floatValue());
                 nodeCoord = new Point2D.Float(lon.floatValue(),lat.floatValue());
                 node_longMap.put(id, coord);
                 break;
@@ -92,7 +92,7 @@ public class OSMHandler extends DefaultHandler {
             }
             case "nd": { //references in a way, to other ways
                 long id = Long.parseLong(atts.getValue("ref"));
-                Point2D coord = node_longMap.get(id); //fetches coordinate from the referenced id
+                OSMNode coord = node_longMap.get(id); //fetches coordinate from the referenced id
                 if(isStart){ //Saves startpoint (for use in coastlines)
                     startPoint = coord;
                     isStart = false;
@@ -176,7 +176,7 @@ public class OSMHandler extends DefaultHandler {
 
         switch (qName) {
             case "way": //TODO: insert way names into the addresslist aswelll
-                Path2D way = PathCreater.createWay(wayCoords);
+                Path2D way = PathCreater.createNodeWay(wayCoords);
                 //start of adding shapes from keys and values
 
                 if (keyValue_map.containsKey("natural")) {
@@ -229,12 +229,19 @@ public class OSMHandler extends DefaultHandler {
 
                 } else if (keyValue_map.containsKey("highway") && !keyValue_map.get("highway").equals("proposed")) {
                     Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"), keyValue_map.get("maxspeed"));
-                    highway.setRouteType(keyValue_map);
-                    if (bigRoads.contains(keyValue_map.get("highway")))
+                    if (bigRoads.contains(keyValue_map.get("highway"))) {
                         bigRoadTree.insert(highway);
-                    else
+                    }
+                    else {
                         streetTree.insert(highway);
-                    vertices.add(wayCoords); //create vertices for all points making up a way
+                    }
+                    for (OSMNode coord : wayCoords) {
+                        coord.refCount++;
+                        if (coord.refCount > 1 || coord.equals(startPoint) || coord.equals(endPoint))
+                            vertices.add(coord);
+                    }
+                    highway.setRouteType(keyValue_map);
+                    //vertices.add(wayCoords); //create vertices for all points making up a way
                     if (keyValue_map.containsKey("junction") && keyValue_map.get("junction").equals("roundabout"))
                         highway.assignEdges(wayCoords, "yes");
                     else if (keyValue_map.containsKey("oneway"))
@@ -449,9 +456,9 @@ public class OSMHandler extends DefaultHandler {
         return quadTrees;
     }
 
-    public List<Point2D> getWayCoords(){return wayCoords;}
+    public List<OSMNode> getWayCoords(){return wayCoords;}
     public LongHashMap<Path2D> getWayIdMap(){return wayId_longMap;}
-    public LongHashMap<Point2D> getNodeMap(){return node_longMap;}
+    public LongHashMap<OSMNode> getNodeMap(){return node_longMap;}
 
     public void setQuadTrees(List<QuadTree> quadTrees) {
         if(quadTrees.size() != 6){

@@ -7,6 +7,7 @@ import Model.Path.Edge;
 import Model.Path.Vertices;
 import Model.MapCalculator;
 import Model.PathCreater;
+import Model.OSMNode;
 
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
@@ -96,9 +97,10 @@ public class Highway extends MapFeature {
     /**
      * Create edges between all points in the way for the current highway
      */
-    public void assignEdges(List<Point2D> points, String oneWay) {
+    public void assignEdges(List<OSMNode> points, String oneWay) {
         Vertices V = Model.getModel().getVertices();
         for (int i = 0; i + 1 < points.size(); i++) {
+            if (!V.vertex_map().containsKey(points.get(i)) || !V.vertex_map().containsKey(points.get(i+1))) continue;
             Point2D v;
             Point2D w;
             if(oneWay.equals("-1")){

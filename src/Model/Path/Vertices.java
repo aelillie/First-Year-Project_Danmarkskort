@@ -23,7 +23,7 @@ public class Vertices implements Serializable {
         }
     }
 
-    private void add(Point2D vertex) {
+    public void add(Point2D vertex) {
         if(vertex_map.containsKey(vertex)) return; //Vertex already added
         vertex_map.put(vertex, counter); //Put vertex in map with an index
         counter++; //next index
@@ -53,4 +53,6 @@ public class Vertices implements Serializable {
     public void clearMap(){
         vertex_map = null;
     }
+
+    public Map<Point2D, Integer> vertex_map() { return vertex_map; }
 }

@@ -59,6 +59,17 @@ public class PathCreater {
         return way;
     }
 
+    public static Path2D createNodeWay(List<OSMNode> coords) {
+        Path2D way = new Path2D.Float();
+        Point2D coord = coords.get(0);
+        way.moveTo(coord.getX(), coord.getY());
+        for (int i = 1; i < coords.size(); i++) {
+            coord = coords.get(i);
+            way.lineTo(coord.getX(), coord.getY());
+        }
+        return way;
+    }
+
     /**
      * Creates a path2D between two points
      * @param point1 -
