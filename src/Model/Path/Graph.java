@@ -4,6 +4,7 @@ package Model.Path;
 import Model.MapFeatures.Highway;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Collection;
 
 /**
@@ -13,7 +14,7 @@ public class Graph implements Serializable{
     private static final long serialVersionUID = 2;
     private int V; //Total amount of vertices
     private int E; //Total amount of edges
-    private Bag<Edge>[] adj; //a bag for each vertex containing adjacent edges
+    private ArrayList<Edge>[] adj; //a bag for each vertex containing adjacent edges
 
 
     public Graph() {
@@ -22,9 +23,9 @@ public class Graph implements Serializable{
     public void initialize(int V) {
         this.V = V;
         this.E = 0;
-        adj = (Bag<Edge>[]) new Bag[V];
+        adj = (ArrayList<Edge>[]) new ArrayList[V];
         for (int v = 0; v < V; v++) {
-            adj[v] = new Bag<>();
+            adj[v] = new ArrayList<>();
         }
     }
 
@@ -100,7 +101,7 @@ public class Graph implements Serializable{
      * @return all edges in the edge-weighted graph as an Iterable.
      */
     public Iterable<Edge> edges() {
-        Bag<Edge> list = new Bag<>();
+        ArrayList<Edge> list = new ArrayList<>();
         for (int v = 0; v < V; v++) {
             int selfLoops = 0;
             for (Edge e : adj(v)) {
