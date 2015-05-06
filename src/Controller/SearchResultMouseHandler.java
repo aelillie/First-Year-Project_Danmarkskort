@@ -62,13 +62,13 @@ public class SearchResultMouseHandler extends MouseAdapter{
      * @param iconType - End or start Position icon type
      */
     public static void goToAddressLocation(Address selectedAddr, Model m, View v, String iconType){
-        Map<Address, Point2D> addressMap = m.getOSMReader().getAddressMap();
+       // Map<Address, Point2D> addressMap = m.getOSMReader().getAddressMap();
         Map<Address, List<Path2D>> streetMap = m.getOSMReader().getStreetMap();
-        Map<Address, Path2D> boundaryMap = m.getOSMReader().getBoundaryMap();
+        //Map<Address, Path2D> boundaryMap = m.getOSMReader().getBoundaryMap();
 
-        Point2D addressLocation = addressMap.get(selectedAddr);
+        Point2D addressLocation = selectedAddr.getAddressLocation();
         List<Path2D> streetLocation = streetMap.get(selectedAddr);
-        Path2D boundaryLocation = boundaryMap.get(selectedAddr);
+        Path2D boundaryLocation = selectedAddr.getBoundaryLocation();
 
         if(addressLocation == null && boundaryLocation == null) {
             v.zoomOnStreet(streetLocation);
@@ -118,13 +118,13 @@ public class SearchResultMouseHandler extends MouseAdapter{
     }
 
     public static Point2D getPoint(Address result, Model m){
-        Map<Address, Point2D> addressMap = m.getOSMReader().getAddressMap();
+        //Map<Address, Point2D> addressMap = m.getOSMReader().getAddressMap();
         Map<Address, List<Path2D>> streetMap = m.getOSMReader().getStreetMap();
-        Map<Address, Path2D> boundaryMap = m.getOSMReader().getBoundaryMap();
+        //Map<Address, Path2D> boundaryMap = m.getOSMReader().getBoundaryMap();
 
-        Point2D addressLocation = addressMap.get(result);
+        Point2D addressLocation = result.getAddressLocation();
         List<Path2D> streetLocation = streetMap.get(result);
-        Path2D boundaryLocation = boundaryMap.get(result);
+        Path2D boundaryLocation = result.getBoundaryLocation();
         if(addressLocation != null)
             return addressLocation;
         else if(streetLocation != null)
