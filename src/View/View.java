@@ -397,7 +397,9 @@ public class View extends JFrame implements Observer {
     public void setStartPoint(Point2D p)throws NoninvertibleTransformException{
         if(p == null){
             start = null;
+            fastestPath = null;
             removePointer("startPointIcon");
+            closeDirectionList();
             return;
         }
         Insets x = getInsets();
@@ -414,7 +416,9 @@ public class View extends JFrame implements Observer {
     public void setEndPoint(Point2D p)throws NoninvertibleTransformException{
         if(p == null){
             end = null;
+            fastestPath = null;
             removePointer("endPointIcon");
+            closeDirectionList();
             return;
         }
         Insets x = getInsets();
@@ -427,6 +431,7 @@ public class View extends JFrame implements Observer {
             findFastestRoute(start, end);
         repaint();
     }
+
 
     private void makeZoomInButton() {
         Dimension preferred = getPreferredSize();
@@ -480,6 +485,7 @@ public class View extends JFrame implements Observer {
     public void closeDirectionList(){
         closeDirectionList.setVisible(false);
         directionPane.setVisible(false);
+        travelTimeLabel.setVisible(false);
     }
 
     public void showIconPanel(){
@@ -831,6 +837,7 @@ public class View extends JFrame implements Observer {
         directionPane.setVisible(false);
         closeDirectionList.setVisible(false);
         travelTimePanel.setVisible(false);
+        travelTimeLabel.setVisible(false);
 
     }
 
