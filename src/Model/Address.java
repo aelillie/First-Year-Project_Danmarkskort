@@ -58,10 +58,10 @@ public class Address implements Comparable<Address>, Serializable {
     public String toString(){
         if ((!floor.equals("")) && !side.equals("")) {
             System.out.println(floor()+" og "+side());
-            String s = String.format("%s %s, %s. %s, %s %s", Address.capitalize(street()), Address.capitalize(house()),floor(), side(),postcode(),Address.capitalize(city)).trim();
+            String s = String.format("%s %s, %s. %s, %s %s", Address.capitalize(street()), Address.capitalize(house()),floor(), side(),postcode(),Address.capitalize(city)).trim().intern();
             return s;
         } else if(!house.equals("")){
-            return String.format("%s %s, %s %s", Address.capitalize(street()), Address.capitalize(house()), postcode(), Address.capitalize(city())).trim();
+            return String.format("%s %s, %s %s", Address.capitalize(street()), Address.capitalize(house()), postcode(), Address.capitalize(city())).trim().intern();
         } else if(!street.equals("")){
             return String.format("%s", Address.capitalize(street())).trim();
         } else {
@@ -77,7 +77,7 @@ public class Address implements Comparable<Address>, Serializable {
         String s = street.trim() + " " + house.trim() + " " + floor.trim() + " " + side.trim()+" " + postcode.trim() + " " + city.trim();
         s = s.replaceAll(" +", " ");
         s = s.trim();
-        s = s.toLowerCase();
+        s = s.toLowerCase().intern();
         return s;
     }
 
@@ -106,8 +106,8 @@ public class Address implements Comparable<Address>, Serializable {
 
 
     public static class Builder {
-        private String street = "", house = "", floor = "",
-                side = "", postcode = "", city = "";
+        private String street = "".intern(), house = "".intern(), floor = "".intern(),
+                side = "".intern(), postcode = "".intern(), city = "".intern();
 
         public Builder street(String _street) {
             street = _street;
@@ -345,7 +345,7 @@ public class Address implements Comparable<Address>, Serializable {
                 capitalize = true;
             }
         }
-        return new String(chars);
+        return new String(chars).intern();
     }
 
     @Override
