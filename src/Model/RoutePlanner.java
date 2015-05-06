@@ -6,14 +6,13 @@ import java.awt.geom.Line2D;
 import java.awt.geom.Point2D;
 import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 /**
  * Created by Kevin on 04-05-2015.
  */
 public class RoutePlanner {
+    private static double edgeConstant = 1.0E-7; //Determined by a lot of experimental testing.
     private Iterable<Edge> edges;
 
     /**
@@ -90,10 +89,14 @@ public class RoutePlanner {
 
                 //Math Magic happens
                 double x = signumDeterminatOf2Vector(vector, p);
-                if(x > 0 ) {
+                if(x > 0 + edgeConstant ) {
+                    //System.out.println(x + " " + street);
                     turnD = "Turn left at ";
-                }else {
+                }else if(x < 0 - edgeConstant) {
+                    //System.out.println(x + " " + street);
                     turnD = "Turn right at ";
+                }else {
+                    turnD = "Continue at ";
                 }
             }
 
@@ -114,7 +117,7 @@ public class RoutePlanner {
             } else {
                 distString = new DecimalFormat("##.##").format(dist/1000) + " km";
             }
-            String direction = turnD + street + " for " + distString;
+            String direction = turnD + street + ", continue for " + distString;
             //String turnDirection =
             if(street.trim().equals("")){
                 if(i != 0) direction = "Continue for " + distString + " until you reach " + streetNames.get(i-1);
@@ -159,7 +162,7 @@ public class RoutePlanner {
 
     public static double signumDeterminatOf2Vector(Line2D vector, Point2D point){
 
-        return  Math.signum((vector.getX2()-vector.getX1())* (point.getY()-vector.getY1()) - (vector.getY2() - vector.getY1()) * (point.getX() - vector.getX1()));
+        return  (vector.getX2()-vector.getX1())* (point.getY()-vector.getY1()) - (vector.getY2() - vector.getY1()) * (point.getX() - vector.getX1());
 
     }
 

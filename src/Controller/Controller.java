@@ -76,12 +76,19 @@ public class Controller extends MouseAdapter implements ActionListener {
             }
         }
         public void mouseClicked(MouseEvent e) {
-            //view.findNearest(e.getPoint());
-            //view.repaint();
+            try {
+                if (e.getButton() == 1)
+                    view.setStartPoint(e.getPoint());
+                else if (e.getButton() == 3)
+                    view.setEndPoint(e.getPoint());
+            }catch(NoninvertibleTransformException ex){
+                ex.printStackTrace();
+            }
         }
         public void mouseEntered(MouseEvent e) {}
         public void mouseExited(MouseEvent e) {}
         public void mousePressed(MouseEvent e) {
+
 
             view.mousePressed(e);
         }
