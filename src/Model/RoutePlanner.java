@@ -117,7 +117,7 @@ public class RoutePlanner {
             } else {
                 distString = new DecimalFormat("##.##").format(dist/1000) + " km";
             }
-            String direction = turnD + street + " for " + distString;
+            String direction = turnD + street + ", continue for " + distString;
             //String turnDirection =
             if(street.trim().equals("")){
                 if(i != 0) direction = "Continue for " + distString + " until you reach " + streetNames.get(i-1);
