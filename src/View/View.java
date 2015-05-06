@@ -743,10 +743,12 @@ public class View extends JFrame implements Observer {
             RoutePlanner routePlanner = new RoutePlanner(fastestPath);
             addToDirectionPane(routePlanner.getDirections());
         }catch(IllegalArgumentException e){
-            addToDirectionPane(new String[]{e.getMessage()});
+            addToDirectionPane(new String[]{"No fastest path between the two locations was Found"});
+            setTravelInfo(null);
 
         }catch(NullPointerException ex){
-            addToDirectionPane(new String[]{ex.getMessage()});
+            addToDirectionPane(new String[]{"No Fastest path between the two locations was Found"});
+            setTravelInfo(null);
         }
 
         repaint();
@@ -764,9 +766,11 @@ public class View extends JFrame implements Observer {
             RoutePlanner routePlanner = new RoutePlanner(shortestPath);
             addToDirectionPane(routePlanner.getDirections());
         }catch(IllegalArgumentException e){
-            addToDirectionPane(new String[]{e.getMessage()});
+            addToDirectionPane(new String[]{"No Shortest Path between the two locations was Found"});
+            setTravelInfo(null);
         }catch(NullPointerException ex){
-            addToDirectionPane(new String[] {ex.getMessage()});
+            addToDirectionPane(new String[] {"No shortest Path between the two locations was Found"});
+            setTravelInfo(null);
         }
 
         repaint();
@@ -774,6 +778,9 @@ public class View extends JFrame implements Observer {
     }
 
     public void setTravelInfo(RouteFinder routeFinder) {
+        if(routeFinder == null){
+            return;
+        }
         double travelTime = routeFinder.getTravelTime();
         double travelDistance = routeFinder.getTravelDistance();
         if (travelDistance < 1)  {

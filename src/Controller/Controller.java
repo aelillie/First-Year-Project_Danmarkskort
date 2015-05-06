@@ -122,19 +122,26 @@ public class Controller extends MouseAdapter implements ActionListener {
                         view.toggleAA();
                         break;
                     case 's':
-                        model.saveBin();
+                        if(e.isAltDown())
+                            model.saveBin();
                         break;
                     case't':
-                        view.toggleTestMode();
-                        view.repaint();
+                        if(e.isAltDown()) {
+                            view.toggleTestMode();
+                            view.repaint();
+                        }
                         break;
                     case 'g':
-                        view.toggleGrid();
-                        view.repaint();
+                        if(e.isAltDown()) {
+                            view.toggleGrid();
+                            view.repaint();
+                        }
                         break;
                     case 'p':
-                        view.toggleGraph();
-                        view.repaint();
+                        if(e.isAltDown()) {
+                            view.toggleGraph();
+                            view.repaint();
+                        }
                         break;
 
                 }

@@ -30,7 +30,7 @@ public class RouteFinder {
         endVertex = findClosestVertex(endPoint);
     }
 
-    public void setTravelInfo(PathTree p)throws NullPointerException {
+    public void setTravelInfo(PathTree p) {
         travelDistance = 0;
         travelTime = 0;
         for (Edge e : p.pathTo(endVertex)) {
