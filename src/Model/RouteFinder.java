@@ -35,10 +35,11 @@ public class RouteFinder {
         travelTime = 0;
         for (Edge e : p.pathTo(endVertex)) {
             travelDistance += e.distance();
-            if(p.isBikeRoute()) travelTime += e.bikeTime();
+            if (p.isBikeRoute()) travelTime += e.bikeTime();
             else if (p.isWalkRoute()) travelTime += e.walkTime();
             else if (p.isCarRoute()) travelTime += e.driveTime();
         }
+
     }
 
     /**
@@ -50,11 +51,12 @@ public class RouteFinder {
         shortestTree.useShortestPath(true);
         setTravelType(shortestTree);
         shortestTree.initiate();
-        setTravelInfo(shortestTree);
+
         if(shortestTree.hasPathTo(endVertex))
             shortestPath = shortestTree.pathTo(endVertex);
         else
             throw new IllegalArgumentException("No shortest path found for the given addresses.");
+        setTravelInfo(shortestTree);
     }
 
     /**

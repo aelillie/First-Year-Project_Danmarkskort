@@ -166,7 +166,7 @@ public class Model extends Observable implements Serializable {
 
 
     public Graph getDiGraph() {
-        return OSMReader.getDiGraph();
+        return OSMReader.getGraph();
     }
 
 }

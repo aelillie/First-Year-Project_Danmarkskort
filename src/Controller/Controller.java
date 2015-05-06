@@ -76,12 +76,19 @@ public class Controller extends MouseAdapter implements ActionListener {
             }
         }
         public void mouseClicked(MouseEvent e) {
-            //view.findNearest(e.getPoint());
-            //view.repaint();
+            try {
+                if (e.getButton() == 1)
+                    view.setStartPoint(e.getPoint());
+                else if (e.getButton() == 3)
+                    view.setEndPoint(e.getPoint());
+            }catch(NoninvertibleTransformException ex){
+                ex.printStackTrace();
+            }
         }
         public void mouseEntered(MouseEvent e) {}
         public void mouseExited(MouseEvent e) {}
         public void mousePressed(MouseEvent e) {
+
 
             view.mousePressed(e);
         }
@@ -115,19 +122,26 @@ public class Controller extends MouseAdapter implements ActionListener {
                         view.toggleAA();
                         break;
                     case 's':
-                        model.saveBin();
+                        if(e.isAltDown())
+                            model.saveBin();
                         break;
                     case't':
-                        view.toggleTestMode();
-                        view.repaint();
+                        if(e.isAltDown()) {
+                            view.toggleTestMode();
+                            view.repaint();
+                        }
                         break;
                     case 'g':
-                        view.toggleGrid();
-                        view.repaint();
+                        if(e.isAltDown()) {
+                            view.toggleGrid();
+                            view.repaint();
+                        }
                         break;
                     case 'p':
-                        view.toggleGraph();
-                        view.repaint();
+                        if(e.isAltDown()) {
+                            view.toggleGraph();
+                            view.repaint();
+                        }
                         break;
 
                 }

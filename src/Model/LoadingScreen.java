@@ -73,7 +73,7 @@ public class LoadingScreen extends JFrame {
             int doneWidth = Math.round(percentage*wid/100.f);
             doneWidth = Math.max(0, Math.min(doneWidth, wid-1));  // limit 0-width
 
-            g.setPaint(Color.BLUE);
+            g.setPaint(Color.BLACK);
             g.fillRect(x, y+1, doneWidth, hei-1);
             splash.update();
         }else if( percentage < 100){
@@ -90,7 +90,7 @@ public class LoadingScreen extends JFrame {
             int doneWidth = Math.round(percentage*wid/100.f);
             doneWidth = Math.max(0, Math.min(doneWidth, wid-1));  // limit 0-width
 
-            g.setPaint(Color.BLUE);
+            g.setPaint(Color.BLACK);
             g.fillRect(x, y+1, doneWidth, hei-1);
 
         }else {
