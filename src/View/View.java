@@ -779,6 +779,7 @@ public class View extends JFrame implements Observer {
 
     public void setTravelInfo(RouteFinder routeFinder) {
         if(routeFinder == null){
+            travelTimeLabel.setText("");
             return;
         }
         double travelTime = routeFinder.getTravelTime();
@@ -1072,7 +1073,6 @@ public class View extends JFrame implements Observer {
 
             Scalebar scalebar = new Scalebar(g, zoomLevel, View.this, transform);
 
-            paintNeighbor(g);
 
             //Draws chosen searchResult (either street or address) as well as start or endpoint address
             for(Map.Entry<String, MapPointer> entry : addressPointerMap.entrySet()) {
@@ -1132,14 +1132,7 @@ public class View extends JFrame implements Observer {
 
         }
 
-        private void paintNeighbor(Graphics2D g) {
-            if (nearestNeighbor != null) {
-                DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(nearestNeighbor.getValueName());
-                g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
-                g.setColor(Color.CYAN);
-                g.draw(nearestNeighbor.getWay());
-            }
-        }
+
 
         private void setDrawAttribute(ValueName valueName) {
             drawAttribute = drawAttributeManager.getDrawAttribute(valueName);
