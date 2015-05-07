@@ -17,19 +17,19 @@ import java.util.Map;
 
 
 public class RoutePanelController implements ActionListener{
-    private RouteView routeView;
-    private JTextField endAddressField;
-    private JTextField startAddressField;
-    private JScrollPane startAddrScrollpane;
-    private JScrollPane endAddrScrollpane;
-    private Map<JTextField, Rectangle> textfieldToBounds;
+    private RouteView routeView; //the routepanel
+    private JTextField endAddressField; //field for end adress
+    private JTextField startAddressField; //field for start address
+    private JScrollPane startAddrScrollpane; //scrollPane for the start addresses
+    private JScrollPane endAddrScrollpane; //scrollPane for the end addresses
+    private Map<JTextField, Rectangle> textfieldToBounds; //The bounds specifying the position of the textfields.
     private static Map<JTextField, String> textFieldToIconType;
     private View view;
-    private int selectedNr = -1;
+    private int selectedNr = -1; //used for default selection of addresses in the resulting scrollpane
     private Model model;
     private Point2D startPoint, endPoint;
 
-    private HashMap<JButton, Boolean> buttonDownMap, routeTypeButtonDownMap;
+    private HashMap<JButton, Boolean> buttonDownMap, routeTypeButtonDownMap; //The maps of booleans specifying whether buttons are pressed down or not (false = not pressed, true = pressed)
 
     /**
      * Controller for route panel.
@@ -50,7 +50,9 @@ public class RoutePanelController implements ActionListener{
         routeTypeButtonDownMap = routeView.getRouteTypeButtonDownMap();
     }
 
-
+    /**
+     * Sets the bound- and icon defaults for the textfields.
+     */
     private void setScrollpaneBoundsAndIcon(){
         textfieldToBounds = new HashMap<>();
         textfieldToBounds.put(startAddressField, new Rectangle(63, 164, 285, 100));
@@ -60,6 +62,9 @@ public class RoutePanelController implements ActionListener{
         textFieldToIconType.put(endAddressField, "endPointIcon".intern());
     }
 
+    /**
+     * Sets the action handlers for textfields and buttons concerning the routepanel.
+     */
     private void setHandlers(){
         routeView.getFindRouteButton().addActionListener(this);
 
@@ -81,12 +86,17 @@ public class RoutePanelController implements ActionListener{
         addFocusListener("Enter end address", endAddressField);
     }
 
+    /**
+     * This method creates a focuslistener for each textfield (its usages can be find above).
+     * @param promptText The default text to be displayed in the textfield when nothing is input.
+     * @param textField The textfield given the particular prompt text.
+     */
     private void addFocusListener(final String promptText, final JTextField textField){
         textField.addFocusListener(new FocusListener() {
 
             @Override
             /**
-             * If selected remove prompt text
+             * If selected, remove prompt text
              */
             public void focusGained(FocusEvent e) {
                 if (textField.getText().equals(promptText)) {
@@ -108,14 +118,25 @@ public class RoutePanelController implements ActionListener{
         });
     }
 
+    /**
+     *  This method creates an InputChangeHandler for the specified textfield. The changehandler handles events regarding input into the textfields.
+     * @param textField The textfield to be given a particular inputchangehandler.
+     * @param resultPane The scrollpane that the search results will be displayed in.
+     */
     private void setInputChangeHandler(final JTextField textField, final JScrollPane resultPane) {
         textField.getDocument().addDocumentListener(new DocumentListener() {
+            /*
+            If something is input into the textfield, this is called.
+             */
             @Override
             public void insertUpdate(DocumentEvent e) {
                 addressSearch(1, textField, resultPane);
                 selectedNr = -1;
             }
 
+            /*
+            If something is removed within the textfield, this is called.
+             */
             @Override
             public void removeUpdate(DocumentEvent e) {
                 addressSearch(1, textField, resultPane);
@@ -123,12 +144,16 @@ public class RoutePanelController implements ActionListener{
             }
 
             @Override
-            public void changedUpdate(DocumentEvent e) {
-            }
+            public void changedUpdate(DocumentEvent e) {}
         });
     }
 
 
+    /**
+     *
+     * @param type Type of compare used for the search: either 1 = startsWith compare otherwise equality compare
+     * @return The search results (Address objects)
+     */
     private Address[] addressSearch(int type, JTextField textField, JScrollPane scrollPane){
         String input = textField.getText();
         if(input.length() < 3){

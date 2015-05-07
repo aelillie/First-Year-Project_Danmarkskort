@@ -96,7 +96,7 @@ public class Address implements Comparable<Address>, Serializable {
     }
 
 
-    //Type of compare: either 1 = startsWith compare, 2 = equality compare and else contains compare
+    //Type of compare: either 1 = startsWith compare else equality compare
     public int searchCompare(Address addr, int type){
        if(type == 1) {
            if (this.toStringForSort().startsWith(addr.toStringForSort())) return 0;

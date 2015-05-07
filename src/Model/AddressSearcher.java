@@ -9,7 +9,7 @@ import java.util.Map;
  */
 public class AddressSearcher {
 
-    //Type of compare: either 1 = startsWith compare, 2 = equality compare and else contains compare
+    //Type of compare: either 1 = startsWith compare otherwise equality compare
     private static int binSearch(ArrayList<Address> list, Address addr, int low, int high, int type){
         if(low > high) return -1;
         int mid = (low+high)/2;
