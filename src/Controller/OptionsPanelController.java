@@ -49,7 +49,7 @@ public class OptionsPanelController implements ActionListener {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            view.adjustZoomFactor();
+
             view.repaint();
             view.scaleAffine();
         } else { //If no file is chosen (the user pressed cancel) or if an error occured

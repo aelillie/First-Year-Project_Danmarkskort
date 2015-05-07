@@ -119,6 +119,9 @@ public class View extends JFrame implements Observer {
         setExtendedState(Frame.NORMAL); //Frame.MAXIMIZED_BOTH
     }
 
+    /**
+     * Sets up the AffineTransform using the bounds of the map and the screen size.
+     */
     public void scaleAffine(){
         //Get the monitors size.
         Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
@@ -136,10 +139,15 @@ public class View extends JFrame implements Observer {
         transform.translate(-model.getBbox().getMinX(), -model.getBbox().getMaxY());
 
         bounds = new CanvasBounds(getBounds(), transform);
+        adjustZoomFactor();
     }
 
 
-
+    /**
+     * Takes a value of amount scaled and calculates the closes zoomLevel to it and sets the affineTransform
+     * to it correctly
+     * @param scale - Value x and y coordinates are scaled.
+     */
     public void adjustZoomLvl(double scale){
         zoomLevel = ZoomCalculator.calculateZoom(scale);
         scale = ZoomCalculator.setScale(zoomLevel);
@@ -234,7 +242,7 @@ public class View extends JFrame implements Observer {
         //makeResultPane();
     }
 
-    public void makeCloseDirectionListPanel(){
+    private void makeCloseDirectionListPanel(){
         closeDirectionList = new JPanel();
         closeDirectionList.setVisible(false);
         closeDirectionList.setBounds(26, 280, 400, 20);
@@ -258,23 +266,32 @@ public class View extends JFrame implements Observer {
         travelTimePanel.add(travelTimeLabel);
     }
 
+    /**
+     * Changes the configuration of how the view should draw objects.
+     */
     public void changeToStandard(){
        drawAttributeManager.toggleStandardView();
         canvas.repaint();
     }
 
+    /**
+     * Changes the configuration of how the view should draw objects.
+     */
     public void changeToColorblind(){
         drawAttributeManager.toggleColorblindView();
         canvas.repaint();
     }
 
+    /**
+     * Changes the configuration of how the view should draw objects.
+     */
     public void changeToTransport(){
         drawAttributeManager.toggleTransportView();
         canvas.repaint();
     }
 
 
-    public void addToDirectionPane(String[] directionArray){
+    private void addToDirectionPane(String[] directionArray){
         JList<String> directionStringList = new JList<>(directionArray);
         directionPane.setVisible(true);
         directionPane.setViewportView(directionStringList);
@@ -285,6 +302,10 @@ public class View extends JFrame implements Observer {
         closeDirectionList.setVisible(true);
     }
 
+    /**
+     * Displays a message for the user when no address was found
+     * @param bounds - bounds for the result pane
+     */
     public void addNoAddressesFoundMsg(Rectangle bounds){
         String[] msgArray = new String[1];
         msgArray[0] = "No addresses found";
@@ -295,6 +316,10 @@ public class View extends JFrame implements Observer {
         resultPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
     }
 
+    /**
+     * Adds the array of addresses to the scroll pane.
+     * @param resultArray
+     */
     public void addToResultPane(Address[] resultArray){
         addressSearchResults = new JList<>(resultArray);
         resultPane.setVisible(true);
@@ -306,6 +331,14 @@ public class View extends JFrame implements Observer {
         resultPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this, model, addressSearchResults, searchArea, resultPane, "chosenAddressIcon"));
     }
 
+    /**
+     * Adds the array of addresses to a specific scroll pane for text field.
+     * @param resultsArray
+     * @param textfield -
+     * @param scrollPane
+     * @param bounds
+     * @param iconType
+     */
     public void addToResultPane(Address[] resultsArray, JTextField textfield, JScrollPane scrollPane, Rectangle bounds, String iconType){
         addressSearchResults = new JList<>(resultsArray);
         scrollPane.setVisible(true);
@@ -316,6 +349,7 @@ public class View extends JFrame implements Observer {
         scrollPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         scrollPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this, model, addressSearchResults, textfield, scrollPane, iconType));
     }
+
 
     private void makeMapTypeButton(){
         Dimension preferred = getPreferredSize();
@@ -352,11 +386,19 @@ public class View extends JFrame implements Observer {
         showRoutePanelButton.setActionCommand("showRoutePanel");
     }
 
+    /**
+     * Used to add a start or end pointer to the map
+     * @param mapPointer MapPointer
+     */
     public void addPointer(MapPointer mapPointer){
         addressPointerMap.put(mapPointer.getType(), mapPointer);
         canvas.repaint();
     }
 
+    /**
+     * Used to remove a specific Pointer from the map.
+     * @param - String what type of pointer.
+     */
     public void removePointer(String iconType){
         addressPointerMap.remove(iconType);
         canvas.repaint();
@@ -394,6 +436,12 @@ public class View extends JFrame implements Observer {
         zoomOutButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() / 3 * 2 + 45), 39, 37);
     }
 
+    /**
+     * stores the position given and if both start and end is given calls for fastest route
+     * between these.
+     * @param p - Point
+     * @throws NoninvertibleTransformException
+     */
     public void setStartPoint(Point2D p)throws NoninvertibleTransformException{
         if(p == null){
             start = null;
@@ -404,19 +452,27 @@ public class View extends JFrame implements Observer {
             routePanel.getStartAddressField().setText("Enter start address");
             return;
         }
+        //Recalibrate position for precision
         Insets x = getInsets();
-        p.setLocation(p.getX(), p.getY()-x.top + x.bottom);
+        p.setLocation(p.getX(), p.getY() - x.top + x.bottom);
 
+        //Transform from screen coordinates to map Values.
         start = transformPoint(p);
         MapPointer startPoint = new MapPointer(start, "startPointIcon".intern());
         addPointer(startPoint);
-        if(end != null && start != null)
+        if(end != null && start != null)    //check if a route should be found.
             findFastestRoute(start, end);
         repaint();
     }
 
+    /**
+     * stores the position given and if both start and end is given calls for fastest route
+     * between these.
+     * @param p - Point
+     * @throws NoninvertibleTransformException
+     */
     public void setEndPoint(Point2D p)throws NoninvertibleTransformException{
-        if(p == null){
+        if(p == null){      //if given null it removes the point and path.
             end = null;
             fastestPath = null;
             removePointer("endPointIcon");
@@ -425,9 +481,8 @@ public class View extends JFrame implements Observer {
             routePanel.getEndAddressField().setText("Enter end address");
             return;
         }
-        Insets x = getInsets();
-        p.setLocation(p.getX(), p.getY()-x.top + x.bottom);
-
+        Insets x = getInsets(); //Recalibrate position for precision
+        p.setLocation(p.getX(), p.getY() - x.top + x.bottom);
         end = transformPoint(p);
 
         addPointer(new MapPointer(end, "endPointIcon".intern()));
@@ -530,7 +585,7 @@ public class View extends JFrame implements Observer {
     }
 
     //Get the center of the current size of the contentpane in lat and longtitude points
-    public Point2D getCenterLatLon(){
+    private Point2D getCenterLatLon(){
         Point2D.Double result = new Point2D.Double();
         Point2D.Double screenCenter = new Point2D.Double();
         screenCenter.x = getWidth()/2; //contentpane width/height
@@ -544,7 +599,7 @@ public class View extends JFrame implements Observer {
     }
 
     //Center map on the following map coordinates
-    public void centerOnLatLon(Point2D newCenter){
+    private void centerOnLatLon(Point2D newCenter){
         Point2D currentCenter = getCenterLatLon();
         double dx = currentCenter.getX() - newCenter.getX();
         double dy = currentCenter.getY() - newCenter.getY();
@@ -742,24 +797,26 @@ public class View extends JFrame implements Observer {
         isFullscreen = !isFullscreen;
     }
 
+    /**
+     * Finds fastest route between to points and stores it for drawing.
+     * @param start - Point2D start point
+     * @param end - Point2D end point
+     */
     public void findFastestRoute(Point2D start, Point2D end){
         shortestPath = null;
         try {
-            RouteFinder routeFinder = new RouteFinder(start, end);
+            RouteFinder routeFinder = new RouteFinder(start, end); //Create a RouteFinder and let it handle it.
             travelMethod(routeFinder);
             routeFinder.setFastestRoute();
-            fastestPath = routeFinder.getFastestPath();
+            fastestPath = routeFinder.getFastestPath(); //retrieve the fastest route from it
             setTravelInfo(routeFinder);
-            RoutePlanner routePlanner = new RoutePlanner(fastestPath);
+            RoutePlanner routePlanner = new RoutePlanner(fastestPath); //create a routePlanner to get direction for path
             addToDirectionPane(routePlanner.getDirections());
-        }catch(IllegalArgumentException e){
+        }catch(IllegalArgumentException | NullPointerException e){
             addToDirectionPane(new String[]{"No fastest path between the two locations was Found"});
             setTravelInfo(null);
-
-        }catch(NullPointerException ex){
-            addToDirectionPane(new String[]{"No Fastest path between the two locations was Found"});
-            setTravelInfo(null);
             fastestPath = null;
+
         }
 
         repaint();
@@ -776,24 +833,22 @@ public class View extends JFrame implements Observer {
             setTravelInfo(routeFinder);
             RoutePlanner routePlanner = new RoutePlanner(shortestPath);
             addToDirectionPane(routePlanner.getDirections());
-        }catch(IllegalArgumentException e){
+        }catch(IllegalArgumentException  | NullPointerException e){
             addToDirectionPane(new String[]{"No Shortest Path between the two locations was Found"});
             setTravelInfo(null);
-        }catch(NullPointerException ex){
-            addToDirectionPane(new String[] {"No shortest Path between the two locations was Found"});
-            setTravelInfo(null);
-            shortestPath =null;
+            shortestPath = null;
         }
 
         repaint();
 
     }
 
-    public void setTravelInfo(RouteFinder routeFinder) {
+    private void setTravelInfo(RouteFinder routeFinder) {
         if(routeFinder == null){
             travelTimeLabel.setText("");
             return;
         }
+        //calculate total distance and travel Time and add it to a label.
         double travelTime = routeFinder.getTravelTime();
         double travelDistance = routeFinder.getTravelDistance();
         if (travelDistance < 1)  {
@@ -804,6 +859,11 @@ public class View extends JFrame implements Observer {
         travelTimePanel.setVisible(true);
     }
 
+    /**
+     * Finds the closest visible highway to the mouse position given
+     * @param position - Position of mouse.
+     * @throws NoninvertibleTransformException
+     */
     public void findNearestToMouse(Point2D position) throws NoninvertibleTransformException{
         //Take insets into account when using mouseCoordinates.
         Insets x = getInsets();
@@ -851,7 +911,7 @@ public class View extends JFrame implements Observer {
     private void travelMethod(RouteFinder routeFinder){
         routeFinder.carPressed(); //by default
         HashMap<JButton, Boolean> buttonMap = routePanel.getButtonDownMap();
-        for (JButton button : buttonMap.keySet()) {
+        for (JButton button : buttonMap.keySet()) {  //Check what travel type is chosen a set it for the route finder.
             boolean isPressed = buttonMap.get(button);
             if (button.equals(routePanel.getBicycleButton()) && isPressed) routeFinder.bikePressed();
             else if (button.equals(routePanel.getFootButton()) && isPressed) routeFinder.walkPressed();
@@ -871,7 +931,7 @@ public class View extends JFrame implements Observer {
         return returnVal;
     }
 
-    public void adjustZoomFactor(){
+    private void adjustZoomFactor(){
         switch(zoomLevel){
             case 0:zoomFactor = 39; break;
             case 1:zoomFactor = 37; break;
@@ -1008,7 +1068,7 @@ public class View extends JFrame implements Observer {
             }
 
 
-            //Justing drawing the of vertices and edges
+            //drawing the graph of vertices and edges if enabled
             if(graph) {
                 for (MapFeature street : mapFStreets) {
                     if (!(street instanceof Highway)) continue;
@@ -1043,6 +1103,7 @@ public class View extends JFrame implements Observer {
                 }
             }
 
+            //Draw the shortestPath if not null
             if (shortestPath != null) {
                 g.setColor(DrawAttribute.cl_darkorange);
                 g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
@@ -1050,6 +1111,7 @@ public class View extends JFrame implements Observer {
                     g.draw(e);
                 }
             }
+            //Draw the fastest path if not null
             if (fastestPath != null) {
                 g.setColor(DrawAttribute.lightgreen);
                 g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
@@ -1112,7 +1174,7 @@ public class View extends JFrame implements Observer {
             mapFStreets = new ArrayList<>();
             mapFAreas = new ArrayList<>();
             mapIcons = new ArrayList<>();
-
+            //Get a rectangle of the part of the map shown on screen
             bounds.updateBounds(getVisibleRect());
             Rectangle2D windowBounds = bounds.getBounds();
             if(zoomLevel > 11)
@@ -1144,8 +1206,6 @@ public class View extends JFrame implements Observer {
             }
 
         }
-
-
 
         private void setDrawAttribute(ValueName valueName) {
             drawAttribute = drawAttributeManager.getDrawAttribute(valueName);
