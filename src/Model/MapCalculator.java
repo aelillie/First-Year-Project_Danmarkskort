@@ -39,7 +39,7 @@ public class MapCalculator {
 
     //NOTE: The formula is only an approximation when applied to the Earth, as it is not a perfect sphere.
     // This means that the earthradius varies from 6356.752 km at the poles to 6378.137 km at the equator.
-    public static double haversineDist(double lon1, double lat1, double lon2, double lat2) {
+    private static double haversineDist(double lon1, double lat1, double lon2, double lat2) {
 
         lat1 = yToLat(lat1); //Transform back using the spherical Mercator projection
         lat2 = yToLat(lat2);

@@ -36,7 +36,7 @@ public class QuadTree implements Serializable{
         /**
          * Divide the Node into four new and spread the values.
          */
-        public void subDivide(){
+        void subDivide(){
             Double newWidth = width/2;
             Double newHeight = height/2;
             MapData[] tmp = value;
@@ -57,7 +57,7 @@ public class QuadTree implements Serializable{
          * Add a new Value, check if node is full
          * @param values - Value to be stored in node
          */
-        public void addvalue(MapData values){
+        void addvalue(MapData values){
             if(N == cap) {
                 subDivide();
                 insert(values);
@@ -74,7 +74,7 @@ public class QuadTree implements Serializable{
 
         }
 
-        public Rectangle2D getRect(){
+        Rectangle2D getRect(){
             return new Rectangle2D.Double(x- width,y - height, width*2, height*2);
         }
 
@@ -112,7 +112,8 @@ public class QuadTree implements Serializable{
         }
     }
 
-    public void insertAgain(MapData value, Node h) {
+    //Used for slightly faster insertion when a node is subdivided.
+    private void insertAgain(MapData value, Node h) {
 
         //First check what Type it is then use its coordinates to store it in the QuadTree
         if(value.getClassType() == MapIcon.class) {
@@ -149,7 +150,6 @@ public class QuadTree implements Serializable{
         }
     }
 
-    //TODO fix this.
     private void insertPath(Node h, Double minX, Double maxX, Double minY, Double maxY , MapData value){
 
         if (less(minX, h.x) &&  less(minY, h.y)) {
