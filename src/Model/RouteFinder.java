@@ -38,6 +38,7 @@ public class RouteFinder {
             if (p.isBikeRoute()) travelTime += e.bikeTime();
             else if (p.isWalkRoute()) travelTime += e.walkTime();
             else if (p.isCarRoute()) travelTime += e.driveTime();
+            System.out.println(e);
         }
 
     }
@@ -48,7 +49,7 @@ public class RouteFinder {
     public void setShortestRoute() {
         //Find shortest Path.
         PathTree shortestTree = new PathTree(model.getDiGraph(), startVertex, endVertex);
-        shortestTree.useShortestPath(true);
+        shortestTree.useShortestPath();
         setTravelType(shortestTree);
         shortestTree.initiate();
 
@@ -64,7 +65,7 @@ public class RouteFinder {
      */
     public void setFastestRoute() {
         PathTree fastestTree = new PathTree(model.getDiGraph(), startVertex, endVertex);
-        fastestTree.useShortestPath(false);
+        fastestTree.useFastestPath();
 
         //Sets what travelType is chosen
 

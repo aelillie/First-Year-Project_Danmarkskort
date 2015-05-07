@@ -401,7 +401,7 @@ public class View extends JFrame implements Observer {
             return;
         }
         Insets x = getInsets();
-        p.setLocation(p.getX(), p.getY()-x.top + x.bottom);
+        p.setLocation(p.getX(), p.getY() - x.top + x.bottom);
 
         start = transformPoint(p);
         MapPointer startPoint = new MapPointer(start, "startPointIcon".intern());
@@ -418,7 +418,7 @@ public class View extends JFrame implements Observer {
             return;
         }
         Insets x = getInsets();
-        p.setLocation(p.getX(), p.getY()-x.top + x.bottom);
+        p.setLocation(p.getX(), p.getY() - x.top + x.bottom);
 
         end = transformPoint(p);
 
@@ -742,11 +742,9 @@ public class View extends JFrame implements Observer {
             setTravelInfo(routeFinder);
             RoutePlanner routePlanner = new RoutePlanner(fastestPath);
             addToDirectionPane(routePlanner.getDirections());
-        }catch(IllegalArgumentException e){
+        }catch(IllegalArgumentException | NullPointerException e){
             addToDirectionPane(new String[]{e.getMessage()});
 
-        }catch(NullPointerException ex){
-            addToDirectionPane(new String[]{ex.getMessage()});
         }
 
         repaint();
@@ -763,10 +761,8 @@ public class View extends JFrame implements Observer {
             setTravelInfo(routeFinder);
             RoutePlanner routePlanner = new RoutePlanner(shortestPath);
             addToDirectionPane(routePlanner.getDirections());
-        }catch(IllegalArgumentException e){
+        }catch(IllegalArgumentException | NullPointerException e){
             addToDirectionPane(new String[]{e.getMessage()});
-        }catch(NullPointerException ex){
-            addToDirectionPane(new String[] {ex.getMessage()});
         }
 
         repaint();
