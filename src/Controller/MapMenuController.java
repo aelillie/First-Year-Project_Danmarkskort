@@ -6,7 +6,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
 /**
- * Created by Kevin on 18-03-2015.
+ * Class is responsible for handling the interaction with the mapmenu
  */
 public class MapMenuController implements ActionListener {
     private View v;

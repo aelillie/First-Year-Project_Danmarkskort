@@ -1,6 +1,7 @@
 package Model.Path;
 
 import Model.MapFeatures.Highway;
+import Model.Model;
 
 import java.awt.geom.Line2D;
 import java.io.Serializable;
@@ -13,31 +14,29 @@ public class Edge extends Line2D.Float implements Serializable {
     private int v;
     private int w;
     private double distance; //edge's distance
-    //private Line2D edgePath;
     private boolean oneWay;
     private boolean oneWayReverse;
     private Highway highway;
+    private Vertices vertices = Model.getModel().getVertices();
 
     /**
-     * Initializes a directed edge from vertex <tt>v</tt> to vertex <tt>w</tt> with
-     * the given <tt>distance</tt>.
+     * Initializes an edge from vertex v to vertex w
      *
-     * @param v      the tail vertex
-     * @param w      the head vertex
+     * @param v the tail vertex
+     * @param w the head vertex
      * @param distance the distance of the directed edge
-     * @throws IndexOutOfBoundsException if either <tt>v</tt> or <tt>w</tt>
-     *                                             is a negative integer
-     * @throws IllegalArgumentException            if <tt>distance</tt> is <tt>NaN</tt>
+     * @param edgePath line between this edge's end point
+     * @param highway parent highway
+     * @throws IndexOutOfBoundsException if either v or w is a negative integer
      */
     public Edge(int v, int w, double distance, Line2D edgePath, Highway highway) {
+        //Sets the location of the end points of this Line2D to the same as those end points of the specified Line2D.
         setLine(edgePath);
         if (v < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
         if (w < 0) throw new IndexOutOfBoundsException("Vertex names must be nonnegative integers");
-        //if (Double.isNaN(distance)) throw new IllegalArgumentException("Weight is NaN");
         this.v = v;
         this.w = w;
         this.distance = distance;
-        //this.edgePath = edgePath;
         this.highway = highway;
     }
 
@@ -105,10 +104,6 @@ public class Edge extends Line2D.Float implements Serializable {
         else throw new IllegalArgumentException("Illegal endpoint");
     }
 
-   /* public Line2D getEdgePath() {
-        return edgePath;
-    }*/
-
     public void setOneWay(boolean isOneWay) {
         oneWay = isOneWay;
     }
@@ -127,5 +122,13 @@ public class Edge extends Line2D.Float implements Serializable {
 
     public Highway highway() {
         return highway;
+    }
+
+    /**
+     * Returns a string representation of the edge.
+     * @return a string representation of the edge
+     */
+    public String toString() {
+        return String.format("%d(" + vertices.getVertex(v) + ")-%d(" + vertices.getVertex(w) + ") %.2f " + highway.getStreetName(), v, w, distance);
     }
 }

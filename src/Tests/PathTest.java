@@ -1,19 +1,27 @@
 package Tests;
 
+import Model.MapFeatures.Highway;
 import Model.Model;
 import Model.Path.Edge;
 import Model.Path.Graph;
 import Model.Path.PathTree;
 import Model.Path.Vertices;
+import Model.PathCreater;
+import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import sun.tools.jar.Main;
 import Model.MapCalculator;
 
+import java.awt.geom.Line2D;
+import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
 
 /**
  * Created by Kevin on 29-04-2015.
@@ -22,28 +30,26 @@ public class PathTest {
     private static final double DELTA = 1e-15;
     private Model m = Model.getModel();
     private Vertices v = m.getVertices();
-    private InputStream inputStream;
+    private Graph g;
     private int start = 933, end = 595;
 
     @Before
     public void loadMap(){
         //Test map with known vertices for test use.
         try {
-            inputStream = Main.class.getResourceAsStream("/data/PathTest.osm");
+            InputStream inputStream = Main.class.getResourceAsStream("/data/PathTest.osm");
             m.loadFile("map.osm", inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
-
+        g = m.getDiGraph();
     }
 
 
     @Test
     public void findPath(){
-        Graph g = m.getDiGraph();
-
         PathTree pS = new PathTree(g,start, end);
-        pS.useShortestPath(true);
+        pS.useShortestPath();
         pS.initiate();
 
         Assert.assertEquals(true, pS.hasPathTo(end));
@@ -60,12 +66,12 @@ public class PathTest {
         //Create one pathTree for shortest route and for fastest
         PathTree shortestTree = new PathTree(g, start, end);
         shortestTree.useCarRoute();
-        shortestTree.useShortestPath(true);
+        shortestTree.useShortestPath();
         shortestTree.initiate();
 
         PathTree fastestTree = new PathTree(g, start, end);
         fastestTree.useCarRoute();
-        fastestTree.useShortestPath(false);
+        fastestTree.useFastestPath();
         fastestTree.initiate();
 
         //can they both find a path?
@@ -83,9 +89,6 @@ public class PathTest {
 
         //The two paths should be different.
         Assert.assertNotEquals(fastestTree.pathTo(end), shortestTree.pathTo(end));
-
-
-
     }
 
     @Test
@@ -93,7 +96,7 @@ public class PathTest {
         Graph g = Model.getModel().getDiGraph();
         PathTree fastestTree = new PathTree(g, 595, 60);
         fastestTree.useCarRoute();
-        fastestTree.useShortestPath(true);
+        fastestTree.useShortestPath();
         fastestTree.initiate();
 
         Assert.assertTrue(fastestTree.hasPathTo(60));

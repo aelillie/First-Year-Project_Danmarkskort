@@ -5,23 +5,21 @@ import java.util.Stack;
 public class PathTree {
 
     private Graph G;
-    private int s;
-    private int d;
-    private double[] valueTo;          // valueTo[v] = distance  of shortest s->v path
-    private Edge[] edgeTo;    // edgeTo[v] = last edge on shortest s->v path
-    private IndexMinPQ<Double> pq;    // priority queue of vertices
-    private boolean shortestPath;
+    private int s;                      // start
+    private int d;                      // destination
+    private double[] valueTo;           // valueTo[v] = distance (if shortest path) = time (if fastest path)s->d
+    private Edge[] edgeTo;              // edgeTo[v] = last edge on shortest s->d path
+    private IndexMinPQ<Double> pq;      // priority queue of vertices
+    private boolean shortestPath;       //if not shortestPath, then fastest path
     private boolean walkRoute, carRoute, bikeRoute;
 
 
     /**
-     * Computes a shortest paths tree from <tt>s</tt> to every other vertex in
-     * the edge-weighted digraph <tt>G</tt>.
-     * @param G the edge-weighted digraph
+     * Creates a path tree object
+     * @param G the weighted graph
      * @param s the source vertex
      * @param d the destination vertex
      * @throws IllegalArgumentException if an edge distance is negative
-     * @throws IllegalArgumentException unless 0 &le; <tt>s</tt> &le; <tt>V</tt> - 1
      */
     public PathTree(Graph G, int s, int d) {
         for (Edge e : G.edges()) {
@@ -34,6 +32,10 @@ public class PathTree {
         this.d = d;
     }
 
+    /**
+     * Computes a paths tree from s to every other vertex in the weighted graph G
+     * Depends on which type of route it is, and if it's the fastest or shortest path
+     */
     public void initiate() {
         valueTo = new double[G.V()];
         edgeTo = new Edge[G.V()];
@@ -45,9 +47,6 @@ public class PathTree {
         else if (carRoute) relaxCarRoute();
         else if (walkRoute) relaxWalkRoute();
         else relaxCarRoute();
-
-        // check optimality conditions
-        // assert check(G, s);
     }
 
     private void relaxBikeRoute() {
@@ -69,21 +68,20 @@ public class PathTree {
         // relax vertices in order of distance/travel time from s
         pq = new IndexMinPQ<>(G.V());
         pq.insert(s, valueTo[s]);
-        while (!pq.isEmpty()) {
+        while (!pq.isEmpty()) {                                 /* 1 */
             int v = pq.delMin();
-            for (Edge e : G.adj(v)) {
-                if (!e.highway().isDriveAble()) continue;
-                if (!shortestPath) relaxTime(e, v); //fastest path
+            for (Edge e : G.adj(v)) {                           /* 2 */
+                if (!e.highway().isDriveAble()) continue;       /* 3 */
+                if (!shortestPath)                              /* 4 */
+                    relaxTime(e, v); //fastest path
                 else relaxDistance(e, v); //shortest path
             }
-            if(v == d) //found destination, stop relaxing edges
+            if(v == d) //found destination, stop relaxing edges /* 5 */
                 break;
         }
     }
 
-        // check optimality conditions
 
-        //assert(check(G, s));
     private void relaxWalkRoute() {
         // relax vertices in order of distance/travel time from s
         pq = new IndexMinPQ<>(G.V());
@@ -135,10 +133,10 @@ public class PathTree {
     }
 
     /**
-     * Returns the length of a shortest path from the source vertex <tt>s</tt> to vertex <tt>v</tt>.
+     * Returns the length of a path from the source vertex s to vertex d.
      * @param v the destination vertex
-     * @return the length of a shortest path from the source vertex <tt>s</tt> to vertex <tt>v</tt>;
-     *    <tt>Double.POSITIVE_INFINITY</tt> if no such path
+     * @return the length of a path from the source vertex s to vertex d;
+     *    Double.POSITIVE_INFINITY if no such path
      */
     public double distTo(int v) {
         return valueTo[v];
@@ -148,20 +146,20 @@ public class PathTree {
     }
 
     /**
-     * Is there a path from the source vertex <tt>s</tt> to vertex <tt>v</tt>?
+     * Is there a path from the source vertex s to vertex d?
      * @param v the destination vertex
-     * @return <tt>true</tt> if there is a path from the source vertex
-     *    <tt>s</tt> to vertex <tt>v</tt>, and <tt>false</tt> otherwise
+     * @return true if there is a path from the source vertex
+     *    s to vertex d, and false otherwise
      */
     public boolean hasPathTo(int v) {
         return valueTo[v] < Double.POSITIVE_INFINITY;
     }
 
     /**
-     * Returns a shortest path from the source vertex <tt>s</tt> to vertex <tt>v</tt>.
+     * Returns a path from the source vertex s to vertex d (in opposite direction).
      * @param v the destination vertex
-     * @return a shortest path from the source vertex <tt>s</tt> to vertex <tt>v</tt>
-     *    as an iterable of edges, and <tt>null</tt> if no such path
+     * @return a shortest path from the source vertex s to vertex d
+     *    as an iterable of edges, and null if no such path
      */
     public Iterable<Edge> pathTo(int v) {
         if (!hasPathTo(v)) return null;
@@ -178,61 +176,14 @@ public class PathTree {
         return path;
     }
 
-
-    // check optimality conditions:
-    // (i) for all edges e:            valueTo[e.to()] <= valueTo[e.from()] + e.distance()
-    // (ii) for all edge e on the SPT: valueTo[e.to()] == valueTo[e.from()] + e.distance()
-    private boolean check(Graph G, int s) {
-
-        // check that edge weights are nonnegative
-        for (Edge e : G.edges()) {
-            if (e.distance() < 0) {
-                System.err.println("negative edge distance detected");
-                return false;
-            }
-        }
-
-        // check that valueTo[v] and edgeTo[v] are consistent
-        if (valueTo[s] != 0.0 || edgeTo[s] != null) {
-            System.err.println("valueTo[s] and edgeTo[s] inconsistent");
-            return false;
-        }
-        for (int v = 0; v < G.V(); v++) {
-            if (v == s) continue;
-            if (edgeTo[v] == null && valueTo[v] != Double.POSITIVE_INFINITY) {
-                System.err.println("valueTo[] and edgeTo[] inconsistent");
-                return false;
-            }
-        }
-
-        // check that all edges e = v->w satisfy valueTo[w] <= valueTo[v] + e.distance()
-        for (int v = 0; v < G.V(); v++) {
-            for (Edge e : G.adj(v)) {
-                int w = e.other(v);
-                if (valueTo[v] + e.distance() < valueTo[w]) {
-                    System.err.println("edge " + e + " not relaxed");
-                    return false;
-                }
-            }
-        }
-
-        // check that all edges e = v->w on SPT satisfy valueTo[w] == valueTo[v] + e.distance()
-        for (int w = 0; w < G.V(); w++) {
-            if (edgeTo[w] == null) continue;
-            Edge e = edgeTo[w];
-            int v = e.either();
-            if (w != e.other(v)) return false;
-            if (valueTo[v] + e.distance() != valueTo[w]) {
-                System.err.println("edge " + e + " on shortest path not tight");
-                return false;
-            }
-        }
-        return true;
+    public void useShortestPath() {
+        shortestPath = true;
     }
 
-    public void useShortestPath(boolean use) {
-        shortestPath = use;
+    public void useFastestPath() {
+        shortestPath = false;
     }
+
 
     public void useWalkRoute() {
         walkRoute = true;
@@ -261,5 +212,33 @@ public class PathTree {
 
     public boolean isBikeRoute() {
         return bikeRoute;
+    }
+
+    public Graph getG() {
+        return G;
+    }
+
+    public int getS() {
+        return s;
+    }
+
+    public int getD() {
+        return d;
+    }
+
+    public double[] getValueTo() {
+        return valueTo;
+    }
+
+    public Edge[] getEdgeTo() {
+        return edgeTo;
+    }
+
+    public IndexMinPQ<Double> getPq() {
+        return pq;
+    }
+
+    public boolean isShortestPath() {
+        return shortestPath;
     }
 }
