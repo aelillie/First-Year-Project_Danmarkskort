@@ -400,6 +400,8 @@ public class View extends JFrame implements Observer {
             fastestPath = null;
             removePointer("startPointIcon");
             closeDirectionList();
+            routePanel.getStartAddressField().setForeground(Color.gray);
+            routePanel.getStartAddressField().setText("Enter start address");
             return;
         }
         Insets x = getInsets();
@@ -419,6 +421,8 @@ public class View extends JFrame implements Observer {
             fastestPath = null;
             removePointer("endPointIcon");
             closeDirectionList();
+            routePanel.getEndAddressField().setForeground(Color.gray);
+            routePanel.getEndAddressField().setText("Enter end address");
             return;
         }
         Insets x = getInsets();
@@ -755,6 +759,7 @@ public class View extends JFrame implements Observer {
         }catch(NullPointerException ex){
             addToDirectionPane(new String[]{"No Fastest path between the two locations was Found"});
             setTravelInfo(null);
+            fastestPath = null;
         }
 
         repaint();
@@ -777,6 +782,7 @@ public class View extends JFrame implements Observer {
         }catch(NullPointerException ex){
             addToDirectionPane(new String[] {"No shortest Path between the two locations was Found"});
             setTravelInfo(null);
+            shortestPath =null;
         }
 
         repaint();
