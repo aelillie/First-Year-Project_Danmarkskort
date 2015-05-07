@@ -700,6 +700,9 @@ public class View extends JFrame implements Observer {
         canvas.requestFocusInWindow();
     }
 
+    /*
+    Checks if the user zooms in
+     */
     private void checkForZoomIn(){
         if(checkIn == 1){
             zoomLevel++;
@@ -713,6 +716,9 @@ public class View extends JFrame implements Observer {
 
     }
 
+    /*
+    checks if the user zooms out
+     */
     private void checkForZoomOut(){
         if(checkOut == 1){
             zoomLevel--;
@@ -823,6 +829,9 @@ public class View extends JFrame implements Observer {
 
     }
 
+    /*
+    finds shortest route between two points and stores it for drawing
+     */
     public void findShortestRoute(Point2D start, Point2D end){
         fastestPath = null;
         try {
@@ -931,6 +940,10 @@ public class View extends JFrame implements Observer {
         return returnVal;
     }
 
+    /*
+    assigns a zoomfactor to each zoomlevel
+    The zoomfactor controls the width of the highway strokes
+     */
     private void adjustZoomFactor(){
         switch(zoomLevel){
             case 0:zoomFactor = 39; break;
