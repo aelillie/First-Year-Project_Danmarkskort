@@ -77,10 +77,15 @@ public class Controller extends MouseAdapter implements ActionListener {
         }
         public void mouseClicked(MouseEvent e) {
             try {
-                if (e.getButton() == 1)
+                if (e.getButton() == 1 && e.isAltDown())
                     view.setStartPoint(e.getPoint());
-                else if (e.getButton() == 3)
+                else if (e.getButton() == 3 && e.isAltDown())
                     view.setEndPoint(e.getPoint());
+                else if (e.getButton() == 1 && e.isControlDown())
+                    view.setStartPoint(null);
+                else if (e.getButton() == 3 && e.isControlDown())
+                    view.setEndPoint(null);
+
             }catch(NoninvertibleTransformException ex){
                 ex.printStackTrace();
             }

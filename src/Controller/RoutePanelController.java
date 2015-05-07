@@ -203,7 +203,8 @@ public class RoutePanelController implements ActionListener{
                 endPoint = SearchResultMouseHandler.getPoint(results[0], model);
             } else endPoint = null;
         } else if (command == "clearStartField") {
-            startAddressField.setText(null);
+            startAddressField.setForeground(Color.GRAY);
+            startAddressField.setText("Enter start address");
             view.setShortestPath(null);
             view.setFastestPath(null);
             try {
@@ -213,7 +214,8 @@ public class RoutePanelController implements ActionListener{
             }
             view.clearDirectionPane();
         } else if (command == "clearEndField") {
-            endAddressField.setText(null);
+            startAddressField.setForeground(Color.GRAY);
+            endAddressField.setText("Enter end address");
             view.setShortestPath(null);
             view.setFastestPath(null);
             try {

@@ -81,8 +81,8 @@ public class Scalebar {
             e.printStackTrace();
         }
 
-        double distance = MapCalculator.haversineDist(transformedStart.getX(), transformedStart.getY(), //Calculate distance between the two points
-                transformedEnd.getX(), transformedEnd.getY());
+        double distance = MapCalculator.haversineDist(transformedStart, //Calculate distance between the two points
+                transformedEnd);
 
 
         double lineWidthPerKm = lineWidth/distance; //Used to calculate the desired distance in pixels

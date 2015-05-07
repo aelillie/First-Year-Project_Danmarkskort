@@ -12,6 +12,9 @@ public class Vertices implements Serializable {
     private Point2D[] vertex_index;
     private int counter;
 
+    /**
+     * Helper class to keep track of linking Node points to vertices indices.
+     */
     public Vertices() {
         vertex_map = new HashMap<>();
         counter = 0;
@@ -31,6 +34,10 @@ public class Vertices implements Serializable {
             throw new NumberFormatException("Integer limit reached");
     }
 
+    /**
+     * When all vertices has been added creates and array
+     * to easily get point linked to vertex index.
+     */
     public void createVertexIndex() {
         vertex_index = new Point2D[vertex_map.size()];
         for(Point2D point : vertex_map.keySet()){
