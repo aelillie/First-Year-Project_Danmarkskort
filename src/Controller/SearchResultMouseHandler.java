@@ -62,9 +62,7 @@ public class SearchResultMouseHandler extends MouseAdapter{
      * @param iconType - End or start Position icon type
      */
     public static void goToAddressLocation(Address selectedAddr, Model m, View v, String iconType){
-       // Map<Address, Point2D> addressMap = m.getOSMReader().getAddressMap();
         Map<Address, List<Path2D>> streetMap = m.getOSMReader().getStreetMap();
-        //Map<Address, Path2D> boundaryMap = m.getOSMReader().getBoundaryMap();
 
         Point2D addressLocation = selectedAddr.getAddressLocation();
         List<Path2D> streetLocation = streetMap.get(selectedAddr);
@@ -118,9 +116,7 @@ public class SearchResultMouseHandler extends MouseAdapter{
     }
 
     public static Point2D getPoint(Address result, Model m){
-        //Map<Address, Point2D> addressMap = m.getOSMReader().getAddressMap();
         Map<Address, List<Path2D>> streetMap = m.getOSMReader().getStreetMap();
-        //Map<Address, Path2D> boundaryMap = m.getOSMReader().getBoundaryMap();
 
         Point2D addressLocation = result.getAddressLocation();
         List<Path2D> streetLocation = streetMap.get(result);

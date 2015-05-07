@@ -150,30 +150,30 @@ public class RoutePanelController implements ActionListener{
 
 
     /**
-     *
+     * This address calls to the model to search for the addresses given an input in a given textfield and chooses appropiately what to do depending on the search results.
      * @param type Type of compare used for the search: either 1 = startsWith compare otherwise equality compare
      * @return The search results (Address objects)
      */
     private Address[] addressSearch(int type, JTextField textField, JScrollPane scrollPane){
         String input = textField.getText();
-        if(input.length() < 3){
+        if(input.length() < 3){ //If the length of the search input is less than 3, don't search, return null.
             if(input.equals("") && input != null) {
-                scrollPane.setVisible(false);
-                view.removePointer(textFieldToIconType.get(textField));
+                scrollPane.setVisible(false); //If the search input is empty, the scrollpane in which the results are displayed need not be visible.
+                view.removePointer(textFieldToIconType.get(textField)); //Remove the pointer in case a given address has already been chosen and a pointer on the map is displayed.
             }
             return null;
         } else {
             input = input.trim().toLowerCase();
-            Address address = Address.parse(input);
+            Address address = Address.parse(input); //Parse to address object
             if(address == null) return null;
             Address[] results = model.searchForAddresses(address, type);
             if(results != null) {
-                view.addToResultPane(results,textField,scrollPane,textfieldToBounds.get(textField),textFieldToIconType.get(textField));
+                view.addToResultPane(results,textField,scrollPane,textfieldToBounds.get(textField),textFieldToIconType.get(textField)); //Add the results to the scrollpane to display them.
             }
             else{
-                view.getResultPane().setVisible(false);
+                view.getResultPane().setVisible(false); //If no results, set the scrollpane invisible.
             }
-            return results;
+            return results; //Return the results - in case they are null, the client code can decide what to do with this.
         }
     }
 
@@ -183,7 +183,7 @@ public class RoutePanelController implements ActionListener{
      */
     public void actionPerformed(ActionEvent e) {
         String command = e.getActionCommand();
-        if (command == "findRoute") {
+        if (command == "findRoute") { //The "Find route" button
             if(startAddressField.getText().equals(""))
                 startPoint = null;
             if(endAddressField.getText().equals(""))
@@ -202,17 +202,13 @@ public class RoutePanelController implements ActionListener{
 
             }
         }
-
-        else if (command == "car") {
+        else if (command == "car") { //The car button
             setButtonsBoolean(routeView.getCarButton());
-            //transportButtonDown(routeView.getCarButton());
-        } else if (command == "bicycle"){
+        } else if (command == "bicycle"){ //The bicycle button
             setButtonsBoolean(routeView.getBicycleButton());
-            //transportButtonDown(routeView.getBicycleButton());
-        } else if (command == "walking"){
+        } else if (command == "walking"){ //The walking/by foot button
             setButtonsBoolean(routeView.getFootButton());
-            //transportButtonDown(routeView.getFootButton());
-        } else if (command == "startAddressSearch"){
+        } else if (command == "startAddressSearch"){ //The start adress field
             Address[] results = addressSearch(2,startAddressField,startAddrScrollpane);
             if(results != null && results.length == 1) {
                 startAddrScrollpane.setVisible(false);
@@ -220,16 +216,17 @@ public class RoutePanelController implements ActionListener{
                 startPoint = SearchResultMouseHandler.getPoint(results[0], model);
             }else startPoint = null;
         }
-        else if (command == "endAddressSearch") {
+        else if (command == "endAddressSearch") { //End address field
             Address[] results = addressSearch(2, endAddressField, endAddrScrollpane);
             if (results != null && results.length == 1) {
                 endAddrScrollpane.setVisible(false);
                 System.out.println("Point B found");
                 endPoint = SearchResultMouseHandler.getPoint(results[0], model);
             } else endPoint = null;
-        } else if (command == "clearStartField") {
+        } else if (command == "clearStartField") { //The "X" button near the startfield
             startAddressField.setForeground(Color.GRAY);
             startAddressField.setText("Enter start address");
+            view.requestFocusInWindow();
             view.setShortestPath(null);
             view.setFastestPath(null);
             try {
@@ -238,9 +235,10 @@ public class RoutePanelController implements ActionListener{
                 ex.printStackTrace();
             }
             view.clearDirectionPane();
-        } else if (command == "clearEndField") {
+        } else if (command == "clearEndField") { //The "X" button near the endfield
             startAddressField.setForeground(Color.GRAY);
             endAddressField.setText("Enter end address");
+            view.requestFocusInWindow();
             view.setShortestPath(null);
             view.setFastestPath(null);
             try {
@@ -249,13 +247,17 @@ public class RoutePanelController implements ActionListener{
                 ex.printStackTrace();
             }
             view.clearDirectionPane();
-        } else if (command == "shortestPath"){
+        } else if (command == "shortestPath"){ //"Shortest" button
             setRouteTypeButtonBoolean(routeView.getShortestPathButton());
-        } else if (command == "fastestPath"){
+        } else if (command == "fastestPath"){ //"Fastest" button
             setRouteTypeButtonBoolean(routeView.getFastestPathButton());
         }
     }
 
+    /**
+     * Sets the boolean specifying whether the route type buttons are down or not when one button is pressed.
+     * @param button The button which is pressed.
+     */
     public void setRouteTypeButtonBoolean(JButton button){
         boolean isButtonDown = routeTypeButtonDownMap.get(button);
 
@@ -271,12 +273,21 @@ public class RoutePanelController implements ActionListener{
         }
     }
 
+    /**
+     * Changes the appearance and boolean specifying whether the button is up or down.
+     * @param button The button to be changed.
+     * @param map The map specifying the boolean values
+     */
     public void transportButtonDown(JButton button, HashMap<JButton, Boolean> map){
         boolean isButtonDown = map.get(button);
         routeView.changeButtonAppearence(button, isButtonDown);
         map.put(button, !isButtonDown);
     }
 
+    /**
+     * Makes sure to set the other booleans specifying whether the button is pressed or not of the other transport buttons once one is clicked.
+     * @param button The button which has been pressed.
+     */
     private void setButtonsBoolean(JButton button){
         JButton bicycleButton = routeView.getBicycleButton();
         JButton footButton = routeView.getFootButton();
@@ -299,6 +310,9 @@ public class RoutePanelController implements ActionListener{
 
     }
 
+    /**
+     * The Keyhandler which enables the use of keybindings - "ENTER" for search and the arrows up and down for selecting an address.
+     */
     private class SearchFieldKeyHandler extends KeyAdapter {
         private JList<Address> list = view.getAddressSearchResults();
         JTextField textField;
@@ -318,6 +332,7 @@ public class RoutePanelController implements ActionListener{
                 enterPressed();
             }
 
+            //Sets the selected item according to the direction of the arrow keys that have been pressed.
             if(e.getKeyCode() == KeyEvent.VK_DOWN && selectedNr < list.getModel().getSize()-1){
                 list.setSelectedIndex(++selectedNr);
 
@@ -328,28 +343,29 @@ public class RoutePanelController implements ActionListener{
 
         }
 
+        /**
+         * The method reacting to enter pressed.
+         */
         public void enterPressed(){
             Address selectedItem = null;
             try{
-                selectedItem = list.getSelectedValue();
+                selectedItem = list.getSelectedValue(); //Obtains the selected value - catches the exception if none is chosen.
             } catch (NullPointerException ex){
                 System.out.println("No address chosen");
             }
             if(!(selectedItem==null)) {
-                textField.setText(selectedItem.toString());
+                textField.setText(selectedItem.toString()); //Sets the textfields text to the selected address' name.
                 textField.setVisible(true);
-            }
-
-            Address[] results = addressSearch(2,textField,resultPane);
-            if (results != null) {
-                if (results.length == 1){
-                    SearchResultMouseHandler.goToAddressLocation(results[0], model, view, textFieldToIconType.get(textField));
+                SearchResultMouseHandler.goToAddressLocation(selectedItem,model,view,textFieldToIconType.get(textField));
+            } else { //If none is selected, search for the current input in the textfield.
+                Address[] results = addressSearch(2, textField, resultPane); //Search for the address corresponding exactly to what is typed in.
+                if (results != null) {
+                    if (results.length == 1) {
+                        SearchResultMouseHandler.goToAddressLocation(results[0], model, view, textFieldToIconType.get(textField));
+                    }
+                    resultPane.setVisible(false);
+                    view.getCanvas().requestFocusInWindow();
                 }
-                resultPane.setVisible(false);
-                view.getCanvas().requestFocusInWindow();
-            } else {
-                addressSearch(1,textField,resultPane);
-                view.getCanvas().requestFocusInWindow();
             }
         }
     }
