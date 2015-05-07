@@ -15,7 +15,7 @@ public class PathTree {
 
 
     /**
-     * Creates a path tree object
+     * Creates a path tree
      * @param G the weighted graph
      * @param s the source vertex
      * @param d the destination vertex

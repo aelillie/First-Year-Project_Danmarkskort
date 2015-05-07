@@ -29,6 +29,18 @@ public class whiteboxTest {
     private static final double DELTA = 1e-15;
     private Model m = Model.getModel();
     private Vertices V;
+    double d0; //1509 -> 932
+    double d1; //1509 -> 1566
+    double d2; //1566 -> 131
+    double d3; //131 -> 132
+    double d4; //132 -> 133
+    double d5; //133 -> 841
+    double d6; //133 -> 78
+    double d7; //133 -> 134
+    double d8; //841 -> 842
+    double d9; //131 -> 839
+    double d10; //840 -> 841
+
 
 
 
@@ -41,7 +53,28 @@ public class whiteboxTest {
             e.printStackTrace();
         }
         V = m.getVertices();
+        d0 = MapCalculator.haversineDist(V.getVertex(1509), V.getVertex(932));  //1509 -> 932
+        d1 = MapCalculator.haversineDist(V.getVertex(1509), V.getVertex(1566)); //1509 -> 1566
+        d2 = MapCalculator.haversineDist(V.getVertex(1566), V.getVertex(131));  //1566 -> 131
+        d3 = MapCalculator.haversineDist(V.getVertex(131), V.getVertex(132));   //131 -> 132
+        d4 = MapCalculator.haversineDist(V.getVertex(132), V.getVertex(133));   //132 -> 133
+        d5 = MapCalculator.haversineDist(V.getVertex(133), V.getVertex(841));   //133 -> 841
+        d6 = MapCalculator.haversineDist(V.getVertex(133), V.getVertex(78));    //133 -> 78
+        d7 = MapCalculator.haversineDist(V.getVertex(133), V.getVertex(134));   //133 -> 134
+        d8 = MapCalculator.haversineDist(V.getVertex(841), V.getVertex(842));   //841 -> 842
+        d9 = MapCalculator.haversineDist(V.getVertex(131), V.getVertex(839));   //131 -> 839
+        d10 = MapCalculator.haversineDist(V.getVertex(840), V.getVertex(841));  //840 -> 841
     }
+
+    private int checkForOcc(PathTree PT) {
+        int counter = 0;
+        for (Edge e : PT.getEdgeTo()) {
+            if (e != null)
+                counter++;
+        }
+        return counter;
+    }
+
     @Test
     public void branch1case1() {
         PathTree PT = new PathTree(m.getDiGraph(), 1509, 1509);
@@ -50,19 +83,38 @@ public class whiteboxTest {
         PT.initiate();
 
         Assert.assertTrue(checkForOcc(PT) == 2);
-        Assert.assertEquals(MapCalculator.haversineDist(V.getVertex(1509), V.getVertex(932)), PT.getValueTo()[932], DELTA);
-        Assert.assertEquals(MapCalculator.haversineDist(V.getVertex(1509), V.getVertex(1566)), PT.getValueTo()[1566], DELTA);
-    }
-
-    private int checkForOcc(PathTree PT) {
-        int counter = 0;
-        for (Edge e : PT.getEdgeTo()) {
-            if (e != null) counter++;
-        }
-        return counter;
+        Assert.assertEquals(d0, PT.getValueTo()[932], DELTA);
+        Assert.assertEquals(d1, PT.getValueTo()[1566], DELTA);
     }
 
     @Test
+    public void branch1case2() {
+        PathTree PT = new PathTree(m.getDiGraph(), 1509, 1566);
+        PT.useShortestPath();
+        PT.useCarRoute();
+        PT.initiate();
+
+        Assert.assertTrue(checkForOcc(PT) == 3);
+        Assert.assertEquals(d0, PT.getValueTo()[932], DELTA);
+        Assert.assertEquals(d1, PT.getValueTo()[1566], DELTA);
+        Assert.assertEquals(d1 + d2, PT.getValueTo()[131], DELTA);
+    }
+
+    @Test
+    public void branch1case3() {
+        PathTree PT = new PathTree(m.getDiGraph(), 1509, 131);
+        PT.useShortestPath();
+        PT.useCarRoute();
+        PT.initiate();
+        int actualNum = checkForOcc(PT);
+        Assert.assertTrue(17 == actualNum);
+        Assert.assertEquals(d0, PT.getValueTo()[932], DELTA);
+        Assert.assertEquals(d1, PT.getValueTo()[1566], DELTA);
+        Assert.assertEquals(d1 + d2, PT.getValueTo()[131], DELTA);
+        Assert.assertEquals(d1 + d2 + d3, PT.getValueTo()[132], DELTA);
+        Assert.assertEquals(d1 + d2 + d9, PT.getValueTo()[839], DELTA);
+    }
+
     public void shortest() {
         int s = 1509;
         int d = 841;
@@ -83,7 +135,6 @@ public class whiteboxTest {
 
     }
 
-    @Test
     public void fast() {
         int s = 1509;
         int d = 841;
@@ -133,7 +184,7 @@ public class whiteboxTest {
         Path2D way3 = PathCreater.createWay(wayCoords3);
         Path2D way4 = PathCreater.createWay(wayCoords4);
 
-        Highway highway1 = new Highway(way1, 2, "primary", false, "Højager", "50");
+        Highway highway1 = new Highway(way1, 2, "primary", false, "Hï¿½jager", "50");
         highway1.setRouteType(kv_map);
         vertices.add(wayCoords1);
         highway1.assignEdges(wayCoords1, "no");
