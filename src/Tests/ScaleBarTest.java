@@ -36,16 +36,12 @@ public class ScaleBarTest {
 
     }
 
-
     @Test
     public void TestStartPoint() {
         assertEquals(new Point2D.Float(150,10), getDesiredPoint(lineWidth, 1.0));
         assertEquals(new Point2D.Float(125,10), getDesiredPoint(lineWidth, 0.5));
 
     }
-
-
-
 
     private Point2D getDesiredPoint(double lineWidth, double desiredDistance){
         Point2D.Float transformedStart = new Point2D.Float();
@@ -57,10 +53,7 @@ public class ScaleBarTest {
         } catch (NoninvertibleTransformException e){
             e.printStackTrace();
         }
-
-
         double distance = 2.0; //HaverSineDistance tested in MapCalculatorTest.
-
 
         double lineWidthPerKm = lineWidth/distance; //Used to calculate the desired distance in pixels
         return new Point2D.Float((float) (lineEnd.getX()-desiredDistance*lineWidthPerKm),(float)lineStart.getY()); //Change the x coordinate to form the desired distance.

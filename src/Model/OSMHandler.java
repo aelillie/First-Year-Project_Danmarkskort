@@ -27,9 +27,7 @@ public class OSMHandler extends DefaultHandler {
             "trunk", "primary", "secondary", "tertiary"));
 
     //Contains relevant places parsed as address objects linked to their coordinate.
-    private Map<Address, Point2D> addressMap;
     private Map<Address, List<Path2D>> streetMap;
-    private Map<Address, Path2D> boundaryMap;
 
     private QuadTree streetTree, buildingTree, iconTree, naturalTree, railwayTree, bigRoadTree;
     private ArrayList<Address> addressList; //list of all the addresses in the .osm file
@@ -54,9 +52,7 @@ public class OSMHandler extends DefaultHandler {
         node_longMap = new LongHashMap<Point2D>();
         keyValue_map = new HashMap<>();
         wayId_longMap = new LongHashMap<Path2D>();
-        addressMap = new HashMap<>();
         streetMap = new HashMap<>();
-        boundaryMap = new HashMap<>();
         vertices = new Vertices();
         graph = new Graph();
     }
@@ -262,7 +258,7 @@ public class OSMHandler extends DefaultHandler {
                     }
                     if (keyValue_map.containsKey("boundary")) {
                         Address addr = Address.newStreet(name);
-                        boundaryMap.put(addr, way);
+                        addr.setBoundaryLocation(way);
                         addressList.add(addr);
                     }
                 }
@@ -283,7 +279,6 @@ public class OSMHandler extends DefaultHandler {
                         else if (keyValue_map.containsKey("natural")) ;
                         //if(keyValue_map.get("natural").equals("water"))
                         // naturalTree.insert(new Natural(path, fetchOSMLayer(), "water"));
-                        //TODO How do draw harbor.
                     }
                     if (val.equals("boundary")) {
                         Path2D path = PathCreater.createMultipolygon(memberReferences, wayId_longMap);
@@ -292,7 +287,8 @@ public class OSMHandler extends DefaultHandler {
                         if (name == null) return;
                         name.toLowerCase().trim();
                         Address addr = Address.newTown(name);
-                        boundaryMap.put(addr, path);
+                        //boundaryMap.put(addr, path);
+                        addr.setBoundaryLocation(path);
                         addressList.add(addr);
                     }
 
@@ -342,14 +338,16 @@ public class OSMHandler extends DefaultHandler {
                         if (place.equals("town") || place.equals("village") || place.equals("suburb") || place.equals("locality") || place.equals("neighbourhood")) {
                             String name = keyValue_map.get("name").toLowerCase();
                             Address addr = Address.newTown(name);
-                            addressMap.put(addr, nodeCoord);
+                            addr.setAddressLocation(nodeCoord);
+                            //addressMap.put(addr, nodeCoord);
                             addressList.add(addr);
                         }
                     }
-                } else if (keyValue_map.containsKey("addr:street")) {    //TODO uncomment!
+                } else if (keyValue_map.containsKey("addr:street")) {
                     if (hasHouseNo && hasCity && hasPostcode) {
                         Address addr = Address.newAddress(streetName.toLowerCase(), houseNumber.toLowerCase(), postCode.toLowerCase(), cityName.toLowerCase());
-                        addressMap.put(addr, nodeCoord);
+                        addr.setAddressLocation(nodeCoord);
+                        //addressMap.put(addr, nodeCoord);
                         addressList.add(addr);
                     }
                 }
@@ -364,7 +362,7 @@ public class OSMHandler extends DefaultHandler {
                 long time = System.nanoTime();
                 Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
                 System.out.printf("sorted all addresses, time: %d ms\n", (System.nanoTime() - time) / 1000000);
-                PathCreater.connectCoastlines(bbox);
+                PathCreater.connectEndPoints(bbox);
                 vertices.createVertexIndex();
                 graph.initialize(vertices.V());
                 graph.addEdges(streetEdges());
@@ -384,8 +382,6 @@ public class OSMHandler extends DefaultHandler {
         Collection<Highway> highways = (Collection<Highway>)(Collection<?>) mapData;
         return highways;
     }
-
-
 
     /**
      * Some map features have pre defined layer values, some don't
@@ -423,11 +419,8 @@ public class OSMHandler extends DefaultHandler {
     }
 
     public Address[] searchForAddressess(Address add, int type){
-        return AddressSearcher.searchForAddresses(add, addressList, addressMap, type);
+        return AddressSearcher.searchForAddresses(add, addressList, type);
     }
-
-
-
 
     /**
      * Custom comparator that defines how to compare two addresses. Used when sorting a collection of addresses.
@@ -472,21 +465,11 @@ public class OSMHandler extends DefaultHandler {
         this.bigRoadTree = quadTrees.get(5);
     }
 
-    public Map<Address,Point2D> getAddressMap(){ return  addressMap;}
     public Map<Address, List<Path2D>> getStreetMap() {return streetMap;}
-    public Map<Address, Path2D> getBoundaryMap(){ return boundaryMap;}
     public List<Address> getAddressList(){return addressList;}
-
-    public void setAddressMap(Map<Address, Point2D> addressMap) {
-        this.addressMap = addressMap;
-    }
 
     public void setStreetMap(Map<Address, List<Path2D>> streetMap) {
         this.streetMap = streetMap;
-    }
-
-    public void setBoundaryMap(Map<Address, Path2D> boundaryMap) {
-        this.boundaryMap = boundaryMap;
     }
 
     public void setAddressList(ArrayList<Address> addressList) {

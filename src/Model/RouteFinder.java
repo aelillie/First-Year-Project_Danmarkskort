@@ -30,7 +30,7 @@ public class RouteFinder {
         endVertex = findClosestVertex(endPoint);
     }
 
-    public void setTravelInfo(PathTree p)throws NullPointerException {
+    private void setTravelInfo(PathTree p) {
         travelDistance = 0;
         travelTime = 0;
         for (Edge e : p.pathTo(endVertex)) {
@@ -103,7 +103,7 @@ public class RouteFinder {
             if (mp instanceof Highway ) {
                 Highway highway = (Highway) mp;
                 double[] points = new double[6];
-
+                //Iterate through the Path2D for better precision
                 PathIterator pI = highway.getWay().getPathIterator(new AffineTransform());
 
                 pI.currentSegment(points);
@@ -120,7 +120,7 @@ public class RouteFinder {
                         championLine = path;
                         champion = highway;
                     }
-                    else if(path.ptSegDist(position) < championLine.ptSegDist(position)){
+                    else if(path.ptSegDist(position) < championLine.ptSegDist(position)){   //Check if closer than champion line
                         champion = highway;
                         championLine = path;
 
@@ -128,7 +128,7 @@ public class RouteFinder {
                 }
             }
         }
-        return (Highway) champion;
+        return (Highway) champion; // return closest highway.
     }
 
     private int findClosestVertex(Point2D chosenPoint){
@@ -192,7 +192,7 @@ public class RouteFinder {
 
     private void filterRoads(Collection<MapData> before) {
 
-        //Goes through a collection and removes unnecessary highways
+        //Goes through a collection and removes unnecessary paths
         for (Iterator<MapData> it = before.iterator(); it.hasNext(); ) {
             Highway highway = (Highway) it.next();
             if (highway.getValue().equals("footway") || highway.getValue().equals("cycleway") ||

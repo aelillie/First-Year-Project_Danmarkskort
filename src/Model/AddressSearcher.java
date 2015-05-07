@@ -48,7 +48,7 @@ public class AddressSearcher {
         return range;
     }
 
-    public static Address[] searchForAddresses(Address addressInput, ArrayList<Address> addressList, Map<Address, Point2D> addressMap, int type){
+    public static Address[] searchForAddresses(Address addressInput, ArrayList<Address> addressList, int type){
         int[] range = multipleEntriesSearch(addressInput, addressList,type); //search for one or multiple entries
         if(range == null) { //If it is not found, the return value will be negative
 
@@ -60,9 +60,6 @@ public class AddressSearcher {
             Address[] results = new Address[upperBound-lowerBound+1];
             int arrayIndex = 0;
             for(int i = lowerBound; i <= upperBound; i++){
-                Address foundAddr = addressList.get(i);
-                Point2D coordinate = addressMap.get(foundAddr);
-                //System.out.println(foundAddr.toString());
                 results[arrayIndex] = addressList.get(i);
                 arrayIndex++;
             }

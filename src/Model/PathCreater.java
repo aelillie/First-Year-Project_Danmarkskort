@@ -131,7 +131,7 @@ public class PathCreater {
         }
     }
 
-    public static void connectCoastlines(Rectangle2D bbox) {
+    public static void connectEndPoints(Rectangle2D bbox) {
 
         Point2D southWest = new Point2D.Double(bbox.getX(), bbox.getY());
         Point2D southEast = new Point2D.Double(bbox.getX() + bbox.getWidth(), bbox.getY());

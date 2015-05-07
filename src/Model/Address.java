@@ -2,9 +2,12 @@ package Model;
 
 import com.sun.deploy.util.StringUtils;
 
+import java.awt.geom.Path2D;
+import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
@@ -12,8 +15,8 @@ import java.util.regex.Pattern;
 public class Address implements Comparable<Address>, Serializable {
     private String street, house, floor, side, postcode, city;
     static private List<Pattern> patternList = new ArrayList<>();
-    private static List<Address> addressList = new ArrayList<>();
-
+    private Point2D addressLocation;
+    private Path2D boundaryLocation;
 
     private Address(String _street, String _house, String _floor, String _side, String _postcode, String _city) {
         street = _street;
@@ -24,7 +27,7 @@ public class Address implements Comparable<Address>, Serializable {
         city = _city;
     }
 
-    public static Address newAddress(String streetName, String houseNumber, String postcode, String city ){
+    public static Address newAddress(String streetName, String houseNumber, String postcode, String city){
         Builder b = new Builder();
 
         streetName = streetName.intern();
@@ -360,5 +363,13 @@ public class Address implements Comparable<Address>, Serializable {
     public int hashCode(){
         return Objects.hash(street,house,floor,side,postcode,city);
     }
+
+    public void setAddressLocation(Point2D addressLocation){this.addressLocation = addressLocation;}
+
+    public void setBoundaryLocation(Path2D boundaryLocation){this.boundaryLocation = boundaryLocation;}
+
+    public Point2D getAddressLocation() {return addressLocation;}
+
+    public Path2D getBoundaryLocation() {return boundaryLocation;}
 
 }

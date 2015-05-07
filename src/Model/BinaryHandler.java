@@ -23,7 +23,7 @@ public class BinaryHandler{
      * Writes all the objects of Model.Drawable to a binary file for faster loading. The order of the sequence is important!
      * @param filename File saved to
      */
-    public static void save(String filename) throws IOException {
+    protected static void save(String filename) throws IOException {
 
         ObjectOutputStream out = new ObjectOutputStream(new FileOutputStream(filename));
         //write the boundaries and the number of shapes.
@@ -32,14 +32,11 @@ public class BinaryHandler{
         out.writeObject(model.getBbox().getBounds2D());
         loadingScreen.updateLoadBar(5);
 
-        out.writeObject(model.getOSMReader().getAddressMap());
         loadingScreen.updateLoadBar(20);
 
         out.writeObject(model.getOSMReader().getStreetMap());
         loadingScreen.updateLoadBar(35);
 
-        out.writeObject(model.getOSMReader().getBoundaryMap());
-        loadingScreen.updateLoadBar(40);
 
         out.writeObject(model.getOSMReader().getAddressList());
         loadingScreen.updateLoadBar(50);
@@ -72,7 +69,7 @@ public class BinaryHandler{
      * loads the shapes from a binary file. The order of the sequence is important!
      * @param inputStream file load from
      */
-    public static void load(InputStream inputStream)throws IOException, ClassNotFoundException {
+    protected static void load(InputStream inputStream)throws IOException, ClassNotFoundException {
         Model model = Model.getModel();
         ObjectInputStream in = new ObjectInputStream(new BufferedInputStream(inputStream));
         model.getOSMReader().initializeCollections();
@@ -81,18 +78,12 @@ public class BinaryHandler{
 
         LoadingScreen loadingScreen = new LoadingScreen();
 
-
-        model.getOSMReader().setAddressMap((Map<Address, Point2D>) in.readObject());
-
         loadingScreen.updateLoadBar(15);
 
         model.getOSMReader().setStreetMap((Map<Address, List<Path2D>>) in.readObject());
 
         loadingScreen.updateLoadBar(25);
 
-        model.getOSMReader().setBoundaryMap((Map<Address, Path2D>) in.readObject());
-
-        loadingScreen.updateLoadBar(40);
 
         model.getOSMReader().setAddressList((ArrayList<Address>) in.readObject());
 
