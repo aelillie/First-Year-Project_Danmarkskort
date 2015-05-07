@@ -188,18 +188,14 @@ public class RoutePanelController implements ActionListener{
                 startPoint = null;
             if(endAddressField.getText().equals(""))
                 endPoint = null;
-
             if (startPoint != null && endPoint != null) {
                 if(routeTypeButtonDownMap.get(routeView.getFastestPathButton())) {
-
                     System.out.println("Trying to find Fastest path...");
                     view.findFastestRoute(startPoint, endPoint);
-                }else if(routeTypeButtonDownMap.get(routeView.getShortestPathButton())){
-                    System.out.println("Tryin to find Shortest path...");
+                } else if(routeTypeButtonDownMap.get(routeView.getShortestPathButton())){
+                    System.out.println("Trying to find Shortest path...");
                     view.findShortestRoute(startPoint, endPoint);
-
-                }else view.findFastestRoute(startPoint, endPoint);
-
+                } else view.findFastestRoute(startPoint, endPoint);
             }
         }
         else if (command == "car") { //The car button

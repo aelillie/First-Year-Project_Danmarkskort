@@ -17,6 +17,7 @@ public class IconPanel extends JScrollPane {
 
     public IconPanel() {
         super();
+        getVerticalScrollBar().setUnitIncrement(16); //Make the scroll faster
         controllers = new ArrayList<>();
         Dimension preferred = getPreferredSize();
         GridLayout gridLayout = new GridLayout(0, 2);

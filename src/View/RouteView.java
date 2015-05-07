@@ -44,7 +44,9 @@ public class RouteView extends JPanel{
     }
 
 
-
+    /**
+     * Customize the appearence of all the buttons
+     */
     private void makeFindRoutePanel(){
         JPanel transportTypePanel = new JPanel();
         transportTypePanel.setBackground(Color.WHITE);
@@ -122,7 +124,7 @@ public class RouteView extends JPanel{
         c.fill = GridBagConstraints.HORIZONTAL;
         c.gridx = 1;
         c.gridy = 0;
-        c.ipady = 15;
+        c.ipady = 15; //The size of the component on the y-axis
         c.weightx = 0.85;
         c.weighty = 0.5;
         c.insets = new Insets(5,0,0,0); //Inset/distance from the right.
@@ -215,7 +217,6 @@ public class RouteView extends JPanel{
         findRouteButton.setActionCommand("findRoute");
         c = new GridBagConstraints();
         c.anchor = GridBagConstraints.LAST_LINE_END; //Where the component is situated - in this case to the lower right corner.
-        //c.weighty = 0.1;
         c.gridx = 1;
         c.gridy = 2;
         c.gridwidth = 2;

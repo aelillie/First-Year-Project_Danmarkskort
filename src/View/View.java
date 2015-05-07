@@ -231,17 +231,38 @@ public class View extends JFrame implements Observer {
         searchArea.setBounds(20, 20, 300, 37);
         searchArea.setActionCommand("searchAreaInput");
 
-        makeOptionsButton();
-        makeSearchButton();
-        makeZoomInButton();
-        makeZoomOutButton();
-        makeShowRoutePanelButton();
-        makeFullscreenButton();
-        makeMapTypeButton();
-        makeCloseDirectionListPanel();
-        //makeResultPane();
+        makeFrontGUIButtons();
     }
 
+    /**
+     * Creates the buttons to always be displayed at the front of the GUI.
+     */
+    private void makeFrontGUIButtons(){
+        Dimension preferred = getPreferredSize();
+
+        optionsButton = new JButton();
+        makeFrontButton(optionsButton,"optionsIcon","showOptions",new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() * 0.98), 39, 37));
+        makeSearchButton();
+
+        zoomInButton = new JButton();
+        makeFrontButton(zoomInButton,"plusIcon","zoomIn",new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37));
+
+        zoomOutButton = new JButton();
+        makeFrontButton(zoomOutButton,"minusIcon","zoomOut",new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() / 3 * 2 + 45), 39, 37));
+
+        makeShowRoutePanelButton();
+
+        fullscreenButton = new JButton();
+        makeFrontButton(fullscreenButton,"fullscreenIcon","fullscreen",new Rectangle((int) preferred.getWidth() - 60, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 + 100), 39, 37));
+
+        mapTypeButton = new JButton();
+        makeFrontButton(mapTypeButton,"layerIcon","mapType",new Rectangle((int) preferred.getWidth() - 49, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 - 45), 39, 37));
+        makeCloseDirectionListPanel();
+    }
+
+    /**
+     * The panel above the routedirection scrollpane displaying the time and the distance.
+     */
     private void makeCloseDirectionListPanel(){
         closeDirectionList = new JPanel();
         closeDirectionList.setVisible(false);
@@ -290,14 +311,17 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
-
+    /**
+     * The method called when directions needs to be added to the scrollpanel
+     * @param directionArray
+     */
     private void addToDirectionPane(String[] directionArray){
-        JList<String> directionStringList = new JList<>(directionArray);
+        JList<String> directionStringList = new JList<>(directionArray); //Everything to be added to the scrollpane is added as a JList
         directionPane.setVisible(true);
-        directionPane.setViewportView(directionStringList);
+        directionPane.setViewportView(directionStringList); //Set the display of the scrollpane to the current JList
         directionPane.setBounds(26, 300, 400, 200);
         directionPane.setBorder(new MatteBorder(1, 1, 1, 1, Color.DARK_GRAY));
-        directionPane.getViewport().setBackground(Color.WHITE);
+        directionPane.getViewport().setBackground(Color.WHITE); //The viewport is where the scrollpane elements are display
         directionPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
         closeDirectionList.setVisible(true);
     }
@@ -350,32 +374,24 @@ public class View extends JFrame implements Observer {
         scrollPane.getViewport().getView().addMouseListener(new SearchResultMouseHandler(this, model, addressSearchResults, textfield, scrollPane, iconType));
     }
 
-
-    private void makeMapTypeButton(){
-        Dimension preferred = getPreferredSize();
-        mapTypeButton = new JButton();
-        mapTypeButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("layerIcon")));
-        mapTypeButton.setFocusable(false);
-        mapTypeButton.setOpaque(false);
-        mapTypeButton.setBackground(DrawAttribute.fadeblack);
-        mapTypeButton.setBorderPainted(false);
-        mapTypeButton.setRolloverEnabled(false);
-        mapTypeButton.setActionCommand("mapType");
-        mapTypeButton.setBounds((int) preferred.getWidth() - 49, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 - 45), 39, 37);
+    /**
+     * Default method for creating buttons for the front GUI.
+     * @param button the button to be created
+     * @param icon the string specifying the icon name
+     * @param actionCommand The actioncommand to be used in the controllers.
+     * @param bounds Where the button should be situated on the GUI
+     */
+    private void makeFrontButton(JButton button, String icon, String actionCommand, Rectangle bounds){
+        button.setIcon(new ImageIcon(MapIcon.iconURLs.get(icon)));
+        button.setFocusable(false);
+        button.setOpaque(false);
+        button.setBackground(DrawAttribute.fadeblack);
+        button.setBorderPainted(false);
+        button.setRolloverEnabled(false);
+        button.setActionCommand(actionCommand);
+        button.setBounds(bounds);
     }
 
-    private void makeOptionsButton(){
-        Dimension preferred = getPreferredSize();
-        optionsButton = new JButton();
-        optionsButton.setFocusable(false);
-        optionsButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() * 0.98), 39, 37);
-        optionsButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("optionsIcon")));
-        optionsButton.setOpaque(false);
-        optionsButton.setBackground(DrawAttribute.fadeblack);
-        optionsButton.setBorderPainted(false);
-        optionsButton.setRolloverEnabled(false);
-        optionsButton.setActionCommand("showOptions");
-    }
 
     private void makeShowRoutePanelButton() {
         showRoutePanelButton = new JButton("Route plan");
@@ -402,38 +418,6 @@ public class View extends JFrame implements Observer {
     public void removePointer(String iconType){
         addressPointerMap.remove(iconType);
         canvas.repaint();
-    }
-
-
-
-    private void makeFullscreenButton() {
-        Dimension preferred = getPreferredSize();
-        fullscreenButton = new JButton();
-        fullscreenButton.setBackground(Color.BLACK);
-        fullscreenButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("fullscreenIcon")));
-        fullscreenButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        fullscreenButton.setFocusable(false);
-        fullscreenButton.setOpaque(false);
-        fullscreenButton.setActionCommand("fullscreen");
-        fullscreenButton.setBackground(DrawAttribute.fadeblack);
-        fullscreenButton.setBorderPainted(false);
-        fullscreenButton.setRolloverEnabled(false);
-        fullscreenButton.setBounds((int) preferred.getWidth() - 60, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 + 100), 39, 37);
-    }
-
-    private void makeZoomOutButton() {
-        Dimension preferred = getPreferredSize();
-        zoomOutButton = new JButton();
-        zoomOutButton.setBackground(Color.BLACK);
-        zoomOutButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("minusIcon")));
-                zoomOutButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        zoomOutButton.setFocusable(false);
-        zoomOutButton.setOpaque(false);
-        zoomOutButton.setBackground(DrawAttribute.fadeblack);
-        zoomOutButton.setBorderPainted(false);
-        zoomOutButton.setRolloverEnabled(false);
-        zoomOutButton.setActionCommand("zoomOut");
-        zoomOutButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() / 3 * 2 + 45), 39, 37);
     }
 
     /**
@@ -492,21 +476,6 @@ public class View extends JFrame implements Observer {
     }
 
 
-    private void makeZoomInButton() {
-        Dimension preferred = getPreferredSize();
-        zoomInButton = new JButton();
-        zoomInButton.setBackground(Color.BLACK);
-        zoomInButton.setIcon(new ImageIcon(MapIcon.iconURLs.get("plusIcon")));
-        zoomInButton.setBorder(BorderFactory.createRaisedBevelBorder());
-        zoomInButton.setFocusable(false);
-        zoomInButton.setOpaque(false);
-        zoomInButton.setBackground(DrawAttribute.fadeblack);
-        zoomInButton.setBorderPainted(false);
-        zoomInButton.setRolloverEnabled(false);
-        zoomInButton.setActionCommand("zoomIn");
-        zoomInButton.setBounds((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37);
-    }
-
     private void makeSearchButton() {
         searchButton = new JButton();
         searchButton.setBorder(new CompoundBorder(
@@ -562,7 +531,6 @@ public class View extends JFrame implements Observer {
 
     public void searchResultChosen(double lon, double lat){
         centerOnLatLon(new Point2D.Double(lon, lat));
-        //scalesomething();
     }
 
     public void zoomOnAddress(){
