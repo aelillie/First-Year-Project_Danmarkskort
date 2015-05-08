@@ -1,9 +1,12 @@
 package Model.Path;
 
+import Model.MapCalculator;
+import Model.Model;
+
+import java.awt.geom.Point2D;
 import java.util.Stack;
 
 public class PathTree {
-
     private Graph G;
     private int s;                      // start
     private int d;                      // destination
@@ -12,6 +15,8 @@ public class PathTree {
     private IndexMinPQ<Double> pq;      // priority queue of vertices
     private boolean shortestPath;       //if not shortestPath, then fastest path
     private boolean walkRoute, carRoute, bikeRoute;
+    private Point2D end;
+    private Vertices vertices = Model.getModel().getVertices();
 
 
     /**
@@ -26,7 +31,7 @@ public class PathTree {
             if (e.distance() < 0)
                 throw new IllegalArgumentException("edge " + e + " has negative distance");
         }
-
+        end = vertices.getVertex(d);
         this.G = G;
         this.s = s;
         this.d = d;
@@ -41,7 +46,7 @@ public class PathTree {
         edgeTo = new Edge[G.V()];
         for (int v = 0; v < G.V(); v++)
             valueTo[v] = Double.POSITIVE_INFINITY; //infinite distance to all vertices
-        valueTo[s] = 0.0; //distance 0 to self
+        valueTo[s] = 0.0 + h(s); //distance 0 to self
 
         if (bikeRoute) relaxBikeRoute();
         else if (carRoute) relaxCarRoute();
@@ -114,8 +119,9 @@ public class PathTree {
     }
 
     private double h(int i) {
-        //TODO: A*
-        return 0.0;
+        Point2D p1 = vertices.getVertex(i);
+        double distance = MapCalculator.haversineDist(p1, end);
+        return distance;
     }
 
     private void relaxTime(Edge e, int v) {

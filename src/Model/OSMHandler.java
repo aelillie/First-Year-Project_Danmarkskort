@@ -371,6 +371,7 @@ public class OSMHandler extends DefaultHandler {
                 node_longMap.clear();
                 keyValue_map.clear();
                 vertices.clearMap();
+
                 insertCoastlines();
                 coastlines.clear();
                 break;

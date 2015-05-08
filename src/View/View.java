@@ -977,8 +977,6 @@ public class View extends JFrame implements Observer {
 
 
             //Draw areas first
-
-
             for (MapFeature mapFeature : mapFAreas) {
                 try {
                 setDrawAttribute(mapFeature.getValueName());
