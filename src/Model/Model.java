@@ -159,6 +159,10 @@ public class Model extends Observable implements Serializable {
     public Collection<MapData> getVisibleBigRoads(Rectangle2D visibleArea, boolean sorted){
         return OSMReader.getBigRoadTree().query2D(visibleArea, sorted);
     }
+
+    public Collection<MapData> getVisibleCoastLines(Rectangle2D visibleArea, boolean sorted){
+        return OSMReader.getCoastLineTree().query2D(visibleArea, sorted);
+    }
     public Vertices getVertices() {
         return OSMReader.getVertices();
     }

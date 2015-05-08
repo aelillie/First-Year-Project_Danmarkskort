@@ -55,7 +55,7 @@ public class SearchController extends MouseAdapter implements ActionListener {
                     addressSearch(1);
                 }
                 selectedNr=-1;
-                System.out.println(view.getSearchArea().getText().length());
+                //System.out.println(view.getSearchArea().getText().length());
             }
 
             @Override

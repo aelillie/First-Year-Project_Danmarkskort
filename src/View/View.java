@@ -241,22 +241,22 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
 
         optionsButton = new JButton();
-        makeFrontButton(optionsButton,"optionsIcon","showOptions",new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() * 0.98), 39, 37));
+        makeFrontButton(optionsButton, "optionsIcon", "showOptions", new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() * 0.98), 39, 37));
         makeSearchButton();
 
         zoomInButton = new JButton();
-        makeFrontButton(zoomInButton,"plusIcon","zoomIn",new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37));
+        makeFrontButton(zoomInButton, "plusIcon", "zoomIn", new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37));
 
         zoomOutButton = new JButton();
-        makeFrontButton(zoomOutButton,"minusIcon","zoomOut",new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() / 3 * 2 + 45), 39, 37));
+        makeFrontButton(zoomOutButton, "minusIcon", "zoomOut", new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() / 3 * 2 + 45), 39, 37));
 
         makeShowRoutePanelButton();
 
         fullscreenButton = new JButton();
-        makeFrontButton(fullscreenButton,"fullscreenIcon","fullscreen",new Rectangle((int) preferred.getWidth() - 60, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 + 100), 39, 37));
+        makeFrontButton(fullscreenButton, "fullscreenIcon", "fullscreen", new Rectangle((int) preferred.getWidth() - 60, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 + 100), 39, 37));
 
         mapTypeButton = new JButton();
-        makeFrontButton(mapTypeButton,"layerIcon","mapType",new Rectangle((int) preferred.getWidth() - 49, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 - 45), 39, 37));
+        makeFrontButton(mapTypeButton, "layerIcon", "mapType", new Rectangle((int) preferred.getWidth() - 49, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 - 45), 39, 37));
         makeCloseDirectionListPanel();
     }
 
@@ -947,6 +947,7 @@ public class View extends JFrame implements Observer {
         private Collection<MapFeature> mapFStreets;
         private Collection<MapFeature> mapFAreas;
         private Collection<MapIcon> mapIcons;
+        private Collection<MapFeature> coastlines;
         private DrawAttribute drawAttribute;
         private Graphics2D g;
         private boolean sorted;
@@ -967,7 +968,7 @@ public class View extends JFrame implements Observer {
             g.setColor(drawAttribute.getColor());
             g.fill(box.getWay());
 
-            for (MapFeature coastLine : OSMHandler.getCoastlines()) {
+            for (MapFeature coastLine : coastlines) {
                 setDrawAttribute(coastLine.getValueName());
                 g.setColor(drawAttribute.getColor());
                 g.fill(coastLine.getWay());
@@ -1155,6 +1156,7 @@ public class View extends JFrame implements Observer {
             mapFStreets = new ArrayList<>();
             mapFAreas = new ArrayList<>();
             mapIcons = new ArrayList<>();
+            coastlines = new ArrayList<>();
             //Get a rectangle of the part of the map shown on screen
             bounds.updateBounds(getVisibleRect());
             Rectangle2D windowBounds = bounds.getBounds();
@@ -1162,6 +1164,7 @@ public class View extends JFrame implements Observer {
                 sorted = true;
             else sorted = false;
 
+            coastlines = (Collection<MapFeature>)(Collection<?>) model.getVisibleCoastLines(windowBounds, false);
             Collection < MapData > bigRoads = model.getVisibleBigRoads(windowBounds, sorted);
             mapFStreets = (Collection<MapFeature>)(Collection<?>) bigRoads;
 
