@@ -2,7 +2,6 @@ package View;
 
 import Controller.SearchResultMouseHandler;
 import Model.*;
-import Model.MapFeatures.Bounds;
 import Model.MapFeatures.Highway;
 import Model.MapFeatures.Route;
 import Model.Path.Edge;
@@ -165,7 +164,7 @@ public class View extends JFrame implements Observer {
         canvas = new Canvas();
 
         canvas.setBounds(0, 0, getWidth(), getHeight());
-
+        getContentPane().setBackground(DrawAttribute.whiteblue);
         searchArea = new JTextField();
         searchArea.setForeground(Color.GRAY);
         searchArea.setText(promptText);
@@ -963,10 +962,10 @@ public class View extends JFrame implements Observer {
 
             g.setStroke(min_value); //Just for good measure.
 
-            Bounds box = PathCreater.createBounds(model.getBbox());
+           /* Bounds box = PathCreater.createBounds(model.getBbox());
             setDrawAttribute(box.getValueName());
             g.setColor(drawAttribute.getColor());
-            g.fill(box.getWay());
+            g.fill(bounds.getBounds());*/
 
             for (MapFeature coastLine : coastlines) {
                 setDrawAttribute(coastLine.getValueName());
