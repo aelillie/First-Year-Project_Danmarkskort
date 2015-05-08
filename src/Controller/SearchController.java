@@ -6,6 +6,7 @@ import View.*;
 import javax.swing.*;
 import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
+import java.awt.*;
 import java.awt.event.*;
 
 /**
@@ -50,13 +51,18 @@ public class SearchController extends MouseAdapter implements ActionListener {
         view.getSearchArea().getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                addressSearch(1);
+                if(!(view.getSearchArea().getText().length()<3)) {
+                    addressSearch(1);
+                }
                 selectedNr=-1;
+                System.out.println(view.getSearchArea().getText().length());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                addressSearch(1);
+                if(!(view.getSearchArea().getText().length()<3)) {
+                    addressSearch(1);
+                }
                 selectedNr=-1;
             }
 
@@ -67,20 +73,23 @@ public class SearchController extends MouseAdapter implements ActionListener {
     }
 
     private Address[] addressSearch(int type){
-        String input = view.getSearchArea().getText();
+        String input = view.getSearchArea().getText().trim().toLowerCase();;
         if(input.length() < 3){
             if(input.equals("") && input != null) {
                 view.getResultPane().setVisible(false);
                 view.removePointer("chosenAddressIcon");
             }
+            view.getResultPane().setVisible(false);
             return null;
         } else {
-            input = input.trim().toLowerCase();
             Address address = Address.parse(input);
             if(address == null) return null;
             Address[] results = model.searchForAddresses(address, type);
             if(results != null) view.addToResultPane(results);
-            else view.getResultPane().setVisible(false);
+            else {
+                view.addNoAddressesFoundMsg(new Rectangle(26, 52, 286, 100));
+                //view.getResultPane().setVisible(false);
+            }
             return results;
         }
     }

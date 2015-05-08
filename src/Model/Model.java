@@ -1,17 +1,15 @@
 package Model;
 
-import MapFeatures.Coastline;
-import QuadTree.QuadTree;
-import ShortestPath.Edge;
-import ShortestPath.Graph;
-import ShortestPath.Vertices;
+import Model.MapFeatures.Coastline;
+import Model.QuadTree.QuadTree;
+import Model.Path.Graph;
+import Model.Path.Vertices;
 import org.xml.sax.InputSource;
 import org.xml.sax.SAXException;
 
 import javax.xml.parsers.ParserConfigurationException;
 import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.BufferedInputStream;
 import java.io.IOException;
@@ -28,7 +26,7 @@ public class Model extends Observable implements Serializable {
 
     private String currentFilename;
     private OSMHandler OSMReader = new OSMHandler();
-    private static Model model = new Model();
+    private static Model model = new Model(); //SingleTon design choice.
     private ArrayList<Address> addressList = new ArrayList<>(); //Contains all addresses to be sorted according to the compareTo method.
 
 
@@ -165,8 +163,10 @@ public class Model extends Observable implements Serializable {
         return OSMReader.getVertices();
     }
 
+
+
     public Graph getDiGraph() {
-        return OSMReader.getDiGraph();
+        return OSMReader.getGraph();
     }
 
 }

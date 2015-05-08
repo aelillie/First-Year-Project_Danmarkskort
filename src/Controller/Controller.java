@@ -76,12 +76,24 @@ public class Controller extends MouseAdapter implements ActionListener {
             }
         }
         public void mouseClicked(MouseEvent e) {
-            //view.findNearest(e.getPoint());
-            //view.repaint();
+            try {
+                if (e.getButton() == 1 && e.isAltDown())
+                    view.setStartPoint(e.getPoint());
+                else if (e.getButton() == 3 && e.isAltDown())
+                    view.setEndPoint(e.getPoint());
+                else if (e.getButton() == 1 && e.isControlDown())
+                    view.setStartPoint(null);
+                else if (e.getButton() == 3 && e.isControlDown())
+                    view.setEndPoint(null);
+
+            }catch(NoninvertibleTransformException ex){
+                ex.printStackTrace();
+            }
         }
         public void mouseEntered(MouseEvent e) {}
         public void mouseExited(MouseEvent e) {}
         public void mousePressed(MouseEvent e) {
+
 
             view.mousePressed(e);
         }
@@ -115,25 +127,26 @@ public class Controller extends MouseAdapter implements ActionListener {
                         view.toggleAA();
                         break;
                     case 's':
-                        model.saveBin();
-                        break;
-                    case 'l':
-                        view.findShortestPath();
-                        break;
-                    case 'f':
-                        view.findFastestPath();
+                        if(e.isAltDown())
+                            model.saveBin();
                         break;
                     case't':
-                        view.toggleTestMode();
-                        view.repaint();
+                        if(e.isAltDown()) {
+                            view.toggleTestMode();
+                            view.repaint();
+                        }
                         break;
                     case 'g':
-                        view.toggleGrid();
-                        view.repaint();
+                        if(e.isAltDown()) {
+                            view.toggleGrid();
+                            view.repaint();
+                        }
                         break;
                     case 'p':
-                        view.toggleGraph();
-                        view.repaint();
+                        if(e.isAltDown()) {
+                            view.toggleGraph();
+                            view.repaint();
+                        }
                         break;
 
                 }

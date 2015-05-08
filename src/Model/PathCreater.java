@@ -1,7 +1,7 @@
 package Model;
 
-import MapFeatures.Bounds;
-import MapFeatures.Coastline;
+import Model.MapFeatures.Bounds;
+import Model.MapFeatures.Coastline;
 
 import java.awt.geom.Line2D;
 import java.awt.geom.Path2D;
@@ -131,7 +131,7 @@ public class PathCreater {
         }
     }
 
-    public static void connectCoastlines(Rectangle2D bbox) {
+    public static void connectEndPoints(Rectangle2D bbox) {
 
         Point2D southWest = new Point2D.Double(bbox.getX(), bbox.getY());
         Point2D southEast = new Point2D.Double(bbox.getX() + bbox.getWidth(), bbox.getY());

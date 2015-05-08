@@ -1,6 +1,6 @@
 package Tests;
 
-import MapFeatures.Highway;
+import Model.MapFeatures.Highway;
 import Model.MapFeature;
 import Model.PathCreater;
 import org.junit.Before;
