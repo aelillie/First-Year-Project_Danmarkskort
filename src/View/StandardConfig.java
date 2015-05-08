@@ -72,7 +72,7 @@ public class StandardConfig {
         standardView[ValueName.ARCHAEOLOGICAL_SITE.ordinal()] = new DrawAttribute(false, 0, DrawAttribute.fadegreen,15) ;
         //LANDUSE
         standardView[ValueName.LANDUSE.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, 16);
-        standardView[ValueName.FOREST.ordinal()] =          new DrawAttribute(false, 0, DrawAttribute.darkgreen, 0);
+        standardView[ValueName.FOREST.ordinal()] =          new DrawAttribute(false, 0, DrawAttribute.darkgreen, 4);
         standardView[ValueName.CEMETERY.ordinal()] =        new DrawAttribute(false, 0, DrawAttribute.lightgreen, 13);
         standardView[ValueName.CONSTRUCTION.ordinal()] =    new DrawAttribute(false, 0, DrawAttribute.pink, 15);
         standardView[ValueName.GRASS.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.whitegreen, 10);

@@ -837,6 +837,7 @@ public class View extends JFrame implements Observer {
         } else
         travelTimeLabel.setText(String.format("Travel time: %.2f minutes     Distance: %.2f km", travelTime, travelDistance  ));
         travelTimePanel.setVisible(true);
+        travelTimeLabel.setVisible(true);
     }
 
     /**
@@ -1192,6 +1193,8 @@ public class View extends JFrame implements Observer {
             if(zoomLevel >= 15){
                 mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds);
             }
+
+            if (zoomLevel <= 4) mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleForests(windowBounds, sorted));
 
         }
 

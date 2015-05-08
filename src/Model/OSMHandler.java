@@ -29,7 +29,7 @@ public class OSMHandler extends DefaultHandler {
     //Contains relevant places parsed as address objects linked to their coordinate.
     private Map<Address, List<Path2D>> streetMap;
 
-    private QuadTree streetTree, buildingTree, iconTree, naturalTree, railwayTree, bigRoadTree, coastLinesTree;
+    private QuadTree streetTree, buildingTree, iconTree, naturalTree, railwayTree, bigRoadTree, coastLinesTree, forestTree;
     private ArrayList<Address> addressList; //list of all the addresses in the .osm file
     private List<Long> memberReferences; //member referenced in a relation of ways
     private List<Point2D> wayCoords; //List of referenced coordinates used to make up a single way
@@ -38,7 +38,7 @@ public class OSMHandler extends DefaultHandler {
     private Long wayId; //Id of the current way
     private Point2D nodeCoord; //current node's coordinates
     //if a given feature is present:
-    private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity, isStart, isOneWay;
+    private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity, isStart;
     private String streetName, houseNumber,cityName, postCode; //address info
     private Point2D startPoint, endPoint; //coastline start point and end point
     private Rectangle2D bbox = new Rectangle2D.Double();
@@ -129,9 +129,7 @@ public class OSMHandler extends DefaultHandler {
                 naturalTree = new QuadTree(bbox, 190);
                 railwayTree = new QuadTree(bbox, 75);
                 coastLinesTree = new QuadTree(bbox, 200);
-
-
-
+                forestTree = new QuadTree(bbox, 20);
                 break;
             case "tag": //tags define ways
                 String k = atts.getValue("k");
@@ -191,8 +189,10 @@ public class OSMHandler extends DefaultHandler {
                     if (keyValue_map.get("leisure").equals("park"))
                         naturalTree.insert(new Leisure(way, fetchOSMLayer(), "park"));
                     else buildingTree.insert(new Leisure(way, fetchOSMLayer(), keyValue_map.get("leisure")));
-                } else if (keyValue_map.containsKey("landuse"))
-                    naturalTree.insert(new Landuse(way, fetchOSMLayer(), keyValue_map.get("landuse"), isArea));
+                } else if (keyValue_map.containsKey("landuse")) {
+                    if (keyValue_map.get("landuse").equals("forest")) forestTree.insert(new Landuse(way, fetchOSMLayer(), "forest", true));
+                    else naturalTree.insert(new Landuse(way, fetchOSMLayer(), keyValue_map.get("landuse"), isArea));
+                }
                 else if (keyValue_map.containsKey("geological"))
                     naturalTree.insert(new Geological(way, fetchOSMLayer(), keyValue_map.get("geological")));
                 else if (keyValue_map.containsKey("building"))
@@ -276,10 +276,9 @@ public class OSMHandler extends DefaultHandler {
                             buildingTree.insert(new Multipolygon(path, fetchOSMLayer(), "building"));
                         else if (keyValue_map.containsKey("place"))
                             naturalTree.insert(new Multipolygon(path, fetchOSMLayer(), "place"));
+                        else if (keyValue_map.containsKey("forest"))
+                            forestTree.insert(new Multipolygon(path, fetchOSMLayer(), "forest"));
 
-                        else if (keyValue_map.containsKey("natural")) ;
-                        //if(keyValue_map.get("natural").equals("water"))
-                        // naturalTree.insert(new Natural(path, fetchOSMLayer(), "water"));
                     }
                     if (val.equals("boundary")) {
                         Path2D path = PathCreater.createMultipolygon(memberReferences, wayId_longMap);
@@ -458,6 +457,7 @@ public class OSMHandler extends DefaultHandler {
         quadTrees.add(railwayTree);
         quadTrees.add(bigRoadTree);
         quadTrees.add(coastLinesTree);
+        quadTrees.add(forestTree);
         return quadTrees;
     }
 
@@ -476,6 +476,7 @@ public class OSMHandler extends DefaultHandler {
         this.railwayTree = quadTrees.get(4);
         this.bigRoadTree = quadTrees.get(5);
         this.coastLinesTree = quadTrees.get(6);
+        this.forestTree = quadTrees.get(6);
     }
 
     public Map<Address, List<Path2D>> getStreetMap() {return streetMap;}
@@ -504,6 +505,8 @@ public class OSMHandler extends DefaultHandler {
     public QuadTree getNaturalTree() {
         return naturalTree;
     }
+
+    public QuadTree getForestTree() { return forestTree; }
 
     public QuadTree getBigRoadTree(){ return bigRoadTree;}
 
