@@ -2,7 +2,6 @@ package View;
 
 import Controller.SearchResultMouseHandler;
 import Model.*;
-import Model.MapFeatures.Bounds;
 import Model.MapFeatures.Highway;
 import Model.MapFeatures.Route;
 import Model.Path.Edge;
@@ -1164,9 +1163,7 @@ public class View extends JFrame implements Observer {
             //Get a rectangle of the part of the map shown on screen
             bounds.updateBounds(getVisibleRect());
             Rectangle2D windowBounds = bounds.getBounds();
-            if(zoomLevel > 11)
-                sorted = true;
-            else sorted = false;
+            sorted = zoomLevel > 11;
 
             coastLines = (Collection<MapFeature>) (Collection<?>) model.getVisibleCoastLines(windowBounds);
 
@@ -1186,16 +1183,19 @@ public class View extends JFrame implements Observer {
 
             }
 
-            if(zoomLevel >= 13){
+            if(zoomLevel > 10){
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBuildings(windowBounds, sorted));
             }
 
-            if(zoomLevel >= 15){
+            if(zoomLevel > 14){
                 mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds);
             }
 
-            if (zoomLevel <= 4) mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleForests(windowBounds, sorted));
+            if (zoomLevel > 4) mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleForests(windowBounds, sorted));
 
+            if (zoomLevel >= 6) mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
+
+            mapFAreas.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleLakes(windowBounds, sorted));
         }
 
         private void setDrawAttribute(ValueName valueName) {

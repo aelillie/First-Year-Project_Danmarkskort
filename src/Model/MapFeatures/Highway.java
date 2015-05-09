@@ -108,8 +108,7 @@ public class Highway extends MapFeature {
                 v = points.get(i);
                 w = points.get(i+1);
             }
-            double distance = calcDist(v, w);
-            Edge edge = new Edge(V.getIndex(v), V.getIndex(w), distance, edgePath(v,w), this);
+            Edge edge = new Edge(V.getIndex(v), V.getIndex(w), calcDist(v, w), edgePath(v,w), this);
             if(oneWay.equals("yes"))
                 edge.setOneWay(true);
             if(oneWay.equals("-1"))
@@ -122,10 +121,6 @@ public class Highway extends MapFeature {
 
     private double calcDist(Point2D v, Point2D w) {
         return MapCalculator.haversineDist(v, w); //returns km as unit
-    }
-
-    private double calcTime(double distance) {
-        return (distance/maxspeed)*60;
     }
 
     private Line2D edgePath(Point2D point1, Point2D point2) {
@@ -176,10 +171,6 @@ public class Highway extends MapFeature {
         return edges;
     }
 
-    public int getVertex(int i) {
-        return edges.get(i).v();
-    }
-
     public List<Point2D> getPoints() {
         Vertices vertices = Model.getModel().getVertices();
         List<Point2D> localVertices = new ArrayList<>();
@@ -193,20 +184,6 @@ public class Highway extends MapFeature {
     public String getStreetName(){
         return streetName;
     }
-
-    /*public void setOneWay(String value) {
-        switch (value) {
-            case "yes":
-                oneWay = "yes"; //one way in normal direction
-                break;
-            case "-1":
-                oneWay = "-1"; //one way in reverse direction
-                break;
-            default:
-                oneWay = "no"; //one way not present
-                break;
-        }
-    }*/
 
     /**
      * Determines whether you can walk, ride a bike and/or drive on this highway

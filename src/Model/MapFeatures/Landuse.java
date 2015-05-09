@@ -19,6 +19,7 @@ public class Landuse extends MapFeature {
     public void setPreDefLayerValues() {
         super.setPreDefLayerValues();
         if (value.equals("basin")) layer_value = 42;
+        else if (value.equals("forest")) layer_value = 41;
     }
 
     @Override
