@@ -133,8 +133,8 @@ public class PathTree {
         return MapCalculator.haversineDist(vertices.getVertex(i), end);
     }
 
-    private double hdrive(int i , int speed){
-        double test =  MapCalculator.haversineDist(vertices.getVertex(i), end)/speed;
+    private double hdrive(int i ){
+        //double test =  (MapCalculator.haversineDist(vertices.getVertex(i), end)/120);
         return 0.0;
     }
 
@@ -147,8 +147,10 @@ public class PathTree {
         if (valueTo[w] > valueTo[v] + e.driveTime()) {
             valueTo[w] = valueTo[v] + e.driveTime();
             edgeTo[w] = e;
-            if (pq.contains(w)) pq.decreaseKey(w, valueTo[w] + hdrive(w, (int) e.highway().getMaxspeed()));
-            else                pq.insert(w, valueTo[w]+ hdrive(w, (int) e.highway().getMaxspeed()));
+            if (pq.contains(w)){
+                pq.decreaseKey(w, valueTo[w] + hdrive(w));
+            }
+            else                pq.insert(w, valueTo[w]+ hdrive(w));
         }
     }
 

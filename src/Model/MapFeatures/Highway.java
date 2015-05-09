@@ -233,5 +233,5 @@ public class Highway extends MapFeature {
         return walkAble;
     }
 
-    public double getMaxspeed(){return  maxspeed;}
+    public int getMaxspeed(){return  maxspeed;}
 }
