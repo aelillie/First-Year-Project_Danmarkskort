@@ -1,6 +1,6 @@
 package Model;
 
-import ShortestPath.Edge;
+import Model.Path.Edge;
 
 import java.awt.geom.Line2D;
 import java.util.ArrayDeque;

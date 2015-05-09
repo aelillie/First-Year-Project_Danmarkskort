@@ -1,8 +1,11 @@
 package Model.Path;
 
+import java.awt.geom.Point2D;
 import java.util.ArrayDeque;
-import java.util.Deque;
-import java.util.Stack;
+import java.util.ArrayList;
+
+import Model.Model;
+import Model.MapCalculator;
 
 public class PathTree {
 
@@ -14,6 +17,9 @@ public class PathTree {
     private IndexMinPQ<Double> pq;      // priority queue of vertices
     private boolean shortestPath;       //if not shortestPath, then fastest path
     private boolean walkRoute, carRoute, bikeRoute;
+    private Point2D end;
+    private Vertices vertices = Model.getModel().getVertices();
+    private ArrayList<Edge> visitedEdges;
 
 
     /**
@@ -32,6 +38,7 @@ public class PathTree {
         this.G = G;
         this.s = s;
         this.d = d;
+        end = vertices.getVertex(d);
     }
 
     /**
@@ -43,8 +50,8 @@ public class PathTree {
         edgeTo = new Edge[G.V()];
         for (int v = 0; v < G.V(); v++)
             valueTo[v] = Double.POSITIVE_INFINITY; //infinite distance to all vertices
-        valueTo[s] = 0.0; //distance 0 to self
-
+        valueTo[s] = 0.0 + h(s); //distance 0 to self
+        visitedEdges = new ArrayList<>();
         if (bikeRoute) relaxBikeRoute();
         else if (carRoute) relaxCarRoute();
         else if (walkRoute) relaxWalkRoute();
@@ -60,6 +67,7 @@ public class PathTree {
             for (Edge e : G.adj(v)) {
                 if (!e.highway().isBikeAble()) continue;
                 relaxDistance(e, v); //shortest path (also the fastest)
+                visitedEdges.add(e);
             }
             if(v == d) //found destination, stop relaxing edges
                 break;
@@ -74,9 +82,14 @@ public class PathTree {
             int v = pq.delMin();
             for (Edge e : G.adj(v)) {                           /* 2 */
                 if (!e.highway().isDriveAble()) continue;       /* 3 */
-                if (!shortestPath)                              /* 4 */
+                if (!shortestPath) {                              /* 4 */
                     relaxTime(e, v); //fastest path
-                else relaxDistance(e, v); //shortest path
+                    visitedEdges.add(e);
+                }
+                else{
+                    relaxDistance(e, v); //shortest path
+                    visitedEdges.add(e);
+                }
             }
             if(v == d) //found destination, stop relaxing edges /* 5 */
                 break;
@@ -93,6 +106,7 @@ public class PathTree {
             for (Edge e : G.adj(v)) {
                 if (!e.highway().isWalkAble()) continue;
                 relaxDistance(e, v); //shortest path (also the fastest)
+                visitedEdges.add(e);
             }
             if(v == d) //found destination, stop relaxing edges
                 break;
@@ -116,8 +130,8 @@ public class PathTree {
     }
 
     private double h(int i) {
-        //TODO: A*
-        return 0.0;
+
+        return MapCalculator.haversineDist(vertices.getVertex(i), end);
     }
 
     private void relaxTime(Edge e, int v) {
@@ -129,8 +143,8 @@ public class PathTree {
         if (valueTo[w] > valueTo[v] + e.driveTime()) {
             valueTo[w] = valueTo[v] + e.driveTime();
             edgeTo[w] = e;
-            if (pq.contains(w)) pq.decreaseKey(w, valueTo[w]);
-            else                pq.insert(w, valueTo[w]);
+            if (pq.contains(w)) pq.decreaseKey(w, valueTo[w] + h(w));
+            else                pq.insert(w, valueTo[w]+ h(w));
         }
     }
 
@@ -243,4 +257,6 @@ public class PathTree {
     public boolean isShortestPath() {
         return shortestPath;
     }
+
+    public ArrayList<Edge> getVisitedEdges(){return visitedEdges; }
 }

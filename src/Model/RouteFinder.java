@@ -19,6 +19,7 @@ public class RouteFinder {
     private Iterable<Edge> shortestPath, fastestPath;
     private boolean carPressed, bikePressed, walkPressed;
     private double travelDistance, travelTime;
+    private Iterable<Edge> visitedEdges;
 
     /**
      * Finds the vertices closes to the points and saves them
@@ -38,7 +39,7 @@ public class RouteFinder {
             if (p.isBikeRoute()) travelTime += e.bikeTime();
             else if (p.isWalkRoute()) travelTime += e.walkTime();
             else if (p.isCarRoute()) travelTime += e.driveTime();
-            System.out.println(e);
+            //System.out.println(e); annoying
         }
 
     }
@@ -53,8 +54,10 @@ public class RouteFinder {
         setTravelType(shortestTree);
         shortestTree.initiate();
 
-        if(shortestTree.hasPathTo(endVertex))
+        if(shortestTree.hasPathTo(endVertex)) {
             shortestPath = shortestTree.pathTo(endVertex);
+            visitedEdges = shortestTree.getVisitedEdges();
+        }
         else
             throw new IllegalArgumentException("No shortest path found for the given addresses.");
         setTravelInfo(shortestTree);
@@ -72,8 +75,10 @@ public class RouteFinder {
         setTravelType(fastestTree);
         fastestTree.initiate();
         setTravelInfo(fastestTree);
-        if(fastestTree.hasPathTo(endVertex))
+        if(fastestTree.hasPathTo(endVertex)){
             fastestPath = fastestTree.pathTo(endVertex);
+            visitedEdges = fastestTree.getVisitedEdges();
+        }
         else
             throw new IllegalArgumentException("No fastest path found for the given addresses.");
     }
@@ -235,5 +240,9 @@ public class RouteFinder {
      */
     public double getTravelTime() {
         return travelTime;
+    }
+
+    public Iterable<Edge> getVisitedEdges(){
+        return visitedEdges;
     }
 }

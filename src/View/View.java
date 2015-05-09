@@ -52,8 +52,7 @@ public class View extends JFrame implements Observer {
     private Map<String,MapPointer> addressPointerMap = new HashMap<>();
 
     private Iterable<Edge> shortestPath;
-    private Iterable<Edge> fastestPath;
-
+    private Iterable<Edge> fastestPath, visitedEdges;
     private boolean isFullscreen = false;
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
     private String promptText = "Enter Address";
@@ -818,6 +817,7 @@ public class View extends JFrame implements Observer {
             setTravelInfo(routeFinder);
             RoutePlanner routePlanner = new RoutePlanner(fastestPath); //create a routePlanner to get direction for path
             addToDirectionPane(routePlanner.getDirections());
+            visitedEdges = routeFinder.getVisitedEdges();
         }catch(IllegalArgumentException | NullPointerException e){
             addToDirectionPane(new String[]{"No fastest path between the two locations was Found"});
             setTravelInfo(null);
@@ -1115,6 +1115,15 @@ public class View extends JFrame implements Observer {
 
                 }
             }
+
+            if(visitedEdges != null){
+                g.setColor(DrawAttribute.cl_red4);
+                g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
+                for (Edge e : visitedEdges) {
+                    g.draw(e);
+                }
+            }
+
 
             //Draw the shortestPath if not null
             if (shortestPath != null) {
