@@ -18,7 +18,7 @@ import java.util.Map;
 public class Highway extends MapFeature {
     private String streetName;
     private List<Edge> edges = new ArrayList<>();
-    private double maxspeed;
+    private int maxspeed;
     private boolean driveAble, bikeAble, walkAble;
 
     public Highway() {}
@@ -36,7 +36,7 @@ public class Highway extends MapFeature {
 
     private void setMaxSpeed(String maxspeed) {
         try {
-            this.maxspeed = Double.parseDouble(maxspeed);
+            this.maxspeed = Integer.parseInt(maxspeed);
         } catch (NumberFormatException e) {
             setPreDefMaxSpeed();
         }
@@ -45,49 +45,49 @@ public class Highway extends MapFeature {
     private void setPreDefMaxSpeed() {
         switch (value) {
             case "motorway":
-                maxspeed = 130.0;
+                maxspeed = 130;
                 break;
             case "trunk":
-                maxspeed = 80.0;
+                maxspeed = 80;
                 break;
             case "primary":
-                maxspeed = 80.0;
+                maxspeed = 80;
                 break;
             case "secondary":
-                maxspeed = 80.0;
+                maxspeed = 80;
                 break;
             case "tertiary":
-                maxspeed = 80.0;
+                maxspeed = 80;
                 break;
             case "unclassified":
-                maxspeed = 80.0;
+                maxspeed = 80;
                 break;
             case "living_street":
-                maxspeed = 15.0;
+                maxspeed = 15;
                 break;
             case "pedestrian":
-                maxspeed = 5.0;
+                maxspeed = 5;
                 break;
             case "track":
-                maxspeed = 5.0;
+                maxspeed = 5;
                 break;
             case "footway":
-                maxspeed = 5.0;
+                maxspeed = 5;
                 break;
             case "cycleway":
-                maxspeed = 15.0;
+                maxspeed = 15;
                 break;
             case "bridleway":
-                maxspeed = 15.0;
+                maxspeed = 15;
                 break;
             case "steps":
-                maxspeed = 3.0;
+                maxspeed = 3;
                 break;
             case "path":
-                maxspeed = 5.0;
+                maxspeed = 5;
                 break;
             default:
-                maxspeed = 50.0;
+                maxspeed = 50;
                 break;
         }
     }
