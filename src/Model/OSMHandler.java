@@ -466,8 +466,8 @@ public class OSMHandler extends DefaultHandler {
     public LongHashMap<Point2D> getNodeMap(){return node_longMap;}
 
     public void setQuadTrees(List<QuadTree> quadTrees) {
-        if(quadTrees.size() != 7){
-            throw new IllegalArgumentException("List must contain the 7 QuadTrees");
+        if(quadTrees.size() != 8){
+            throw new IllegalArgumentException("List must contain the 8 QuadTrees");
         }
         this.streetTree = quadTrees.get(0);
         this.naturalTree = quadTrees.get(1);
@@ -476,7 +476,7 @@ public class OSMHandler extends DefaultHandler {
         this.railwayTree = quadTrees.get(4);
         this.bigRoadTree = quadTrees.get(5);
         this.coastLinesTree = quadTrees.get(6);
-        this.forestTree = quadTrees.get(6);
+        this.forestTree = quadTrees.get(7);
     }
 
     public Map<Address, List<Path2D>> getStreetMap() {return streetMap;}
