@@ -14,23 +14,28 @@ import java.util.List;
 public class PathCreaterTest {
 
     private static final double DELTA = 1e-15;
-    private static List<Coastline> testList;
+    private static List<Coastline> testList1;
+    private static List<Coastline> testList2;
 
+
+    /**
+     * This testmethod tests whether coastlines that are supposed to be connected, does in fact get connected.
+     */
    @Test
-    public void testProcessCoastline(){
-        testList = new ArrayList<>();
-        Point2D start = new Point2D.Float(1,1);
+    public void testProcessCoastlineConnects(){
+        testList1 = new ArrayList<>();
+        Point2D start1 = new Point2D.Float(1,1);
         Point2D middle = new Point2D.Float(2,2);
         Point2D end = new Point2D.Float(3,3);
 
         Path2D one = new Path2D.Double();
-        one.moveTo(start.getX(),start.getY());
+        one.moveTo(start1.getX(),start1.getY());
         one.lineTo(middle.getX(), middle.getY());
         one.lineTo(end.getX(),end.getY());
 
-        processCoastlines(one,start,end,testList);
+        processCoastlines(one,start1,end,testList1);
 
-        start = new Point2D.Float(3,3);
+        Point2D start = new Point2D.Float(3,3);
         middle = new Point2D.Float(4,4);
         end = new Point2D.Float(5,5);
 
@@ -39,7 +44,7 @@ public class PathCreaterTest {
         two.lineTo(middle.getX(),middle.getY());
         two.lineTo(end.getX(),end.getY());
 
-        processCoastlines(two,start,end,testList);
+        processCoastlines(two,start,end,testList1);
 
         start = new Point2D.Float(5,5);
         middle = new Point2D.Float(6,6);
@@ -50,18 +55,78 @@ public class PathCreaterTest {
         three.lineTo(middle.getX(),middle.getY());
         three.lineTo(end.getX(),end.getY());
 
-        processCoastlines(three,start,end,testList);
+        processCoastlines(three,start,end,testList1);
 
-       //Check whether they get connected to one coastline
-       assertEquals(1,testList.size());
+       //Check whether they get connected to one single coastline
+       assertEquals(1,testList1.size());
 
-       Coastline coastline = testList.get(0);
+       Coastline coastline = testList1.get(0);
 
        //Check whether the coastlines end and start point are correct (that they get correctly connected)
-       assertEquals(end.getX(),coastline.getEnd().getX(),DELTA);
-       assertEquals(end.getY(),coastline.getEnd().getY(),DELTA);
-       assertEquals(1,coastline.getStart().getX(),DELTA);
-       assertEquals(1,coastline.getStart().getY(),DELTA);
+       assertEquals(end,coastline.getEnd());
+       assertEquals(start1,coastline.getStart());
+    }
+
+
+    /**
+     * This testmethod tests whether coastlines that are not supposed to be connected, does in fact not get connected.
+     */
+    @Test
+    public void testProcessCoastlineDoesNotConnect(){
+        testList2 = new ArrayList<>();
+        Point2D start = new Point2D.Float(1,1);
+        Point2D middle = new Point2D.Float(2,2);
+        Point2D end = new Point2D.Float(3,3);
+
+        Path2D one = new Path2D.Double();
+        one.moveTo(1,1);
+        one.lineTo(2, 2);
+        one.lineTo(3,3);
+
+        processCoastlines(one,start,end,testList2);
+
+        start = new Point2D.Float(3,3);
+        middle = new Point2D.Float(4,4);
+        end = new Point2D.Float(5,5);
+
+        Path2D two = new Path2D.Double();
+        two.moveTo(start.getX(),start.getY());
+        two.lineTo(middle.getX(),middle.getY());
+        two.lineTo(end.getX(),end.getY());
+
+        processCoastlines(two,start,end,testList2);
+
+        start = new Point2D.Float(5,5);
+        middle = new Point2D.Float(6,6);
+        end = new Point2D.Float(7,7);
+
+        Path2D three = new Path2D.Double();
+        three.moveTo(start.getX(),start.getY());
+        three.lineTo(middle.getX(),middle.getY());
+        three.lineTo(end.getX(),end.getY());
+
+        processCoastlines(three,start,end,testList2);
+
+        Point2D startOther = new Point2D.Float(8,8);
+        Point2D middleOther = new Point2D.Float(9,9);
+        Point2D endOther = new Point2D.Float(10,10);
+
+        Path2D four = new Path2D.Double();
+        four.moveTo(startOther.getX(),startOther.getY());
+        four.lineTo(middleOther.getX(),middleOther.getY());
+        four.lineTo(endOther.getX(),endOther.getY());
+
+        processCoastlines(four,startOther,endOther,testList2);
+
+        //Check whether they get connected to 2 coastlines as supposed to according to the above values.
+        assertEquals(2,testList2.size());
+
+        Coastline coastline2 = testList2.get(1);
+
+        //Checks whether the coastline not supposed to get connected has the right end and start still.
+        assertEquals(coastline2.getStart(),startOther);
+        assertEquals(coastline2.getEnd(),endOther);
+
     }
 
     public static void processCoastlines(Path2D coastPath, Point2D startPoint, Point2D endPoint, List<Coastline> coastlines) {
