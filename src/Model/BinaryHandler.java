@@ -53,7 +53,7 @@ public class BinaryHandler{
 
         loadingScreen.updateLoadBar(90);
 
-        out.writeObject(model.getCoastlines());
+        //out.writeObject(model.getCoastlines());
 
 
         loadingScreen.updateLoadBar(100);
@@ -102,8 +102,8 @@ public class BinaryHandler{
         model.setQuadTree(qT);
         System.out.println("done in " + (System.nanoTime() - time) / 1000000);
 
-        List<Coastline> coasts = model.getCoastlines();
-        coasts.addAll((List<Coastline>) in.readObject());
+        //List<Coastline> coasts = model.getCoastlines();
+        //coasts.addAll((List<Coastline>) in.readObject());
         loadingScreen.updateLoadBar(99);
 
 

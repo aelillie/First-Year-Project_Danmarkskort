@@ -1,7 +1,9 @@
 package Model.Path;
 
+import java.awt.geom.Point2D;
 import java.util.Stack;
-
+import Model.Model;
+import Model.MapCalculator;
 public class PathTree {
 
     private Graph G;
@@ -12,6 +14,8 @@ public class PathTree {
     private IndexMinPQ<Double> pq;      // priority queue of vertices
     private boolean shortestPath;       //if not shortestPath, then fastest path
     private boolean walkRoute, carRoute, bikeRoute;
+    private Vertices vertices = Model.getModel().getVertices();
+    private Point2D end;
 
 
     /**
@@ -30,6 +34,7 @@ public class PathTree {
         this.G = G;
         this.s = s;
         this.d = d;
+        end = vertices.getVertex(d);
     }
 
     /**
@@ -114,8 +119,7 @@ public class PathTree {
     }
 
     private double h(int i) {
-        //TODO: A*
-        return 0.0;
+        return MapCalculator.haversineDist(vertices.getVertex(i), end);
     }
 
     private void relaxTime(Edge e, int v) {

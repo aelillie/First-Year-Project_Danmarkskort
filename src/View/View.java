@@ -165,7 +165,7 @@ public class View extends JFrame implements Observer {
         canvas = new Canvas();
 
         canvas.setBounds(0, 0, getWidth(), getHeight());
-
+        getContentPane().setBackground(DrawAttribute.whiteblue);
         searchArea = new JTextField();
         searchArea.setForeground(Color.GRAY);
         searchArea.setText(promptText);
@@ -947,6 +947,7 @@ public class View extends JFrame implements Observer {
         private Collection<MapFeature> mapFStreets;
         private Collection<MapFeature> mapFAreas;
         private Collection<MapIcon> mapIcons;
+        private Collection<MapFeature> coastLines;
         private DrawAttribute drawAttribute;
         private Graphics2D g;
         private boolean sorted;
@@ -962,12 +963,12 @@ public class View extends JFrame implements Observer {
 
             g.setStroke(min_value); //Just for good measure.
 
-            Bounds box = PathCreater.createBounds(model.getBbox());
+           /* Bounds box = PathCreater.createBounds(model.getBbox());
             setDrawAttribute(box.getValueName());
             g.setColor(drawAttribute.getColor());
-            g.fill(box.getWay());
+            g.fill(box.getWay());*/
 
-            for (MapFeature coastLine : OSMHandler.getCoastlines()) {
+            for (MapFeature coastLine : coastLines) {
                 setDrawAttribute(coastLine.getValueName());
                 g.setColor(drawAttribute.getColor());
                 g.fill(coastLine.getWay());
@@ -1108,7 +1109,7 @@ public class View extends JFrame implements Observer {
             if(showGrid) {
                 List<QuadTree> trees = model.getQuadTrees();
                 g.setColor(Color.green);
-                for (Rectangle2D rec : trees.get(0).getNodeRects())
+                for (Rectangle2D rec : trees.get(6).getNodeRects())
                     g.draw(rec);
             }
 
@@ -1155,12 +1156,15 @@ public class View extends JFrame implements Observer {
             mapFStreets = new ArrayList<>();
             mapFAreas = new ArrayList<>();
             mapIcons = new ArrayList<>();
+            coastLines = new ArrayList<>();
             //Get a rectangle of the part of the map shown on screen
             bounds.updateBounds(getVisibleRect());
             Rectangle2D windowBounds = bounds.getBounds();
             if(zoomLevel > 11)
                 sorted = true;
             else sorted = false;
+
+            coastLines = (Collection<MapFeature>) (Collection<?>) model.getVisibleCoastLines(windowBounds);
 
             Collection < MapData > bigRoads = model.getVisibleBigRoads(windowBounds, sorted);
             mapFStreets = (Collection<MapFeature>)(Collection<?>) bigRoads;
@@ -1183,7 +1187,7 @@ public class View extends JFrame implements Observer {
             }
 
             if(zoomLevel >= 15){
-                mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds, sorted);
+                mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds);
             }
 
         }

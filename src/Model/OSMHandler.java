@@ -29,7 +29,7 @@ public class OSMHandler extends DefaultHandler {
     //Contains relevant places parsed as address objects linked to their coordinate.
     private Map<Address, List<Path2D>> streetMap;
 
-    private QuadTree streetTree, buildingTree, iconTree, naturalTree, railwayTree, bigRoadTree;
+    private QuadTree streetTree, buildingTree, iconTree, naturalTree, railwayTree, bigRoadTree, coastLinesTree;
     private ArrayList<Address> addressList; //list of all the addresses in the .osm file
     private List<Long> memberReferences; //member referenced in a relation of ways
     private List<Point2D> wayCoords; //List of referenced coordinates used to make up a single way
@@ -128,6 +128,7 @@ public class OSMHandler extends DefaultHandler {
                 iconTree = new QuadTree(bbox, 40);
                 naturalTree = new QuadTree(bbox, 190);
                 railwayTree = new QuadTree(bbox, 75);
+                coastLinesTree = new QuadTree(bbox, 200);
 
 
 
@@ -366,10 +367,14 @@ public class OSMHandler extends DefaultHandler {
                 vertices.createVertexIndex();
                 graph.initialize(vertices.V());
                 graph.addEdges(streetEdges());
+                insertCoastLines();
+                System.out.print(coastlines.size());
                 wayId_longMap.clear(); //sets key and value arrays to point to null
                 node_longMap.clear();
                 keyValue_map.clear();
                 vertices.clearMap();
+                System.out.print(coastLinesTree.query2D(bbox, false).size());
+                coastlines.clear();
                 break;
 
         }
@@ -401,6 +406,12 @@ public class OSMHandler extends DefaultHandler {
             System.out.println("Fetching layer value for " + keyValue + " failed...");
         }
         return layer_val; //won't be 0
+    }
+
+    private void insertCoastLines(){
+        for(MapFeature coastline : coastlines){
+            coastLinesTree.insert(coastline);
+        }
     }
 
 
@@ -446,6 +457,7 @@ public class OSMHandler extends DefaultHandler {
         quadTrees.add(iconTree);
         quadTrees.add(railwayTree);
         quadTrees.add(bigRoadTree);
+        quadTrees.add(coastLinesTree);
         return quadTrees;
     }
 
@@ -454,8 +466,8 @@ public class OSMHandler extends DefaultHandler {
     public LongHashMap<Point2D> getNodeMap(){return node_longMap;}
 
     public void setQuadTrees(List<QuadTree> quadTrees) {
-        if(quadTrees.size() != 6){
-            throw new IllegalArgumentException("List must contain the 6 QuadTrees");
+        if(quadTrees.size() != 7){
+            throw new IllegalArgumentException("List must contain the 7 QuadTrees");
         }
         this.streetTree = quadTrees.get(0);
         this.naturalTree = quadTrees.get(1);
@@ -463,6 +475,7 @@ public class OSMHandler extends DefaultHandler {
         this.iconTree = quadTrees.get(3);
         this.railwayTree = quadTrees.get(4);
         this.bigRoadTree = quadTrees.get(5);
+        this.coastLinesTree = quadTrees.get(6);
     }
 
     public Map<Address, List<Path2D>> getStreetMap() {return streetMap;}
@@ -493,6 +506,10 @@ public class OSMHandler extends DefaultHandler {
     }
 
     public QuadTree getBigRoadTree(){ return bigRoadTree;}
+
+    public QuadTree getCoastLinesTree(){
+        return coastLinesTree;
+    }
 
     public Vertices getVertices() {
         return vertices;
