@@ -291,7 +291,8 @@ public class View extends JFrame implements Observer {
      * Changes the configuration of how the view should draw objects.
      */
     public void changeToStandard(){
-       drawAttributeManager.toggleStandardView();
+        drawAttributeManager.toggleStandardView();
+        getContentPane().setBackground(DrawAttribute.whiteblue);
         canvas.repaint();
     }
 
@@ -300,7 +301,7 @@ public class View extends JFrame implements Observer {
      */
     public void changeToColorblind(){
         drawAttributeManager.toggleColorblindView();
-        //getContentPane().setBackground(DrawAttribute.);
+        getContentPane().setBackground(DrawAttribute.cl_whiteblue);
         canvas.repaint();
     }
 
@@ -309,6 +310,7 @@ public class View extends JFrame implements Observer {
      */
     public void changeToTransport(){
         drawAttributeManager.toggleTransportView();
+        getContentPane().setBackground(DrawAttribute.whiteblue);
         canvas.repaint();
     }
 
