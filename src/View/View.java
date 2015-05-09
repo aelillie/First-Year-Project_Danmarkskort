@@ -300,6 +300,7 @@ public class View extends JFrame implements Observer {
      */
     public void changeToColorblind(){
         drawAttributeManager.toggleColorblindView();
+        //getContentPane().setBackground(DrawAttribute.);
         canvas.repaint();
     }
 

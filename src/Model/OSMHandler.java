@@ -368,12 +368,12 @@ public class OSMHandler extends DefaultHandler {
                 graph.initialize(vertices.V());
                 graph.addEdges(streetEdges());
                 insertCoastLines();
-                System.out.print(coastlines.size());
+                //System.out.print(coastlines.size());
                 wayId_longMap.clear(); //sets key and value arrays to point to null
                 node_longMap.clear();
                 keyValue_map.clear();
                 vertices.clearMap();
-                System.out.print(coastLinesTree.query2D(bbox, false).size());
+                //System.out.print(coastLinesTree.query2D(bbox, false).size());
                 coastlines.clear();
                 break;
 
