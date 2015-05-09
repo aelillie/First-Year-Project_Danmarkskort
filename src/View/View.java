@@ -67,7 +67,7 @@ public class View extends JFrame implements Observer {
      * @param m Reference to Model class
      */
     public View(Model m) {
-        super("This is our map");
+        super("Group G");
         model = m;
         iconPanel.addObserverToIcons(this);
         routePanel = new RouteView(this, model);
