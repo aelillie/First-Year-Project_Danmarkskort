@@ -4,6 +4,7 @@ import Controller.SearchResultMouseHandler;
 import Model.*;
 import Model.MapFeatures.Highway;
 import Model.MapFeatures.Route;
+import Model.MapFeatures.Waterway;
 import Model.Path.Edge;
 import Model.QuadTree.QuadTree;
 
@@ -278,7 +279,7 @@ public class View extends JFrame implements Observer {
 
         travelTimePanel = new JPanel();
         travelTimePanel.setOpaque(false);
-        travelTimePanel.setBounds(26,280,265,20);
+        travelTimePanel.setBounds(26,280,275,20);
         travelTimePanel.setVisible(false);
         travelTimeLabel = new JLabel();
         travelTimeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -832,9 +833,9 @@ public class View extends JFrame implements Observer {
         double travelDistance = routeFinder.getTravelDistance();
         if (travelDistance < 1)  {
             travelDistance *= 1000;
-            travelTimeLabel.setText(String.format("Travel time: %.2f minutes     Distance: %.0f m", travelTime, travelDistance  ));
+            travelTimeLabel.setText(String.format("Travel time: %.2f minutes   Distance: %.0f m", travelTime, travelDistance  ));
         } else
-        travelTimeLabel.setText(String.format("Travel time: %.2f minutes     Distance: %.2f km", travelTime, travelDistance  ));
+        travelTimeLabel.setText(String.format("Travel time: %.2f minutes   Distance: %.2f km", travelTime, travelDistance  ));
         travelTimePanel.setVisible(true);
         travelTimeLabel.setVisible(true);
     }
@@ -981,26 +982,23 @@ public class View extends JFrame implements Observer {
 
 
             //Draw areas first
-
-
             for (MapFeature mapFeature : mapFAreas) {
                 try {
-                setDrawAttribute(mapFeature.getValueName());
-                if (zoomLevel >= drawAttribute.getZoomLevel()) {
-                    if (mapFeature.isArea()) {
-                        g.setColor(drawAttribute.getColor());
-                        g.fill(mapFeature.getWay());
+                    setDrawAttribute(mapFeature.getValueName());
+                    if (zoomLevel >= drawAttribute.getZoomLevel()) {
+                        if (mapFeature.isArea()) {
+                            g.setColor(drawAttribute.getColor());
+                            g.fill(mapFeature.getWay());
+                        }
                     }
-                }
                 } catch (NullPointerException e) {
-                        System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
+                    System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
                 }
-
             }
 
             //Then draw boundaries on top of areas
             for (MapFeature Area : mapFAreas) {
-                if (zoomLevel > 14) {
+                if (zoomLevel > 13) {
                     try {
                         g.setColor(Color.BLACK);
                         setDrawAttribute(Area.getValueName());
@@ -1027,7 +1025,6 @@ public class View extends JFrame implements Observer {
                     } else g.setStroke(DrawAttribute.basicStrokes[0]);
                     g.draw(street.getWay());
                 }
-
             }
 
 
@@ -1044,7 +1041,9 @@ public class View extends JFrame implements Observer {
                     else {
                         if (mapFeature instanceof Highway) {
                             g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
-                        } else {
+                        } else if (mapFeature instanceof Waterway) {
+                            g.setStroke(DrawAttribute.basicStrokes[drawAttribute.getStrokeId()]);
+                        }else {
                             g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
                         }
                     }
@@ -1071,10 +1070,6 @@ public class View extends JFrame implements Observer {
                             g.setPaint(Color.PINK);
                         g.draw(e);
                     }
-
-
-
-
                 }
                 for (MapFeature street : mapFStreets) {
                     if (!(street instanceof Highway)) continue;
@@ -1098,7 +1093,7 @@ public class View extends JFrame implements Observer {
             }
             //Draw the fastest path if not null
             if (fastestPath != null) {
-                g.setColor(DrawAttribute.lightgreen);
+                g.setColor(DrawAttribute.cl_blue4);
                 g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
                 for (Edge e : fastestPath) {
                     g.draw(e);
@@ -1173,29 +1168,27 @@ public class View extends JFrame implements Observer {
             if(zoomLevel > 7)
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleStreets(windowBounds,sorted));
 
-            if(zoomLevel > 9){
+            if(zoomLevel > 9)
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleRailways(windowBounds, sorted));
 
-            }
 
-            if(zoomLevel > 8){
-                mapFAreas = (Collection<MapFeature>)(Collection<?>)model.getVisibleNatural(windowBounds,sorted);
+            if (zoomLevel > 8)
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>)model.getVisibleNatural(windowBounds,sorted));
 
-            }
-
-            if(zoomLevel > 10){
+            if(zoomLevel > 10)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBuildings(windowBounds, sorted));
-            }
 
-            if(zoomLevel > 14){
+
+            if(zoomLevel > 13)
                 mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds);
-            }
 
-            if (zoomLevel > 4) mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigNaturals(windowBounds, sorted));
 
-            if (zoomLevel > 5) mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
+            if (zoomLevel > 5)
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
 
-            mapFAreas.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleLakes(windowBounds, sorted));
+            mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigForests(windowBounds, sorted));
+            mapFAreas.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleBikLakes(windowBounds, sorted));
+
         }
 
         private void setDrawAttribute(ValueName valueName) {
