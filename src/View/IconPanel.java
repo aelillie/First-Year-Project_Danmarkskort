@@ -5,6 +5,8 @@ import Model.MapIcon;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.net.URL;
 import java.util.ArrayList;
 
@@ -13,6 +15,8 @@ public class IconPanel extends JScrollPane {
     private JPanel panel;
     private static ArrayList<IconController> controllers;
     private ArrayList<URL> icons;
+    private ArrayList<JCheckBox> checkBoxes = new ArrayList<>();
+    private static View v;
 
     /**
      * Creates the iconPanel and calls the addIcons() and showIconPanel() method
@@ -42,13 +46,34 @@ public class IconPanel extends JScrollPane {
      */
     public void addIcons() {
         icons = MapIcon.getIcons();
+        JCheckBox check = new JCheckBox("",false);
+        JLabel label = new JLabel("All Icons");
+        check.addActionListener(new ActionListener() {
+
+            //
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JCheckBox check1 = (JCheckBox) e.getSource();
+                boolean selected = check1.getModel().isSelected();
+              //IconController.setUpdateView(false);
+                for(int i = 0; i < checkBoxes.size();i++){
+                    JCheckBox c = checkBoxes.get(i);
+                    c.setSelected(selected);
+                }
+                 //IconController.setUpdateView(true);
+                //v.update(null,null);
+
+            }
+        });
+        panel.add(label);
+        panel.add(check);
         for (int i = 0; i < icons.size(); i++) {
             URL iconPath = icons.get(i);
             JLabel l1 = new JLabel(new ImageIcon(iconPath));
             panel.add(l1);
             IconController controller = new IconController(icons.get(i));
             if (icons.get(i).equals(MapIcon.getIconURLs().get("restaurantIcon")) ||
-                    icons.get(i).equals(MapIcon.getIconURLs().get("pubIcon"))||
+                    icons.get(i).equals(MapIcon.getIconURLs().get("pubIcon")) ||
                     icons.get(i).equals(MapIcon.getIconURLs().get("toiletIcon")) ||
                     icons.get(i).equals(MapIcon.getIconURLs().get("7elevenIcon")) ||
                     icons.get(i).equals(MapIcon.getIconURLs().get("cafeIcon"))) {
@@ -59,6 +84,7 @@ public class IconPanel extends JScrollPane {
                 panel.add(checkboxx);
                 panel.addComponentListener(controller);
                 controllers.add(controller);
+                checkBoxes.add(checkboxx);
             } else {
                 JCheckBox checkbox = new JCheckBox("", true);
                 MapIcon.setIconState(icons.get(i), true);
@@ -67,6 +93,7 @@ public class IconPanel extends JScrollPane {
                 panel.add(checkbox);
                 panel.addComponentListener(controller);
                 controllers.add(controller);
+                checkBoxes.add(checkbox);
 
             }
         }
@@ -77,6 +104,7 @@ public class IconPanel extends JScrollPane {
         for (IconController con : controllers) {
             con.setView(v);
         }
+     //this.v = v;
 
     }
 
