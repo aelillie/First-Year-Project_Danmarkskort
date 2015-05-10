@@ -62,4 +62,16 @@ public class AddressTest{
         assertEquals("floor of " + input, "3", addr.floor());
         assertEquals("city of " + input, "Helsingør", addr.city());
     }
+/*
+    @Test
+    public void testWeirdAddress(){
+        String input = "5. Junivej 29, 2400 København";
+        Address addr = Address.parse(input);
+        assertEquals("street of" + input, "5. Junivej", addr.street());
+        assertEquals("house of" + input, "29", addr.house());
+        assertEquals("postcode of" + input, "2400", addr.postcode());
+        assertEquals("city of" + input, "København", addr.city());
+    }
+    */
+
 }

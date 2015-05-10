@@ -15,7 +15,6 @@ public class IconController extends Observable implements ComponentListener, Ite
 
 
     private URL number;
-    //add'er view for at få tilgang til update()
     private View v;
 
     /**
@@ -46,7 +45,11 @@ public class IconController extends Observable implements ComponentListener, Ite
 
     }
 
-    //Set the icon state to the opposite and update view
+    /**
+     *  Set the icon state to the opposite and update view
+     *  @param e ItemEvent
+     */
+
     public void itemStateChanged(ItemEvent e) {
         MapIcon.setIconState(this.number, !MapIcon.getIconState(this.number));
         v.update(null, null);

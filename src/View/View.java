@@ -4,7 +4,6 @@ import Controller.SearchResultMouseHandler;
 import Model.*;
 import Model.MapFeatures.Highway;
 import Model.MapFeatures.Route;
-import Model.MapFeatures.Waterway;
 import Model.Path.Edge;
 import Model.QuadTree.QuadTree;
 
@@ -912,9 +911,9 @@ public class View extends JFrame implements Observer {
         return returnVal;
     }
 
-    /*
-    assigns a zoomfactor to each zoomlevel
-    The zoomfactor controls the width of the highway strokes
+    /**
+     * Assigns a zoomfactor to each zoomlevel
+     * The zoomfactor controls the width of the highway strokes
      */
     private void adjustZoomFactor(){
         switch(zoomLevel){
@@ -967,10 +966,6 @@ public class View extends JFrame implements Observer {
 
             g.setStroke(min_value); //Just for good measure.
 
-           /* Bounds box = PathCreater.createBounds(model.getBbox());
-            setDrawAttribute(box.getValueName());
-            g.setColor(drawAttribute.getColor());
-            g.fill(box.getWay());*/
 
             for (MapFeature coastLine : coastLines) {
                 setDrawAttribute(coastLine.getValueName());
@@ -1041,9 +1036,7 @@ public class View extends JFrame implements Observer {
                     else {
                         if (mapFeature instanceof Highway) {
                             g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
-                        } else if (mapFeature instanceof Waterway) {
-                            g.setStroke(DrawAttribute.basicStrokes[drawAttribute.getStrokeId()]);
-                        }else {
+                        } else {
                             g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
                         }
                     }
@@ -1070,6 +1063,8 @@ public class View extends JFrame implements Observer {
                             g.setPaint(Color.PINK);
                         g.draw(e);
                     }
+
+
                 }
                 for (MapFeature street : mapFStreets) {
                     if (!(street instanceof Highway)) continue;
