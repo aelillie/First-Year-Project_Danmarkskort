@@ -14,7 +14,9 @@ public class IconPanel extends JScrollPane {
     private static ArrayList<IconController> controllers;
     private ArrayList<URL> icons;
 
-
+    /**
+     * Creates the iconPanel and calls the addIcons() and showIconPanel() method
+     */
     public IconPanel() {
         super();
         getVerticalScrollBar().setUnitIncrement(16); //Make the scroll faster
@@ -33,6 +35,11 @@ public class IconPanel extends JScrollPane {
         showIconPanel();
     }
 
+    /**
+     * Adds the icons and gives it a checkbox
+     * Some icons should not be shown from the beginning and they are manually chosen in an if statement
+     * Controllers are added to the arraylist
+     */
     public void addIcons() {
         icons = MapIcon.getIcons();
         for (int i = 0; i < icons.size(); i++) {

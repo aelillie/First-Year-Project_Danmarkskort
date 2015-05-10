@@ -912,9 +912,9 @@ public class View extends JFrame implements Observer {
         return returnVal;
     }
 
-    /*
-    assigns a zoomfactor to each zoomlevel
-    The zoomfactor controls the width of the highway strokes
+    /**
+     * Assigns a zoomfactor to each zoomlevel
+     * The zoomfactor controls the width of the highway strokes
      */
     private void adjustZoomFactor(){
         switch(zoomLevel){
@@ -967,10 +967,6 @@ public class View extends JFrame implements Observer {
 
             g.setStroke(min_value); //Just for good measure.
 
-           /* Bounds box = PathCreater.createBounds(model.getBbox());
-            setDrawAttribute(box.getValueName());
-            g.setColor(drawAttribute.getColor());
-            g.fill(box.getWay());*/
 
             for (MapFeature coastLine : coastLines) {
                 setDrawAttribute(coastLine.getValueName());
@@ -982,8 +978,6 @@ public class View extends JFrame implements Observer {
 
 
             //Draw areas first
-
-
             for (MapFeature mapFeature : mapFAreas) {
                 try {
                 setDrawAttribute(mapFeature.getValueName());
@@ -1072,8 +1066,6 @@ public class View extends JFrame implements Observer {
                             g.setPaint(Color.PINK);
                         g.draw(e);
                     }
-
-
 
 
                 }
