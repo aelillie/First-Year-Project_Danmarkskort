@@ -20,6 +20,19 @@ public class Landuse extends MapFeature {
         super.setPreDefLayerValues();
         if (value.equals("basin")) layer_value = 42;
         else if (value.equals("forest")) layer_value = 41;
+        else if (value.equals("industrial") || value.equals("commercial"))
+            layer_value = 8;
+        else if (value.equals("farmland") || value.equals("farmyard"))
+            layer_value = 8;
+        else if (value.equals("pitch"))
+            layer_value = 9;
+        else if (value.equals("grass"))
+            layer_value = 9;
+        else if (value.equals("residential"))
+            layer_value = -19;
+        else if (value.equals("military"))
+            layer_value = 5;
+
     }
 
     @Override
@@ -27,6 +40,18 @@ public class Landuse extends MapFeature {
         if(value.equals("cemetery")) {
             isArea = true;
             setValueName(ValueName.CEMETERY);
+        }
+        else if(value.equals("meadow") || value.equals("recreation_ground") || value.equals("village_green")) {
+            isArea = true;
+            setValueName(ValueName.MEADOW);
+        }
+        else if(value.equals("farmland") || value.equals("farmyard")) {
+            isArea = true;
+            setValueName(ValueName.FARMLAND);
+        }
+        else if(value.equals("residential")) {
+            isArea = true;
+            setValueName(ValueName.RESIDENTIAL_AREA);
         }
         else if(value.equals("forest")) {
             isArea = true;
@@ -42,7 +67,10 @@ public class Landuse extends MapFeature {
                 isArea = true;
                 setValueName(ValueName.BROWNFIELD);
         }
-        else if(value.equals("industrial")) setValueName(ValueName.INDUSTRIAL);
+        else if(value.equals("industrial") || value.equals("commercial")) {
+            isArea = true;
+            setValueName(ValueName.INDUSTRIAL);
+        }
         else if(value.equals("orchard")) setValueName(ValueName.ORCHARD);
         else if(value.equals("reservoir")){
             isArea = true;
@@ -51,7 +79,13 @@ public class Landuse extends MapFeature {
         else if(value.equals("basin")) {
             isArea = true;
             setValueName(ValueName.BASIN);
-       } else if(value.equals("allotments")) {
+        }
+        else if(value.equals("military")) {
+            isArea = true;
+            setValueName(ValueName.MILITARY);
+
+        }
+        else if(value.equals("allotments")) {
             isArea = true;
             setValueName(ValueName.ALLOTMENTS);
         }

@@ -30,7 +30,7 @@ public class OSMHandler extends DefaultHandler {
     private Map<Address, List<Path2D>> streetMap;
 
     private QuadTree streetTree, buildingTree, iconTree, naturalTree, railwayTree, bigRoadTree;
-    private QuadTree coastLinesTree, landuseTree, forestTree, lakeTree;
+    private QuadTree coastLinesTree, landuseTree, bigNatureTree, lakeTree;
     private ArrayList<Address> addressList; //list of all the addresses in the .osm file
     private List<Long> memberReferences; //member referenced in a relation of ways
     private List<Point2D> wayCoords; //List of referenced coordinates used to make up a single way
@@ -131,7 +131,7 @@ public class OSMHandler extends DefaultHandler {
                 railwayTree = new QuadTree(bbox, 75);
                 coastLinesTree = new QuadTree(bbox, 200);
                 landuseTree = new QuadTree(bbox, 150);
-                forestTree = new QuadTree(bbox, 20);
+                bigNatureTree = new QuadTree(bbox, 20);
                 lakeTree = new QuadTree(bbox, 50);
                 break;
             case "tag": //tags define ways
@@ -183,16 +183,15 @@ public class OSMHandler extends DefaultHandler {
 
                 if (keyValue_map.containsKey("natural")) {
                     String val = keyValue_map.get("natural");
-                    switch (val) {
-                        case "coastline":
-                            PathCreater.processCoastlines(way, startPoint, endPoint);
-                            break;
-                        case "water":
-                            lakeTree.insert(new Natural(way, fetchOSMLayer(), val));
-                            break;
-                        default:
-                            naturalTree.insert(new Natural(way, fetchOSMLayer(), keyValue_map.get("natural")));
-                            break;
+                    if (val.equals("coastline")) {
+                        PathCreater.processCoastlines(way, startPoint, endPoint);
+
+                    } else if (val.equals("water") && (MapCalculator.pathLength(wayCoords) > 10)) {
+                        bigNatureTree.insert(new Natural(way, fetchOSMLayer(), val));
+
+                    } else {
+                        naturalTree.insert(new Natural(way, fetchOSMLayer(), keyValue_map.get("natural")));
+
                     }
                 }
                 else if (keyValue_map.containsKey("waterway"))
@@ -203,8 +202,8 @@ public class OSMHandler extends DefaultHandler {
                     else buildingTree.insert(new Leisure(way, fetchOSMLayer(), keyValue_map.get("leisure")));
                 }
                 else if (keyValue_map.containsKey("landuse")) {
-                    if (keyValue_map.get("landuse").equals("forest"))
-                        forestTree.insert(new Landuse(way, fetchOSMLayer(), "forest", true));
+                    if (keyValue_map.get("landuse").equals("forest") && (MapCalculator.pathLength(wayCoords) > 10))
+                        bigNatureTree.insert(new Landuse(way, fetchOSMLayer(), "forest", true));
                     else
                         landuseTree.insert(new Landuse(way, fetchOSMLayer(), keyValue_map.get("landuse"), isArea));
                 }
@@ -226,6 +225,8 @@ public class OSMHandler extends DefaultHandler {
                     naturalTree.insert(new Historic(way, fetchOSMLayer(), keyValue_map.get("historic")));
                 else if (keyValue_map.containsKey("craft"))
                     naturalTree.insert(new Craft(way, fetchOSMLayer(), keyValue_map.get("craft")));
+                else if (keyValue_map.containsKey("power"))
+                    buildingTree.insert(new Power(way, fetchOSMLayer(), keyValue_map.get("power")));
                 else if (keyValue_map.containsKey("emergency"))
                     naturalTree.insert(new Emergency(way, fetchOSMLayer(), keyValue_map.get("emergency")));
                 else if (keyValue_map.containsKey("aeroway"))
@@ -236,16 +237,9 @@ public class OSMHandler extends DefaultHandler {
                         iconTree.insert(new MapIcon(way, "parkingIcon"));
                     }
 
-
-                    //if(keyValue_map.get("amenity").equals("atm")){
-                    //  quadTree.insert(new MapIcon(way, MapIcon.atmIcon));}
                 }
                 else if (keyValue_map.containsKey("barrier"))
                     buildingTree.insert(new Barrier(way, fetchOSMLayer(), keyValue_map.get("barrier"), isArea));
-                else if (keyValue_map.containsKey("boundary")) {
-                    //quadTree.insert(new Boundary(way, fetchOSMLayer(), keyValue_map.get("boundary"))); //Appears in <relation
-
-                }
                 else if (keyValue_map.containsKey("highway") && !keyValue_map.get("highway").equals("proposed")) {
 
                     Highway highway = new Highway(way, fetchOSMLayer(), keyValue_map.get("highway"), isArea, keyValue_map.get("name"), keyValue_map.get("maxspeed"));
@@ -298,7 +292,7 @@ public class OSMHandler extends DefaultHandler {
                             naturalTree.insert(new Place(path, fetchOSMLayer(), keyValue_map.get("place")));
                         else if (keyValue_map.containsKey("landuse")) {
                             if (keyValue_map.get("landuse").equals("forest"))
-                                forestTree.insert(new Landuse(path, fetchOSMLayer(), "forest", true));
+                                bigNatureTree.insert(new Landuse(path, fetchOSMLayer(), "forest", true));
                             else
                                 landuseTree.insert(new Landuse(path, fetchOSMLayer(), keyValue_map.get("landuse"), isArea));
                         }
@@ -313,7 +307,7 @@ public class OSMHandler extends DefaultHandler {
                                 naturalTree.insert(new Leisure(path, fetchOSMLayer(), "park"));
                             else buildingTree.insert(new Leisure(path, fetchOSMLayer(), keyValue_map.get("leisure")));
                         }
-
+                        //TODO: Natural = water
 
                     }
                     if (typeValue.equals("boundary")) {
@@ -500,7 +494,7 @@ public class OSMHandler extends DefaultHandler {
         quadTrees.add(bigRoadTree);
         quadTrees.add(coastLinesTree);
         quadTrees.add(landuseTree);
-        quadTrees.add(forestTree);
+        quadTrees.add(bigNatureTree);
         quadTrees.add(lakeTree);
         return quadTrees;
     }
@@ -521,7 +515,7 @@ public class OSMHandler extends DefaultHandler {
         this.bigRoadTree = quadTrees.get(5);
         this.coastLinesTree = quadTrees.get(6);
         this.landuseTree = quadTrees.get(7);
-        this.forestTree = quadTrees.get(8);
+        this.bigNatureTree = quadTrees.get(8);
         this.lakeTree = quadTrees.get(9);
     }
 
@@ -558,7 +552,7 @@ public class OSMHandler extends DefaultHandler {
 
     public QuadTree getLanduseTree() { return landuseTree; }
 
-    public QuadTree getForestTree() {return forestTree;}
+    public QuadTree getBigNatureTree() {return bigNatureTree;}
 
     public QuadTree getBigRoadTree(){ return bigRoadTree;}
 

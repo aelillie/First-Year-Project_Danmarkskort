@@ -20,12 +20,21 @@ public class Vertices implements Serializable {
         counter = 0;
     }
 
+    /**
+     * Add a list of vertices to the vertex_map
+     * @param wayCoords the coordinates making up a single way
+     */
     public void add(List<Point2D> wayCoords) {
         for(Point2D vertex : wayCoords) {
             add(vertex);
         }
     }
 
+    /**
+     * Add a new vertex to the vertex_map with the current index number,
+     * and increment the counter, for the next vertex to be added
+     * @param vertex A Point2D coordinate set
+     */
     private void add(Point2D vertex) {
         if(vertex_map.containsKey(vertex)) return; //Vertex already added
         vertex_map.put(vertex, counter); //Put vertex in map with an index
@@ -35,7 +44,7 @@ public class Vertices implements Serializable {
     }
 
     /**
-     * When all vertices has been added creates and array
+     * When all vertices has been added creates an array
      * to easily get point linked to vertex index.
      */
     public void createVertexIndex() {

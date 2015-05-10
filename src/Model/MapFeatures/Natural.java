@@ -10,8 +10,6 @@ public class Natural extends MapFeature {
     public Natural(Path2D way, int layer_value, String value) {
         super(way, layer_value, value);
         isArea = true;
-        setValueIcon();
-
     }
 
     @Override
@@ -24,6 +22,7 @@ public class Natural extends MapFeature {
     public void setValueName() {
         if (value.equals("wood")) setValueName(ValueName.WOOD);
         else if (value.equals("scrub")) setValueName(ValueName.SCRUB);
+        else if (value.equals("forest")) setValueName(ValueName.FOREST);
         else if (value.equals("heath")) setValueName(ValueName.HEATH);
         else if (value.equals("grassland")) setValueName(ValueName.GRASSLAND);
         else if (value.equals("sand")) setValueName(ValueName.SAND);
@@ -31,14 +30,10 @@ public class Natural extends MapFeature {
         else if (value.equals("fell")) setValueName(ValueName.FELL);
         else if (value.equals("water")) setValueName(ValueName.WATER);
         else if (value.equals("wetland")) setValueName(ValueName.WETLAND);
+        else if (value.equals("mud")) setValueName(ValueName.MUD);
         else if (value.equals("beach")) setValueName(ValueName.BEACH);
 
         else setValueName(ValueName.NATURAL);
-    }
-
-
-    private void setValueIcon() {
-
     }
 
 

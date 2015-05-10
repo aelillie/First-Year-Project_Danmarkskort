@@ -19,6 +19,8 @@ public class Amenity extends MapFeature {
     public void setPreDefLayerValues() {
         super.setPreDefLayerValues();
         if (value.equals("fountain")) layer_value = 45;
+        else if (value.equals("hospotal") || value.equals("pharmaceutical")) layer_value = -5;
+
     }
 
     @Override
@@ -35,7 +37,14 @@ public class Amenity extends MapFeature {
         }
         else if(value.equals("pub")) setValueName(ValueName.PUB);
         else if(value.equals("bar")) setValueName(ValueName.BAR);
-        else if(value.equals("pharmaceutical")) setValueName(ValueName.PHARMACEUTICAL);
+        else if(value.equals("pharmaceutical")) {
+            isArea = true;
+            setValueName(ValueName.PHARMACEUTICAL);
+        }
+        else if(value.equals("hospital")) {
+            isArea = true;
+            setValueName(ValueName.HOSPITAL);
+        }
         else setValueName(ValueName.AMENITY);
 
 

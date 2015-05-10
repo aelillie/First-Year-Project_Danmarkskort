@@ -1170,7 +1170,7 @@ public class View extends JFrame implements Observer {
             Collection < MapData > bigRoads = model.getVisibleBigRoads(windowBounds, sorted);
             mapFStreets = (Collection<MapFeature>)(Collection<?>) bigRoads;
 
-            if(zoomLevel >= 8)
+            if(zoomLevel > 7)
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleStreets(windowBounds,sorted));
 
             if(zoomLevel > 9){
@@ -1191,9 +1191,9 @@ public class View extends JFrame implements Observer {
                 mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds);
             }
 
-            if (zoomLevel > 4) mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleForests(windowBounds, sorted));
+            if (zoomLevel > 4) mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigNaturals(windowBounds, sorted));
 
-            if (zoomLevel >= 6) mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
+            if (zoomLevel > 5) mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
 
             mapFAreas.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleLakes(windowBounds, sorted));
         }
