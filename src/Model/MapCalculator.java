@@ -2,9 +2,8 @@ package Model;
 
 import javafx.scene.transform.Affine;
 
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Point2D;
-import java.awt.geom.Rectangle2D;
+import java.awt.geom.*;
+import java.util.List;
 
 
 public class MapCalculator {
@@ -25,7 +24,7 @@ public class MapCalculator {
      * @return the corresponding latitude
      */
     public static double yToLat(double aY) {
-        return Math.toDegrees(2* Math.atan(Math.exp(Math.toRadians(aY))) - Math.PI/2);
+        return Math.toDegrees(2 * Math.atan(Math.exp(Math.toRadians(aY))) - Math.PI / 2);
     }
 
     public static double haversineDist(Point2D coord1, Point2D coord2){
@@ -53,6 +52,16 @@ public class MapCalculator {
 
         double distance = 2 * earthRadius * Math.asin(Math.sqrt(a)); //distance = 2 * R * arcsin(√a)
         return distance; //distance in kilometers
+    }
+
+    public static int pathLength(List<Point2D> points) {
+        double pathLength = 0;
+        for (int i = 0; i + 1< points.size() ; i++) {
+            Point2D v = points.get(i);
+            Point2D w = points.get(i+1);
+            pathLength += haversineDist(v, w);
+        }
+        return (int) pathLength;
     }
 
 }

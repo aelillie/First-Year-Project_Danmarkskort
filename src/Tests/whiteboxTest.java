@@ -75,6 +75,9 @@ public class whiteboxTest {
         return counter;
     }
 
+    /**
+     * Whiteboxtest with source vertex and destination vertex being the same - 0 iterations
+     */
     @Test
     public void branch1case1() {
         PathTree PT = new PathTree(m.getDiGraph(), 1509, 1509);
@@ -86,7 +89,9 @@ public class whiteboxTest {
         Assert.assertEquals(d0, PT.getValueTo()[932], DELTA);
         Assert.assertEquals(d1, PT.getValueTo()[1566], DELTA);
     }
-
+    /**
+     *
+     */
     @Test
     public void branch1case2() {
         PathTree PT = new PathTree(m.getDiGraph(), 1509, 1566);

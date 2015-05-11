@@ -161,6 +161,7 @@ public class RoutePanelController implements ActionListener{
                 scrollPane.setVisible(false); //If the search input is empty, the scrollpane in which the results are displayed need not be visible.
                 view.removePointer(textFieldToIconType.get(textField)); //Remove the pointer in case a given address has already been chosen and a pointer on the map is displayed.
             }
+            view.getResultPane().setVisible(false);
             return null;
         } else {
             input = input.trim().toLowerCase();

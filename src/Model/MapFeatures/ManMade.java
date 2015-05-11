@@ -17,6 +17,8 @@ public class ManMade extends MapFeature{
     @Override
     public void setPreDefLayerValues() {
         super.setPreDefLayerValues();
+        if (value.equals("pier"))
+            layer_value = 15;
     }
 
     @Override

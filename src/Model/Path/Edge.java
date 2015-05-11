@@ -67,6 +67,7 @@ public class Edge extends Line2D.Float implements Serializable {
 
     /**
      * Returns the time of walking from either endpoint to the other
+     * Using 5 km/h as average pace
      * @return the walking time of the edge
      */
     public double walkTime() {
@@ -75,6 +76,7 @@ public class Edge extends Line2D.Float implements Serializable {
 
     /**
      * Returns the time of biking from either endpoint to the other
+     * Using 15 km/h as average pace
      * @return the biking time of the edge
      */
     public double bikeTime() {

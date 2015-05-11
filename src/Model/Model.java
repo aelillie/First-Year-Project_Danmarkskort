@@ -148,20 +148,32 @@ public class Model extends Observable implements Serializable {
         return OSMReader.getBuildingTree().query2D(visibleArea, sorted);
     }
 
-    public Collection<MapData> getVisibleIcons(Rectangle2D visibleArea, boolean sorted){
-        return OSMReader.getIconTree().query2D(visibleArea, sorted);
+    public Collection<MapData> getVisibleIcons(Rectangle2D visibleArea){
+        return OSMReader.getIconTree().query2D(visibleArea, false);
     }
 
     public Collection<MapData> getVisibleRailways(Rectangle2D visibleArea, boolean sorted) {
         return OSMReader.getRailwayTree().query2D(visibleArea, sorted);
     }
 
+    public Collection<MapData> getVisibleLanduse(Rectangle2D visibleArea, boolean sorted) {
+        return OSMReader.getLanduseTree().query2D(visibleArea, sorted);
+    }
+
+    public Collection<MapData> getVisibleBigForests(Rectangle2D visibleArea, boolean sorted) {
+        return OSMReader.getBigForestTree().query2D(visibleArea, sorted);
+    }
+
     public Collection<MapData> getVisibleBigRoads(Rectangle2D visibleArea, boolean sorted){
         return OSMReader.getBigRoadTree().query2D(visibleArea, sorted);
     }
 
-    public Collection<MapData> getVisibleCoastLines(Rectangle2D visibleArea, boolean sorted){
-        return OSMReader.getCoastLineTree().query2D(visibleArea, sorted);
+    public Collection<MapData> getVisibleBikLakes(Rectangle2D visibleArea, boolean sorted){
+        return OSMReader.getBigLakeTree().query2D(visibleArea, sorted);
+    }
+
+    public Collection<MapData> getVisibleCoastLines(Rectangle2D visibleArea){
+        return OSMReader.getCoastLinesTree().query2D(visibleArea, false);
     }
     public Vertices getVertices() {
         return OSMReader.getVertices();

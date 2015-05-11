@@ -32,9 +32,17 @@ public class Multipolygon extends MapFeature {
             isArea = true;
             setValueName(ValueName.ISLET);
         }
+        else if(value.equals("island")) {
+            isArea = true;
+            setValueName(ValueName.ISLAND);
+        }
+        else if(value.equals("forest")) {
+            isArea = true;
+            setValueName(ValueName.FOREST);
+        }
         else {
-            isArea = false;
-            setValueName(ValueName.PLACE);
+            isArea = true;
+            setValueName(ValueName.MULTIPOLYGON);
         }
     }
 

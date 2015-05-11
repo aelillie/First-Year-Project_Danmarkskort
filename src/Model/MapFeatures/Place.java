@@ -26,6 +26,10 @@ public class Place extends MapFeature {
             isArea = true;
             setValueName(ValueName.ISLAND);
         }
+        else if (value.equals("islet")) {
+            isArea = true;
+            setValueName(ValueName.ISLET);
+        }
         else {
             isArea = false;
             setValueName(ValueName.PLACE);

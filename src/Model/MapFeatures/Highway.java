@@ -18,7 +18,7 @@ import java.util.Map;
 public class Highway extends MapFeature {
     private String streetName;
     private List<Edge> edges = new ArrayList<>();
-    private double maxspeed;
+    private int maxspeed;
     private boolean driveAble, bikeAble, walkAble;
 
     public Highway() {}
@@ -36,7 +36,7 @@ public class Highway extends MapFeature {
 
     private void setMaxSpeed(String maxspeed) {
         try {
-            this.maxspeed = Double.parseDouble(maxspeed);
+            this.maxspeed = Integer.parseInt(maxspeed);
         } catch (NumberFormatException e) {
             setPreDefMaxSpeed();
         }
@@ -45,49 +45,49 @@ public class Highway extends MapFeature {
     private void setPreDefMaxSpeed() {
         switch (value) {
             case "motorway":
-                maxspeed = 130.0;
+                maxspeed = 130;
                 break;
             case "trunk":
-                maxspeed = 80.0;
+                maxspeed = 80;
                 break;
             case "primary":
-                maxspeed = 80.0;
+                maxspeed = 80;
                 break;
             case "secondary":
-                maxspeed = 80.0;
+                maxspeed = 80;
                 break;
             case "tertiary":
-                maxspeed = 80.0;
+                maxspeed = 80;
                 break;
             case "unclassified":
-                maxspeed = 80.0;
+                maxspeed = 80;
                 break;
             case "living_street":
-                maxspeed = 15.0;
+                maxspeed = 15;
                 break;
             case "pedestrian":
-                maxspeed = 5.0;
+                maxspeed = 5;
                 break;
             case "track":
-                maxspeed = 5.0;
+                maxspeed = 5;
                 break;
             case "footway":
-                maxspeed = 5.0;
+                maxspeed = 5;
                 break;
             case "cycleway":
-                maxspeed = 15.0;
+                maxspeed = 15;
                 break;
             case "bridleway":
-                maxspeed = 15.0;
+                maxspeed = 15;
                 break;
             case "steps":
-                maxspeed = 3.0;
+                maxspeed = 3;
                 break;
             case "path":
-                maxspeed = 5.0;
+                maxspeed = 5;
                 break;
             default:
-                maxspeed = 50.0;
+                maxspeed = 50;
                 break;
         }
     }
@@ -108,8 +108,7 @@ public class Highway extends MapFeature {
                 v = points.get(i);
                 w = points.get(i+1);
             }
-            double distance = calcDist(v, w);
-            Edge edge = new Edge(V.getIndex(v), V.getIndex(w), distance, edgePath(v,w), this);
+            Edge edge = new Edge(V.getIndex(v), V.getIndex(w), calcDist(v, w), edgePath(v,w), this);
             if(oneWay.equals("yes"))
                 edge.setOneWay(true);
             if(oneWay.equals("-1"))
@@ -122,10 +121,6 @@ public class Highway extends MapFeature {
 
     private double calcDist(Point2D v, Point2D w) {
         return MapCalculator.haversineDist(v, w); //returns km as unit
-    }
-
-    private double calcTime(double distance) {
-        return (distance/maxspeed)*60;
     }
 
     private Line2D edgePath(Point2D point1, Point2D point2) {
@@ -176,10 +171,6 @@ public class Highway extends MapFeature {
         return edges;
     }
 
-    public int getVertex(int i) {
-        return edges.get(i).v();
-    }
-
     public List<Point2D> getPoints() {
         Vertices vertices = Model.getModel().getVertices();
         List<Point2D> localVertices = new ArrayList<>();
@@ -193,20 +184,6 @@ public class Highway extends MapFeature {
     public String getStreetName(){
         return streetName;
     }
-
-    /*public void setOneWay(String value) {
-        switch (value) {
-            case "yes":
-                oneWay = "yes"; //one way in normal direction
-                break;
-            case "-1":
-                oneWay = "-1"; //one way in reverse direction
-                break;
-            default:
-                oneWay = "no"; //one way not present
-                break;
-        }
-    }*/
 
     /**
      * Determines whether you can walk, ride a bike and/or drive on this highway

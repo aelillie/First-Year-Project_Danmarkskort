@@ -66,7 +66,7 @@ public class View extends JFrame implements Observer {
      * @param m Reference to Model class
      */
     public View(Model m) {
-        super("This is our map");
+        super("Group G");
         model = m;
         iconPanel.addObserverToIcons(this);
         routePanel = new RouteView(this, model);
@@ -240,22 +240,22 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
 
         optionsButton = new JButton();
-        makeFrontButton(optionsButton, "optionsIcon", "showOptions", new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() * 0.98), 39, 37));
+        makeFrontButton(optionsButton,"optionsIcon","showOptions",new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() * 0.98), 39, 37));
         makeSearchButton();
 
         zoomInButton = new JButton();
-        makeFrontButton(zoomInButton, "plusIcon", "zoomIn", new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37));
+        makeFrontButton(zoomInButton,"plusIcon","zoomIn",new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37));
 
         zoomOutButton = new JButton();
-        makeFrontButton(zoomOutButton, "minusIcon", "zoomOut", new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() / 3 * 2 + 45), 39, 37));
+        makeFrontButton(zoomOutButton,"minusIcon","zoomOut",new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() / 3 * 2 + 45), 39, 37));
 
         makeShowRoutePanelButton();
 
         fullscreenButton = new JButton();
-        makeFrontButton(fullscreenButton, "fullscreenIcon", "fullscreen", new Rectangle((int) preferred.getWidth() - 60, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 + 100), 39, 37));
+        makeFrontButton(fullscreenButton,"fullscreenIcon","fullscreen",new Rectangle((int) preferred.getWidth() - 60, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 + 100), 39, 37));
 
         mapTypeButton = new JButton();
-        makeFrontButton(mapTypeButton, "layerIcon", "mapType", new Rectangle((int) preferred.getWidth() - 49, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 - 45), 39, 37));
+        makeFrontButton(mapTypeButton,"layerIcon","mapType",new Rectangle((int) preferred.getWidth() - 49, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 - 45), 39, 37));
         makeCloseDirectionListPanel();
     }
 
@@ -278,7 +278,7 @@ public class View extends JFrame implements Observer {
 
         travelTimePanel = new JPanel();
         travelTimePanel.setOpaque(false);
-        travelTimePanel.setBounds(26,280,265,20);
+        travelTimePanel.setBounds(26,280,275,20);
         travelTimePanel.setVisible(false);
         travelTimeLabel = new JLabel();
         travelTimeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -290,7 +290,8 @@ public class View extends JFrame implements Observer {
      * Changes the configuration of how the view should draw objects.
      */
     public void changeToStandard(){
-       drawAttributeManager.toggleStandardView();
+        drawAttributeManager.toggleStandardView();
+        getContentPane().setBackground(DrawAttribute.whiteblue);
         canvas.repaint();
     }
 
@@ -299,6 +300,7 @@ public class View extends JFrame implements Observer {
      */
     public void changeToColorblind(){
         drawAttributeManager.toggleColorblindView();
+        getContentPane().setBackground(DrawAttribute.cl_whiteblue);
         canvas.repaint();
     }
 
@@ -307,6 +309,7 @@ public class View extends JFrame implements Observer {
      */
     public void changeToTransport(){
         drawAttributeManager.toggleTransportView();
+        getContentPane().setBackground(DrawAttribute.whiteblue);
         canvas.repaint();
     }
 
@@ -829,10 +832,11 @@ public class View extends JFrame implements Observer {
         double travelDistance = routeFinder.getTravelDistance();
         if (travelDistance < 1)  {
             travelDistance *= 1000;
-            travelTimeLabel.setText(String.format("Travel time: %.2f minutes     Distance: %.0f m", travelTime, travelDistance  ));
+            travelTimeLabel.setText(String.format("Travel time: %.2f minutes   Distance: %.0f m", travelTime, travelDistance  ));
         } else
-        travelTimeLabel.setText(String.format("Travel time: %.2f minutes     Distance: %.2f km", travelTime, travelDistance  ));
+        travelTimeLabel.setText(String.format("Travel time: %.2f minutes   Distance: %.2f km", travelTime, travelDistance  ));
         travelTimePanel.setVisible(true);
+        travelTimeLabel.setVisible(true);
     }
 
     /**
@@ -907,9 +911,9 @@ public class View extends JFrame implements Observer {
         return returnVal;
     }
 
-    /*
-    assigns a zoomfactor to each zoomlevel
-    The zoomfactor controls the width of the highway strokes
+    /**
+     * Assigns a zoomfactor to each zoomlevel
+     * The zoomfactor controls the width of the highway strokes
      */
     private void adjustZoomFactor(){
         switch(zoomLevel){
@@ -946,7 +950,7 @@ public class View extends JFrame implements Observer {
         private Collection<MapFeature> mapFStreets;
         private Collection<MapFeature> mapFAreas;
         private Collection<MapIcon> mapIcons;
-        private Collection<MapFeature> coastlines;
+        private Collection<MapFeature> coastLines;
         private DrawAttribute drawAttribute;
         private Graphics2D g;
         private boolean sorted;
@@ -962,12 +966,8 @@ public class View extends JFrame implements Observer {
 
             g.setStroke(min_value); //Just for good measure.
 
-           /* Bounds box = PathCreater.createBounds(model.getBbox());
-            setDrawAttribute(box.getValueName());
-            g.setColor(drawAttribute.getColor());
-            g.fill(bounds.getBounds());*/
 
-            for (MapFeature coastLine : coastlines) {
+            for (MapFeature coastLine : coastLines) {
                 setDrawAttribute(coastLine.getValueName());
                 g.setColor(drawAttribute.getColor());
                 g.fill(coastLine.getWay());
@@ -979,22 +979,21 @@ public class View extends JFrame implements Observer {
             //Draw areas first
             for (MapFeature mapFeature : mapFAreas) {
                 try {
-                setDrawAttribute(mapFeature.getValueName());
-                if (zoomLevel >= drawAttribute.getZoomLevel()) {
-                    if (mapFeature.isArea()) {
-                        g.setColor(drawAttribute.getColor());
-                        g.fill(mapFeature.getWay());
+                    setDrawAttribute(mapFeature.getValueName());
+                    if (zoomLevel >= drawAttribute.getZoomLevel()) {
+                        if (mapFeature.isArea()) {
+                            g.setColor(drawAttribute.getColor());
+                            g.fill(mapFeature.getWay());
+                        }
                     }
-                }
                 } catch (NullPointerException e) {
-                        System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
+                    System.out.println(mapFeature.getValueName() + " " + mapFeature.getValue());
                 }
-
             }
 
             //Then draw boundaries on top of areas
             for (MapFeature Area : mapFAreas) {
-                if (zoomLevel > 14) {
+                if (zoomLevel > 13) {
                     try {
                         g.setColor(Color.BLACK);
                         setDrawAttribute(Area.getValueName());
@@ -1021,7 +1020,6 @@ public class View extends JFrame implements Observer {
                     } else g.setStroke(DrawAttribute.basicStrokes[0]);
                     g.draw(street.getWay());
                 }
-
             }
 
 
@@ -1067,8 +1065,6 @@ public class View extends JFrame implements Observer {
                     }
 
 
-
-
                 }
                 for (MapFeature street : mapFStreets) {
                     if (!(street instanceof Highway)) continue;
@@ -1092,7 +1088,7 @@ public class View extends JFrame implements Observer {
             }
             //Draw the fastest path if not null
             if (fastestPath != null) {
-                g.setColor(DrawAttribute.lightgreen);
+                g.setColor(DrawAttribute.cl_blue4);
                 g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
                 for (Edge e : fastestPath) {
                     g.draw(e);
@@ -1106,7 +1102,7 @@ public class View extends JFrame implements Observer {
             if(showGrid) {
                 List<QuadTree> trees = model.getQuadTrees();
                 g.setColor(Color.green);
-                for (Rectangle2D rec : trees.get(0).getNodeRects())
+                for (Rectangle2D rec : trees.get(6).getNodeRects())
                     g.draw(rec);
             }
 
@@ -1153,38 +1149,40 @@ public class View extends JFrame implements Observer {
             mapFStreets = new ArrayList<>();
             mapFAreas = new ArrayList<>();
             mapIcons = new ArrayList<>();
-            coastlines = new ArrayList<>();
+            coastLines = new ArrayList<>();
             //Get a rectangle of the part of the map shown on screen
             bounds.updateBounds(getVisibleRect());
             Rectangle2D windowBounds = bounds.getBounds();
-            if(zoomLevel > 11)
-                sorted = true;
-            else sorted = false;
+            sorted = zoomLevel > 11;
 
-            coastlines = (Collection<MapFeature>)(Collection<?>) model.getVisibleCoastLines(windowBounds, false);
+            coastLines = (Collection<MapFeature>) (Collection<?>) model.getVisibleCoastLines(windowBounds);
+
             Collection < MapData > bigRoads = model.getVisibleBigRoads(windowBounds, sorted);
             mapFStreets = (Collection<MapFeature>)(Collection<?>) bigRoads;
 
-            if(zoomLevel >= 8)
+            if(zoomLevel > 7)
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleStreets(windowBounds,sorted));
 
-            if(zoomLevel > 9){
+            if(zoomLevel > 9)
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleRailways(windowBounds, sorted));
 
-            }
 
-            if(zoomLevel > 8){
-                mapFAreas = (Collection<MapFeature>)(Collection<?>)model.getVisibleNatural(windowBounds,sorted);
+            if (zoomLevel > 8)
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>)model.getVisibleNatural(windowBounds,sorted));
 
-            }
-
-            if(zoomLevel >= 13){
+            if(zoomLevel > 10)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBuildings(windowBounds, sorted));
-            }
 
-            if(zoomLevel >= 15){
-                mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds, sorted);
-            }
+
+            if(zoomLevel > 13)
+                mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds);
+
+
+            if (zoomLevel > 5)
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
+
+            mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigForests(windowBounds, sorted));
+            mapFAreas.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleBikLakes(windowBounds, sorted));
 
         }
 

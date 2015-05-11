@@ -76,7 +76,7 @@ public class PathCreater {
         List<Coastline> coastlines = OSMHandler.getCoastlines();
         boolean hasBeenConnected = false;
 
-        //Start by adding or comparing to all the other addded coastlines.
+        //Start by adding or comparing to all the other added coastlines.
         for (int i = 0; i < coastlines.size(); i++) {
             Point2D start = coastlines.get(i).getStart();
             Point2D end = coastlines.get(i).getEnd();
@@ -97,7 +97,10 @@ public class PathCreater {
 
     }
 
-    //Checks the list once more to make sure that every coastline supposed to be connected is connected.
+    /**
+     *  Checks the list once more to make sure that every coastline supposed to be connected is connected.
+     *  @param coastlines List of coastlines
+     */
     private static void connectCoastlines(List<Coastline> coastlines) {
 
         for (int i = 0; i < coastlines.size(); i++) {
@@ -131,6 +134,10 @@ public class PathCreater {
         }
     }
 
+    /**
+     * Connect coastlines endpoints
+     * @param bbox Rectangle2D
+     */
     public static void connectEndPoints(Rectangle2D bbox) {
 
         Point2D southWest = new Point2D.Double(bbox.getX(), bbox.getY());

@@ -44,7 +44,7 @@ public class OSMHandlerTest {
         }
         streetList = m.getVisibleStreets(new Rectangle2D.Float(0, 0, 1000, 1000), true);
         buildingList = m.getVisibleBuildings(new Rectangle2D.Float(0, 0, 1000, 1000), true);
-        iconList = m.getVisibleIcons(new Rectangle2D.Float(0, 0, 500, 500), true);
+        iconList = m.getVisibleIcons(new Rectangle2D.Float(0, 0, 500, 500));
         naturalList = m.getVisibleNatural(new Rectangle2D.Float(0, 0, 500, 500), true);
         streetList.addAll(m.getVisibleBigRoads(new Rectangle2D.Double(0,0,500,500), true));
         mapFeatureList.addAll(streetList);

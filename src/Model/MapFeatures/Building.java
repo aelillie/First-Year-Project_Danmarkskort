@@ -18,7 +18,7 @@ public class Building extends MapFeature {
     @Override
     public void setPreDefLayerValues() {
         super.setPreDefLayerValues();
-        if (value.equals("yes")) layer_value = 19;
+        layer_value = 19;
     }
 
 

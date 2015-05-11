@@ -46,23 +46,21 @@ public class SearchController extends MouseAdapter implements ActionListener {
         }
     }
 
+    /**
+     *  This method creates an InputChangeHandler for the specified textfield. The changehandler handles events regarding input into the textfields.
+     */
 
     private void setInputChangeHandler(){
         view.getSearchArea().getDocument().addDocumentListener(new DocumentListener() {
             @Override
             public void insertUpdate(DocumentEvent e) {
-                if(!(view.getSearchArea().getText().length()<3)) {
-                    addressSearch(1);
-                }
+                addressSearch(1);
                 selectedNr=-1;
-                //System.out.println(view.getSearchArea().getText().length());
             }
 
             @Override
             public void removeUpdate(DocumentEvent e) {
-                if(!(view.getSearchArea().getText().length()<3)) {
-                    addressSearch(1);
-                }
+                addressSearch(1);
                 selectedNr=-1;
             }
 
@@ -72,11 +70,16 @@ public class SearchController extends MouseAdapter implements ActionListener {
         });
     }
 
+
+    /**
+     * This address calls to the model to search for the addresses given an input in the searchfield and chooses appropiately what to do depending on the search results.
+     * @param type Type of compare used for the search: either 1 = startsWith compare otherwise equality compare
+     * @return The search results (Address objects)
+     */
     private Address[] addressSearch(int type){
-        String input = view.getSearchArea().getText().trim().toLowerCase();;
+        String input = view.getSearchArea().getText().trim().toLowerCase();
         if(input.length() < 3){
-            if(input.equals("") && input != null) {
-                view.getResultPane().setVisible(false);
+            if(input.equals("") || input.equals(null)) {
                 view.removePointer("chosenAddressIcon");
             }
             view.getResultPane().setVisible(false);

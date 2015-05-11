@@ -197,19 +197,16 @@ public class QuadTree implements Serializable{
     public Collection<MapData> query2D(Shape rect, boolean sorted) {
         Collection<MapData> values;
         if(sorted){
-            values = new TreeSet<>(new Comparator<MapData>() {
-                @Override
-                /**
+            values = new TreeSet<>((o1, o2) -> {
+                /*
                  * Compares two MapFeature objects.
                  * Returns a negative integer, zero, or a positive integer as the first argument
                  * is less than, equal to, or greater than the second.
                  */
-                public int compare(MapData o1, MapData o2) {
-                    if(o1.equals(o2)) return 0;
-                    else if (o1.getLayerVal() < o2.getLayerVal()) return -1;
-                    else if (o1.getLayerVal() > o2.getLayerVal()) return 1;
-                    return -1;
-                }
+                if(o1.equals(o2)) return 0;
+                else if (o1.getLayerVal() < o2.getLayerVal()) return -1;
+                else if (o1.getLayerVal() > o2.getLayerVal()) return 1;
+                return -1;
             });
         }else {
             values = new ArrayList<>();

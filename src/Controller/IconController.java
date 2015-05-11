@@ -8,6 +8,7 @@ import java.awt.event.ComponentListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.Observable;
 
 
@@ -15,8 +16,8 @@ public class IconController extends Observable implements ComponentListener, Ite
 
 
     private URL number;
-    //add'er view for at få tilgang til update()
     private View v;
+  //  private static boolean updateView = true;
 
     /**
      * Tells MapIcon which icons should be drawn.
@@ -46,16 +47,24 @@ public class IconController extends Observable implements ComponentListener, Ite
 
     }
 
-    //Set the icon state to the opposite and update view
+    /**
+     *  Set the icon state to the opposite and update view
+     *  @param e ItemEvent
+     */
+
     public void itemStateChanged(ItemEvent e) {
         MapIcon.setIconState(this.number, !MapIcon.getIconState(this.number));
+       //if(IconController.updateView)
         v.update(null, null);
-
     }
 
     public void setView(View v) {
         this.v = v;
     }
+ /* public static void setUpdateView(Boolean b){
+        IconController.updateView = b;
+
+    }*/
 }
 
 

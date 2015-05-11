@@ -1,0 +1,79 @@
+Group G RC1 (feature freeze)
+==================
+
+Features added since v0.10:
+* Turn left and turn right instructions in the route finding output
+* More map features and adjusted zoom levels
+* More quad trees for better performance
+* Tests of coastlines
+* The option to pick shortest or fastest path in the route panel
+* Toggle all icons on/off GUI feature
+
+“Features” discovered/added since v0.10:
+* Not all relations are currently drawn correctly
+* Some areas are drawn on wrong zoom levels
+
+Time usage in man hours:
+* Tests			10 hours
+* Bugfixes	 	10 hours
+* Restructuring		6 hours
+* Report		13 hours
+* GUI			4 hours
+* Commenting code 	2 hours
+* A* (shortest path) 	1 hour
+* Route Description	4 hours
+* Visualisation 	17 hours
+* Binary save/load	1 hour
+* Whitebox tests	22 hours
+
+Cumulative cost so far: (1h = DKK 625)
+Lectures:                	21.875,-
+Meetings:                	 7.187,-
+Code review:            	15.625,-
+"Homework":			15.625,-
+GUI/basic controllers		54.685,- + 1.875,-
+Code trimming:			 3.125,-
+Address search	 		43.125,-
+OSM layers			13.125,-
+Road names 		 	 8.125,-
+Binary save/load		 7.500,- + 6.25,-
+Visualisation 			29.250,- + 10.625,-
+Restructuring 			50.625,- + 4.375,-
+Workshop			12.500,-
+Report writing			36.375,- + 12.500,- 
+Coastlines		 	26.875,-
+Mercator projection 		 2.500,-
+Load files from program 	 4.375,-
+Self-contained jar		 9.375,-
+Zoomlevel 			 3.125,-
+Group presentations		12.500,-
+Maptypes			 3.125,-
+Scalebar			 6.250,-
+Tests 				18.750,- + 6.250,-
+Quadtree                        21.250,-
+Strokewidth 			 5.000,-
+Nearest neighbor		 5.000,-
+LoadingScreen		 	 1.875,-
+Keybordnavigation		 3.125,-
+Shortest path			50.000,- + 625,-
+Route description		 6.250,- + 2.500,-
+Extra Feature			 3.750,-
+Bugfixes			 5.000,-
+Whitebox testing		 3.750,- + 13.750,-
+
+
+Wishlist for v1.0:
+* Fastest path taking traffic lights into account
+* Correct zoom levels for all map features and in all map types
+
+Feedback Request:
+Any advice? :)
+
+
+
+
+
+
+
+
+
