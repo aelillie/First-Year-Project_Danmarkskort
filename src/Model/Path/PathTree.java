@@ -1,9 +1,10 @@
 package Model.Path;
 
+import Model.MapCalculator;
+import Model.Model;
+
 import java.awt.geom.Point2D;
 import java.util.Stack;
-import Model.Model;
-import Model.MapCalculator;
 public class PathTree {
 
     private Graph G;
@@ -113,7 +114,7 @@ public class PathTree {
         if (valueTo[w] > valueTo[v] + e.distance()) {
             valueTo[w] = valueTo[v] + e.distance();
             edgeTo[w] = e;
-            if (pq.contains(w)) pq.decreaseKey(w, valueTo[w] + h(w));
+            if (pq.contains(w)) pq.decreaseKey(w, valueTo[w]  + h(w));
             else                pq.insert(w, valueTo[w] + h(w));
         }
     }

@@ -1,11 +1,8 @@
 package Tests;
 
-import Model.MapFeatures.Highway;
+import Model.MapCalculator;
 import Model.Model;
 import Model.Path.Edge;
-import Model.PathCreater;
-
-import Model.MapCalculator;
 import Model.Path.PathTree;
 import Model.Path.Vertices;
 import org.junit.Assert;
@@ -13,14 +10,8 @@ import org.junit.Before;
 import org.junit.Test;
 import sun.tools.jar.Main;
 
-
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Anders on 06-05-2015.
@@ -40,6 +31,7 @@ public class whiteboxTest {
     double d8; //841 -> 842
     double d9; //131 -> 839
     double d10; //840 -> 841
+    double d11; //839 -> 840
 
 
 
@@ -64,6 +56,7 @@ public class whiteboxTest {
         d8 = MapCalculator.haversineDist(V.getVertex(841), V.getVertex(842));   //841 -> 842
         d9 = MapCalculator.haversineDist(V.getVertex(131), V.getVertex(839));   //131 -> 839
         d10 = MapCalculator.haversineDist(V.getVertex(840), V.getVertex(841));  //840 -> 841
+        d11 = MapCalculator.haversineDist(V.getVertex(839), V.getVertex(840));  //839 -> 840
     }
 
     private int checkForOcc(PathTree PT) {
@@ -112,12 +105,26 @@ public class whiteboxTest {
         PT.useCarRoute();
         PT.initiate();
         int actualNum = checkForOcc(PT);
+
         Assert.assertTrue(17 == actualNum);
         Assert.assertEquals(d0, PT.getValueTo()[932], DELTA);
         Assert.assertEquals(d1, PT.getValueTo()[1566], DELTA);
         Assert.assertEquals(d1 + d2, PT.getValueTo()[131], DELTA);
         Assert.assertEquals(d1 + d2 + d3, PT.getValueTo()[132], DELTA);
         Assert.assertEquals(d1 + d2 + d9, PT.getValueTo()[839], DELTA);
+    }
+
+    @Test
+    public void branch2case2(){
+        PathTree PT = new PathTree(m.getDiGraph(), 839, 841);
+        PT.useShortestPath();
+        PT.useCarRoute();
+        PT.initiate();
+
+
+
+
+
     }
 
     public void shortest() {
@@ -139,6 +146,8 @@ public class whiteboxTest {
 
 
     }
+
+
 
     public void fast() {
         int s = 1509;
