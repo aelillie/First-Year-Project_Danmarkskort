@@ -54,14 +54,15 @@ public class MapCalculator {
         return distance; //distance in kilometers
     }
 
-    public static int pathLength(List<Point2D> points) {
+    public static boolean exceedsPathLength(List<OSMNode> points, double limit) {
         double pathLength = 0;
         for (int i = 0; i + 1< points.size() ; i++) {
             Point2D v = points.get(i);
             Point2D w = points.get(i+1);
             pathLength += haversineDist(v, w);
+            if (pathLength > limit) break;
         }
-        return (int) pathLength;
+        return pathLength > limit;
     }
 
 }

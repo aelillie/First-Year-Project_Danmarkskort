@@ -19,7 +19,7 @@ import java.util.*;
  */
 public class OSMHandler extends DefaultHandler {
     private Map<String, String> keyValue_map; //relation between the keys and values in the XML file
-    private LongHashMap<Point2D> node_longMap; //Relation between a nodes' id and coordinates
+    private LongHashMap<OSMNode> node_longMap; //Relation between a nodes' id and coordinates
     private LongHashMap<Path2D> wayId_longMap; //Map of ways and their id's
     private Graph graph;
     private Vertices vertices;
@@ -33,15 +33,16 @@ public class OSMHandler extends DefaultHandler {
     private QuadTree coastLinesTree, landuseTree, bigForestTree, bigLakeTree;
     private ArrayList<Address> addressList; //list of all the addresses in the .osm file
     private List<Long> memberReferences; //member referenced in a relation of ways
-    private List<Point2D> wayCoords; //List of referenced coordinates used to make up a single way
+    private List<OSMNode> wayCoords; //List of referenced coordinates used to make up a single way
     private static List<Coastline> coastlines; //List of all of the coastlines to be drawn
 
     private Long wayId; //Id of the current way
-    private Point2D nodeCoord; //current node's coordinates
+    private OSMNode nodeCoord; //current node's coordinates
     //if a given feature is present:
-    private boolean isArea, isBusstop, isMetro, isSTog, hasName, hasHouseNo, hasPostcode, hasCity, isStart;
+    private boolean isArea, isBusstop, isMetro, isSTog, hasHouseNo, hasPostcode, hasCity, isStart;
     private String streetName, houseNumber,cityName, postCode; //address info
-    private Point2D startPoint, endPoint; //coastline start point and end point
+    private long thisNodeId;
+    private OSMNode startPoint, endPoint; //coastline start point and end point
     private Rectangle2D bbox = new Rectangle2D.Double();
 
 
@@ -50,7 +51,7 @@ public class OSMHandler extends DefaultHandler {
         memberReferences = new ArrayList<>();
         addressList = new ArrayList<>();
         wayCoords = new ArrayList<>();
-        node_longMap = new LongHashMap<Point2D>();
+        node_longMap = new LongHashMap<OSMNode>();
         keyValue_map = new HashMap<>();
         wayId_longMap = new LongHashMap<Path2D>();
         streetMap = new HashMap<>();
@@ -79,21 +80,22 @@ public class OSMHandler extends DefaultHandler {
             case "node": {
                 keyValue_map.clear();
                 isBusstop = false; isMetro = false;  isSTog = false;
-                hasName = false; hasHouseNo = false; hasPostcode = false; hasCity = false;
+                hasHouseNo = false; hasPostcode = false; hasCity = false;
 
                 Double lat = Double.parseDouble(atts.getValue("lat"));
                 lat = MapCalculator.latToY(lat); //transforming according to the Mercator projection
                 Double lon = Double.parseDouble(atts.getValue("lon"));
                 long id = Long.parseLong(atts.getValue("id"));
-                Point2D coord = new Point2D.Float(lon.floatValue(), lat.floatValue());
-                nodeCoord = new Point2D.Float(lon.floatValue(),lat.floatValue());
+                thisNodeId = id;
+                OSMNode coord = new OSMNode(lon.floatValue(), lat.floatValue());
+                nodeCoord = new OSMNode(lon.floatValue(),lat.floatValue());
                 node_longMap.put(id, coord);
                 break;
 
             }
             case "nd": { //references in a way, to other ways
                 long id = Long.parseLong(atts.getValue("ref"));
-                Point2D coord = node_longMap.get(id); //fetches coordinate from the referenced id
+                OSMNode coord = node_longMap.get(id); //fetches coordinate from the referenced id
                 if(isStart){ //Saves startpoint (for use in coastlines)
                     startPoint = coord;
                     isStart = false;
@@ -108,7 +110,6 @@ public class OSMHandler extends DefaultHandler {
                 keyValue_map.clear();
                 wayCoords.clear(); //clears list of referenced coordinates within a way
                 isArea = false;
-                hasName = false;
                 isStart = true;
                 wayId = Long.parseLong(atts.getValue("id"));
                 break;
@@ -139,12 +140,14 @@ public class OSMHandler extends DefaultHandler {
                 String v = atts.getValue("v");
                 keyValue_map.put(k, v);
                 if(k.equals("area") && v.equals("yes")) isArea = true;
-                if(k.equals("highway") && v.equals("bus_stop")) isBusstop = true;
+                if(k.equals("highway")) {
+                    if(v.equals("bus_stop"))
+                        isBusstop = true;
+                    else if(k.equals("highway") && v.equals("traffic_signals"))
+                        node_longMap.get(thisNodeId).hasTrafficSignal = true;
+                }
                 if(k.equals("subway")&& v.equals("yes")) isMetro = true;
                 if(k.equals("network") && v.equals("S-Tog")) isSTog = true;
-                if(k.equals("name")){
-                    hasName = true;
-                }
                 if(k.equals("addr:street")){
                     streetName = v;
                 }
@@ -187,9 +190,9 @@ public class OSMHandler extends DefaultHandler {
                         PathCreater.processCoastlines(way, startPoint, endPoint);
                     } else {
                         Natural natural = new Natural(way, fetchOSMLayer(), val);
-                        if (val.equals("forest") && (MapCalculator.pathLength(wayCoords) > 12))
+                        if (val.equals("forest") && (MapCalculator.exceedsPathLength(wayCoords, 12)))
                             bigForestTree.insert(natural);
-                        else if (val.equals("water") && (MapCalculator.pathLength(wayCoords) > 12))
+                        else if (val.equals("water") && (MapCalculator.exceedsPathLength(wayCoords, 12)))
                             bigLakeTree.insert(natural);
                         else
                             naturalTree.insert(natural);
@@ -203,7 +206,7 @@ public class OSMHandler extends DefaultHandler {
                     else buildingTree.insert(new Leisure(way, fetchOSMLayer(), keyValue_map.get("leisure")));
                 }
                 else if (keyValue_map.containsKey("landuse")) {
-                    if (keyValue_map.get("landuse").equals("forest") && (MapCalculator.pathLength(wayCoords) > 12)) {
+                    if (keyValue_map.get("landuse").equals("forest") && (MapCalculator.exceedsPathLength(wayCoords, 12))) {
                         bigForestTree.insert(new Landuse(way, fetchOSMLayer(), "forest", true));
                     }
                     else
@@ -504,9 +507,9 @@ public class OSMHandler extends DefaultHandler {
         return quadTrees;
     }
 
-    public List<Point2D> getWayCoords(){return wayCoords;}
+    public List<OSMNode> getWayCoords(){return wayCoords;}
     public LongHashMap<Path2D> getWayIdMap(){return wayId_longMap;}
-    public LongHashMap<Point2D> getNodeMap(){return node_longMap;}
+    public LongHashMap<OSMNode> getNodeMap(){return node_longMap;}
 
     public void setQuadTrees(List<QuadTree> quadTrees) {
         if(quadTrees.size() != 10){

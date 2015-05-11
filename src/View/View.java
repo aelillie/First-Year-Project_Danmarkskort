@@ -4,6 +4,7 @@ import Controller.SearchResultMouseHandler;
 import Model.*;
 import Model.MapFeatures.Highway;
 import Model.MapFeatures.Route;
+import Model.MapFeatures.Waterway;
 import Model.Path.Edge;
 import Model.QuadTree.QuadTree;
 
@@ -14,6 +15,8 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
+import java.math.BigDecimal;
+import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
 
@@ -240,14 +243,14 @@ public class View extends JFrame implements Observer {
         Dimension preferred = getPreferredSize();
 
         optionsButton = new JButton();
-        makeFrontButton(optionsButton,"optionsIcon","showOptions",new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() * 0.98), 39, 37));
+        makeFrontButton(optionsButton, "optionsIcon", "showOptions", new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() * 0.98), 39, 37));
         makeSearchButton();
 
         zoomInButton = new JButton();
-        makeFrontButton(zoomInButton,"plusIcon","zoomIn",new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37));
+        makeFrontButton(zoomInButton, "plusIcon", "zoomIn", new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) preferred.getHeight() / 3 * 2, 39, 37));
 
         zoomOutButton = new JButton();
-        makeFrontButton(zoomOutButton,"minusIcon","zoomOut",new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() / 3 * 2 + 45), 39, 37));
+        makeFrontButton(zoomOutButton, "minusIcon", "zoomOut", new Rectangle((int) preferred.getWidth() - 60, (int) preferred.getHeight() - (int) (preferred.getHeight() / 3 * 2 + 45), 39, 37));
 
         makeShowRoutePanelButton();
 
@@ -255,7 +258,7 @@ public class View extends JFrame implements Observer {
         makeFrontButton(fullscreenButton,"fullscreenIcon","fullscreen",new Rectangle((int) preferred.getWidth() - 60, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 + 100), 39, 37));
 
         mapTypeButton = new JButton();
-        makeFrontButton(mapTypeButton,"layerIcon","mapType",new Rectangle((int) preferred.getWidth() - 49, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 - 45), 39, 37));
+        makeFrontButton(mapTypeButton, "layerIcon", "mapType", new Rectangle((int) preferred.getWidth() - 49, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 - 45), 39, 37));
         makeCloseDirectionListPanel();
     }
 
@@ -829,12 +832,32 @@ public class View extends JFrame implements Observer {
         }
         //calculate total distance and travel Time and add it to a label.
         double travelTime = routeFinder.getTravelTime();
+        double seconds = (travelTime%1);
+        double minutes = travelTime - seconds;
+        String timeString;
+        if(travelTime/60 >= 1){
+            double hours_dec = minutes/60;
+            double minutes_dec = hours_dec%1;
+            double hours = hours_dec-minutes_dec;
+            minutes = minutes_dec*60;
+            timeString = new DecimalFormat("##").format(hours) + " hr(s) " + new DecimalFormat("##").format(minutes) + " min";
+
+        } else {
+            if (seconds <= 0.25)
+                seconds = 0;
+            else if (seconds >= 0.75) { //DecimalFormat will take care of this
+                seconds = 0;
+                minutes += 1;
+            } else seconds = 0.5;
+
+            timeString = minutes + seconds + " min";
+        }
         double travelDistance = routeFinder.getTravelDistance();
         if (travelDistance < 1)  {
             travelDistance *= 1000;
-            travelTimeLabel.setText(String.format("Travel time: %.2f minutes   Distance: %.0f m", travelTime, travelDistance  ));
+            travelTimeLabel.setText(String.format("Travel time: " + timeString + "   Distance: %.0f m", travelDistance  ));
         } else
-        travelTimeLabel.setText(String.format("Travel time: %.2f minutes   Distance: %.2f km", travelTime, travelDistance  ));
+        travelTimeLabel.setText(String.format("Travel time: "  + timeString + "   Distance: %.2f km", travelTime, travelDistance  ));
         travelTimePanel.setVisible(true);
         travelTimeLabel.setVisible(true);
     }
@@ -984,6 +1007,10 @@ public class View extends JFrame implements Observer {
                         if (mapFeature.isArea()) {
                             g.setColor(drawAttribute.getColor());
                             g.fill(mapFeature.getWay());
+                        } else {
+                            g.setColor(drawAttribute.getColor());
+                            g.setStroke(DrawAttribute.basicStrokes[drawAttribute.getStrokeId()]);
+                            g.draw(mapFeature.getWay());
                         }
                     }
                 } catch (NullPointerException e) {
@@ -992,18 +1019,18 @@ public class View extends JFrame implements Observer {
             }
 
             //Then draw boundaries on top of areas
-            for (MapFeature Area : mapFAreas) {
+            for (MapFeature area : mapFAreas) {
                 if (zoomLevel > 13) {
                     try {
                         g.setColor(Color.BLACK);
-                        setDrawAttribute(Area.getValueName());
+                        setDrawAttribute(area.getValueName());
                         if (drawAttribute.isDashed()) continue;
-                        else if (!Area.isArea())
+                        else if (!area.isArea())
                              g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
                         else g.setStroke(DrawAttribute.basicStrokes[0]);
-                        g.draw(Area.getWay());
+                        g.draw(area.getWay());
                     } catch (NullPointerException e) {
-                        System.out.println(Area.getValueName() + " " + Area.getValue());
+                        System.out.println(area.getValueName() + " " + area.getValue());
                     }
                 }
             }
@@ -1160,15 +1187,18 @@ public class View extends JFrame implements Observer {
             Collection < MapData > bigRoads = model.getVisibleBigRoads(windowBounds, sorted);
             mapFStreets = (Collection<MapFeature>)(Collection<?>) bigRoads;
 
+            if (zoomLevel > 5)
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
+
             if(zoomLevel > 7)
-                mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleStreets(windowBounds,sorted));
+                mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleStreets(windowBounds, sorted));
 
             if(zoomLevel > 9)
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleRailways(windowBounds, sorted));
 
 
             if (zoomLevel > 8)
-                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>)model.getVisibleNatural(windowBounds,sorted));
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>)model.getVisibleNatural(windowBounds, sorted));
 
             if(zoomLevel > 10)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBuildings(windowBounds, sorted));
@@ -1177,9 +1207,6 @@ public class View extends JFrame implements Observer {
             if(zoomLevel > 13)
                 mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds);
 
-
-            if (zoomLevel > 5)
-                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
 
             mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigForests(windowBounds, sorted));
             mapFAreas.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleBikLakes(windowBounds, sorted));

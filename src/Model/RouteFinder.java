@@ -15,6 +15,7 @@ import java.util.List;
  */
 public class RouteFinder {
     private Model model = Model.getModel();
+    private Vertices V = model.getVertices();
     private int startVertex, endVertex;
     private Iterable<Edge> shortestPath, fastestPath;
     private boolean carPressed, bikePressed, walkPressed;
@@ -38,7 +39,9 @@ public class RouteFinder {
             if (p.isBikeRoute()) travelTime += e.bikeTime();
             else if (p.isWalkRoute()) travelTime += e.walkTime();
             else if (p.isCarRoute()) travelTime += e.driveTime();
-            System.out.println(e);
+            if (e.hasTrafficSignals())
+                travelTime += 0.15;
+            //System.out.println(e);
         }
 
     }

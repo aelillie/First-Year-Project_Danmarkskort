@@ -15,7 +15,7 @@ import java.util.regex.Pattern;
 public class Address implements Comparable<Address>, Serializable {
     private String street, house, floor, side, postcode, city;
     static private List<Pattern> patternList = new ArrayList<>();
-    private Point2D addressLocation;
+    private OSMNode addressLocation;
     private Path2D boundaryLocation;
 
     private Address(String _street, String _house, String _floor, String _side, String _postcode, String _city) {
@@ -364,11 +364,11 @@ public class Address implements Comparable<Address>, Serializable {
         return Objects.hash(street,house,floor,side,postcode,city);
     }
 
-    public void setAddressLocation(Point2D addressLocation){this.addressLocation = addressLocation;}
+    public void setAddressLocation(OSMNode addressLocation){this.addressLocation = addressLocation;}
 
     public void setBoundaryLocation(Path2D boundaryLocation){this.boundaryLocation = boundaryLocation;}
 
-    public Point2D getAddressLocation() {return addressLocation;}
+    public OSMNode getAddressLocation() {return addressLocation;}
 
     public Path2D getBoundaryLocation() {return boundaryLocation;}
 

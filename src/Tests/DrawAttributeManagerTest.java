@@ -3,6 +3,7 @@ package Tests;
 import Model.MapFeatures.*;
 import Model.MapFeature;
 import Model.PathCreater;
+import Model.OSMNode;
 import View.DrawAttribute;
 import View.DrawAttributeManager;
 import org.junit.Before;
@@ -36,12 +37,12 @@ public class DrawAttributeManagerTest {
 
 
     private Path2D createRandomPath(){
-        ArrayList<Point2D> points = new ArrayList<>();
+        ArrayList<OSMNode> points = new ArrayList<>();
         Random r = new Random();
         points.clear();
-        points.add(new Point2D.Float(r.nextFloat(), r.nextFloat()));
-        points.add(new Point2D.Float(r.nextFloat(), r.nextFloat()));
-        points.add(new Point2D.Float(r.nextFloat(), r.nextFloat()));
+        points.add(new OSMNode(r.nextFloat(), r.nextFloat()));
+        points.add(new OSMNode(r.nextFloat(), r.nextFloat()));
+        points.add(new OSMNode(r.nextFloat(), r.nextFloat()));
         return PathCreater.createWay(points);
     }
 
