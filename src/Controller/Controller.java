@@ -124,6 +124,7 @@ public class Controller extends MouseAdapter implements ActionListener {
                         view.zoom(1 / 1.2);
                         break;
                     case 'a':
+                        if(e.isAltDown())
                         view.toggleAA();
                         break;
                     case 's':

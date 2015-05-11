@@ -4,7 +4,6 @@ import Controller.SearchResultMouseHandler;
 import Model.*;
 import Model.MapFeatures.Highway;
 import Model.MapFeatures.Route;
-import Model.MapFeatures.Waterway;
 import Model.Path.Edge;
 import Model.QuadTree.QuadTree;
 
@@ -15,7 +14,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
@@ -857,7 +855,7 @@ public class View extends JFrame implements Observer {
             travelDistance *= 1000;
             travelTimeLabel.setText(String.format("Travel time: " + timeString + "   Distance: %.0f m", travelDistance  ));
         } else
-        travelTimeLabel.setText(String.format("Travel time: "  + timeString + "   Distance: %.2f km", travelTime, travelDistance  ));
+        travelTimeLabel.setText(String.format("Travel time: "  + timeString + "   Distance: %.2f km",  travelDistance  ));
         travelTimePanel.setVisible(true);
         travelTimeLabel.setVisible(true);
     }
