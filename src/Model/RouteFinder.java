@@ -40,7 +40,6 @@ public class RouteFinder {
             else if (p.isCarRoute()) travelTime += e.driveTime();
             if (e.hasTrafficSignals())
                 travelTime += 0.15;
-            //System.out.println(e);
         }
 
     }
