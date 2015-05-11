@@ -148,7 +148,7 @@ public class OSMHandlerTest {
     @Test
     public void addingNaturalsTest(){
         Assert.assertTrue(!naturalList.isEmpty());
-        Assert.assertEquals(3, naturalList.size());
+        Assert.assertEquals(2, naturalList.size());
         naturalList.forEach(natural ->{
                     Assert.assertNotNull(natural);
                 }

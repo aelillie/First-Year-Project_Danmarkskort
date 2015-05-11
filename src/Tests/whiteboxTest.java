@@ -112,19 +112,58 @@ public class whiteboxTest {
         Assert.assertEquals(d0, PT.getValueTo()[932], DELTA);
         Assert.assertEquals(d1, PT.getValueTo()[1566], DELTA);
         Assert.assertEquals(d1 + d2, PT.getValueTo()[131], DELTA);
-       // Assert.assertEquals(d1 + d2 + d3, PT.getValueTo()[132], DELTA);
+       //Assert.assertEquals(d1 + d2 + d3, PT.getValueTo()[132], DELTA);
         //Assert.assertEquals(d1 + d2 + d9, PT.getValueTo()[839], DELTA);
     }
 
     @Test
-    public void branch2case2(){
+    public void branch2case1(){
         //TODO not done!
-        PathTree PT = new PathTree(m.getDiGraph(), 839, 841);
-        PT.useShortestPath();
-        PT.useCarRoute();
-        PT.initiate();
 
-        Assert.assertTrue(3 == checkForOcc(PT));
+        PathTree zeroAdjacent= new PathTree(m.getDiGraph(), 636, 635);
+        zeroAdjacent.useShortestPath();
+        zeroAdjacent.useCarRoute();
+        zeroAdjacent.initiate();
+
+        //no adjacent  == 0 iterations
+        Assert.assertTrue(0 == checkForOcc(zeroAdjacent));
+
+        Assert.assertEquals(Double.POSITIVE_INFINITY, zeroAdjacent.distTo(635), DELTA);
+
+    }
+
+    @Test
+    public void branch2case2(){
+        PathTree oneAdjacent = new PathTree(m.getDiGraph(), 635, 636);
+        oneAdjacent.useShortestPath();
+        oneAdjacent.useCarRoute();
+        oneAdjacent.initiate();
+
+        //Only needs to check one adjacent edge
+        Assert.assertEquals(1, checkForOcc(oneAdjacent));
+
+        Assert.assertTrue(oneAdjacent.hasPathTo(636));
+
+        Assert.assertEquals(Double.POSITIVE_INFINITY, oneAdjacent.distTo(634), DELTA);
+
+    }
+
+    @Test
+    public void branch2case3(){
+        PathTree moreAdjacent = new PathTree(m.getDiGraph(), 510, 511);
+
+        moreAdjacent.useShortestPath();
+        moreAdjacent.useCarRoute();
+        moreAdjacent.initiate();
+
+        //Vertex 510 has 3 adjacent edges
+        Assert.assertEquals(3, checkForOcc(moreAdjacent));
+
+        Assert.assertTrue(moreAdjacent.hasPathTo(511));
+
+        Assert.assertTrue(moreAdjacent.hasPathTo(689));
+        Assert.assertTrue(moreAdjacent.hasPathTo(509));
+
 
     }
 
@@ -288,7 +327,6 @@ public class whiteboxTest {
 
 
     }
-
 
 
     public void fast() {
