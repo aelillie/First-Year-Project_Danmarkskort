@@ -69,7 +69,7 @@ public class View extends JFrame implements Observer {
      * @param m Reference to Model class
      */
     public View(Model m) {
-        super("Group G");
+        super("Group G: Danmarkskort");
         model = m;
         iconPanel.addObserverToIcons(this);
         routePanel = new RouteView(this, model);
@@ -1230,6 +1230,7 @@ public class View extends JFrame implements Observer {
                 g.drawString(nearestNeighbor.getStreetName(), (int) (getRootPane().getContentPane().getWidth() * 0.01 + 1),
                         getRootPane().getContentPane().getHeight() - 10);
             }
+
         }
     }
 

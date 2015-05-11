@@ -323,7 +323,7 @@ public class RoutePanelController implements ActionListener{
         @Override
         public void keyPressed(KeyEvent e) {
             list = view.getAddressSearchResults();
-
+            //7+ 23 + 5 + 1 + 16 + 12 + 17 + 1 = 82 classes in our program.
             //Set up the keyboard handler for different keys.
             if(e.getKeyCode() == KeyEvent.VK_ENTER) {
                 enterPressed();

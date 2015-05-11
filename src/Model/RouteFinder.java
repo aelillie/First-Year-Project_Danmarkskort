@@ -15,7 +15,6 @@ import java.util.List;
  */
 public class RouteFinder {
     private Model model = Model.getModel();
-    private Vertices V = model.getVertices();
     private int startVertex, endVertex;
     private Iterable<Edge> shortestPath, fastestPath;
     private boolean carPressed, bikePressed, walkPressed;

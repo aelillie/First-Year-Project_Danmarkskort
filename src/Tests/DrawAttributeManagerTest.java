@@ -1,7 +1,10 @@
 package Tests;
 
-import Model.MapFeatures.*;
 import Model.MapFeature;
+import Model.MapFeatures.Building;
+import Model.MapFeatures.Highway;
+import Model.MapFeatures.Leisure;
+import Model.MapFeatures.Natural;
 import Model.PathCreater;
 import Model.OSMNode;
 import View.DrawAttribute;
@@ -15,7 +18,6 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
 
 /**
  * Created by i5-4670K on 09-04-2015.
@@ -53,7 +55,7 @@ public class DrawAttributeManagerTest {
         DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeatures.get(0).getValueName());
 
         assertEquals(drawAttribute.getColor(), DrawAttribute.lightyellow);
-        assertEquals(drawAttribute.getZoomLevel(), 7);
+        assertEquals(drawAttribute.getZoomLevel(), 6);
         drawAttribute = drawAttributeManager.getDrawAttribute(mapFeatures.get(2).getValueName());
 
         assertEquals(drawAttribute.getColor(), DrawAttribute.lightgreen);
@@ -68,7 +70,7 @@ public class DrawAttributeManagerTest {
         DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeatures.get(0).getValueName());
 
         assertEquals(drawAttribute.getColor(), DrawAttribute.lightergrey);
-        assertEquals(drawAttribute.getZoomLevel(),5);
+        assertEquals(drawAttribute.getZoomLevel(),6);
         drawAttribute = drawAttributeManager.getDrawAttribute(mapFeatures.get(2).getValueName());
 
         assertEquals(drawAttribute.getColor(), DrawAttribute.whitegreen);
