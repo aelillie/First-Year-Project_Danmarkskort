@@ -17,6 +17,7 @@ public class Aeroway extends MapFeature {
     @Override
     public void setPreDefLayerValues() {
         super.setPreDefLayerValues();
+        layer_value = 26;
     }
 
     @Override
@@ -26,6 +27,7 @@ public class Aeroway extends MapFeature {
             setValueName(ValueName.TERMINAL);
         }
         else if (value.equals("runway")) {
+            isArea = true;
             setValueName(ValueName.RUNWAY);
         }
         else if (value.equals("taxiway")) {

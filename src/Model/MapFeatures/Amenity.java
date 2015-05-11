@@ -19,7 +19,7 @@ public class Amenity extends MapFeature {
     public void setPreDefLayerValues() {
         super.setPreDefLayerValues();
         if (value.equals("fountain")) layer_value = 45;
-        else if (value.equals("hospotal") || value.equals("pharmaceutical")) layer_value = -5;
+        else if (value.equals("hospital") || value.equals("pharmaceutical")) layer_value = -5;
 
     }
 

@@ -235,7 +235,7 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("emergency"))
                     naturalTree.insert(new Emergency(way, fetchOSMLayer(), keyValue_map.get("emergency")));
                 else if (keyValue_map.containsKey("aeroway"))
-                    naturalTree.insert(new Aeroway(way, fetchOSMLayer(), keyValue_map.get("aeroway")));
+                    buildingTree.insert(new Aeroway(way, fetchOSMLayer(), keyValue_map.get("aeroway")));
                 else if (keyValue_map.containsKey("amenity")) {
                     buildingTree.insert(new Amenity(way, fetchOSMLayer(), keyValue_map.get("amenity"), keyValue_map.containsKey("building")));
                     if (keyValue_map.get("amenity").equals("parking")) {
