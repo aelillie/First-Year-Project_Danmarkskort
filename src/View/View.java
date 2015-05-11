@@ -268,7 +268,7 @@ public class View extends JFrame implements Observer {
     private void makeCloseDirectionListPanel(){
         closeDirectionList = new JPanel();
         closeDirectionList.setVisible(false);
-        closeDirectionList.setBounds(26, 280, 400, 20);
+        closeDirectionList.setBounds(25, 280, 400, 20);
         closeDirectionList.setBackground(DrawAttribute.fadeblack);
         closeDirectionList.setLayout(new BoxLayout(closeDirectionList, BoxLayout.LINE_AXIS));
         closeDirectionList.setComponentOrientation(ComponentOrientation.RIGHT_TO_LEFT);
@@ -281,7 +281,7 @@ public class View extends JFrame implements Observer {
 
         travelTimePanel = new JPanel();
         travelTimePanel.setOpaque(false);
-        travelTimePanel.setBounds(26,280,275,20);
+        travelTimePanel.setBounds(25,280,275,20);
         travelTimePanel.setVisible(false);
         travelTimeLabel = new JLabel();
         travelTimeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -324,7 +324,7 @@ public class View extends JFrame implements Observer {
         JList<String> directionStringList = new JList<>(directionArray); //Everything to be added to the scrollpane is added as a JList
         directionPane.setVisible(true);
         directionPane.setViewportView(directionStringList); //Set the display of the scrollpane to the current JList
-        directionPane.setBounds(26, 300, 400, 200);
+        directionPane.setBounds(25, 300, 400, 200);
         directionPane.setBorder(new MatteBorder(1, 1, 1, 1, Color.DARK_GRAY));
         directionPane.getViewport().setBackground(Color.WHITE); //The viewport is where the scrollpane elements are display
         directionPane.setVerticalScrollBarPolicy(ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -402,7 +402,7 @@ public class View extends JFrame implements Observer {
         showRoutePanelButton = new JButton("Route plan");
         showRoutePanelButton.setFocusable(false);
         showRoutePanelButton.setBackground(Color.WHITE);
-        showRoutePanelButton.setBounds(20, 55, 100, 25);
+        showRoutePanelButton.setBounds(25, 55, 100, 25);
         showRoutePanelButton.setBorder(BorderFactory.createMatteBorder(4, 1, 1, 1, Color.GRAY));
         showRoutePanelButton.setActionCommand("showRoutePanel");
     }
