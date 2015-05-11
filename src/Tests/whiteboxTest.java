@@ -16,7 +16,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 
 /**
- * Created by Anders on 06-05-2015.
+ * This class is a whitebox test of the shortest path method relaxCarRoute() in the PathTree class
  */
 public class whiteboxTest {
     private static final double DELTA = 1e-15;
@@ -71,53 +71,61 @@ public class whiteboxTest {
     }
 
     /**
-     * Whiteboxtest with source vertex and destination vertex being the same - 0 iterations
+     * Whiteboxtest with source vertex and destination vertex being the same - 1 iteration in the while loop
+     * Tests if there is in fact no edges occuring
      */
     @Test
     public void branch1case1() {
-        PathTree PT = new PathTree(m.getDiGraph(), 1509, 1509);
-        PT.useShortestPath();
-        PT.useCarRoute();
-        PT.initiate();
+        PathTree oneVertex = new PathTree(m.getDiGraph(), 1509, 1509);
+        oneVertex.useShortestPath();
+        oneVertex.useCarRoute();
+        oneVertex.initiate();
 
-        Assert.assertTrue(checkForOcc(PT) == 0);
-        //Assert.assertEquals(d0, PT.getValueTo()[932], DELTA);
-        //Assert.assertEquals(d1, PT.getValueTo()[1566], DELTA);
+        Assert.assertEquals(0,checkForOcc(oneVertex));
     }
 
 
     /**
-     *
+     * Two different vertices - 2 iteration in the while loop
+     * Tests if the correct amount of edges occur and that their distances are correct
      */
     @Test
     public void branch1case2() {
-        PathTree PT = new PathTree(m.getDiGraph(), 1509, 1566);
-        PT.useShortestPath();
-        PT.useCarRoute();
-        PT.initiate();
+        PathTree twoVertices = new PathTree(m.getDiGraph(), 1509, 1566);
+        twoVertices.useShortestPath();
+        twoVertices.useCarRoute();
+        twoVertices.initiate();
 
-        Assert.assertTrue(checkForOcc(PT) == 2);
-        Assert.assertEquals(d0, PT.getValueTo()[932], DELTA);
-        Assert.assertEquals(d1, PT.getValueTo()[1566], DELTA);
+        Assert.assertEquals(2, checkForOcc(twoVertices));
+        Assert.assertEquals(d0, twoVertices.getValueTo()[932], DELTA);
+        Assert.assertEquals(d1, twoVertices.getValueTo()[1566], DELTA);
         //Assert.assertEquals(d1 + d2, PT.getValueTo()[131], DELTA);
     }
 
+
+    /**
+     * three different vertices - 3 iterations or more in the while loop
+     * Tests if the correct amount of edges occur and that their distances are correct
+     */
     @Test
     public void branch1case3() {
-        PathTree PT = new PathTree(m.getDiGraph(), 1509, 131);
-        PT.useShortestPath();
-        PT.useCarRoute();
-        PT.initiate();
-        int actualNum = checkForOcc(PT);
+        PathTree moreVertices = new PathTree(m.getDiGraph(), 1509, 131);
+        moreVertices.useShortestPath();
+        moreVertices.useCarRoute();
+        moreVertices.initiate();
+        int actualNum = checkForOcc(moreVertices);
 
         Assert.assertTrue(3 == actualNum);
-        Assert.assertEquals(d0, PT.getValueTo()[932], DELTA);
-        Assert.assertEquals(d1, PT.getValueTo()[1566], DELTA);
-        Assert.assertEquals(d1 + d2, PT.getValueTo()[131], DELTA);
-       //Assert.assertEquals(d1 + d2 + d3, PT.getValueTo()[132], DELTA);
-        //Assert.assertEquals(d1 + d2 + d9, PT.getValueTo()[839], DELTA);
+        Assert.assertEquals(d0, moreVertices.getValueTo()[932], DELTA);
+        Assert.assertEquals(d1, moreVertices.getValueTo()[1566], DELTA);
+        Assert.assertEquals(d1 + d2, moreVertices.getValueTo()[131], DELTA);
     }
 
+
+    /**
+     * No adjacent edges - zero iterations in the for-loop
+     * Tests that there are no adjacent edges, and therefore no path from source to destination
+     */
     @Test
     public void branch2case1(){
 
@@ -128,12 +136,15 @@ public class whiteboxTest {
         zeroAdjacent.initiate();
 
         //no adjacent  == 0 iterations
-        Assert.assertTrue(0 == checkForOcc(zeroAdjacent));
-
+        Assert.assertEquals(0, checkForOcc(zeroAdjacent));
         Assert.assertEquals(Double.POSITIVE_INFINITY, zeroAdjacent.distTo(635), DELTA);
-
     }
 
+
+    /**
+     * One adjacent edge - 1 iteration in the for-loop
+     * Tests that there is exactly 1 adjacent edge, and that there is a single path between them
+     */
     @Test
     public void branch2case2(){
         PathTree oneAdjacent = new PathTree(m.getDiGraph(), 635, 636);
@@ -143,13 +154,15 @@ public class whiteboxTest {
 
         //Only needs to check one adjacent edge
         Assert.assertEquals(1, checkForOcc(oneAdjacent));
-
         Assert.assertTrue(oneAdjacent.hasPathTo(636));
-
         Assert.assertEquals(Double.POSITIVE_INFINITY, oneAdjacent.distTo(634), DELTA);
 
     }
 
+    /**
+     * Two or more adjacent edges - 2 or more iterations in the for-loop
+     * Tests that there are 2 or more adjacent edges, and that there are 2 or more paths
+     */
     @Test
     public void branch2case3(){
         PathTree moreAdjacent = new PathTree(m.getDiGraph(), 510, 511);
@@ -165,10 +178,12 @@ public class whiteboxTest {
 
         Assert.assertTrue(moreAdjacent.hasPathTo(689));
         Assert.assertTrue(moreAdjacent.hasPathTo(509));
-
-
     }
 
+    /**
+     * True if-statement
+     * Tests that an edge between 2 vertices is not drivable
+     */
     @Test
     public void branch3case1(){
         PathTree PT = new PathTree(m.getDiGraph(), 1120, 393);
@@ -176,14 +191,33 @@ public class whiteboxTest {
         PT.useCarRoute();
         PT.initiate();
 
-        //Due to no path the distance to should be infinite
+        //Due to no path the distanceTo[] should be infinite
 
         Assert.assertEquals(Double.POSITIVE_INFINITY, PT.distTo(393), DELTA);
-
-
-
     }
 
+    /**
+     * False if-statement
+     * Tests that an edge between 2 vertices is drivable
+     */
+    @Test
+    public void branch3case2(){
+        PathTree PT = new PathTree(m.getDiGraph(), 1509, 1566);
+        PT.useShortestPath();
+        PT.useCarRoute();
+        PT.initiate();
+
+        //Due to a path found, distanceTo[] is finite
+        Assert.assertEquals(1, checkForOcc(PT));
+        Assert.assertEquals(d1,PT.getValueTo()[1566],DELTA);
+    }
+
+
+    /**
+     * Tests that fastest path is different from shortest path.
+     * Also tests that fastest returns the fastest path,
+     * and that shortest returns the shortest path.
+     */
     @Test
     public void branch4case1and2(){
         PathTree shortest = new PathTree(m.getDiGraph(), 1509, 841);
@@ -259,6 +293,9 @@ public class whiteboxTest {
 
     }
 
+    /**
+     * Tests that the pathtree stops relaxing edges once it finds the destination
+     */
     @Test
     public void branch5case1(){
         //End found, break of search
@@ -274,9 +311,12 @@ public class whiteboxTest {
 
         Assert.assertEquals(Double.POSITIVE_INFINITY , destinationPossible.distTo(839), DELTA);
         Assert.assertEquals(Double.POSITIVE_INFINITY, destinationPossible.distTo(132), DELTA);
-
     }
 
+    /**
+     * Tests that it tries all possible paths until it finds the destination or it can't
+     * (In this case it can't find the destination)
+     */
     @Test
     public void branch5case2(){
         //End not found, check all possibilities
