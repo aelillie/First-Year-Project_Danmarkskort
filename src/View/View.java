@@ -854,7 +854,7 @@ public class View extends JFrame implements Observer {
                 0.01 , 0.01);
         Collection<MapData> streets = model.getVisibleStreets(mouseBox, false);
         streets.addAll(model.getVisibleBigRoads(mouseBox, false));
-        //filterRoads(streets);  //remove all highways without names.
+        filterRoads(streets);  //remove all highways without names.
 
 
         nearestNeighbor = RouteFinder.findNearestHighway(coordinates, streets);
@@ -1203,11 +1203,7 @@ public class View extends JFrame implements Observer {
                 g.drawString(nearestNeighbor.getStreetName(), (int) (getRootPane().getContentPane().getWidth() * 0.01 + 1),
                         getRootPane().getContentPane().getHeight() - 10);
             }
-            if(nearestNeighbor != null) {
-                for (Edge e : nearestNeighbor.getEdges())
-                    System.out.print(e.other(e.either()) + " " + e.either() + " ");
-                System.out.println();
-            }
+
         }
     }
 
