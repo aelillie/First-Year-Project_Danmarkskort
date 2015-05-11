@@ -198,7 +198,7 @@ public class whiteboxTest {
 
     /**
      * False if-statement
-     * Tests that an edge between 2 vertices is drivable
+     * Tests that if an edge is drivable the path will update it.
      */
     @Test
     public void branch3case2(){
@@ -208,7 +208,7 @@ public class whiteboxTest {
         PT.initiate();
 
         //Due to a path found, distanceTo[] is finite
-        Assert.assertEquals(1, checkForOcc(PT));
+        Assert.assertEquals(2, checkForOcc(PT));
         Assert.assertEquals(d1,PT.getValueTo()[1566],DELTA);
     }
 
