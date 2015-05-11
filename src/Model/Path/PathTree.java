@@ -61,12 +61,13 @@ public class PathTree {
         pq.insert(s, valueTo[s]);
         while (!pq.isEmpty()) {
             int v = pq.delMin();
+            if(v == d) //found destination, stop relaxing edges
+                break;
             for (Edge e : G.adj(v)) {
                 if (!e.highway().isBikeAble()) continue;
                 relaxDistance(e, v); //shortest path (also the fastest)
             }
-            if(v == d) //found destination, stop relaxing edges
-                break;
+
         }
     }
 
@@ -76,14 +77,15 @@ public class PathTree {
         pq.insert(s, valueTo[s]);
         while (!pq.isEmpty()) {                                 /* 1 */
             int v = pq.delMin();
+            if(v == d) //found destination, stop relaxing edges /* 5 */
+                break;
             for (Edge e : G.adj(v)) {                           /* 2 */
                 if (!e.highway().isDriveAble()) continue;       /* 3 */
                 if (!shortestPath)                              /* 4 */
                     relaxTime(e, v); //fastest path
                 else relaxDistance(e, v); //shortest path
             }
-            if(v == d) //found destination, stop relaxing edges /* 5 */
-                break;
+
         }
     }
 
@@ -94,12 +96,13 @@ public class PathTree {
         pq.insert(s, valueTo[s]);
         while (!pq.isEmpty()) {
             int v = pq.delMin();
+            if(v == d) //found destination, stop relaxing edges
+                break;
             for (Edge e : G.adj(v)) {
                 if (!e.highway().isWalkAble()) continue;
                 relaxDistance(e, v); //shortest path (also the fastest)
             }
-            if(v == d) //found destination, stop relaxing edges
-                break;
+
         }
     }
 
