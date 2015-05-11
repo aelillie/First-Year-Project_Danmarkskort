@@ -148,7 +148,8 @@ public class DrawAttribute {
 
     public static Color cl_orange = new Color(255,193,51);
     public static Color cl_lightblue = new Color(0,183,236);
-    public static Color cl_green = new Color(0, 160, 119);
+    public static Color cl_darkgreen = new Color(0, 164, 119);
+    public static Color cl_green = new Color(0,179,130);
     public static Color cl_white = new Color(199, 199, 199);
     public static Color cl_darkblue = new Color(0, 128, 200);
     public static Color cl_darkorange = new Color(235, 104, 0);
