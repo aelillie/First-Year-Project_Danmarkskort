@@ -69,7 +69,7 @@ public class DrawAttributeManagerTest {
         DrawAttribute drawAttribute = drawAttributeManager.getDrawAttribute(mapFeatures.get(0).getValueName());
 
         assertEquals(drawAttribute.getColor(), DrawAttribute.lightergrey);
-        assertEquals(drawAttribute.getZoomLevel(),5);
+        assertEquals(drawAttribute.getZoomLevel(),6);
         drawAttribute = drawAttributeManager.getDrawAttribute(mapFeatures.get(2).getValueName());
 
         assertEquals(drawAttribute.getColor(), DrawAttribute.whitegreen);
