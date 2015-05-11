@@ -48,9 +48,9 @@ public class PathCreater {
      * @param coords List of Point2D's
      * @return Path  The path connected by the Points
      */
-    public static Path2D createWay(List<Point2D> coords) {
+    public static Path2D createWay(List<OSMNode> coords) {
         Path2D way = new Path2D.Float();
-        Point2D coord = coords.get(0);
+        OSMNode coord = coords.get(0);
         way.moveTo(coord.getX(), coord.getY());
         for (int i = 1; i < coords.size(); i++) {
             coord = coords.get(i);
@@ -70,7 +70,7 @@ public class PathCreater {
         return way;
     }
 
-    public static void processCoastlines(Path2D coastPath, Point2D startPoint, Point2D endPoint) {
+    public static void processCoastlines(Path2D coastPath, OSMNode startPoint, OSMNode endPoint) {
         Coastline currentCoastline = new Coastline(coastPath, startPoint, endPoint, -2, "coastline");
 
         List<Coastline> coastlines = OSMHandler.getCoastlines();

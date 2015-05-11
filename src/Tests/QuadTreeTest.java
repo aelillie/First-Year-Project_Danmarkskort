@@ -5,6 +5,7 @@ import Model.MapFeatures.Highway;
 import Model.MapData;
 import Model.MapFeature;
 import Model.MapIcon;
+import Model.OSMNode;
 import Model.PathCreater;
 import Model.QuadTree.QuadTree;
 import org.junit.Before;
@@ -30,18 +31,18 @@ public class QuadTreeTest {
     @Before
     public void CreateQuadTree(){
         paths = new ArrayList<>();
-        ArrayList<Point2D> points = new ArrayList<>();
+        ArrayList<OSMNode> points = new ArrayList<>();
         Rectangle2D testBox = new Rectangle2D.Float(0,0,100,100);
         quadTree = new QuadTree(testBox,1000);
-        points.add(new Point2D.Float(0,0));
-        points.add(new Point2D.Float(10,10));
-        points.add(new Point2D.Float(50,60));
-        points.add(new Point2D.Float(70,80));
-        points.add(new Point2D.Float(20,30));
-        points.add(new Point2D.Float(30,40));
-        points.add(new Point2D.Float(40,40));
-        points.add(new Point2D.Float(15,75));
-        points.add(new Point2D.Float(25,50));
+        points.add(new OSMNode(0,0));
+        points.add(new OSMNode(10,10));
+        points.add(new OSMNode(50,60));
+        points.add(new OSMNode(70,80));
+        points.add(new OSMNode(20,30));
+        points.add(new OSMNode(30,40));
+        points.add(new OSMNode(40,40));
+        points.add(new OSMNode(15,75));
+        points.add(new OSMNode(25,50));
 
         paths.add(PathCreater.createWay(points.subList(0, 1)));
         paths.add(PathCreater.createWay(points.subList(2,3)));
@@ -52,7 +53,7 @@ public class QuadTreeTest {
         MapFeature mf2 = new Highway(paths.get(1), 0, "trunk", false, "vej2", null);
         MapFeature mf3 = new Building(paths.get(2), 0, "building");
         MapFeature mf4 = new Highway(paths.get(3), 0, "footway", false, "vej3", null);
-        MapIcon mI1 = new MapIcon(new Point2D.Float(10,10),"parkingIcon");
+        MapIcon mI1 = new MapIcon(new OSMNode(10,10),"parkingIcon");
 
         quadTree.insert(mf1);
         quadTree.insert(mf2);
@@ -75,12 +76,12 @@ public class QuadTreeTest {
 
     @Test
     public void TestSubdivide(){
-        ArrayList<Point2D> points = new ArrayList<>();
+        ArrayList<OSMNode> points = new ArrayList<>();
 
         for(int i = 0; i < 1500; i++){
             points.clear();
-            points.add(new Point2D.Float((i * 4 % 50) + 50, i % 50));
-            points.add(new Point2D.Float((i * 10 / 2 % 50) + 50, i / 2 % 50));
+            points.add(new OSMNode((i * 4 % 50) + 50, i % 50));
+            points.add(new OSMNode((i * 10 / 2 % 50) + 50, i / 2 % 50));
             quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false, "vej1", null));
         }
 
@@ -96,18 +97,18 @@ public class QuadTreeTest {
 
     @Test(timeout = 500)
     public void TestEfficiency(){
-        ArrayList<Point2D> points = new ArrayList<>();
+        ArrayList<OSMNode> points = new ArrayList<>();
         Random r = new Random();
         Rectangle2D testBox = new Rectangle2D.Float(0,0,200,200);
         quadTree = new QuadTree(testBox,2000);
         for(int i = 0; i < 10000; i++){
             if(r.nextBoolean()) {
                 points.clear();
-                points.add(new Point2D.Float((i * 4 % 200) + 50, i % 200));
-                points.add(new Point2D.Float((i * 10 / 2 % 200) + 50, i / 2 % 200));
+                points.add(new OSMNode((i * 4 % 200) + 50, i % 200));
+                points.add(new OSMNode((i * 10 / 2 % 200) + 50, i / 2 % 200));
                 quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false, "vej6", null));
             }else{
-                quadTree.insert(new MapIcon(new Point2D.Float((i * 4 % 200) + 50, i % 200), "busIcon"));
+                quadTree.insert(new MapIcon(new OSMNode((i * 4 % 200) + 50, i % 200), "busIcon"));
             }
         }
 
@@ -117,18 +118,18 @@ public class QuadTreeTest {
 
     @Test(timeout = 500)
     public void testRangeSearch(){
-        ArrayList<Point2D> points = new ArrayList<>();
+        ArrayList<OSMNode> points = new ArrayList<>();
         Random r = new Random();
         Rectangle2D testBox = new Rectangle2D.Float(0,0,500,500);
         quadTree = new QuadTree(testBox,1000);
         for(int i = 0; i < 5000; i++){
             if(r.nextBoolean()) {
                 points.clear();
-                points.add(new Point2D.Float((i * 4 % 500) + 50, i % 500));
-                points.add(new Point2D.Float((i * 10 / 2 % 500) + 50, i / 2 % 500));
+                points.add(new OSMNode((i * 4 % 500) + 50, i % 500));
+                points.add(new OSMNode((i * 10 / 2 % 500) + 50, i / 2 % 500));
                 quadTree.insert(new Highway(PathCreater.createWay(points), 0, "road", false, "vej8", null));
             }else{
-                quadTree.insert(new MapIcon(new Point2D.Float((i * 4 % 200) + 50, i % 500),"busIcon"));
+                quadTree.insert(new MapIcon(new OSMNode((i * 4 % 200) + 50, i % 500),"busIcon"));
             }
         }
 

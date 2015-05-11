@@ -2,6 +2,7 @@ package Tests;
 
 import Model.MapFeatures.Highway;
 import Model.MapFeature;
+import Model.OSMNode;
 import Model.PathCreater;
 import org.junit.Before;
 import org.junit.Test;
@@ -25,18 +26,18 @@ public class FindNearestTest {
     public void setUp(){
         mapFeatures = new ArrayList<>();
 
-        ArrayList<Point2D> points = new ArrayList<>();
-        points.add(new Point2D.Float(0,0));
-        points.add(new Point2D.Float(10,10));
-        points.add(new Point2D.Float(15,10));
-        points.add(new Point2D.Float(50,60));
-        points.add(new Point2D.Float(70,80));
-        points.add(new Point2D.Float(75,80));
-        points.add(new Point2D.Float(20,30));
-        points.add(new Point2D.Float(30,40));
-        points.add(new Point2D.Float(40,40));
-        points.add(new Point2D.Float(15,75));
-        points.add(new Point2D.Float(25,50));
+        ArrayList<OSMNode> points = new ArrayList<>();
+        points.add(new OSMNode(0,0));
+        points.add(new OSMNode(10,10));
+        points.add(new OSMNode(15,10));
+        points.add(new OSMNode(50,60));
+        points.add(new OSMNode(70,80));
+        points.add(new OSMNode(75,80));
+        points.add(new OSMNode(20,30));
+        points.add(new OSMNode(30,40));
+        points.add(new OSMNode(40,40));
+        points.add(new OSMNode(15,75));
+        points.add(new OSMNode(25,50));
 
 
 
@@ -60,11 +61,11 @@ public class FindNearestTest {
                 float[] points = new float[6];
                 PathIterator pI = mp.getWay().getPathIterator(new AffineTransform());
                 pI.currentSegment(points);
-                Point2D p1 = new Point2D.Float(points[0], points[1]);
+                Point2D p1 = new OSMNode(points[0], points[1]);
                 pI.next();
                 while(!pI.isDone()) {
                     pI.currentSegment(points);
-                    Point2D p2 = new Point2D.Float(points[0], points[1]);
+                    Point2D p2 = new OSMNode(points[0], points[1]);
 
                     pI.next();
 

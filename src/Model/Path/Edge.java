@@ -2,6 +2,7 @@ package Model.Path;
 
 import Model.MapFeatures.Highway;
 import Model.Model;
+import Model.OSMNode;
 
 import java.awt.geom.Line2D;
 import java.io.Serializable;
@@ -124,6 +125,10 @@ public class Edge extends Line2D.Float implements Serializable {
 
     public Highway highway() {
         return highway;
+    }
+
+    public boolean hasTrafficSignals() {
+        return vertices.getVertex(v).hasTrafficSignal || vertices.getVertex(w).hasTrafficSignal;
     }
 
     /**
