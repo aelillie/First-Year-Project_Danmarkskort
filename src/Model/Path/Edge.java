@@ -14,7 +14,7 @@ public class Edge extends Line2D.Float implements Serializable {
     private static final long serialVersionUID = 128;
     private int v;
     private int w;
-    private double distance; //edge's distance
+    private double distance; //edge's distance in km
     private boolean oneWay;
     private boolean oneWayReverse;
     private Highway highway;
@@ -63,7 +63,29 @@ public class Edge extends Line2D.Float implements Serializable {
      * @return the driving time of the edge
      */
     public double driveTime() {
-        return (distance/highway.getMaxspeed())*60;
+        return (distance/highway.getMaxspeed())*60 + waitingTime();
+    }
+
+    public int waitingTime() {
+        OSMNode v1 = vertices.getVertex(v);
+        OSMNode w1 = vertices.getVertex(w);
+        int waitingTime = 0;
+        if (v1.trafficSignal == 1) {
+            waitingTime += 0.25; //15 sec average waiting time at a traffic signal
+            v1.trafficSignal++; //makes sure another this is only done once for this node
+        }
+        if (w1.trafficSignal == 1) {
+            waitingTime += 0.25;
+            w1.trafficSignal++;
+        }
+        return waitingTime;
+    }
+
+    public void resetWaitingCounter() {
+        OSMNode v1 = vertices.getVertex(v);
+        OSMNode w1 = vertices.getVertex(w);
+        if (v1.trafficSignal > 1) v1.trafficSignal = 1;
+        if (w1.trafficSignal > 1) w1.trafficSignal = 1;
     }
 
     /**
@@ -127,8 +149,19 @@ public class Edge extends Line2D.Float implements Serializable {
         return highway;
     }
 
-    public boolean hasTrafficSignals() {
-        return vertices.getVertex(v).hasTrafficSignal || vertices.getVertex(w).hasTrafficSignal;
+    private int hasTrafficSignals() {
+        OSMNode v_node = vertices.getVertex(v);
+        OSMNode w_node = vertices.getVertex(w);
+        int signalWaitTime = 0;
+        if (v_node.trafficSignal == 1) {
+            signalWaitTime += 15;
+            v_node.trafficSignal++;
+        }
+        if (w_node.trafficSignal == 1) {
+            signalWaitTime += 15;
+            w_node.trafficSignal++;
+        }
+        return signalWaitTime;
     }
 
     /**
