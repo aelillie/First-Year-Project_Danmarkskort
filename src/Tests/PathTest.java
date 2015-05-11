@@ -115,4 +115,11 @@ public class PathTest {
         Assert.assertEquals(expDistance, realDistance, DELTA);
     }
 
+    @Test
+    public void testRelaxTime(){
+
+    }
+
+
+
 }

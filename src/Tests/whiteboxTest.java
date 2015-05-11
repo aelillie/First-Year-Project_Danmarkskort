@@ -89,6 +89,8 @@ public class whiteboxTest {
         Assert.assertEquals(d0, PT.getValueTo()[932], DELTA);
         Assert.assertEquals(d1, PT.getValueTo()[1566], DELTA);
     }
+
+
     /**
      *
      */
@@ -119,6 +121,19 @@ public class whiteboxTest {
         Assert.assertEquals(d1 + d2 + d3, PT.getValueTo()[132], DELTA);
         Assert.assertEquals(d1 + d2 + d9, PT.getValueTo()[839], DELTA);
     }
+
+    @Test
+    public void branch3case2(){
+        PathTree PT = new PathTree(m.getDiGraph(), 1509, 1566);
+        PT.useShortestPath();
+        PT.useCarRoute();
+        PT.initiate();
+
+        Assert.assertTrue(checkForOcc(PT) == 1);
+        Assert.assertEquals(d1,PT.getValueTo()[1566], DELTA);
+    }
+
+
 
     public void shortest() {
         int s = 1509;
