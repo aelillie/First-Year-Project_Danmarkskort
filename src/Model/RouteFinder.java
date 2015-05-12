@@ -92,7 +92,7 @@ public class RouteFinder {
      * Finds the Nearest Highway from the MousePosition using distance from point to lineSegment
      * @param position Position of MousePointer
      */
-    public static Highway findNearestHighway(Point2D position, Collection<MapData> node)throws NoninvertibleTransformException{
+    public static Highway findNearestHighway(Point2D position, Collection<MapData> node){
 
         MapFeature champion = null;
         Line2D championLine = null;
@@ -107,6 +107,15 @@ public class RouteFinder {
                 pI.currentSegment(points);
                 Point2D p1 = new Point2D.Double(points[0], points[1]);
                 pI.next();
+                if(pI.isDone()) {
+                    pI.currentSegment(points);
+                    Point2D p2 = new Point2D.Double(points[0], points[1]);
+                    Line2D path = new Line2D.Double(p1, p2);
+                    if (check(path, championLine, position)) {
+                        champion = highway;
+                        championLine = path;
+                    }
+                }
                 while(!pI.isDone()) {
                     pI.currentSegment(points);
                     Point2D p2 = new Point2D.Double(points[0], points[1]);
@@ -114,19 +123,27 @@ public class RouteFinder {
                     Line2D path = new Line2D.Double(p1,p2);
                     p1 = p2;
                     pI.next();
-                    if(championLine == null) {
-                        championLine = path;
-                        champion = highway;
-                    }
-                    else if(path.ptSegDist(position) < championLine.ptSegDist(position)){   //Check if closer than champion line
-                        champion = highway;
-                        championLine = path;
 
+                    if (check(path, championLine, position)) {
+                        champion = highway;
+                        championLine = path;
                     }
+
                 }
             }
         }
         return (Highway) champion; // return closest highway.
+    }
+
+    private static boolean check(Line2D path, Line2D championLine, Point2D position){
+        if(championLine == null) {
+            return true;
+        }
+        else if(path.ptSegDist(position) < championLine.ptSegDist(position)){   //Check if closer than champion line
+            return true;
+
+        }
+        return false;
     }
 
     private int findClosestVertex(Point2D chosenPoint){
@@ -141,11 +158,9 @@ public class RouteFinder {
 
         //Find closest highway to point
         filterRoads(streets);
-        try {
-            way = findNearestHighway(chosenPoint, streets);
-        } catch (NoninvertibleTransformException e) {
-            e.printStackTrace();
-        }
+
+        way = findNearestHighway(chosenPoint, streets);
+
 
         //Find the closest vertex on the
         List<Edge> edges = way.getEdges();
