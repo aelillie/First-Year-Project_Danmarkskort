@@ -29,6 +29,7 @@ public class OSMHandlerTest {
     Collection<MapData> buildingList;
     Collection<MapData> iconList;
     Collection<MapData> naturalList;
+    Collection<MapData> railWaysList;
     Collection<MapData> mapFeatureList = new ArrayList<>();
 
     /**
@@ -46,9 +47,11 @@ public class OSMHandlerTest {
         buildingList = m.getVisibleBuildings(new Rectangle2D.Float(0, 0, 1000, 1000), true);
         iconList = m.getVisibleIcons(new Rectangle2D.Float(0, 0, 500, 500));
         naturalList = m.getVisibleNatural(new Rectangle2D.Float(0, 0, 500, 500), true);
+        railWaysList = m.getVisibleRailways(new Rectangle2D.Float(0, 0, 500, 500), true);
+
         streetList.addAll(m.getVisibleBigRoads(new Rectangle2D.Double(0,0,500,500), true));
         mapFeatureList.addAll(streetList);
-        mapFeatureList.addAll(m.getVisibleRailways(new Rectangle2D.Float(0,0,500,500), true));
+        mapFeatureList.addAll(railWaysList);
         mapFeatureList.addAll(buildingList);
         mapFeatureList.addAll(naturalList);
 
@@ -60,6 +63,7 @@ public class OSMHandlerTest {
         buildingList.clear();
         iconList.clear();
         naturalList.clear();
+        railWaysList.clear();
     }
 
     @Test

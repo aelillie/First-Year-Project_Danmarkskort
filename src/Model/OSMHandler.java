@@ -264,8 +264,8 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("place"))
                     naturalTree.insert(new Place(way, fetchOSMLayer(), keyValue_map.get("place")));
                 else if (keyValue_map.containsKey("railway")) {
-                    if (keyValue_map.containsKey("construction") && !keyValue_map.get("construction").equals("yes"))
-                        railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
+                    if (keyValue_map.containsKey("construction") && keyValue_map.get("construction").equals("yes")) ;
+                    else  railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 }
                 else if (keyValue_map.containsKey("route"))
                     railwayTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
