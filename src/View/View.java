@@ -27,32 +27,28 @@ public class View extends JFrame implements Observer {
     private AffineTransform transform;
     private Highway nearestNeighbor;
     private CanvasBounds bounds;
+
     private boolean antialias = true, showGrid = false, graph = false;
-    public void toggleGraph(){
-        graph = !graph;
-    }
     private Point dragEndScreen, dragStartScreen;
     private int zoomLevel;
     private int zoomFactor;
     private int checkOut = 1, checkIn = 0;
     private JTextField searchArea;
-    private JButton searchButton,closeDirectionListButton, zoomInButton, zoomOutButton, fullscreenButton, showRoutePanelButton, optionsButton, mapTypeButton;
+    private JButton searchButton,closeDirectionListButton, zoomInButton, zoomOutButton,
+            fullscreenButton, showRoutePanelButton, optionsButton, mapTypeButton;
     private RouteView routePanel;
     private MapTypePanel mapTypePanel = new MapTypePanel(this);
     private IconPanel iconPanel = new IconPanel();
     private OptionsPanel optionsPanel;
-    private JScrollPane resultPane = new JScrollPane();
-    private JScrollPane resultStartPane = new JScrollPane();
-    private JScrollPane resultEndPane = new JScrollPane();
-    private JScrollPane directionPane = new JScrollPane();
+    private JScrollPane resultPane = new JScrollPane(), resultStartPane = new JScrollPane();
+    private JScrollPane resultEndPane = new JScrollPane(), directionPane = new JScrollPane();
     private JList<Address> addressSearchResults;
     private JPanel closeDirectionList, travelTimePanel;
     private JLabel travelTimeLabel;
     private Point2D start,end;
     private Map<String,MapPointer> addressPointerMap = new HashMap<>();
 
-    private Iterable<Edge> shortestPath;
-    private Iterable<Edge> fastestPath;
+    private Iterable<Edge> shortestPath, fastestPath;
 
     private boolean isFullscreen = false;
     private DrawAttributeManager drawAttributeManager = new DrawAttributeManager();
@@ -72,7 +68,7 @@ public class View extends JFrame implements Observer {
         iconPanel.addObserverToIcons(this);
         routePanel = new RouteView(this, model);
         optionsPanel = new OptionsPanel(this,model);
-        /*Two helper functions to set up the AfflineTransform object and
+        /*Three helper functions to set up the AffineTransform object and
         make the buttons and layout for the frame*/
         setScale();
         makeGUI();
@@ -82,30 +78,32 @@ public class View extends JFrame implements Observer {
 
 
         //This sets up a listener for when the frame is re-sized.
-        this.getRootPane().addComponentListener(new ComponentAdapter() {
-            public void componentResized(ComponentEvent e) {
-                //Re-position the buttons.
-                zoomOutButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2 + 39, 30, 35);
-                fullscreenButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2 + 100, 30, 35);
-                zoomInButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2, 30, 35);
-                //mapMenu.setBounds(getWidth() - 300, getHeight() - getHeight() / 3 * 2 - 50, 130, 30);
-                mapTypePanel.setBounds(getWidth()-330, getHeight() - getHeight() / 3 * 2 - 45, 280, 200);
-                optionsPanel.setBounds(getWidth() - 220, getHeight() - (int) (getHeight() * 0.98), 150, 80);
-                optionsButton.setBounds(getWidth() - 60, getHeight() - (int) (getHeight() * 0.98), 39, 37);
-                mapTypeButton.setBounds(getWidth() - 49, getHeight() - getHeight() / 3 * 2 - 45, 39, 37);
-                iconPanel.setBounds(getWidth()- 214, (int)(getHeight()-getHeight()*0.98+70), 120, 180);
-
-                repaint();
-            }
-        });
+        createComponentListener();
 
         pack();
         canvas.requestFocusInWindow();
         model.addObserver(this);
     }
 
+    private void createComponentListener() {
+        this.getRootPane().addComponentListener(new ComponentAdapter() {
+            public void componentResized(ComponentEvent e) {
+                //Re-position the buttons.
+                zoomOutButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2 + 39, 30, 35);
+                fullscreenButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2 + 100, 30, 35);
+                zoomInButton.setBounds(getWidth() - 45, getHeight() - getHeight() / 3 * 2, 30, 35);
+                mapTypePanel.setBounds(getWidth()-330, getHeight() - getHeight() / 3 * 2 - 45, 280, 200);
+                optionsPanel.setBounds(getWidth() - 220, getHeight() - (int) (getHeight() * 0.98), 150, 80);
+                optionsButton.setBounds(getWidth() - 60, getHeight() - (int) (getHeight() * 0.98), 39, 37);
+                mapTypeButton.setBounds(getWidth() - 49, getHeight() - getHeight() / 3 * 2 - 45, 39, 37);
+                iconPanel.setBounds(getWidth()- 214, (int)(getHeight()-getHeight()*0.98+70), 120, 180);
+                repaint();
+            }
+        });
+    }
+
     /**
-     * Sets the scale for the afflineTransform object using to bounds from the osm file
+     * Sets the scale for the affineTransform object using to bounds from the osm file
      * Also sets up the frame size from screenSize
      */
     public void setScale() {
@@ -129,7 +127,7 @@ public class View extends JFrame implements Observer {
         double width = screenSize.getWidth();
         double height = screenSize.getHeight();
 
-        //Set up the scale amount for our Afflinetransform
+        //Set up the scale amount for our Affinetransform
         double xscale = width / model.getBbox().getWidth();
         double yscale = height / model.getBbox().getHeight();
 
@@ -156,11 +154,9 @@ public class View extends JFrame implements Observer {
 
     /**
      * Makes use of different layers to put JComponent on top
-     * of the canvas. Creates the GUI for the
+     * of the canvas. Creates the GUI for the application.
      */
     private void makeGUI() {
-        //retrieve the LayeredPane stored in the frame.
-        JLayeredPane layer = getLayeredPane();
         //Create the canvas and Components for GUI.
         canvas = new Canvas();
 
@@ -196,11 +192,14 @@ public class View extends JFrame implements Observer {
 
         });
 
-
         //Make the components for the frame.
         makeComponents();
+        addComponentsToLayers();
+    }
 
-
+    private void addComponentsToLayers() {
+        //retrieve the LayeredPane stored in the frame.
+        JLayeredPane layer = getLayeredPane();
         layer.add(canvas, new Integer(1));
         layer.add(searchArea, new Integer(2));
         layer.add(searchButton, new Integer(2));
@@ -220,6 +219,7 @@ public class View extends JFrame implements Observer {
         layer.add(directionPane, new Integer(2));
         layer.add(closeDirectionList, new Integer(2));
         layer.add(travelTimePanel, new Integer(3));
+
     }
 
     private void makeComponents() {
@@ -253,7 +253,7 @@ public class View extends JFrame implements Observer {
         makeShowRoutePanelButton();
 
         fullscreenButton = new JButton();
-        makeFrontButton(fullscreenButton,"fullscreenIcon","fullscreen",new Rectangle((int) preferred.getWidth() - 60, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 + 100), 39, 37));
+        makeFrontButton(fullscreenButton, "fullscreenIcon", "fullscreen", new Rectangle((int) preferred.getWidth() - 60, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 + 100), 39, 37));
 
         mapTypeButton = new JButton();
         makeFrontButton(mapTypeButton, "layerIcon", "mapType", new Rectangle((int) preferred.getWidth() - 49, (int) (preferred.getHeight() - preferred.getHeight() / 3 * 2 - 45), 39, 37));
@@ -261,7 +261,7 @@ public class View extends JFrame implements Observer {
     }
 
     /**
-     * The panel above the routedirection scrollpane displaying the time and the distance.
+     * The panel above the route direction scroll pane displaying the time and the distance.
      */
     private void makeCloseDirectionListPanel(){
         closeDirectionList = new JPanel();
@@ -279,7 +279,7 @@ public class View extends JFrame implements Observer {
 
         travelTimePanel = new JPanel();
         travelTimePanel.setOpaque(false);
-        travelTimePanel.setBounds(25,280,275,20);
+        travelTimePanel.setBounds(25, 280, 275, 20);
         travelTimePanel.setVisible(false);
         travelTimeLabel = new JLabel();
         travelTimeLabel.setHorizontalAlignment(SwingConstants.RIGHT);
@@ -295,19 +295,11 @@ public class View extends JFrame implements Observer {
         getContentPane().setBackground(DrawAttribute.whiteblue);
         canvas.repaint();
     }
-
-    /**
-     * Changes the configuration of how the view should draw objects.
-     */
     public void changeToColorblind(){
         drawAttributeManager.toggleColorblindView();
         getContentPane().setBackground(DrawAttribute.cl_whiteblue);
         canvas.repaint();
     }
-
-    /**
-     * Changes the configuration of how the view should draw objects.
-     */
     public void changeToTransport(){
         drawAttributeManager.toggleTransportView();
         getContentPane().setBackground(DrawAttribute.whiteblue);
@@ -315,8 +307,8 @@ public class View extends JFrame implements Observer {
     }
 
     /**
-     * The method called when directions needs to be added to the scrollpanel
-     * @param directionArray
+     * The method called when directions needs to be added to the scroll panel
+     * @param directionArray array of Strings
      */
     private void addToDirectionPane(String[] directionArray){
         JList<String> directionStringList = new JList<>(directionArray); //Everything to be added to the scrollpane is added as a JList
@@ -360,11 +352,11 @@ public class View extends JFrame implements Observer {
 
     /**
      * Adds the array of addresses to a specific scroll pane for text field.
-     * @param resultsArray
-     * @param textfield -
-     * @param scrollPane
-     * @param bounds
-     * @param iconType
+     * @param resultsArray Array of strings
+     * @param textfield - Text to be shown
+     * @param scrollPane Given scroll pane
+     * @param bounds Given bounds
+     * @param iconType Given icon type
      */
     public void addToResultPane(Address[] resultsArray, JTextField textfield, JScrollPane scrollPane, Rectangle bounds, String iconType){
         addressSearchResults = new JList<>(resultsArray);
@@ -378,10 +370,10 @@ public class View extends JFrame implements Observer {
     }
 
     /**
-     * Default method for creating buttons for the front GUI.
+     * Default method for creating buttons for the front right GUI.
      * @param button the button to be created
      * @param icon the string specifying the icon name
-     * @param actionCommand The actioncommand to be used in the controllers.
+     * @param actionCommand The action command to be used in the controllers.
      * @param bounds Where the button should be situated on the GUI
      */
     private void makeFrontButton(JButton button, String icon, String actionCommand, Rectangle bounds){
@@ -416,7 +408,7 @@ public class View extends JFrame implements Observer {
 
     /**
      * Used to remove a specific Pointer from the map.
-     * @param - String what type of pointer.
+     * @param iconType - String what type of pointer.
      */
     public void removePointer(String iconType){
         addressPointerMap.remove(iconType);
@@ -545,7 +537,7 @@ public class View extends JFrame implements Observer {
     }
 
 
-    //Get the center of the current size of the contentpane in lat and longtitude points
+    //Get the center of the current size of the contentpane in latitude and longitude points
     private Point2D getCenterLatLon(){
         Point2D.Double result = new Point2D.Double();
         Point2D.Double screenCenter = new Point2D.Double();
@@ -566,7 +558,7 @@ public class View extends JFrame implements Observer {
         double dy = currentCenter.getY() - newCenter.getY();
         panMapCoords(dx, dy);
     }
-    //Pan map with lat/lon, translate rather than preconcatenate
+    //Pan map with lat/lon, translate rather than pre concatenate
     public void panMapCoords(double dx, double dy){
         transform.translate(dx, dy);
         repaint();
@@ -578,8 +570,8 @@ public class View extends JFrame implements Observer {
     }
 
     /**
-     * The function of this method is to scale the view of the canvas by a factor given.
-     * then pans the view to remove the moving towards 0,0 coord.
+     * Scales the view of the canvas by a factor given,
+     * then pans the view to not move towards 0,0 coordinates.
      *
      * @param factor Double, the factor scaling
      */
@@ -594,15 +586,13 @@ public class View extends JFrame implements Observer {
             transform.preConcatenate(AffineTransform.getScaleInstance(factor, factor));
             pan(getWidth() * (1 - factor) / 2, getHeight() * (1 - factor) / 2);
             checkForZoomOut();
-        }System.out.println("level " + zoomLevel);
-        System.out.println("factor " + zoomFactor);
+        }
     }
 
     /**
      * Creates the inverse transformation of a point given.
-     * It simply transforms a device space coordinate back
+     * It transforms a device space coordinate back
      * to user space coordinates.
-     *
      * @param p1 Point2D mouse position
      * @return Point2D The point after inverse of the scale.
      * @throws NoninvertibleTransformException
@@ -622,7 +612,7 @@ public class View extends JFrame implements Observer {
     public void wheelZoom(MouseWheelEvent e) {
         try {
             int wheelRotation = e.getWheelRotation();
-            Insets x = getInsets();
+            Insets x = getInsets(); //Top bar space of the application
             Point p = e.getPoint();
             p.setLocation(p.getX() , p.getY()-x.top + x.bottom);
             if (wheelRotation > 0 && zoomLevel != 0) {
@@ -736,15 +726,12 @@ public class View extends JFrame implements Observer {
         this.antialias = antialias;
     }
 
-    /**
-     * Making that canvas look crisp and then back to shit.
-     */
     public void toggleAA() {
         antialias = !antialias;
         repaint();
     }
 
-    public void toggleTestMode(){
+    public void toggleQuadTreeTestMode(){
         bounds.toggleTestMode();
     }
 
@@ -790,8 +777,10 @@ public class View extends JFrame implements Observer {
 
     }
 
-    /*
-    finds shortest route between two points and stores it for drawing
+    /**
+     * Finds shortest route between two points and stores it for drawing
+     * @param start - Point2D start point
+     * @param end - Point2D end point
      */
     public void findShortestRoute(Point2D start, Point2D end){
         fastestPath = null;
@@ -813,6 +802,10 @@ public class View extends JFrame implements Observer {
 
     }
 
+    /**
+     * Sets info in the route panel about the given path
+     * @param routeFinder
+     */
     private void setTravelInfo(RouteFinder routeFinder) {
         if(routeFinder == null){
             travelTimeLabel.setText("");
@@ -873,7 +866,6 @@ public class View extends JFrame implements Observer {
     }
 
     private void filterRoads(Collection<MapData> before){
-
         for(Iterator<MapData> it = before.iterator(); it.hasNext();){
             Highway highway = (Highway) it.next();
             if(highway.getValue().equals("footway") || highway.getValue().equals("cycleway") ||
@@ -895,14 +887,13 @@ public class View extends JFrame implements Observer {
         closeDirectionList.setVisible(false);
         travelTimePanel.setVisible(false);
         travelTimeLabel.setVisible(false);
-
     }
 
-
+    //Check what travel type is chosen and sets it for the route finder.
     private void travelMethod(RouteFinder routeFinder){
         routeFinder.carPressed(); //by default
         HashMap<JButton, Boolean> buttonMap = routePanel.getButtonDownMap();
-        for (JButton button : buttonMap.keySet()) {  //Check what travel type is chosen a set it for the route finder.
+        for (JButton button : buttonMap.keySet()) {
             boolean isPressed = buttonMap.get(button);
             if (button.equals(routePanel.getBicycleButton()) && isPressed) routeFinder.bikePressed();
             else if (button.equals(routePanel.getFootButton()) && isPressed) routeFinder.walkPressed();
@@ -957,11 +948,8 @@ public class View extends JFrame implements Observer {
      */
     class Canvas extends JComponent {
         public static final long serialVersionUID = 4;
-        Stroke min_value = new BasicStroke(Float.MIN_VALUE);
-        private Collection<MapFeature> mapFStreets;
-        private Collection<MapFeature> mapFAreas;
+        private Collection<MapFeature> mapFStreets, mapFAreas, coastLines;
         private Collection<MapIcon> mapIcons;
-        private Collection<MapFeature> coastLines;
         private DrawAttribute drawAttribute;
         private Graphics2D g;
         private boolean sorted;
@@ -975,19 +963,16 @@ public class View extends JFrame implements Observer {
             g.setTransform(transform);
             if (antialias) g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
 
-            g.setStroke(min_value); //Just for good measure.
+            g.setStroke(DrawAttribute.s00); //Minimum stroke
 
-
+            //Draws coastlines first
             for (MapFeature coastLine : coastLines) {
                 setDrawAttribute(coastLine.getValueName());
                 g.setColor(drawAttribute.getColor());
                 g.fill(coastLine.getWay());
             }
 
-            g.setColor(Color.BLACK);
-
-
-            //Draw areas first
+            //Draw areas
             for (MapFeature mapFeature : mapFAreas) {
                 try {
                     setDrawAttribute(mapFeature.getValueName());
@@ -1023,7 +1008,7 @@ public class View extends JFrame implements Observer {
                 }
             }
 
-           //Then draw Boundaries for Streets
+           //Then draw boundaries for streets
             for(MapFeature street : mapFStreets){
                 if (zoomLevel > 13) {
                     g.setColor(Color.BLACK);
@@ -1036,10 +1021,8 @@ public class View extends JFrame implements Observer {
                     g.draw(street.getWay());
                 }
             }
-
-
             //Draw the fillers on top of boundaries and areas
-               for (MapFeature mapFeature : mapFStreets) {
+            for (MapFeature mapFeature : mapFStreets) {
                 setDrawAttribute(mapFeature.getValueName());
                 if (zoomLevel >= drawAttribute.getZoomLevel()) {
                     g.setColor(drawAttribute.getColor());
@@ -1049,18 +1032,16 @@ public class View extends JFrame implements Observer {
                         else  g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
                     }
                     else {
-                        if (mapFeature instanceof Highway) {
+                        if (mapFeature instanceof Highway)
                             g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + zoomFactor]);
-                        } else {
+                        else
                             g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId()]);
-                        }
                     }
                     g.draw(mapFeature.getWay());
                 }
             }
 
-
-            //drawing the graph of vertices and edges if enabled
+            //Draws the graph of vertices and edges (if enabled)
             if(graph) {
                 for (MapFeature street : mapFStreets) {
                     if (!(street instanceof Highway)) continue;
@@ -1114,8 +1095,7 @@ public class View extends JFrame implements Observer {
                 }
             }
 
-            g.setColor(Color.BLACK);
-            g.setStroke(new BasicStroke(0.0005f));
+            g.setStroke(DrawAttribute.s05);
 
 
             if(showGrid) {
@@ -1140,7 +1120,7 @@ public class View extends JFrame implements Observer {
                 g.draw(windowBounds);
             }
 
-            Scalebar scalebar = new Scalebar(g, zoomLevel, View.this, transform);
+            new Scalebar(g, zoomLevel, View.this, transform);
 
 
             //Draws chosen searchResult (either street or address) as well as start or endpoint address
@@ -1164,6 +1144,9 @@ public class View extends JFrame implements Observer {
             updateStreetName();
         }
 
+        /*
+        Retrieves data from the quad trees
+         */
         private void getData(){
             mapFStreets = new ArrayList<>();
             mapFAreas = new ArrayList<>();
@@ -1282,5 +1265,9 @@ public class View extends JFrame implements Observer {
 
     public void setShortestPath(Iterable<Edge> it ) { shortestPath = it;}
     public void setFastestPath(Iterable<Edge> it ) { fastestPath = it; }
+    public void toggleGraph(){
+        graph = !graph;
+    }
+
 
 }

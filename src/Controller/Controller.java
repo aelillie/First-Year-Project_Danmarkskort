@@ -133,7 +133,7 @@ public class Controller extends MouseAdapter implements ActionListener {
                         break;
                     case't':
                         if(e.isAltDown()) {
-                            view.toggleTestMode();
+                            view.toggleQuadTreeTestMode();
                             view.repaint();
                         }
                         break;
