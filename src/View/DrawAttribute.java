@@ -126,7 +126,7 @@ public class DrawAttribute {
     public static Color greenblue = new Color(102,205,170);
     public static Color whitegreen = new Color(144,238,144);
     public static Color brown = new Color(139,69,19);
-    public static Color lightbrown = new Color(93, 40, 13);
+    public static Color lightbrown = new Color(138, 60, 20);
     public static Color ground = new Color(238,238,238);
     public static Color teal = new Color(0,128,128);
     public static Color moccasin = new Color(255, 228, 181);
