@@ -130,6 +130,7 @@ public class DrawAttribute {
     public static Color ground = new Color(238,238,238);
     public static Color teal = new Color(0,128,128);
     public static Color moccasin = new Color(255, 228, 181);
+    public static Color babyPurple = new Color(153,102,204);
 
 
     //Predefined colors for colorblind view

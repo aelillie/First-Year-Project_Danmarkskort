@@ -4,7 +4,6 @@ import Controller.SearchResultMouseHandler;
 import Model.*;
 import Model.MapFeatures.Highway;
 import Model.MapFeatures.Route;
-import Model.MapFeatures.Waterway;
 import Model.Path.Edge;
 import Model.QuadTree.QuadTree;
 
@@ -15,7 +14,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
@@ -1109,16 +1107,16 @@ public class View extends JFrame implements Observer {
 
             //Draw the shortestPath if not null
             if (shortestPath != null) {
-                g.setColor(DrawAttribute.cl_pink);
-                g.setStroke(DrawAttribute.streetStrokes[5 + zoomFactor]);
+                g.setColor(DrawAttribute.babyPurple);
+                g.setStroke(DrawAttribute.streetStrokes[6 + zoomFactor]);
                 for (Edge e : shortestPath) {
                     g.draw(e);
                 }
             }
             //Draw the fastest path if not null
             if (fastestPath != null) {
-                g.setColor(DrawAttribute.cl_blue4);
-                g.setStroke(DrawAttribute.streetStrokes[5 + zoomFactor]);
+                g.setColor(DrawAttribute.babyPurple);
+                g.setStroke(DrawAttribute.streetStrokes[6 + zoomFactor]);
                 for (Edge e : fastestPath) {
                     g.draw(e);
                 }
@@ -1131,7 +1129,7 @@ public class View extends JFrame implements Observer {
             if(showGrid) {
                 List<QuadTree> trees = model.getQuadTrees();
                 g.setColor(Color.green);
-                for (Rectangle2D rec : trees.get(6).getNodeRects())
+                for (Rectangle2D rec : trees.get(0).getNodeRects())
                     g.draw(rec);
             }
 
@@ -1182,7 +1180,7 @@ public class View extends JFrame implements Observer {
             //Get a rectangle of the part of the map shown on screen
             bounds.updateBounds(getVisibleRect());
             Rectangle2D windowBounds = bounds.getBounds();
-            sorted = zoomLevel > 11;
+            sorted = zoomLevel >= 11;
 
             coastLines = (Collection<MapFeature>) (Collection<?>) model.getVisibleCoastLines(windowBounds);
 
