@@ -201,11 +201,8 @@ public class OSMHandler extends DefaultHandler {
                 }
                 else if (keyValue_map.containsKey("waterway"))
                     naturalTree.insert(new Waterway(way, fetchOSMLayer(), keyValue_map.get("waterway"), isArea));
-                else if (keyValue_map.containsKey("leisure")) {
-                    if (keyValue_map.get("leisure").equals("park"))
-                        naturalTree.insert(new Leisure(way, fetchOSMLayer(), "park"));
-                    else buildingTree.insert(new Leisure(way, fetchOSMLayer(), keyValue_map.get("leisure")));
-                }
+                else if (keyValue_map.containsKey("leisure"))
+                    naturalTree.insert(new Leisure(way, fetchOSMLayer(), keyValue_map.get("leisure")));
                 else if (keyValue_map.containsKey("landuse")) {
                     if (keyValue_map.get("landuse").equals("forest") && (MapCalculator.exceedsPathLength(wayCoords, 12))) {
                         bigForestTree.insert(new Landuse(way, fetchOSMLayer(), "forest", true));

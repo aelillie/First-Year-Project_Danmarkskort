@@ -18,7 +18,6 @@ public class Natural extends MapFeature {
         if (value.equals("water")) layer_value = 6;
         else if (value.equals("grassland")) layer_value = 8;
         else if (value.equals("wood")) layer_value = 9;
-
     }
 
     @Override

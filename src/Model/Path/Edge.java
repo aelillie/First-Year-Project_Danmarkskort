@@ -139,7 +139,7 @@ public class Edge extends Line2D.Float implements Serializable {
         OSMNode w_node = vertices.getVertex(w);
         double signalWaitTime = 0;
         if (w_node.trafficSignal == trafficLightType) {
-            signalWaitTime += 0.25; //25 % of a minute = 15 seconds
+            signalWaitTime += 0.3; //30 % of a minute = 18 seconds
         }
         return signalWaitTime;
     }
