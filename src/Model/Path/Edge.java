@@ -3,6 +3,7 @@ package Model.Path;
 import Model.MapFeatures.Highway;
 import Model.Model;
 import Model.OSMNode;
+import Model.ValueName;
 
 import java.awt.geom.Line2D;
 import java.io.Serializable;
@@ -14,7 +15,7 @@ public class Edge extends Line2D.Float implements Serializable {
     private static final long serialVersionUID = 128;
     private int v;
     private int w;
-    private double distance; //edge's distance
+    private double distance; //edge's distance in km
     private boolean oneWay;
     private boolean oneWayReverse;
     private Highway highway;
@@ -63,8 +64,9 @@ public class Edge extends Line2D.Float implements Serializable {
      * @return the driving time of the edge
      */
     public double driveTime() {
-        return (distance/highway.getMaxspeed())*60;
+        return (distance/highway.getMaxspeed()) * 60 + trafficSignal(ValueName.TRAFFICLIGHT_HIGHWAY);
     }
+
 
     /**
      * Returns the time of walking from either endpoint to the other
@@ -72,7 +74,7 @@ public class Edge extends Line2D.Float implements Serializable {
      * @return the walking time of the edge
      */
     public double walkTime() {
-        return (distance/5.0)*60;
+        return (distance/5.0)*60 + trafficSignal(ValueName.TRAFFICLIGHT_PEDESTRIAN);
     }
 
     /**
@@ -81,7 +83,7 @@ public class Edge extends Line2D.Float implements Serializable {
      * @return the biking time of the edge
      */
     public double bikeTime() {
-        return (distance/15.0)*60;
+        return (distance/15.0)*60 + trafficSignal(ValueName.TRAFFICLIGHT_HIGHWAY);
     }
 
     /**
@@ -127,8 +129,19 @@ public class Edge extends Line2D.Float implements Serializable {
         return highway;
     }
 
-    public boolean hasTrafficSignals() {
-        return vertices.getVertex(v).hasTrafficSignal || vertices.getVertex(w).hasTrafficSignal;
+    /**
+     * Adds travel time for the current edge if there is a traffic light
+     * Average waiting time estimated to 15 seconds per traffic light
+     * @param trafficLightType Either a traffic light for pedestrians or for cars
+     * @return 0 if no traffic light, 15 if traffic light present
+     */
+    public double trafficSignal(ValueName trafficLightType) {
+        OSMNode w_node = vertices.getVertex(w);
+        double signalWaitTime = 0;
+        if (w_node.trafficSignal == trafficLightType) {
+            signalWaitTime += 0.25; //25 % of a minute = 15 seconds
+        }
+        return signalWaitTime;
     }
 
     /**

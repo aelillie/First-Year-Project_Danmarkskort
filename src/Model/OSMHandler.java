@@ -144,8 +144,9 @@ public class OSMHandler extends DefaultHandler {
                     if(v.equals("bus_stop"))
                         isBusstop = true;
                     else if(k.equals("highway") && v.equals("traffic_signals"))
-                        node_longMap.get(thisNodeId).hasTrafficSignal = true;
-                }
+                        node_longMap.get(thisNodeId).trafficSignal = ValueName.TRAFFICLIGHT_HIGHWAY;
+                }else if (k.equals("crossing") && v.equals("traffic_signals"))
+                    node_longMap.get(thisNodeId).trafficSignal = ValueName.TRAFFICLIGHT_PEDESTRIAN;
                 if(k.equals("subway")&& v.equals("yes")) isMetro = true;
                 if(k.equals("network") && v.equals("S-Tog")) isSTog = true;
                 if(k.equals("addr:street")){
@@ -230,12 +231,14 @@ public class OSMHandler extends DefaultHandler {
                     naturalTree.insert(new Historic(way, fetchOSMLayer(), keyValue_map.get("historic")));
                 else if (keyValue_map.containsKey("craft"))
                     naturalTree.insert(new Craft(way, fetchOSMLayer(), keyValue_map.get("craft")));
-                else if (keyValue_map.containsKey("power"))
-                    buildingTree.insert(new Power(way, fetchOSMLayer(), keyValue_map.get("power")));
+                else if (keyValue_map.containsKey("power")) {
+                    if (keyValue_map.get("power").equals("plant") || keyValue_map.get("power").equals("substation"))
+                        buildingTree.insert(new Power(way, fetchOSMLayer(), keyValue_map.get("power")));
+                }
                 else if (keyValue_map.containsKey("emergency"))
                     naturalTree.insert(new Emergency(way, fetchOSMLayer(), keyValue_map.get("emergency")));
                 else if (keyValue_map.containsKey("aeroway"))
-                    buildingTree.insert(new Aeroway(way, fetchOSMLayer(), keyValue_map.get("aeroway")));
+                    naturalTree.insert(new Aeroway(way, fetchOSMLayer(), keyValue_map.get("aeroway")));
                 else if (keyValue_map.containsKey("amenity")) {
                     buildingTree.insert(new Amenity(way, fetchOSMLayer(), keyValue_map.get("amenity"), keyValue_map.containsKey("building")));
                     if (keyValue_map.get("amenity").equals("parking")) {

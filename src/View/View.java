@@ -4,7 +4,6 @@ import Controller.SearchResultMouseHandler;
 import Model.*;
 import Model.MapFeatures.Highway;
 import Model.MapFeatures.Route;
-import Model.MapFeatures.Waterway;
 import Model.Path.Edge;
 import Model.QuadTree.QuadTree;
 
@@ -15,7 +14,6 @@ import javax.swing.filechooser.FileNameExtensionFilter;
 import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.*;
-import java.math.BigDecimal;
 import java.text.DecimalFormat;
 import java.util.*;
 import java.util.List;
@@ -220,8 +218,8 @@ public class View extends JFrame implements Observer {
         layer.add(iconPanel, new Integer(3));
         layer.add(optionsPanel, new Integer(2));
         layer.add(directionPane, new Integer(2));
-        layer.add(closeDirectionList, new Integer(3));
-        layer.add(travelTimePanel, new Integer(4));
+        layer.add(closeDirectionList, new Integer(2));
+        layer.add(travelTimePanel, new Integer(3));
     }
 
     private void makeComponents() {
@@ -498,6 +496,9 @@ public class View extends JFrame implements Observer {
         routePanel.showRoutePanel();
         if(!routePanel.isVisible()) closeDirectionList();
         if(mapTypePanel.isVisible()) mapTypePanel.setVisible(false);
+        if(resultPane.isVisible()) resultPane.setVisible(false);
+        if(routePanel.getRp().getStartAddrScrollpane().isVisible()) routePanel.getRp().getStartAddrScrollpane().setVisible(false);
+        if(routePanel.getRp().getEndAddrScrollpane().isVisible()) routePanel.getRp().getEndAddrScrollpane().setVisible(false);
         if(optionsPanel.isVisible()) {
             optionsPanel.setVisible(false);
             if(iconPanel.isVisible()) iconPanel.setVisible(false);
@@ -792,7 +793,7 @@ public class View extends JFrame implements Observer {
             RoutePlanner routePlanner = new RoutePlanner(fastestPath); //create a routePlanner to get direction for path
             addToDirectionPane(routePlanner.getDirections());
         }catch(IllegalArgumentException | NullPointerException e){
-            addToDirectionPane(new String[]{"No fastest path between the two locations was Found"});
+            addToDirectionPane(new String[]{"No fastest path between the two locations was found"});
             setTravelInfo(null);
             fastestPath = null;
 
@@ -816,7 +817,7 @@ public class View extends JFrame implements Observer {
             RoutePlanner routePlanner = new RoutePlanner(shortestPath);
             addToDirectionPane(routePlanner.getDirections());
         }catch(IllegalArgumentException  | NullPointerException e){
-            addToDirectionPane(new String[]{"No Shortest Path between the two locations was Found"});
+            addToDirectionPane(new String[]{"No shortest path between the two locations was found"});
             setTravelInfo(null);
             shortestPath = null;
         }
@@ -857,7 +858,7 @@ public class View extends JFrame implements Observer {
             travelDistance *= 1000;
             travelTimeLabel.setText(String.format("Travel time: " + timeString + "   Distance: %.0f m", travelDistance  ));
         } else
-        travelTimeLabel.setText(String.format("Travel time: "  + timeString + "   Distance: %.2f km", travelTime, travelDistance  ));
+            travelTimeLabel.setText(String.format("Travel time: "  + timeString + "   Distance: %.2f km", travelDistance  ));
         travelTimePanel.setVisible(true);
         travelTimeLabel.setVisible(true);
     }
@@ -1107,16 +1108,20 @@ public class View extends JFrame implements Observer {
 
             //Draw the shortestPath if not null
             if (shortestPath != null) {
-                g.setColor(DrawAttribute.cl_darkorange);
-                g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
+                int i = 5;
+                if (zoomLevel < 8) i = 9;
+                g.setColor(DrawAttribute.cl_pink);
+                g.setStroke(DrawAttribute.streetStrokes[i + zoomFactor]);
                 for (Edge e : shortestPath) {
                     g.draw(e);
                 }
             }
             //Draw the fastest path if not null
             if (fastestPath != null) {
+                int i = 5;
+                if (zoomLevel < 8) i = 9;
                 g.setColor(DrawAttribute.cl_blue4);
-                g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
+                g.setStroke(DrawAttribute.streetStrokes[i + zoomFactor]);
                 for (Edge e : fastestPath) {
                     g.draw(e);
                 }
@@ -1129,13 +1134,13 @@ public class View extends JFrame implements Observer {
             if(showGrid) {
                 List<QuadTree> trees = model.getQuadTrees();
                 g.setColor(Color.green);
-                for (Rectangle2D rec : trees.get(6).getNodeRects())
+                for (Rectangle2D rec : trees.get(0).getNodeRects())
                     g.draw(rec);
             }
 
 
-            //Draw the icons if zoomlevel 15 or more
-            if (zoomLevel >= 15) {
+            //Draw the icons
+            if (zoomLevel > 13) {
                 for (MapIcon mapIcon : mapIcons) {
                     if(mapIcon.isVisible()) {
                         mapIcon.draw(g, transform);
@@ -1180,35 +1185,45 @@ public class View extends JFrame implements Observer {
             //Get a rectangle of the part of the map shown on screen
             bounds.updateBounds(getVisibleRect());
             Rectangle2D windowBounds = bounds.getBounds();
-            sorted = zoomLevel > 11;
+            sorted = zoomLevel >= 11;
 
             coastLines = (Collection<MapFeature>) (Collection<?>) model.getVisibleCoastLines(windowBounds);
 
             Collection < MapData > bigRoads = model.getVisibleBigRoads(windowBounds, sorted);
             mapFStreets = (Collection<MapFeature>)(Collection<?>) bigRoads;
 
-            if (zoomLevel > 5)
+            if (zoomLevel > 4)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
 
-            if(zoomLevel > 7)
+            if (zoomLevel > 7)
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>)model.getVisibleNatural(windowBounds, sorted));
+
+            if(zoomLevel > 7) 
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleStreets(windowBounds, sorted));
 
-            if(zoomLevel > 9)
+            if (drawAttributeManager.isTransport())
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleRailways(windowBounds, sorted));
+            else if(zoomLevel > 7) {
+                mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleRailways(windowBounds, sorted));
+            }
 
 
-            if (zoomLevel > 8)
-                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>)model.getVisibleNatural(windowBounds, sorted));
 
             if(zoomLevel > 10)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBuildings(windowBounds, sorted));
+            
 
 
             if(zoomLevel > 13)
                 mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds);
+            
 
-
-            mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigForests(windowBounds, sorted));
+            if (!drawAttributeManager.isTransport())
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigForests(windowBounds, sorted));
+            else {
+                if (zoomLevel > 7)
+                    mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigForests(windowBounds, sorted));
+            }
             mapFAreas.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleBikLakes(windowBounds, sorted));
 
         }

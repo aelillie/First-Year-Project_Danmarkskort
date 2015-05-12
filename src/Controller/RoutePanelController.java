@@ -368,4 +368,7 @@ public class RoutePanelController implements ActionListener{
 
     public HashMap<JButton, Boolean> getButtonDownMap(){ return buttonDownMap;}
 
+    public JScrollPane getEndAddrScrollpane() { return endAddrScrollpane;}
+
+    public JScrollPane getStartAddrScrollpane() { return startAddrScrollpane;}
 }

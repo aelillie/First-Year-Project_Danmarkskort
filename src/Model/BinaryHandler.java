@@ -1,12 +1,10 @@
 package Model;
 
-import Model.MapFeatures.Coastline;
-import Model.QuadTree.QuadTree;
 import Model.Path.Graph;
 import Model.Path.Vertices;
+import Model.QuadTree.QuadTree;
 
 import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.util.ArrayList;
@@ -32,7 +30,7 @@ public class BinaryHandler{
         out.writeObject(model.getBbox().getBounds2D());
         loadingScreen.updateLoadBar(5);
 
-        loadingScreen.updateLoadBar(20);
+        loadingScreen.updateLoadBar(10);
 
         out.writeObject(model.getOSMReader().getStreetMap());
         loadingScreen.updateLoadBar(35);
@@ -78,16 +76,16 @@ public class BinaryHandler{
 
         LoadingScreen loadingScreen = new LoadingScreen();
 
-        loadingScreen.updateLoadBar(15);
+        loadingScreen.updateLoadBar(5);
 
         model.getOSMReader().setStreetMap((Map<Address, List<Path2D>>) in.readObject());
 
-        loadingScreen.updateLoadBar(25);
+        loadingScreen.updateLoadBar(20);
 
 
         model.getOSMReader().setAddressList((ArrayList<Address>) in.readObject());
 
-        loadingScreen.updateLoadBar(55);
+        loadingScreen.updateLoadBar(40);
         model.getOSMReader().setGraph((Graph) in.readObject());
         loadingScreen.updateLoadBar(65);
         model.getOSMReader().setVertices((Vertices) in.readObject());

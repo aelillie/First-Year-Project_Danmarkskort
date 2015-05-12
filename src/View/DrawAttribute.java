@@ -84,6 +84,10 @@ public class DrawAttribute {
     public static Stroke r43 = new BasicStroke(0.0038f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     public static Stroke r44 = new BasicStroke(0.004f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
     public static Stroke r45 = new BasicStroke(0.005f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r46 = new BasicStroke(0.0054f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r47 = new BasicStroke(0.0056f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r48 = new BasicStroke(0.0058f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
+    public static Stroke r49 = new BasicStroke(0.006f, BasicStroke.CAP_ROUND, BasicStroke.JOIN_ROUND);
 
 
     public static Stroke d0 = new BasicStroke(0.00001f, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER, 10.0f, new float[]{0.0001f}, 0.00001f); //Metro
@@ -130,6 +134,7 @@ public class DrawAttribute {
     public static Color ground = new Color(238,238,238);
     public static Color teal = new Color(0,128,128);
     public static Color moccasin = new Color(255, 228, 181);
+    public static Color babyPurple = new Color(153,102,204);
 
 
     //Predefined colors for colorblind view
@@ -165,7 +170,8 @@ public class DrawAttribute {
                                                 grey, white, bloodred, red, skincolor, bluegreen, orange, pink, sand, whiteblue, greenblue, whitegreen, brown};
     public static Stroke[] basicStrokes = new Stroke[]{s00, s01, s02, s03, s04, s05, s06, s07, s08, s09, s10, s11,s12, s13, s14, s15};
     public static Stroke[] dashedStrokes = new Stroke[] {d0, d1, d2, d3, d4, d5, d6};
-    public static Stroke[] streetStrokes = new Stroke[] {r00, r01, r02, r03, r04, r05, r06, r07, r08, r09, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19, r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31, r32, r33, r34, r35, r36, r37, r38, r39, r40, r41, r42, r43, r44, r45};
+    public static Stroke[] streetStrokes = new Stroke[] {r00, r01, r02, r03, r04, r05, r06, r07, r08, r09, r10, r11, r12, r13, r14, r15, r16, r17, r18, r19,
+            r20, r21, r22, r23, r24, r25, r26, r27, r28, r29, r30, r31, r32, r33, r34, r35, r36, r37, r38, r39, r40, r41, r42, r43, r44, r45, r46, r47, r48, r49};
 
     public boolean isDashed() {
         return dashed;

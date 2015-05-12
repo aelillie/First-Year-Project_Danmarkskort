@@ -294,5 +294,5 @@ public class RouteView extends JPanel{
 
     public HashMap<JButton, Boolean> getRouteTypeButtonDownMap() { return routeButtonDownMap; }
 
-
+    public RoutePanelController getRp() {return rp;}
 }

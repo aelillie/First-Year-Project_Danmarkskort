@@ -28,7 +28,5 @@ public class Power extends MapFeature {
             isArea = true;
             setValueName(ValueName.POWER_AREA);
         }
-        else
-            setValueName(ValueName.POWER);
     }
 }
