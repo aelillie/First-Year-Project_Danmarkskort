@@ -26,13 +26,13 @@ public class ZoomCalculator {
     public static int calculateZoom(double scale){
         double[] scaleNiveau = makeValues(20);
         double distance =  Math.abs(scaleNiveau[0] - scale);
-
+        if(scale == Double.NEGATIVE_INFINITY) return 0;
         int idx = 0;
         //Find the closest value
         for(int c = 1; c < scaleNiveau.length; c++){
             double cDistance = Math.abs(scaleNiveau[c] - scale);
-            if(cDistance < distance){
-                idx = c;
+            if(cDistance <= distance){
+                idx = c+1;
                 distance = cDistance;
             }
 

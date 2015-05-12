@@ -1,26 +1,22 @@
 package Tests;
 
+import Model.*;
 import Model.MapFeatures.Highway;
-import Model.MapFeature;
-import Model.OSMNode;
-import Model.PathCreater;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
-import java.awt.geom.Line2D;
-import java.awt.geom.PathIterator;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 /**
  * Created by Kevin on 08-04-2015.
  */
 public class FindNearestTest {
-    ArrayList<MapFeature> mapFeatures;
+    ArrayList<MapData> mapFeatures;
 
     @Before
     public void setUp(){
@@ -49,60 +45,54 @@ public class FindNearestTest {
 
     }
 
-    private MapFeature findNearest(Point2D position){
-        //Rectangle2D rec = new Rectangle2D.Double(position.getX(), position.getY(),0,0);
-
-
-        MapFeature champion = null;
-        Line2D championLine = null;
-
-        for (MapFeature mp : mapFeatures) {
-            if (mp instanceof Highway) {
-                float[] points = new float[6];
-                PathIterator pI = mp.getWay().getPathIterator(new AffineTransform());
-                pI.currentSegment(points);
-                Point2D p1 = new OSMNode(points[0], points[1]);
-                pI.next();
-                while(!pI.isDone()) {
-                    pI.currentSegment(points);
-                    Point2D p2 = new OSMNode(points[0], points[1]);
-
-                    pI.next();
-
-                    Line2D path = new Line2D.Double(p1,p2);
-                    p1 = p2;
-                    if(championLine == null) {
-                        championLine = path;
-                        champion = mp;
-                    }
-
-                    else if(path.ptSegDist(position) < championLine.ptSegDist(position)){
-                        champion = mp;
-                        championLine = path;
-
-                    }
-                }
-            }
-
-        }
-
-
-        return champion;
-
-    }
-
 
     @Test
     public void findNearest(){
 
-        MapFeature champion = findNearest(new Point(8,5));
+        MapFeature champion = RouteFinder.findNearestHighway(new Point(8, 5), mapFeatures);
 
         assertEquals("H1", champion.getValue());
 
 
-        champion = findNearest(new Point(70,75));
+        champion = RouteFinder.findNearestHighway(new Point2D.Double(70, 75), mapFeatures);
 
         assertEquals("H2", champion.getValue());
+    }
+
+
+    @Test (expected = NullPointerException.class)
+    public void noClosestPath(){
+
+        MapFeature champion = RouteFinder.findNearestHighway(new Point(3,5), new ArrayList<>());
+
+        if(champion == null)
+            throw new NullPointerException("no ways given");
+    }
+
+    @Test
+    public void twoEqualClose(){
+        ArrayList<OSMNode> points = new ArrayList<>();
+        points.add(new OSMNode(0,0));
+        points.add(new OSMNode(0,10));
+        points.add(new OSMNode(10,0));
+        points.add(new OSMNode(10,10));
+
+        ArrayList<MapData> twoPaths = new ArrayList<>();
+
+        twoPaths.add(new Highway(PathCreater.createWay(points.subList(0, 1)), 0 , "H1", false, "vej1", null));
+
+        twoPaths.add(new Highway(PathCreater.createWay(points.subList(2,3)), 0 , "H2", false, "vej2", null));
+
+        MapFeature champion = RouteFinder.findNearestHighway(new Point2D.Double(5,5), twoPaths);
+
+
+
+        assertTrue(champion != null);
+        String value = champion.getValue();
+
+        assertTrue(value.equals("H1") || value.equals("H2"));
+
+
     }
 
 
