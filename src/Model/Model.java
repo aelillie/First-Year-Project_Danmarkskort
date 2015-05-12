@@ -35,14 +35,11 @@ public class Model extends Observable implements Serializable {
     }
 
     public void loadFile(String filename, InputStream inputStream) throws IOException {
-
-        long time = System.nanoTime();
         if (filename.endsWith(".osm")) parseOSM(inputStream);
         else if (filename.endsWith(".zip")) parseZIP(inputStream);
         else if (filename.endsWith(".bin")) loadBin(inputStream);
         else System.err.println("File not recognized");
         inputStream.close(); //closes current input stream and releases any system resources associated with it
-        System.out.printf("Complete model load time: %d ms\n", (System.nanoTime() - time) / 1000000);
     }
 
 
@@ -56,7 +53,6 @@ public class Model extends Observable implements Serializable {
         }
     }
 
-
     private void parseZIP(InputStream inputStream) {
         try (ZipInputStream zip = new ZipInputStream(new BufferedInputStream(inputStream))) {
             zip.getNextEntry();
@@ -69,17 +65,13 @@ public class Model extends Observable implements Serializable {
         }
     }
 
-
-
     private void loadBin(InputStream inputStream) {
         try {
             BinaryHandler.load(inputStream);
-
         } catch (ClassNotFoundException | IOException e) {
             e.printStackTrace();
         }
     }
-
 
     public void saveBin() {
         saveBin(currentFilename);
@@ -94,7 +86,6 @@ public class Model extends Observable implements Serializable {
     }
 
 
-
     public Address[] searchForAddresses(Address address, int type){
         return OSMReader.searchForAddressess(address, type);
     }
@@ -104,6 +95,9 @@ public class Model extends Observable implements Serializable {
         return currentFilename;
     }
 
+    /*
+    * Determines the name for a saved map
+     */
     public void setCurrentFilename(String path) {
         String filename = path;
         if (path.endsWith(".osm"))
@@ -129,11 +123,14 @@ public class Model extends Observable implements Serializable {
     }
 
     public List<Coastline> getCoastlines(){
-        return OSMReader.getCoastlines();
+        return OSMHandler.getCoastlines();
     }
 
     public OSMHandler getOSMReader(){return OSMReader;}
 
+    /*
+    * Getters for quad trees
+     */
     public Collection<MapData> getVisibleStreets(Rectangle2D visibleArea, boolean sorted){
         return OSMReader.getStreetTree().query2D(visibleArea, sorted);
     }
@@ -177,9 +174,7 @@ public class Model extends Observable implements Serializable {
         return OSMReader.getVertices();
     }
 
-
-
-    public Graph getDiGraph() {
+    public Graph getGraph() {
         return OSMReader.getGraph();
     }
 

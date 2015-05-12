@@ -445,7 +445,7 @@ public class View extends JFrame implements Observer {
 
         //Transform from screen coordinates to map Values.
         start = transformPoint(p);
-        MapPointer startPoint = new MapPointer(start, "startPointIcon".intern());
+        MapPointer startPoint = new MapPointer(start, "startPointIcon");
         addPointer(startPoint);
         if(end != null && start != null)    //check if a route should be found.
             findFastestRoute(start, end);
@@ -544,19 +544,6 @@ public class View extends JFrame implements Observer {
         adjustZoomFactor();
     }
 
-    public void zoomOnStreet(List<Path2D> streetSeqments){
-        Path2D pathConnected = new Path2D.Double();
-        for(Path2D waySeg: streetSeqments){
-            pathConnected.append(waySeg,false);
-        }
-        Rectangle2D pathRec = pathConnected.getBounds2D();
-
-        double scaleX = getWidth()/ pathRec.getWidth();
-        double scaleY = getHeight()/ pathRec.getHeight();
-
-        adjustZoomLvl(Math.max(scaleX, scaleY) * 0.5);
-        adjustZoomFactor();
-    }
 
     //Get the center of the current size of the contentpane in lat and longtitude points
     private Point2D getCenterLatLon(){

@@ -5,7 +5,9 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * Created by Anders on 15-04-2015.
+ * Priority queue with minimum key as priority. Copied from the Algorithms book
+ *  For additional documentation, see http://algs4.cs.princeton.edu/24pq/IndexMinPQ.java of
+ *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
  */
 public class IndexMinPQ<Key extends Comparable<Key>> implements Iterable<Integer>, Serializable {
     private static final long serialVersionUID = 11;

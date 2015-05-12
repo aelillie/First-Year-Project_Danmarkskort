@@ -9,7 +9,9 @@ import java.awt.geom.Line2D;
 import java.io.Serializable;
 
 /**
- * Created by Anders on 22-04-2015.
+ * An edge connects two vertices.
+ * It knows about the distance between its vertices
+ * and the time it takes travelling from one end to the other
  */
 public class Edge extends Line2D.Float implements Serializable {
     private static final long serialVersionUID = 128;
@@ -23,7 +25,6 @@ public class Edge extends Line2D.Float implements Serializable {
 
     /**
      * Initializes an edge from vertex v to vertex w
-     *
      * @param v the tail vertex
      * @param w the head vertex
      * @param distance the distance of the directed edge

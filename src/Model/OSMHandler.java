@@ -12,18 +12,18 @@ import java.awt.geom.Rectangle2D;
 import java.util.*;
 
 /**
- * Contenthandler, which handles the .osm file written in XML.
+ * Content handler, which handles the .osm file written in XML.
  * Saving data from the file, which is being parsed, through keys and tags read.
- * Ultimately adding shapes to be drawn to lists in this class.
+ * Ultimately adding shapes to be drawn.
  */
 public class OSMHandler extends DefaultHandler {
     private Map<String, String> keyValue_map; //relation between the keys and values in the XML file
     private LongHashMap<OSMNode> node_longMap; //Relation between a nodes' id and coordinates
     private LongHashMap<Path2D> wayId_longMap; //Map of ways and their id's
-    private Graph graph;
-    private Vertices vertices;
+    private Graph graph; //Contains vertices and edges in the map, for the use of path finding
+    private Vertices vertices; //node in ways, saved in the graph
     private HashSet<String> bigRoads = new HashSet<>(Arrays.asList("motorway",
-            "trunk", "primary", "secondary", "tertiary"));
+            "trunk", "primary", "secondary", "tertiary")); //Roads to be put in bigRoadTree
 
 
     private QuadTree streetTree, buildingTree, iconTree, naturalTree, railwayTree, bigRoadTree;
@@ -43,6 +43,9 @@ public class OSMHandler extends DefaultHandler {
     private Rectangle2D bbox = new Rectangle2D.Double();
 
 
+    /**
+     * When a new binary file is loaded, lists get initialized anew
+     */
     public void initializeCollections(){
         coastlines = new ArrayList<>();
         memberReferences = new ArrayList<>();
@@ -92,18 +95,18 @@ public class OSMHandler extends DefaultHandler {
             case "nd": { //references in a way, to other ways
                 long id = Long.parseLong(atts.getValue("ref"));
                 OSMNode coord = node_longMap.get(id); //fetches coordinate from the referenced id
-                if(isStart){ //Saves startpoint (for use in coastlines)
+                if (coord == null) break;
+                if(isStart){ //Saves start point (for use in coastlines)
                     startPoint = coord;
                     isStart = false;
                 }
-                 endPoint = coord;
+                endPoint = coord;
 
-                if (coord == null) return;
                 wayCoords.add(coord);
                 break;
             }
             case "way": //A way containing references to other ways and possible tags
-                keyValue_map.clear();
+                keyValue_map.clear(); //To make ready for a new way's tags
                 wayCoords.clear(); //clears list of referenced coordinates within a way
                 isArea = false;
                 isStart = true;
@@ -120,6 +123,7 @@ public class OSMHandler extends DefaultHandler {
                 float maxlon = Float.parseFloat(atts.getValue("maxlon"));
                 Rectangle2D rect =  new Rectangle2D.Float(minlon, minlat, maxlon - minlon, maxlat - minlat);
                 bbox.setRect(rect);
+                //Initialize quad trees with the current bounding box and cell capacity
                 streetTree = new QuadTree(bbox, 225);
                 bigRoadTree = new QuadTree(bbox, 60);
                 buildingTree = new QuadTree(bbox, 225);
@@ -211,7 +215,7 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("building"))
                     buildingTree.insert(new Building(way, fetchOSMLayer(), keyValue_map.get("building")));
                 else if (keyValue_map.containsKey("shop"))
-                    buildingTree.insert(new Shop(way, fetchOSMLayer(), keyValue_map.get("shop"))); //This seems to only appear under <node
+                    buildingTree.insert(new Shop(way, fetchOSMLayer(), keyValue_map.get("shop")));
                 else if (keyValue_map.containsKey("tourism")) {
                     buildingTree.insert(new Tourism(way, fetchOSMLayer(), keyValue_map.get("tourism")));
                     if (keyValue_map.get("tourism").equals("attraction")) {
@@ -260,17 +264,16 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("place"))
                     naturalTree.insert(new Place(way, fetchOSMLayer(), keyValue_map.get("place")));
                 else if (keyValue_map.containsKey("railway")) {
-                    if (keyValue_map.containsKey("construction") && keyValue_map.get("construction").equals("yes"))
-                        ;
-                    else railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
+                    if (keyValue_map.containsKey("construction") && !keyValue_map.get("construction").equals("yes"))
+                        railwayTree.insert(new Railway(way, fetchOSMLayer(), keyValue_map.get("railway")));
                 }
                 else if (keyValue_map.containsKey("route"))
                     railwayTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
 
-                wayId_longMap.put(wayId, way);
+                wayId_longMap.put(wayId, way); //used for relations
                 break;
 
-            case "relation":
+            case "relation": //Polygons are defined with this tag
                 if (keyValue_map.containsKey("type")) {
                     String typeValue = keyValue_map.get("type");
                     if (typeValue.equals("multipolygon")) {
@@ -299,10 +302,8 @@ public class OSMHandler extends DefaultHandler {
                         }
                     }
                 }
-
                 break;
-
-            case "node":
+            case "node": //Locations for icons and addresses
                 if (keyValue_map.containsKey("highway")) {
                     String val = keyValue_map.get("highway");
                     if (val.equals("bus_stop") && isBusstop) {
@@ -352,7 +353,6 @@ public class OSMHandler extends DefaultHandler {
                             String name = keyValue_map.get("name").toLowerCase();
                             Address addr = Address.newTown(name);
                             addr.setAddressLocation(nodeCoord);
-                            //addressMap.put(addr, nodeCoord);
                             addressList.add(addr);
                         }
                     }
@@ -360,32 +360,22 @@ public class OSMHandler extends DefaultHandler {
                     if (hasHouseNo && hasCity && hasPostcode) {
                         Address addr = Address.newAddress(streetName.toLowerCase(), houseNumber.toLowerCase(), postCode.toLowerCase(), cityName.toLowerCase());
                         addr.setAddressLocation(nodeCoord);
-                        //addressMap.put(addr, nodeCoord);
                         addressList.add(addr);
                     }
                 }
-                //else if (keyValue_map.containsKey("addr:city")) addCityName();
-                //else if (keyValue_map.containsKey("addr:postcode")) addPostcode();
-
-
                 break;
-
             case "osm": //The end of the osm file
-
-                long time = System.nanoTime();
-                Collections.sort(addressList, new AddressComparator()); //iterative mergesort. ~n*lg(n) comparisons
-                System.out.printf("sorted all addresses, time: %d ms\n", (System.nanoTime() - time) / 1000000);
-                PathCreater.connectEndPoints(bbox);
+                Collections.sort(addressList, new AddressComparator()); //Sorts addresses (using mergesort)
+                PathCreater.connectEndPoints(bbox); //coastlines' endpoints
                 vertices.createVertexIndex();
                 graph.initialize(vertices.V());
                 graph.addEdges(streetEdges());
                 insertCoastLines();
-
-                wayId_longMap.clear(); //sets key and value arrays to point to null
+                //Clears the hash maps
+                wayId_longMap.clear();
                 node_longMap.clear();
                 keyValue_map.clear();
                 vertices.clearMap();
-
                 coastlines.clear();
                 break;
 
@@ -393,6 +383,9 @@ public class OSMHandler extends DefaultHandler {
 
     }
 
+    /*
+    * Returns all highways
+     */
     private Collection<Highway> streetEdges() {
         Collection<MapData> mapData = streetTree.query2D(bbox, false);
         mapData.addAll(bigRoadTree.query2D(bbox, false));
@@ -425,8 +418,6 @@ public class OSMHandler extends DefaultHandler {
             coastLinesTree.insert(coastline);
         }
     }
-
-
 
     public Address[] searchForAddressess(Address add, int type){
         return AddressSearcher.searchForAddresses(add, addressList, type);
@@ -463,14 +454,7 @@ public class OSMHandler extends DefaultHandler {
         return quadTrees;
     }
 
-    public List<OSMNode> getWayCoords(){return wayCoords;}
-    public LongHashMap<Path2D> getWayIdMap(){return wayId_longMap;}
-    public LongHashMap<OSMNode> getNodeMap(){return node_longMap;}
-
     public void setQuadTrees(List<QuadTree> quadTrees) {
-        if(quadTrees.size() != 10){
-            throw new IllegalArgumentException("List must contain the 10 QuadTrees");
-        }
         this.streetTree = quadTrees.get(0);
         this.naturalTree = quadTrees.get(1);
         this.buildingTree = quadTrees.get(2);

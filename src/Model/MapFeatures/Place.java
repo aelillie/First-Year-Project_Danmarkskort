@@ -5,9 +5,7 @@ import Model.ValueName;
 
 import java.awt.geom.Path2D;
 
-/**
- * Created by Anders on 27-04-2015.
- */
+
 public class Place extends MapFeature {
 
     public Place(Path2D way, int layer_value, String value) {

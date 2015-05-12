@@ -6,9 +6,7 @@ import Model.ValueName;
 import java.awt.geom.Path2D;
 import java.awt.geom.Point2D;
 
-/**
- * Created by Anders on 10-05-2015.
- */
+
 public class Power extends MapFeature {
 
     public Power(Path2D way, int layer_value, String value) {

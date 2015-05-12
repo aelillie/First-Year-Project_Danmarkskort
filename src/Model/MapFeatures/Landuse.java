@@ -5,9 +5,6 @@ import Model.ValueName;
 
 import java.awt.geom.Path2D;
 
-/**
- * Created by Anders on 11-03-2015.
- */
 public class Landuse extends MapFeature {
     private int length;
 

@@ -46,7 +46,7 @@ public class RouteFinder {
      */
     public void setShortestRoute() {
         //Find shortest Path.
-        PathTree shortestTree = new PathTree(model.getDiGraph(), startVertex, endVertex);
+        PathTree shortestTree = new PathTree(model.getGraph(), startVertex, endVertex);
         shortestTree.useShortestPath();
         setTravelType(shortestTree);
         shortestTree.initiate();
@@ -62,7 +62,7 @@ public class RouteFinder {
      * sets its field fastest path to the shortest path from startVertex to endVertex
      */
     public void setFastestRoute() {
-        PathTree fastestTree = new PathTree(model.getDiGraph(), startVertex, endVertex);
+        PathTree fastestTree = new PathTree(model.getGraph(), startVertex, endVertex);
         fastestTree.useFastestPath();
 
         //Sets what travelType is chosen

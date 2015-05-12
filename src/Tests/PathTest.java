@@ -1,27 +1,18 @@
 package Tests;
 
-import Model.MapFeatures.Highway;
 import Model.Model;
 import Model.Path.Edge;
 import Model.Path.Graph;
 import Model.Path.PathTree;
 import Model.Path.Vertices;
-import Model.PathCreater;
-import org.junit.After;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import sun.tools.jar.Main;
 import Model.MapCalculator;
 
-import java.awt.geom.Line2D;
-import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
 import java.io.IOException;
 import java.io.InputStream;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
 
 /**
  * Created by Kevin on 29-04-2015.
@@ -42,7 +33,7 @@ public class PathTest {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        g = m.getDiGraph();
+        g = m.getGraph();
     }
 
 
@@ -61,7 +52,7 @@ public class PathTest {
 
     @Test
     public void testFastestPath(){
-        Graph g = m.getDiGraph();
+        Graph g = m.getGraph();
 
         //Create one pathTree for shortest route and for fastest
         PathTree shortestTree = new PathTree(g, start, end);
@@ -93,7 +84,7 @@ public class PathTest {
 
     @Test
     public void testTravelInfo() {
-        Graph g = Model.getModel().getDiGraph();
+        Graph g = Model.getModel().getGraph();
         PathTree fastestTree = new PathTree(g, 595, 60);
         fastestTree.useCarRoute();
         fastestTree.useShortestPath();
