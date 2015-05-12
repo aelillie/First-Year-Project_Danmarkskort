@@ -1109,16 +1109,20 @@ public class View extends JFrame implements Observer {
 
             //Draw the shortestPath if not null
             if (shortestPath != null) {
+                int i = 5;
+                if (zoomLevel < 8) i = 9;
                 g.setColor(DrawAttribute.cl_pink);
-                g.setStroke(DrawAttribute.streetStrokes[5 + zoomFactor]);
+                g.setStroke(DrawAttribute.streetStrokes[i + zoomFactor]);
                 for (Edge e : shortestPath) {
                     g.draw(e);
                 }
             }
             //Draw the fastest path if not null
             if (fastestPath != null) {
+                int i = 5;
+                if (zoomLevel < 8) i = 9;
                 g.setColor(DrawAttribute.cl_blue4);
-                g.setStroke(DrawAttribute.streetStrokes[5 + zoomFactor]);
+                g.setStroke(DrawAttribute.streetStrokes[i + zoomFactor]);
                 for (Edge e : fastestPath) {
                     g.draw(e);
                 }
@@ -1199,7 +1203,9 @@ public class View extends JFrame implements Observer {
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleStreets(windowBounds, sorted));
             }
 
-            if(zoomLevel > 9) {
+            if (drawAttributeManager.isTransport())
+                mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleRailways(windowBounds, sorted));
+            else if(zoomLevel > 7) {
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleRailways(windowBounds, sorted));
             }
 
@@ -1214,8 +1220,12 @@ public class View extends JFrame implements Observer {
                 mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds);
             }
 
-
-            mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigForests(windowBounds, sorted));
+            if (!drawAttributeManager.isTransport())
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigForests(windowBounds, sorted));
+            else {
+                if (zoomLevel > 7)
+                    mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigForests(windowBounds, sorted));
+            }
             mapFAreas.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleBikLakes(windowBounds, sorted));
 
         }

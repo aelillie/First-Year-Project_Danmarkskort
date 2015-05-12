@@ -16,10 +16,10 @@ public class StandardConfig {
     public void defineStandardView() {
         //standardView[ValueName.VALUENAME.ordinal()] =     new DrawAttribute(isDashed, strokeId, color, zoomLevel);
         //AEROWAY
-        standardView[ValueName.AEROWAY.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.lightgrey, 9);
-        standardView[ValueName.TERMINAL.ordinal()] =        new DrawAttribute(false, 1, DrawAttribute.purple, 9);
-        standardView[ValueName.RUNWAY.ordinal()] =          new DrawAttribute(false, 1, DrawAttribute.teal, 9);
-        standardView[ValueName.TAXIWAY.ordinal()] =         new DrawAttribute(false, 5, DrawAttribute.teal, 9);
+        standardView[ValueName.AEROWAY.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.lightgrey, 8);
+        standardView[ValueName.TERMINAL.ordinal()] =        new DrawAttribute(false, 1, DrawAttribute.purple, 8);
+        standardView[ValueName.RUNWAY.ordinal()] =          new DrawAttribute(false, 1, DrawAttribute.teal, 8);
+        standardView[ValueName.TAXIWAY.ordinal()] =         new DrawAttribute(false, 5, DrawAttribute.teal, 8);
         //AMENITY
         standardView[ValueName.AMENITY.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, 14);
         standardView[ValueName.PARKING.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.moccasin, 14);
@@ -127,7 +127,6 @@ public class StandardConfig {
         standardView[ValueName.ROUTE.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.white, 12);
         standardView[ValueName.FERRY.ordinal()] =           new DrawAttribute(true, 1, DrawAttribute.lightblue, 12);
         //POWER
-        standardView[ValueName.POWER.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.lightgrey, 14);
         standardView[ValueName.POWER_AREA.ordinal()] =      new DrawAttribute(false, 0, DrawAttribute.lightgrey, 14);
         //SHOP
         standardView[ValueName.SHOP.ordinal()] =            new DrawAttribute(false, 0, DrawAttribute.lightgrey, 16);

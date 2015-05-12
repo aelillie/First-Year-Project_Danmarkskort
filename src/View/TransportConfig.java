@@ -17,10 +17,10 @@ public class TransportConfig {
         //transportView
         //[ValueName.VALUENAME.ordinal()] =     new DrawAttribute(isDashed, strokeId, color, zoomLevel);
         //AEROWAY
-        transportView[ValueName.AEROWAY.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.lightgrey, 9);
-        transportView[ValueName.TERMINAL.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.purple, 9);
-        transportView[ValueName.RUNWAY.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.teal, 9);
-        transportView[ValueName.TAXIWAY.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.teal, 9);
+        transportView[ValueName.AEROWAY.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.lightgrey, 8);
+        transportView[ValueName.TERMINAL.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.purple, 8);
+        transportView[ValueName.RUNWAY.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.teal, 8);
+        transportView[ValueName.TAXIWAY.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.teal, 8);
         //AMENITY
         transportView[ValueName.AMENITY.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightgrey, 14);
         transportView[ValueName.PARKING.ordinal()] =         new DrawAttribute(false, 1, DrawAttribute.lightergrey, 14);
@@ -119,16 +119,15 @@ public class TransportConfig {
         transportView[ValueName.ISLAND.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightergrey, 13);
         transportView[ValueName.ISLET.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.lightergrey, 13);
         //RAILWAY
-        transportView[ValueName.RAILWAY.ordinal()] =         new DrawAttribute(true, 6, DrawAttribute.lightred, 8);
-        transportView[ValueName.LIGHT_RAIL.ordinal()] =      new DrawAttribute(true, 6, DrawAttribute.lightred, 8);
-        transportView[ValueName.RAIL.ordinal()] =            new DrawAttribute(true, 6, DrawAttribute.lightred, 8);
-        transportView[ValueName.TRAM.ordinal()] =           new DrawAttribute(true, 6, DrawAttribute.lightgreen, 8);
-        transportView[ValueName.SUBWAY.ordinal()] =         new DrawAttribute(true, 6, DrawAttribute.cl_red, 8);
+        transportView[ValueName.RAILWAY.ordinal()] =         new DrawAttribute(true, 6, DrawAttribute.lightred, 0);
+        transportView[ValueName.LIGHT_RAIL.ordinal()] =      new DrawAttribute(true, 6, DrawAttribute.lightred, 0);
+        transportView[ValueName.RAIL.ordinal()] =            new DrawAttribute(true, 6, DrawAttribute.lightred, 0);
+        transportView[ValueName.TRAM.ordinal()] =           new DrawAttribute(true, 6, DrawAttribute.lightgreen, 0);
+        transportView[ValueName.SUBWAY.ordinal()] =         new DrawAttribute(true, 6, DrawAttribute.cl_red, 0);
         //ROUTE
         transportView[ValueName.ROUTE.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.grey, 12);
         transportView[ValueName.FERRY.ordinal()] =           new DrawAttribute(true, 1, DrawAttribute.lightblue, 12);
         //POWER
-        transportView[ValueName.POWER.ordinal()] =            new DrawAttribute(false, 0, DrawAttribute.lightgrey, 14);
         transportView[ValueName.POWER_AREA.ordinal()] =       new DrawAttribute(false, 0, DrawAttribute.lightgrey, 14);
         //SHOP
         transportView[ValueName.SHOP.ordinal()] =            new DrawAttribute(false, 0, DrawAttribute.lightgrey, 16);
