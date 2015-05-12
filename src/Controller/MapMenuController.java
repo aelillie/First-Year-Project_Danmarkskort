@@ -26,7 +26,6 @@ public class MapMenuController implements ActionListener {
             case "standardMap":
                 v.changeToStandard();
                 mapPanel.setVisible(false);
-
                 break;
             case "colorblindMap":
                 v.changeToColorblind();

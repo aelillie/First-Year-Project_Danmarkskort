@@ -27,8 +27,6 @@ public class Model extends Observable implements Serializable {
     private String currentFilename;
     private OSMHandler OSMReader = new OSMHandler();
     private static Model model = new Model(); //SingleTon design choice.
-    private ArrayList<Address> addressList = new ArrayList<>(); //Contains all addresses to be sorted according to the compareTo method.
-
 
     private Model(){}
 

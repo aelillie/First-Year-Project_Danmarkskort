@@ -16,7 +16,7 @@ public class IconPanel extends JScrollPane {
     private static ArrayList<IconController> controllers;
     private ArrayList<URL> icons;
     private ArrayList<JCheckBox> checkBoxes = new ArrayList<>();
-    private static View v;
+
 
     /**
      * Creates the iconPanel and calls the addIcons() and showIconPanel() method
@@ -42,31 +42,10 @@ public class IconPanel extends JScrollPane {
     /**
      * Adds the icons and gives it a checkbox
      * Some icons should not be shown from the beginning and they are manually chosen in an if statement
-     * Controllers are added to the arraylist
+     * Controllers and checboxes are added to arraylists
      */
     public void addIcons() {
-        icons = MapIcon.getIcons();
-        JCheckBox check = new JCheckBox("",false);
-        JLabel label = new JLabel("All Icons");
-        check.addActionListener(new ActionListener() {
-
-            //
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                JCheckBox check1 = (JCheckBox) e.getSource();
-                boolean selected = check1.getModel().isSelected();
-              //IconController.setUpdateView(false);
-                for(int i = 0; i < checkBoxes.size();i++){
-                    JCheckBox c = checkBoxes.get(i);
-                    c.setSelected(selected);
-                }
-                 //IconController.setUpdateView(true);
-                //v.update(null,null);
-
-            }
-        });
-        panel.add(label);
-        panel.add(check);
+        allOrNothingButton();
         for (int i = 0; i < icons.size(); i++) {
             URL iconPath = icons.get(i);
             JLabel l1 = new JLabel(new ImageIcon(iconPath));
@@ -99,12 +78,40 @@ public class IconPanel extends JScrollPane {
         }
     }
 
+    /**
+     * Adds a all-or-nothing button with an actionsListener
+     */
+    public void allOrNothingButton(){
+        icons = MapIcon.getIcons();
+        JCheckBox check = new JCheckBox("",false);
+        JLabel label = new JLabel("All Icons");
+        check.addActionListener(new ActionListener() {
+
+
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                JCheckBox check1 = (JCheckBox) e.getSource();
+                boolean selected = check1.getModel().isSelected();
+                //IconController.setUpdateView(false);
+                for(int i = 0; i < checkBoxes.size();i++){
+                    JCheckBox c = checkBoxes.get(i);
+                    c.setSelected(selected);
+                }
+                //IconController.setUpdateView(true);
+                //v.update(null,null);
+
+            }
+        });
+        panel.add(label);
+        panel.add(check);
+    }
+
     //for all IconControllers adjust the view
     public void addObserverToIcons(View v) {
         for (IconController con : controllers) {
             con.setView(v);
         }
-     //this.v = v;
+        //this.v = v;
 
     }
 
