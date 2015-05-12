@@ -857,7 +857,7 @@ public class View extends JFrame implements Observer {
             travelDistance *= 1000;
             travelTimeLabel.setText(String.format("Travel time: " + timeString + "   Distance: %.0f m", travelDistance  ));
         } else
-        travelTimeLabel.setText(String.format("Travel time: "  + timeString + "   Distance: %.2f km", travelDistance  ));
+        travelTimeLabel.setText(String.format("Travel time: "  + timeString + "   Distance: %.2f km", travelTime, travelDistance  ));
         travelTimePanel.setVisible(true);
         travelTimeLabel.setVisible(true);
     }
@@ -1018,17 +1018,15 @@ public class View extends JFrame implements Observer {
                 }
             }
 
-            //Then draw boundaries on top of areas
+           //Then draw boundaries on top of areas
             for (MapFeature area : mapFAreas) {
                 if (zoomLevel > 13) {
                     try {
                         g.setColor(Color.BLACK);
                         setDrawAttribute(area.getValueName());
                         if (drawAttribute.isDashed()) continue;
-                        else if (!area.isArea()) {
-                            g.setColor(drawAttribute.getColor());
-                            g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
-                        }
+                        else if (!area.isArea())
+                             g.setStroke(DrawAttribute.streetStrokes[drawAttribute.getStrokeId() + 1]);
                         else g.setStroke(DrawAttribute.basicStrokes[0]);
                         g.draw(area.getWay());
                     } catch (NullPointerException e) {
@@ -1037,7 +1035,7 @@ public class View extends JFrame implements Observer {
                 }
             }
 
-            //Then draw Boundaries for Streets
+           //Then draw Boundaries for Streets
             for(MapFeature street : mapFStreets){
                 if (zoomLevel > 13) {
                     g.setColor(Color.BLACK);
@@ -1109,8 +1107,8 @@ public class View extends JFrame implements Observer {
 
             //Draw the shortestPath if not null
             if (shortestPath != null) {
-                g.setColor(DrawAttribute.cl_pink);
-                g.setStroke(DrawAttribute.streetStrokes[5 + zoomFactor]);
+                g.setColor(DrawAttribute.cl_darkorange);
+                g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
                 for (Edge e : shortestPath) {
                     g.draw(e);
                 }
@@ -1118,7 +1116,7 @@ public class View extends JFrame implements Observer {
             //Draw the fastest path if not null
             if (fastestPath != null) {
                 g.setColor(DrawAttribute.cl_blue4);
-                g.setStroke(DrawAttribute.streetStrokes[5 + zoomFactor]);
+                g.setStroke(DrawAttribute.streetStrokes[4 + zoomFactor]);
                 for (Edge e : fastestPath) {
                     g.draw(e);
                 }
@@ -1136,8 +1134,8 @@ public class View extends JFrame implements Observer {
             }
 
 
-            //Draw the icons
-            if (zoomLevel > 13) {
+            //Draw the icons if zoomlevel 15 or more
+            if (zoomLevel >= 15) {
                 for (MapIcon mapIcon : mapIcons) {
                     if(mapIcon.isVisible()) {
                         mapIcon.draw(g, transform);
@@ -1189,30 +1187,25 @@ public class View extends JFrame implements Observer {
             Collection < MapData > bigRoads = model.getVisibleBigRoads(windowBounds, sorted);
             mapFStreets = (Collection<MapFeature>)(Collection<?>) bigRoads;
 
-            if (zoomLevel > 4)
+            if (zoomLevel > 5)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
 
-            if (zoomLevel > 7)
+            if(zoomLevel > 7)
+                mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleStreets(windowBounds, sorted));
+
+            if(zoomLevel > 9)
+                mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleRailways(windowBounds, sorted));
+
+
+            if (zoomLevel > 8)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>)model.getVisibleNatural(windowBounds, sorted));
 
-            if(zoomLevel > 7) {
-                mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleStreets(windowBounds, sorted));
-            }
-
-            if(zoomLevel > 9) {
-                mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleRailways(windowBounds, sorted));
-            }
-
-
-
-            if(zoomLevel > 10) {
+            if(zoomLevel > 10)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBuildings(windowBounds, sorted));
-            }
 
 
-            if(zoomLevel > 13) {
+            if(zoomLevel > 13)
                 mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds);
-            }
 
 
             mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigForests(windowBounds, sorted));

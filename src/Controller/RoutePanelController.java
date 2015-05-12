@@ -28,7 +28,6 @@ public class RoutePanelController implements ActionListener{
     private int selectedNr = -1; //used for default selection of addresses in the resulting scrollpane
     private Model model;
     private Point2D startPoint, endPoint;
-
     private HashMap<JButton, Boolean> buttonDownMap, routeTypeButtonDownMap; //The maps of booleans specifying whether buttons are pressed down or not (false = not pressed, true = pressed)
 
     /**

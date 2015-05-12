@@ -120,13 +120,13 @@ public class DrawAttribute {
     public static Color skincolor = new Color(222,184,135);
     public static Color bluegreen = new Color(60,179,113);
     public static Color orange = new Color(205,133,63);
-    public static Color pink = new Color(188,143,143);
+    public static Color pink = new Color(117, 90, 90);
     public static Color sand = new Color(255,228,181);
     public static Color whiteblue = new Color(95,158,160);
     public static Color greenblue = new Color(102,205,170);
     public static Color whitegreen = new Color(144,238,144);
     public static Color brown = new Color(139,69,19);
-    public static Color lightbrown = new Color(194, 117, 37);
+    public static Color lightbrown = new Color(93, 40, 13);
     public static Color ground = new Color(238,238,238);
     public static Color teal = new Color(0,128,128);
     public static Color moccasin = new Color(255, 228, 181);
