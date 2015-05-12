@@ -220,8 +220,8 @@ public class View extends JFrame implements Observer {
         layer.add(iconPanel, new Integer(3));
         layer.add(optionsPanel, new Integer(2));
         layer.add(directionPane, new Integer(2));
-        layer.add(closeDirectionList, new Integer(3));
-        layer.add(travelTimePanel, new Integer(4));
+        layer.add(closeDirectionList, new Integer(2));
+        layer.add(travelTimePanel, new Integer(3));
     }
 
     private void makeComponents() {
@@ -498,6 +498,9 @@ public class View extends JFrame implements Observer {
         routePanel.showRoutePanel();
         if(!routePanel.isVisible()) closeDirectionList();
         if(mapTypePanel.isVisible()) mapTypePanel.setVisible(false);
+        if(resultPane.isVisible()) resultPane.setVisible(false);
+        if(routePanel.getRp().getStartAddrScrollpane().isVisible()) routePanel.getRp().getStartAddrScrollpane().setVisible(false);
+        if(routePanel.getRp().getEndAddrScrollpane().isVisible()) routePanel.getRp().getEndAddrScrollpane().setVisible(false);
         if(optionsPanel.isVisible()) {
             optionsPanel.setVisible(false);
             if(iconPanel.isVisible()) iconPanel.setVisible(false);
