@@ -39,9 +39,6 @@ public class RouteFinder {
             else if (p.isWalkRoute()) travelTime += e.walkTime();
             else if (p.isCarRoute()) travelTime += e.driveTime();
         }
-        for (Edge e : p.pathTo(endVertex))
-            e.resetWaitingCounter();
-
     }
 
     /**

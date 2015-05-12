@@ -9,7 +9,7 @@ import java.io.Serializable;
 public class OSMNode extends Point2D.Float implements Serializable {
     public static final long serialVersionUID = 1;
 
-    public int trafficSignal;
+    public ValueName trafficSignal;
 
     public OSMNode(float x, float y) {
         super(x, y);

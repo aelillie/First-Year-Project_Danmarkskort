@@ -3,6 +3,7 @@ package Model.Path;
 import Model.MapFeatures.Highway;
 import Model.Model;
 import Model.OSMNode;
+import Model.ValueName;
 
 import java.awt.geom.Line2D;
 import java.io.Serializable;
@@ -63,30 +64,9 @@ public class Edge extends Line2D.Float implements Serializable {
      * @return the driving time of the edge
      */
     public double driveTime() {
-        return (distance/highway.getMaxspeed())*60 + waitingTime();
+        return (distance/highway.getMaxspeed()) * 60 + trafficSignal(ValueName.TRAFFICLIGHT_HIGHWAY);
     }
 
-    public int waitingTime() {
-        OSMNode v1 = vertices.getVertex(v);
-        OSMNode w1 = vertices.getVertex(w);
-        int waitingTime = 0;
-        if (v1.trafficSignal == 1) {
-            waitingTime += 0.25; //15 sec average waiting time at a traffic signal
-            v1.trafficSignal++; //makes sure another this is only done once for this node
-        }
-        if (w1.trafficSignal == 1) {
-            waitingTime += 0.25;
-            w1.trafficSignal++;
-        }
-        return waitingTime;
-    }
-
-    public void resetWaitingCounter() {
-        OSMNode v1 = vertices.getVertex(v);
-        OSMNode w1 = vertices.getVertex(w);
-        if (v1.trafficSignal > 1) v1.trafficSignal = 1;
-        if (w1.trafficSignal > 1) w1.trafficSignal = 1;
-    }
 
     /**
      * Returns the time of walking from either endpoint to the other
@@ -94,7 +74,7 @@ public class Edge extends Line2D.Float implements Serializable {
      * @return the walking time of the edge
      */
     public double walkTime() {
-        return (distance/5.0)*60;
+        return (distance/5.0)*60 + trafficSignal(ValueName.TRAFFICLIGHT_PEDESTRIAN);
     }
 
     /**
@@ -103,7 +83,7 @@ public class Edge extends Line2D.Float implements Serializable {
      * @return the biking time of the edge
      */
     public double bikeTime() {
-        return (distance/15.0)*60;
+        return (distance/15.0)*60 + trafficSignal(ValueName.TRAFFICLIGHT_HIGHWAY);
     }
 
     /**
@@ -149,17 +129,17 @@ public class Edge extends Line2D.Float implements Serializable {
         return highway;
     }
 
-    private int hasTrafficSignals() {
-        OSMNode v_node = vertices.getVertex(v);
+    /**
+     * Adds travel time for the current edge if there is a traffic light
+     * Average waiting time estimated to 15 seconds per traffic light
+     * @param trafficLightType Either a traffic light for pedestrians or for cars
+     * @return 0 if no traffic light, 15 if traffic light present
+     */
+    private double trafficSignal(ValueName trafficLightType) {
         OSMNode w_node = vertices.getVertex(w);
         int signalWaitTime = 0;
-        if (v_node.trafficSignal == 1) {
-            signalWaitTime += 15;
-            v_node.trafficSignal++;
-        }
-        if (w_node.trafficSignal == 1) {
-            signalWaitTime += 15;
-            w_node.trafficSignal++;
+        if (w_node.trafficSignal == trafficLightType) {
+            signalWaitTime += 0.25; //25 % of a minute = 15 seconds
         }
         return signalWaitTime;
     }

@@ -1182,7 +1182,7 @@ public class View extends JFrame implements Observer {
             //Get a rectangle of the part of the map shown on screen
             bounds.updateBounds(getVisibleRect());
             Rectangle2D windowBounds = bounds.getBounds();
-            sorted = zoomLevel > 11;
+            sorted = zoomLevel >= 11;
 
             coastLines = (Collection<MapFeature>) (Collection<?>) model.getVisibleCoastLines(windowBounds);
 
