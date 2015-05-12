@@ -480,6 +480,9 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
+    /**
+     * Makes sure to set all other dropdown panels to invisible once maptypepanel is set to visible
+     */
     public void showMapTypePanel(){
         mapTypePanel.showMapTypePanel();
         if(mapTypePanel.isVisible() && optionsPanel.isVisible()){
@@ -490,17 +493,24 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
+    /**
+     * Closes the route direction description list.
+     */
     public void closeDirectionList(){
         closeDirectionList.setVisible(false);
         directionPane.setVisible(false);
         travelTimeLabel.setVisible(false);
     }
 
+
     public void showIconPanel(){
         iconPanel.showIconPanel();
         canvas.repaint();
     }
 
+    /**
+     * Makes sure to set all other dropdown panels to invisible once optionspanel is set to visible
+     */
     public void showOptionsPanel(){
         optionsPanel.showOptionsPanel();
         if(!optionsPanel.isVisible() && iconPanel.isVisible()) iconPanel.setVisible(false);
@@ -509,10 +519,12 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
+    //Centers the screen on the search result which has been chosen
     public void searchResultChosen(double lon, double lat){
         centerOnLatLon(new Point2D.Double(lon, lat));
     }
 
+    //Zooms on the search result which has been chosen
     public void zoomOnAddress(){
         adjustZoomLvl(16000);
         adjustZoomFactor();
