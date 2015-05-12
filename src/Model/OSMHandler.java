@@ -181,7 +181,7 @@ public class OSMHandler extends DefaultHandler {
     public void endElement(String uri, String localName, String qName) {
 
         switch (qName) {
-            case "way": //TODO: insert way names into the addresslist aswelll
+            case "way":
                 Path2D way = PathCreater.createWay(wayCoords);
                 //start of adding shapes from keys and values
 
