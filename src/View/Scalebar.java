@@ -34,13 +34,11 @@ public class Scalebar {
      * Draws the scalebar line and the markers at each end.
      */
 
-    //loadButton.setBounds((int) preferred.getWidth() - 65, (int) preferred.getHeight() - 65, 40, 20);
-
     public void drawScaleBar(){
         g.setTransform(new AffineTransform());
         g.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_ON);
         lineStart = new Point2D.Float(view.getWidth()-200,view.getContentPane().getHeight()-13); //Place the linestart at a arbitrary location to start with
-        lineEnd = new Point2D.Float(view.getWidth()-65,view.getContentPane().getHeight()-13); //The endpoint is static
+        lineEnd = new Point2D.Float(view.getWidth()-65,view.getContentPane().getHeight()-13); //The endpoint is ALWAYS static
 
         double lineWidth = lineEnd.getX()-lineStart.getX();
         g.setColor(DrawAttribute.fadewhite);
@@ -49,15 +47,17 @@ public class Scalebar {
         Double line = lineWidth + 100;
         g.fill(new Rectangle2D.Float(x.floatValue(), y.floatValue(), line.floatValue() , 20));
         double desiredDistance = zoomLevelDistances.get(zoomLevel); //The distance we want to display according to the zoomlevel
-        lineStart.setLocation(getDesiredDistance(lineWidth,desiredDistance));
+        lineStart.setLocation(getDesiredDistance(lineWidth,desiredDistance)); //Set the start location to the calculated startpoint from the desired distance.
 
+
+        //Draws the line with the points calculated above
         g.setColor(Color.BLACK);
         g.setStroke(new BasicStroke(2));
         g.draw(new Line2D.Float(lineStart, lineEnd));
         g.draw(new Line2D.Float(lineStart,new Point2D.Double(lineStart.getX(),lineStart.getY()-5)));
         g.draw(new Line2D.Float(lineEnd,new Point2D.Double(lineEnd.getX(),lineStart.getY()-5)));
 
-        displayDistanceString(desiredDistance);
+        displayDistanceString(desiredDistance); //Displays the meters / kilometers near the scalebar
 
         g.setTransform(transform);
     }
@@ -69,11 +69,11 @@ public class Scalebar {
      * @param desiredDistance the desired distance in kilometers
      */
     private Point2D getDesiredDistance(double lineWidth, double desiredDistance){
-        Point2D.Float transformedStart = new Point2D.Float();
-        Point2D.Float transformedEnd = new Point2D.Float();
+        Point2D.Float transformedStart = new Point2D.Float(); //The point in which the tranformed start point will be saved in.
+        Point2D.Float transformedEnd = new Point2D.Float(); //The point in which the transformed end point will be saved in.
 
         try {
-            transform.inverseTransform(lineStart, transformedStart); //Use inverse transform to calculate the points to their corresponding lat and lon according to our transform
+            transform.inverseTransform(lineStart, transformedStart); //Use inverse transform to calculate the points from pixels on the screen to their corresponding lat and lon according to our transform
             transform.inverseTransform(lineEnd,transformedEnd);
         } catch (NoninvertibleTransformException e){
             e.printStackTrace();
@@ -103,7 +103,7 @@ public class Scalebar {
             }
         } else {
             String kilometerDist = new DecimalFormat("##.##").format(desiredDistance) + " km";
-            if(kilometerDist.length() >= 5){
+            if(kilometerDist.length() >= 5){ //Makes sure to draw it appropiately if there are more numbers.
                 g.drawString(kilometerDist, (int) lineStart.getX() - 45, (int) lineStart.getY()+1);
             } else {
                 g.drawString(kilometerDist, (int) lineStart.getX() - 35, (int) lineStart.getY()+1);
@@ -112,7 +112,7 @@ public class Scalebar {
     }
 
     /**
-     * Specifies the distance we wish to display at each zoomlevel.
+     * Specifies the distance we wish to display at each zoomlevel (in km).
      */
     public static void putZoomLevelDistances(){
         zoomLevelDistances = new HashMap<>();
