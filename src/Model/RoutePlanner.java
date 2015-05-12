@@ -12,7 +12,7 @@ import java.util.List;
  * Created by Kevin on 04-05-2015.
  */
 public class RoutePlanner {
-    private static double edgeConstant = 8.0E-8; //Determined by a lot of experimental testing.
+    private static double edgeConstant = 5.0E-8; //Determined by a lot of experimental testing.
     private Iterable<Edge> edges;
 
     /**

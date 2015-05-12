@@ -29,7 +29,7 @@ public class Controller extends MouseAdapter implements ActionListener {
         view.addMouseMotionListener(mH);
         view.addMouseWheelListener(mH);
 
-        // The controller handles what should happen if a button is pressed.
+        //The controller handles what should happen if a button is pressed.
 
         view.getZoomInButton().addActionListener(this);
         view.getZoomOutButton().addActionListener(this);
@@ -124,6 +124,7 @@ public class Controller extends MouseAdapter implements ActionListener {
                         view.zoom(1 / 1.2);
                         break;
                     case 'a':
+                        if(e.isAltDown())
                         view.toggleAA();
                         break;
                     case 's':
