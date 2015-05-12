@@ -133,9 +133,8 @@ public class PathTree {
             w = e.other(v);
         }
         else w = e.either();
-        double driveTime = e.driveTime();
-        if (valueTo[w] > valueTo[v] + driveTime) {
-            valueTo[w] = valueTo[v] + driveTime;
+        if (valueTo[w] > valueTo[v] + e.driveTime()) {
+            valueTo[w] = valueTo[v] + e.driveTime();
             edgeTo[w] = e;
             if (pq.contains(w)) pq.decreaseKey(w, valueTo[w]);
             else                pq.insert(w, valueTo[w]);

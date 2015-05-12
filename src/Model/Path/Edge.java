@@ -135,9 +135,9 @@ public class Edge extends Line2D.Float implements Serializable {
      * @param trafficLightType Either a traffic light for pedestrians or for cars
      * @return 0 if no traffic light, 15 if traffic light present
      */
-    private double trafficSignal(ValueName trafficLightType) {
+    public double trafficSignal(ValueName trafficLightType) {
         OSMNode w_node = vertices.getVertex(w);
-        int signalWaitTime = 0;
+        double signalWaitTime = 0;
         if (w_node.trafficSignal == trafficLightType) {
             signalWaitTime += 0.25; //25 % of a minute = 15 seconds
         }
