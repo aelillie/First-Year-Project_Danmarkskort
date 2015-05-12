@@ -98,8 +98,6 @@ public class ColorblindConfig {
         colorblindView[ValueName.PLAYGROUND.ordinal()] =      new DrawAttribute(false, 0, DrawAttribute.cl_darkgreen, 10);
         //MANMADE
         colorblindView[ValueName.MANMADE.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.cl_pink, 9);
-        //MULTIPOLYGON
-        colorblindView[ValueName.MULTIPOLYGON.ordinal()] =    new DrawAttribute(false, 1, DrawAttribute.cl_darkorange, 15);
         //NATURAL
         colorblindView[ValueName.NATURAL.ordinal()] =         new DrawAttribute(false, 0, DrawAttribute.cl_lightblue, 9);
         colorblindView[ValueName.MUD.ordinal()] =             new DrawAttribute(false, 1, DrawAttribute.cl_darkorange, 9);
@@ -127,7 +125,6 @@ public class ColorblindConfig {
         //ROUTE
         colorblindView[ValueName.ROUTE.ordinal()] =           new DrawAttribute(false, 0, DrawAttribute.cl_pink, 12);
         colorblindView[ValueName.FERRY.ordinal()] =           new DrawAttribute(true, 1, DrawAttribute.cl_lightblue, 12);
-
         //POWER
         colorblindView[ValueName.POWER_AREA.ordinal()] =       new DrawAttribute(false, 0, DrawAttribute.cl_pink, 14);
         //SHOP

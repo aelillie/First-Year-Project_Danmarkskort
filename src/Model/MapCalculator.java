@@ -48,8 +48,7 @@ public class MapCalculator {
                 + Math.cos(Math.toRadians(lat1)) * Math.cos(Math.toRadians(lat2))
                 * Math.sin(lonDistance / 2) * Math.sin(lonDistance / 2);
 
-        double distance = 2 * earthRadius * Math.asin(Math.sqrt(a)); //distance = 2 * R * arcsin(√a)
-        return distance; //distance in kilometers
+        return 2 * earthRadius * Math.asin(Math.sqrt(a)); //distance (km) = 2 * R * arcsin(√a)
     }
 
     /**

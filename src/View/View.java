@@ -1041,38 +1041,6 @@ public class View extends JFrame implements Observer {
                 }
             }
 
-            //Draws the graph of vertices and edges (if enabled)
-            if(graph) {
-                for (MapFeature street : mapFStreets) {
-                    if (!(street instanceof Highway)) continue;
-                    Highway streetedge = (Highway) street;
-                    Iterable<Edge> edges = streetedge.edges();
-                    if (edges == null) continue;
-                    Iterator<Edge> it = edges.iterator();
-                    g.setStroke(new BasicStroke(0.0001f));
-                    g.setPaint(Color.CYAN);
-                    while (it.hasNext()) {
-                        Edge e = it.next();
-                        if (e.isOneWay())
-                            g.setPaint(Color.orange);
-                        else if (e.isOneWayReverse())
-                            g.setPaint(Color.PINK);
-                        g.draw(e);
-                    }
-
-
-                }
-                for (MapFeature street : mapFStreets) {
-                    if (!(street instanceof Highway)) continue;
-                    Highway streetedge = (Highway) street;
-                    List<Point2D> points = streetedge.getPoints();
-                    for(Point2D p : points){
-                        g.setPaint(Color.yellow);
-                        g.draw(new Rectangle2D.Double(p.getX(), p.getY(), 0.000005, 0.000005));
-                    }
-
-                }
-            }
 
             //Draw the shortestPath if not null
             if (shortestPath != null) {
@@ -1095,15 +1063,10 @@ public class View extends JFrame implements Observer {
                 }
             }
 
+            //extra functions
+            paintGraph();
             g.setStroke(DrawAttribute.s05);
-
-
-            if(showGrid) {
-                List<QuadTree> trees = model.getQuadTrees();
-                g.setColor(Color.green);
-                for (Rectangle2D rec : trees.get(0).getNodeRects())
-                    g.draw(rec);
-            }
+            paintQuadTreeGrid();
 
 
             //Draw the icons
@@ -1144,6 +1107,50 @@ public class View extends JFrame implements Observer {
             updateStreetName();
         }
 
+        private void paintQuadTreeGrid() {
+            if(showGrid) {
+                List<QuadTree> trees = model.getQuadTrees();
+                g.setColor(Color.green);
+                for (Rectangle2D rec : trees.get(0).getNodeRects())
+                    g.draw(rec);
+            }
+        }
+
+        private void paintGraph() {
+            //Draws the graph of vertices and edges (if enabled)
+            if(graph) {
+                for (MapFeature street : mapFStreets) {
+                    if (!(street instanceof Highway)) continue;
+                    Highway streetedge = (Highway) street;
+                    Iterable<Edge> edges = streetedge.edges();
+                    if (edges == null) continue;
+                    Iterator<Edge> it = edges.iterator();
+                    g.setStroke(new BasicStroke(0.0001f));
+                    g.setPaint(Color.CYAN);
+                    while (it.hasNext()) {
+                        Edge e = it.next();
+                        if (e.isOneWay())
+                            g.setPaint(Color.orange);
+                        else if (e.isOneWayReverse())
+                            g.setPaint(Color.PINK);
+                        g.draw(e);
+                    }
+
+
+                }
+                for (MapFeature street : mapFStreets) {
+                    if (!(street instanceof Highway)) continue;
+                    Highway streetedge = (Highway) street;
+                    List<Point2D> points = streetedge.getPoints();
+                    for(Point2D p : points){
+                        g.setPaint(Color.yellow);
+                        g.draw(new Rectangle2D.Double(p.getX(), p.getY(), 0.000005, 0.000005));
+                    }
+
+                }
+            }
+        }
+
         /*
         Retrieves data from the quad trees
          */
@@ -1162,13 +1169,19 @@ public class View extends JFrame implements Observer {
             Collection < MapData > bigRoads = model.getVisibleBigRoads(windowBounds, sorted);
             mapFStreets = (Collection<MapFeature>)(Collection<?>) bigRoads;
 
-            if (zoomLevel > 4)
+            if (drawAttributeManager.isTransport() && zoomLevel > 6)
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
+            else if (zoomLevel > 4)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
 
-            if (zoomLevel > 7)
+            if (drawAttributeManager.isTransport() && zoomLevel > 9)
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>)model.getVisibleNatural(windowBounds, sorted));
+            else if (zoomLevel > 7)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>)model.getVisibleNatural(windowBounds, sorted));
 
-            if(zoomLevel > 7) 
+            if (drawAttributeManager.isTransport())
+                mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleStreets(windowBounds, sorted));
+            else if(zoomLevel > 7)
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleStreets(windowBounds, sorted));
 
             if (drawAttributeManager.isTransport())
@@ -1177,16 +1190,13 @@ public class View extends JFrame implements Observer {
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleRailways(windowBounds, sorted));
             }
 
-
-
-            if(zoomLevel > 10)
+            if (drawAttributeManager.isTransport() && zoomLevel > 14)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBuildings(windowBounds, sorted));
-            
-
+            else if(zoomLevel > 10)
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBuildings(windowBounds, sorted));
 
             if(zoomLevel > 14)
                 mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds);
-            
 
             if (!drawAttributeManager.isTransport())
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigForests(windowBounds, sorted));
