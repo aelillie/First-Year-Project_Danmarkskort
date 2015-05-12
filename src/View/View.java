@@ -56,7 +56,6 @@ public class View extends JFrame implements Observer {
     private final JFileChooser fileChooser = new JFileChooser("data"); //sets the initial directory to data
 
 
-
     /**
      * Creates the window of our application.
      *
@@ -448,6 +447,9 @@ public class View extends JFrame implements Observer {
     }
 
 
+    /**
+     * The button next to the main address search field is created
+     */
     private void makeSearchButton() {
         searchButton = new JButton();
         searchButton.setBorder(new CompoundBorder(
