@@ -1056,13 +1056,14 @@ public class View extends JFrame implements Observer {
                     g.draw(e);
                 }
             }
+            g.setStroke(DrawAttribute.s05);
 
             //extra functions
             paintGraph();
-            g.setStroke(DrawAttribute.s05);
             paintQuadTreeGrid();
+            paintQuadTreeView();
 
-
+            g.setColor(Color.BLACK);
             //Draw the icons
             if (zoomLevel > 14) {
                 for (MapIcon mapIcon : mapIcons) {
@@ -1071,11 +1072,7 @@ public class View extends JFrame implements Observer {
                     }
                 }
             }
-            g.setColor(Color.BLACK);
-            if(bounds.testmode()) {
-                Rectangle2D windowBounds = bounds.getBounds();
-                g.draw(windowBounds);
-            }
+
 
             new Scalebar(g, zoomLevel, View.this, transform);
 
@@ -1099,6 +1096,14 @@ public class View extends JFrame implements Observer {
             g.fill(fullscreenArea);
             g.fill(mapTypeButtonArea);
             updateStreetName();
+        }
+
+        private void paintQuadTreeView() {
+            g.setColor(Color.BLACK);
+            if(bounds.testmode()) {
+                Rectangle2D windowBounds = bounds.getBounds();
+                g.draw(windowBounds);
+            }
         }
 
         private void paintQuadTreeGrid() {
