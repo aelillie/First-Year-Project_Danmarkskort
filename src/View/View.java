@@ -463,6 +463,9 @@ public class View extends JFrame implements Observer {
     }
 
 
+    /**
+     * Makes sure to set all other dropdown panels to invisible once routepanel is set to visible
+     */
     public void showRoutePanel() {
         routePanel.showRoutePanel();
         if(!routePanel.isVisible()) closeDirectionList();
