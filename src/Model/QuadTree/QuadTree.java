@@ -11,17 +11,20 @@ import java.util.*;
 
 public class QuadTree implements Serializable{
     private static final long serialVersionUID = 8;
-    private int cap = 0;
-    private Node root;
+    private int cap = 0; //The maximum allowed elements in a cell
+    private Node root; //root cell
 
-    // helper node data type
+    /*
+    * A node is a cell containing children.
+    * Has geometric properties for its place on the map
+     */
     private class Node implements Serializable {
         private static final long serialVersionUID = 8;
-        Double x, y;                                // x- and y- coordinates
+        Double x, y;                           // x- and y- coordinates
         Double width, height;
         Node NW, NE, SE, SW;                   // four subtrees
         MapData[] value;
-        int N;
+        int N;                                  //# elements in this cell
 
         Node(Double x, Double y, Double width, Double height) {
             this.x = x;
@@ -29,8 +32,6 @@ public class QuadTree implements Serializable{
             this.width = width/2;
             this.height = height/2;
             value = new MapData[cap/8 + 1];
-
-
         }
 
         /**
@@ -81,7 +82,7 @@ public class QuadTree implements Serializable{
     }
 
     /**
-     * Create an instance from a bbox. Splitting the initial root using bbox values.
+     * Create an instance from a bounding box. Splitting the initial root using the box's values.
      * @param bbox - Bounds containing all values.
      */
     public QuadTree(Rectangle2D bbox, int capacity){
@@ -112,7 +113,10 @@ public class QuadTree implements Serializable{
         }
     }
 
-    //Used for slightly faster insertion when a node is subdivided.
+    /*
+    Used for slightly faster insertion when a node is subdivided
+    Starts from the previous sub divided node
+     */
     private void insertAgain(MapData value, Node h) {
 
         //First check what Type it is then use its coordinates to store it in the QuadTree
@@ -260,25 +264,20 @@ public class QuadTree implements Serializable{
         else {
             rects.addAll(getNodeRects(root));
         }
-
         return rects;
     }
 
     private ArrayList<Rectangle2D> getNodeRects(Node h){
-        ArrayList<Rectangle2D> wut = new ArrayList<>();
+        ArrayList<Rectangle2D> nodeRects = new ArrayList<>();
         if(h == null) return null;
         else{
-            wut.add(h.getRect());
+            nodeRects.add(h.getRect());
 
-            if(h.NW != null)wut.addAll(getNodeRects(h.NW));
-            if(h.NE != null)wut.addAll(getNodeRects(h.NE));
-            if(h.SE != null)wut.addAll(getNodeRects(h.SE));
-            if(h.SW != null)wut.addAll(getNodeRects(h.SW));
+            if(h.NW != null)nodeRects.addAll(getNodeRects(h.NW));
+            if(h.NE != null)nodeRects.addAll(getNodeRects(h.NE));
+            if(h.SE != null)nodeRects.addAll(getNodeRects(h.SE));
+            if(h.SW != null)nodeRects.addAll(getNodeRects(h.SW));
         }
-        return wut;
+        return nodeRects;
     }
-
-
-
-
 }

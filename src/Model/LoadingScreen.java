@@ -38,7 +38,6 @@ public class LoadingScreen extends JFrame {
             this.setLocation(dim.width / 2 - this.getSize().width / 2, dim.height / 2 - this.getSize().height / 2);
             progressBar = new Rectangle2D.Double(getWidth() * .1, getHeight() * .4, getWidth() * .8, 80);
 
-            //painty painty.
             setVisible(true);
             Graphics2D g = (Graphics2D) getGraphics();
             Rectangle2D rec = new Rectangle2D.Double(getWidth()*0.0001,

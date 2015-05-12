@@ -156,7 +156,7 @@ public class RoutePanelController implements ActionListener{
     private Address[] addressSearch(int type, JTextField textField, JScrollPane scrollPane){
         String input = textField.getText();
         if(input.length() < 3){ //If the length of the search input is less than 3, don't search, return null.
-            if(input.equals("") && input != null) {
+            if(input.equals("")) {
                 scrollPane.setVisible(false); //If the search input is empty, the scrollpane in which the results are displayed need not be visible.
                 view.removePointer(textFieldToIconType.get(textField)); //Remove the pointer in case a given address has already been chosen and a pointer on the map is displayed.
             }

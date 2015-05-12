@@ -1,7 +1,5 @@
 package Model;
 
-import javafx.scene.transform.Affine;
-
 import java.awt.geom.*;
 import java.util.List;
 
@@ -54,6 +52,12 @@ public class MapCalculator {
         return distance; //distance in kilometers
     }
 
+    /**
+     * Calculates the circumference of a polygon
+     * @param points Coordiantes making up the polygon
+     * @param limit limit to filter small polygons
+     * @return if the polygon circumference is bigger than the limit
+     */
     public static boolean exceedsPathLength(List<OSMNode> points, double limit) {
         double pathLength = 0;
         for (int i = 0; i + 1< points.size() ; i++) {

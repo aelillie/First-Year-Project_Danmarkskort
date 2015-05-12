@@ -16,13 +16,15 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+/**
+ * This class is used for creating edges making up the graph for path finding
+ * Handles how you can travel on a street
+ */
 public class Highway extends MapFeature {
     private String streetName;
-    private List<Edge> edges = new ArrayList<>();
+    private List<Edge> edges = new ArrayList<>(); //This highway's edges
     private int maxspeed;
     private boolean driveAble, bikeAble, walkAble;
-
-    public Highway() {}
 
     public Highway(Path2D way, int layer_value, String value, boolean isArea, String streetName, String maxspeed) {
         super(way, layer_value, value);
@@ -102,7 +104,7 @@ public class Highway extends MapFeature {
         for (int i = 0; i + 1 < points.size(); i++) {
             Point2D v;
             Point2D w;
-            if(oneWay.equals("-1")){
+            if(oneWay.equals("-1")){ //street in reverse one way direction
                 v = points.get(i+1);
                 w = points.get(i);
             }else{
@@ -120,10 +122,12 @@ public class Highway extends MapFeature {
 
     }
 
+    //Distance between two points in km
     private double calcDist(Point2D v, Point2D w) {
-        return MapCalculator.haversineDist(v, w); //returns km as unit
+        return MapCalculator.haversineDist(v, w);
     }
 
+    //Makes a line between two points
     private Line2D edgePath(Point2D point1, Point2D point2) {
         return PathCreater.createWay(point1, point2);
     }

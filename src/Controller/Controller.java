@@ -3,7 +3,6 @@ package Controller;
 import Model.Model;
 import View.View;
 
-import java.awt.*;
 import java.awt.event.*;
 import java.awt.geom.NoninvertibleTransformException;
 
@@ -117,7 +116,6 @@ public class Controller extends MouseAdapter implements ActionListener {
             //InputStream inputStream = Controller.class.getResourceAsStream("/binaryModel.bin");
             //Set up the keyboard handler for different keys.
             if(!view.getSearchArea().hasFocus()) {
-
                 switch (e.getKeyChar()) {
                     case '+':
                         view.zoom(1.2);
@@ -134,19 +132,19 @@ public class Controller extends MouseAdapter implements ActionListener {
                             model.saveBin();
                         break;
                     case't':
-                        if(e.isAltDown() ) {
-                            view.toggleTestMode();
+                        if(e.isAltDown()) {
+                            view.toggleQuadTreeTestMode();
                             view.repaint();
                         }
                         break;
                     case 'g':
-                        if(e.isAltDown() ) {
+                        if(e.isAltDown()) {
                             view.toggleGrid();
                             view.repaint();
                         }
                         break;
                     case 'p':
-                        if(e.isAltDown() ) {
+                        if(e.isAltDown()) {
                             view.toggleGraph();
                             view.repaint();
                         }

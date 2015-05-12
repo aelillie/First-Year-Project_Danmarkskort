@@ -1,17 +1,19 @@
 package Model;
 
-import com.sun.deploy.util.StringUtils;
+
 
 import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 import java.util.Objects;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
+/**
+ * An address object containing information about the address
+ * specifications and place on the map
+ */
 public class Address implements Comparable<Address>, Serializable {
     private String street, house, floor, side, postcode, city;
     static private List<Pattern> patternList = new ArrayList<>();
@@ -179,7 +181,7 @@ public class Address implements Comparable<Address>, Serializable {
     /**
      * Sets up patterns to be used for parsing addresses.
      */
-    static public void addPatterns() {
+    public static void addPatterns() {
         patternList.add(Pattern.compile(st + "" + filler)); //only street name
         patternList.add(Pattern.compile(st + " " + filler + ci + filler)); //street + city
         patternList.add(Pattern.compile(pc + filler + ci + filler)); //postal and city
@@ -201,9 +203,9 @@ public class Address implements Comparable<Address>, Serializable {
 
     /**
      * This function tries to match an input String with different patterns. If a pattern matches it will create
-     * an Model.Address object with the information given.
-     * @param s String, Model.Address
-     * @return Model.Address object.
+     * an Address object with the information given.
+     * @param s String, Address
+     * @return Address object.
      */
     public static Address parse(String s) {
         addPatterns();
@@ -365,8 +367,6 @@ public class Address implements Comparable<Address>, Serializable {
     }
 
     public void setAddressLocation(OSMNode addressLocation){this.addressLocation = addressLocation;}
-
-    public void setBoundaryLocation(Path2D boundaryLocation){this.boundaryLocation = boundaryLocation;}
 
     public OSMNode getAddressLocation() {return addressLocation;}
 

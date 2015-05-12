@@ -6,6 +6,13 @@ import Model.OSMNode;
 
 import java.awt.geom.Point2D;
 import java.util.Stack;
+
+/**
+ * Data type for solving a single-source shortest and fastest path between two places on a map
+ * This implementation uses Dijkstra's algorithm with a binary heap.
+ *  For additional documentation, see http://algs4.cs.princeton.edu/44sp/DijkstraSP.java of
+ *  <i>Algorithms, 4th Edition</i> by Robert Sedgewick and Kevin Wayne.
+ */
 public class PathTree {
 
     private Graph G;
@@ -76,13 +83,13 @@ public class PathTree {
         // relax vertices in order of distance/travel time from s
         pq = new IndexMinPQ<>(G.V());
         pq.insert(s, valueTo[s]);
-        while (!pq.isEmpty()) {                                 /* 1 */
+        while (!pq.isEmpty()) {
             int v = pq.delMin();
-            if(v == d) //found destination, stop relaxing edges /* 5 */
+            if(v == d) //found destination, stop relaxing edges
                 break;
-            for (Edge e : G.adj(v)) {                           /* 2 */
-                if (!e.highway().isDriveAble()) continue;       /* 3 */
-                if (!shortestPath)                              /* 4 */
+            for (Edge e : G.adj(v)) {
+                if (!e.highway().isDriveAble()) continue;
+                if (!shortestPath)
                     relaxTime(e, v); //fastest path
                 else relaxDistance(e, v); //shortest path
             }
@@ -123,12 +130,9 @@ public class PathTree {
         }
     }
 
+    //Finds the length to d in bee line from vertex i
     private double h(int i) {
         return MapCalculator.haversineDist(vertices.getVertex(i), end);
-    }
-
-    private double hdrive(int i){
-        return (MapCalculator.haversineDist(vertices.getVertex(i), end)/120)*60;
     }
 
     private void relaxTime(Edge e, int v) {
@@ -143,6 +147,11 @@ public class PathTree {
             if (pq.contains(w)) pq.decreaseKey(w, valueTo[w] + hdrive(w));
             else                pq.insert(w, valueTo[w] + hdrive(w));
         }
+    }
+
+    //Finds the time travelling in bee line from i to d
+    private double hdrive(int i){
+        return (MapCalculator.haversineDist(vertices.getVertex(i), end)/120)*60;
     }
 
 
@@ -229,31 +238,11 @@ public class PathTree {
         return bikeRoute;
     }
 
-    public Graph getG() {
-        return G;
-    }
-
-    public int getS() {
-        return s;
-    }
-
-    public int getD() {
-        return d;
-    }
-
     public double[] getValueTo() {
         return valueTo;
     }
 
     public Edge[] getEdgeTo() {
         return edgeTo;
-    }
-
-    public IndexMinPQ<Double> getPq() {
-        return pq;
-    }
-
-    public boolean isShortestPath() {
-        return shortestPath;
     }
 }

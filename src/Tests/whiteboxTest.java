@@ -76,7 +76,7 @@ public class whiteboxTest {
      */
     @Test
     public void branch1case1() {
-        PathTree oneVertex = new PathTree(m.getDiGraph(), 1509, 1509);
+        PathTree oneVertex = new PathTree(m.getGraph(), 1509, 1509);
         oneVertex.useShortestPath();
         oneVertex.useCarRoute();
         oneVertex.initiate();
@@ -91,7 +91,7 @@ public class whiteboxTest {
      */
     @Test
     public void branch1case2() {
-        PathTree twoVertices = new PathTree(m.getDiGraph(), 1509, 1566);
+        PathTree twoVertices = new PathTree(m.getGraph(), 1509, 1566);
         twoVertices.useShortestPath();
         twoVertices.useCarRoute();
         twoVertices.initiate();
@@ -109,7 +109,7 @@ public class whiteboxTest {
      */
     @Test
     public void branch1case3() {
-        PathTree moreVertices = new PathTree(m.getDiGraph(), 1509, 131);
+        PathTree moreVertices = new PathTree(m.getGraph(), 1509, 131);
         moreVertices.useShortestPath();
         moreVertices.useCarRoute();
         moreVertices.initiate();
@@ -130,7 +130,7 @@ public class whiteboxTest {
     public void branch2case1(){
 
 
-        PathTree zeroAdjacent= new PathTree(m.getDiGraph(), 636, 635);
+        PathTree zeroAdjacent= new PathTree(m.getGraph(), 636, 635);
         zeroAdjacent.useShortestPath();
         zeroAdjacent.useCarRoute();
         zeroAdjacent.initiate();
@@ -147,7 +147,7 @@ public class whiteboxTest {
      */
     @Test
     public void branch2case2(){
-        PathTree oneAdjacent = new PathTree(m.getDiGraph(), 635, 636);
+        PathTree oneAdjacent = new PathTree(m.getGraph(), 635, 636);
         oneAdjacent.useShortestPath();
         oneAdjacent.useCarRoute();
         oneAdjacent.initiate();
@@ -165,7 +165,7 @@ public class whiteboxTest {
      */
     @Test
     public void branch2case3(){
-        PathTree moreAdjacent = new PathTree(m.getDiGraph(), 510, 511);
+        PathTree moreAdjacent = new PathTree(m.getGraph(), 510, 511);
 
         moreAdjacent.useShortestPath();
         moreAdjacent.useCarRoute();
@@ -186,7 +186,7 @@ public class whiteboxTest {
      */
     @Test
     public void branch3case1(){
-        PathTree PT = new PathTree(m.getDiGraph(), 1120, 393);
+        PathTree PT = new PathTree(m.getGraph(), 1120, 393);
         PT.useShortestPath();
         PT.useCarRoute();
         PT.initiate();
@@ -202,7 +202,7 @@ public class whiteboxTest {
      */
     @Test
     public void branch3case2(){
-        PathTree PT = new PathTree(m.getDiGraph(), 1509, 1566);
+        PathTree PT = new PathTree(m.getGraph(), 1509, 1566);
         PT.useShortestPath();
         PT.useCarRoute();
         PT.initiate();
@@ -220,8 +220,8 @@ public class whiteboxTest {
      */
     @Test
     public void branch4case1and2(){
-        PathTree shortest = new PathTree(m.getDiGraph(), 1509, 841);
-        PathTree fastest = new PathTree(m.getDiGraph(), 1509, 841);
+        PathTree shortest = new PathTree(m.getGraph(), 1509, 841);
+        PathTree fastest = new PathTree(m.getGraph(), 1509, 841);
 
         shortest.useCarRoute();
         shortest.useShortestPath();
@@ -300,7 +300,7 @@ public class whiteboxTest {
     public void branch5case1(){
         //End found, break of search
 
-        PathTree destinationPossible = new PathTree(m.getDiGraph(), 1509, 131);
+        PathTree destinationPossible = new PathTree(m.getGraph(), 1509, 131);
 
         destinationPossible.useCarRoute();
         destinationPossible.useShortestPath();
@@ -321,7 +321,7 @@ public class whiteboxTest {
     public void branch5case2(){
         //End not found, check all possibilities
 
-        PathTree destinationNotPossible = new PathTree(m.getDiGraph(), 95, 654);
+        PathTree destinationNotPossible = new PathTree(m.getGraph(), 95, 654);
         destinationNotPossible.useCarRoute();
         destinationNotPossible.useShortestPath();
         destinationNotPossible.initiate();

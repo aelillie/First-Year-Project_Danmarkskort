@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 /**
- * Created by woozy_000 on 13-04-2015.
+ * The grid of edges and vertices, used for path finding
  */
 public class Graph implements Serializable{
     private static final long serialVersionUID = 2;
@@ -16,10 +16,13 @@ public class Graph implements Serializable{
     private int E; //Total amount of edges
     private ArrayList<Edge>[] adj; //a bag for each vertex containing adjacent edges
 
-
     public Graph() {
     }
 
+    /**
+     * Creates adjacent lists for all vertices
+     * @param V Number of vertices parsed in OSMHandler
+     */
     public void initialize(int V) {
         this.V = V;
         this.E = 0;
@@ -37,18 +40,20 @@ public class Graph implements Serializable{
         return E;
     }
 
-    // throw an IndexOutOfBoundsException unless 0 <= v < V
     private void validateVertex(int v) {
         if (v < 0 || v >= V)
             throw new IndexOutOfBoundsException("vertex " + v + " is not between 0 and " + (V-1));
     }
 
+    /**
+     * Constructs the graph using a list of highways
+     * @param highways highways to be used in the graph
+     */
     public void addEdges(Collection<Highway> highways) {
         for (Highway highway : highways) {
             addEdge(highway);
         }
     }
-
 
     private void addEdge(Highway way) {
         for (Edge e : way.edges()) {
@@ -56,13 +61,13 @@ public class Graph implements Serializable{
             int w = e.other(v);
             validateVertex(v);
             validateVertex(w);
-            if (e.isOneWay()) {
+            if (e.isOneWay()) { //Edge in one way direction
                 adj[v].add(e);
                 E++;
-            } else if (e.isOneWayReverse()) {
+            } else if (e.isOneWayReverse()) { //Edge in reverse one way direction
                 adj[w].add(e);
                 E++;
-            } else {
+            } else { //Undirected edge
                 adj[v].add(e);
                 adj[w].add(e);
                 E++;
@@ -73,10 +78,9 @@ public class Graph implements Serializable{
 
 
     /**
-     * Returns the directed edges incident from vertex <tt>v</tt>.
-     * @return the directed edges incident from vertex <tt>v</tt> as an Iterable
+     * Returns the edges incident from vertex v.
+     * @return the edges incident from vertex v as an Iterable
      * @param v the vertex
-     * @throws java.lang.IndexOutOfBoundsException unless 0 <= v < V
      */
     public Iterable<Edge> adj(int v) {
         validateVertex(v);
@@ -84,10 +88,9 @@ public class Graph implements Serializable{
     }
 
     /**
-     * Returns the degree of vertex <tt>v</tt>.
-     * @return the degree of vertex <tt>v</tt>
+     * Returns the degree of vertex v.
+     * @return the degree of vertex v
      * @param v the vertex
-     * @throws java.lang.IndexOutOfBoundsException unless 0 <= v < V
      */
     public int degree(int v) {
         validateVertex(v);
@@ -96,8 +99,7 @@ public class Graph implements Serializable{
 
     /**
      * Returns all edges in the edge-weighted graph.
-     * To iterate over the edges in the edge-weighted graph, use foreach notation:
-     * <tt>for (Edge e : G.edges())</tt>.
+     * To iterate over the edges in the edge-weighted graph
      * @return all edges in the edge-weighted graph as an Iterable.
      */
     public Iterable<Edge> edges() {
@@ -120,9 +122,9 @@ public class Graph implements Serializable{
 
     /**
      * Returns a string representation of the edge-weighted digraph.
-     * This method takes time proportional to <em>E</em> + <em>V</em>.
-     * @return the number of vertices <em>V</em>, followed by the number of edges <em>E</em>,
-     *   followed by the <em>V</em> adjacency lists of edges
+     * This method takes time proportional to E + V.
+     * @return the number of vertices V, followed by the number of edges E,
+     *   followed by the V adjacency lists of edges
      */
     public String toString() {
         String NEWLINE = System.getProperty("line.separator");

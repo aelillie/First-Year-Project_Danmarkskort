@@ -4,12 +4,10 @@ import Model.Path.Graph;
 import Model.Path.Vertices;
 import Model.QuadTree.QuadTree;
 
-import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 
 /**
@@ -35,7 +33,7 @@ public class BinaryHandler{
         out.writeObject(model.getOSMReader().getAddressList());
         loadingScreen.updateLoadBar(40);
 
-        out.writeObject(model.getDiGraph());
+        out.writeObject(model.getGraph());
         loadingScreen.updateLoadBar(60);
 
         out.writeObject(model.getVertices());

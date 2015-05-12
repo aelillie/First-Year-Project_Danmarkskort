@@ -25,9 +25,6 @@ public abstract class MapFeature implements Serializable, MapData {
         setValueName();
     }
 
-    public MapFeature() {
-
-    }
 
     /**
      * Defines a larger spectrum of layer values
