@@ -16,11 +16,9 @@ import java.util.Map;
 
 public class MapIcon implements Serializable, MapData {
     public static final long serialVersionUID = 5;
-
     public static Map<String, URL> getIconURLs() {
         return iconURLs;
     }
-
     //Hashmap containing references of paths to resource files.
     public static Map<String, URL> iconURLs = new HashMap<>();
 

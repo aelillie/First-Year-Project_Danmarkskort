@@ -49,7 +49,7 @@ public class IconController extends Observable implements ComponentListener, Ite
     }
 
     /**
-     * Set the icon state to the opposite and update view
+     * When clicked, set the icon state to the opposite and update view
      *
      * @param e ItemEvent
      */

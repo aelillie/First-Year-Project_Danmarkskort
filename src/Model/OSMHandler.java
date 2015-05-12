@@ -28,7 +28,6 @@ public class OSMHandler extends DefaultHandler {
 
     //Contains relevant places parsed as address objects linked to their coordinate.
     private Map<Address, List<Path2D>> streetMap;
-
     private QuadTree streetTree, buildingTree, iconTree, naturalTree, railwayTree, bigRoadTree;
     private QuadTree coastLinesTree, landuseTree, bigForestTree, bigLakeTree;
     private ArrayList<Address> addressList; //list of all the addresses in the .osm file
