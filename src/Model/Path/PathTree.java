@@ -2,6 +2,7 @@ package Model.Path;
 
 import Model.MapCalculator;
 import Model.Model;
+import Model.OSMNode;
 
 import java.awt.geom.Point2D;
 import java.util.Stack;
@@ -143,6 +144,8 @@ public class PathTree {
             else                pq.insert(w, valueTo[w] + hdrive(w));
         }
     }
+
+
 
     /**
      * Returns the length of a path from the source vertex s to vertex d.

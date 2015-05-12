@@ -144,8 +144,9 @@ public class OSMHandler extends DefaultHandler {
                     if(v.equals("bus_stop"))
                         isBusstop = true;
                     else if(k.equals("highway") && v.equals("traffic_signals"))
-                        node_longMap.get(thisNodeId).hasTrafficSignal = true;
-                }
+                        node_longMap.get(thisNodeId).trafficSignal = ValueName.TRAFFICLIGHT_HIGHWAY;
+                }else if (k.equals("crossing") && v.equals("traffic_signals"))
+                    node_longMap.get(thisNodeId).trafficSignal = ValueName.TRAFFICLIGHT_PEDESTRIAN;
                 if(k.equals("subway")&& v.equals("yes")) isMetro = true;
                 if(k.equals("network") && v.equals("S-Tog")) isSTog = true;
                 if(k.equals("addr:street")){
