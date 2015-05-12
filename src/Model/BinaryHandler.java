@@ -32,12 +32,8 @@ public class BinaryHandler{
 
         loadingScreen.updateLoadBar(10);
 
-        out.writeObject(model.getOSMReader().getStreetMap());
-        loadingScreen.updateLoadBar(35);
-
-
         out.writeObject(model.getOSMReader().getAddressList());
-        loadingScreen.updateLoadBar(50);
+        loadingScreen.updateLoadBar(40);
 
         out.writeObject(model.getDiGraph());
         loadingScreen.updateLoadBar(60);
@@ -77,8 +73,6 @@ public class BinaryHandler{
         LoadingScreen loadingScreen = new LoadingScreen();
 
         loadingScreen.updateLoadBar(5);
-
-        model.getOSMReader().setStreetMap((Map<Address, List<Path2D>>) in.readObject());
 
         loadingScreen.updateLoadBar(20);
 

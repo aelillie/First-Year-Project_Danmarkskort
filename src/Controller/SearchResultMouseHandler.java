@@ -62,26 +62,16 @@ public class SearchResultMouseHandler extends MouseAdapter{
      * @param iconType - End or start Position icon type
      */
     public static void goToAddressLocation(Address selectedAddr, Model m, View v, String iconType){
-        Map<Address, List<Path2D>> streetMap = m.getOSMReader().getStreetMap();
-
         Point2D addressLocation = selectedAddr.getAddressLocation();
-        List<Path2D> streetLocation = streetMap.get(selectedAddr);
         Path2D boundaryLocation = selectedAddr.getBoundaryLocation();
 
-        if(addressLocation == null && boundaryLocation == null) {
-            v.zoomOnStreet(streetLocation);
-            Point2D middlePoint = getMiddlePoint(streetLocation);
-
-            v.addPointer(new MapPointer(streetLocation,iconType));
-            v.searchResultChosen(middlePoint.getX(),middlePoint.getY());
-
-        } else if(boundaryLocation == null && streetLocation == null){
+        if(boundaryLocation == null){
             v.zoomOnAddress();
 
             v.addPointer(new MapPointer(addressLocation,iconType));
             v.searchResultChosen(addressLocation.getX(), addressLocation.getY());
 
-        } else if(streetLocation == null && addressLocation == null){
+        } else if(addressLocation == null){
             v.addPointer(new MapPointer(boundaryLocation, iconType));
             v.searchResultChosen(boundaryLocation.getBounds().getCenterX(), boundaryLocation.getBounds().getCenterY());
 
@@ -90,41 +80,12 @@ public class SearchResultMouseHandler extends MouseAdapter{
 
     }
 
-    private static Point2D getMiddlePoint(List<Path2D> street){
-        int pathCount = 0;
-        double xCoordinateMean = 0;
-        double yCoordinateMean = 0;
-        for(Path2D path: street){
-            double[] points = new double[6];
-            PathIterator pathIterator = path.getPathIterator(new AffineTransform());
-            while(!pathIterator.isDone()){
-                pathIterator.currentSegment(points);
-
-                xCoordinateMean += points[0];
-                yCoordinateMean += points[1];
-
-                pathCount++;
-
-                pathIterator.next();
-            }
-
-        }
-
-        xCoordinateMean = xCoordinateMean/pathCount;
-        yCoordinateMean = yCoordinateMean/pathCount;
-        return new Point2D.Double(xCoordinateMean,yCoordinateMean);
-    }
-
     public static Point2D getPoint(Address result, Model m){
-        Map<Address, List<Path2D>> streetMap = m.getOSMReader().getStreetMap();
 
         Point2D addressLocation = result.getAddressLocation();
-        List<Path2D> streetLocation = streetMap.get(result);
         Path2D boundaryLocation = result.getBoundaryLocation();
         if(addressLocation != null)
             return addressLocation;
-        else if(streetLocation != null)
-            return getMiddlePoint(streetLocation);
         else if(boundaryLocation != null)
             return null;
         else return null;

@@ -8,7 +8,6 @@ import org.xml.sax.Attributes;
 import org.xml.sax.helpers.DefaultHandler;
 
 import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.*;
 
@@ -26,8 +25,6 @@ public class OSMHandler extends DefaultHandler {
     private HashSet<String> bigRoads = new HashSet<>(Arrays.asList("motorway",
             "trunk", "primary", "secondary", "tertiary"));
 
-    //Contains relevant places parsed as address objects linked to their coordinate.
-    private Map<Address, List<Path2D>> streetMap;
 
     private QuadTree streetTree, buildingTree, iconTree, naturalTree, railwayTree, bigRoadTree;
     private QuadTree coastLinesTree, landuseTree, bigForestTree, bigLakeTree;
@@ -54,7 +51,6 @@ public class OSMHandler extends DefaultHandler {
         node_longMap = new LongHashMap<OSMNode>();
         keyValue_map = new HashMap<>();
         wayId_longMap = new LongHashMap<Path2D>();
-        streetMap = new HashMap<>();
         vertices = new Vertices();
         graph = new Graph();
     }
@@ -270,13 +266,7 @@ public class OSMHandler extends DefaultHandler {
                 }
                 else if (keyValue_map.containsKey("route"))
                     railwayTree.insert(new Route(way, fetchOSMLayer(), keyValue_map.get("route")));
-                else if (keyValue_map.containsKey("name")) {
-                    String name = keyValue_map.get("name").toLowerCase().trim();
-                    if (keyValue_map.containsKey("highway") || keyValue_map.containsKey("cycleway") || keyValue_map.containsKey("motorroad")) {
-                        Address addr = Address.newStreet(name);
-                        addStreetToMap(way, addr);
-                    }
-                }
+
                 wayId_longMap.put(wayId, way);
                 break;
 
@@ -438,19 +428,6 @@ public class OSMHandler extends DefaultHandler {
 
 
 
-    private void addStreetToMap(Path2D way, Address street){
-        List<Path2D> existingList = streetMap.get(street);
-        if (existingList == null) {
-            List<Path2D> list = new ArrayList<>();
-            list.add(way);
-            streetMap.put(street, list); //Make sure the street is not added again
-            addressList.add(street);
-        } else {
-            List<Path2D> list = streetMap.get(street);
-            list.add(way);
-        }
-    }
-
     public Address[] searchForAddressess(Address add, int type){
         return AddressSearcher.searchForAddresses(add, addressList, type);
     }
@@ -506,12 +483,8 @@ public class OSMHandler extends DefaultHandler {
         this.bigLakeTree = quadTrees.get(9);
     }
 
-    public Map<Address, List<Path2D>> getStreetMap() {return streetMap;}
     public List<Address> getAddressList(){return addressList;}
 
-    public void setStreetMap(Map<Address, List<Path2D>> streetMap) {
-        this.streetMap = streetMap;
-    }
 
     public void setAddressList(ArrayList<Address> addressList) {
         this.addressList = addressList;
