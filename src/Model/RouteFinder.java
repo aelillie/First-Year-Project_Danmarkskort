@@ -10,9 +10,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.List;
 
-/**
- * Created by Anders on 04-05-2015.
- */
 public class RouteFinder {
     private Model model = Model.getModel();
     private int startVertex, endVertex;

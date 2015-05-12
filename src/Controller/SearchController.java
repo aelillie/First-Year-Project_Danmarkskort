@@ -9,9 +9,6 @@ import javax.swing.event.DocumentListener;
 import java.awt.*;
 import java.awt.event.*;
 
-/**
- * Created by Nicoline on 04-04-2015.
- */
 public class SearchController extends MouseAdapter implements ActionListener {
     Model model;
     View view;

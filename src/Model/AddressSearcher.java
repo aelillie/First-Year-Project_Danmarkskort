@@ -4,9 +4,6 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 import java.util.Map;
 
-/**
- * Created by Kevin on 16-03-2015.
- */
 public class AddressSearcher {
 
     //Type of compare: either 1 = startsWith compare otherwise equality compare

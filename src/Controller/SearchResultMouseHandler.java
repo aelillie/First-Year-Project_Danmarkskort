@@ -15,9 +15,6 @@ import java.awt.geom.Point2D;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Nicoline on 04-04-2015.
- */
 public class SearchResultMouseHandler extends MouseAdapter{
 
     private View view;

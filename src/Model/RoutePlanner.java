@@ -9,7 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by Kevin on 04-05-2015.
+ * This class handles the routeplan by processing directions
  */
 public class RoutePlanner {
     private static double edgeConstant = 5.0E-8; //Determined by a lot of experimental testing.
@@ -27,7 +27,7 @@ public class RoutePlanner {
 
 
     /**
-     * GOes through the edges creating the direction-Strings
+     * Goes through the edges creating the direction-Strings
      * @return - String[] of Directions.
      */
     public String[] getDirections(){

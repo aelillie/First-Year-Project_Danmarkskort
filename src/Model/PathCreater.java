@@ -11,8 +11,6 @@ import java.util.List;
 
 public class PathCreater {
 
-
-
     /**
      * Appends multiple Paths and sets the windingrule
      *

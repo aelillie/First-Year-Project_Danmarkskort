@@ -19,7 +19,7 @@ public class MapIcon implements Serializable, MapData {
     public static Map<String, URL> getIconURLs() {
         return iconURLs;
     }
-    //Hashmap containing references of paths to resource files.
+    //Hashmap containing references of paths to resource files
     public static Map<String, URL> iconURLs = new HashMap<>();
 
     static{
@@ -115,24 +115,19 @@ public class MapIcon implements Serializable, MapData {
         it.scale((1 / transform.getScaleX()), (1 / transform.getScaleY())); //Sets off against the transform of the context, scaling the transform of the icon accordingly.
         g.drawImage(img, it, null);
     }
-
+    //Specifically telling how the object should be written when using objectOutputStream
     private void writeObject(ObjectOutputStream stream)throws IOException{
-        //Specifically telling how the object should be written when using objectOutputStream
         stream.writeObject(coord);
         stream.writeUTF(type);
     }
 
+    //How the object is read by a ObjectInputStream
     private void readObject(ObjectInputStream stream) throws IOException, ClassNotFoundException {
-        //How the object is read by a ObjectInputStream
         Object co = stream.readObject();
         coord = (Point2D) co;
         this.type = stream.readUTF().intern();
 
         imgPath = iconURLs.get(type);
-    }
-    public URL getURL()
-    {
-        return this.imgPath;
     }
 
     /**
@@ -185,25 +180,21 @@ public class MapIcon implements Serializable, MapData {
         return iconsOne;
     }
 
-    public static HashMap<URL, Boolean> getHashIcon() {
-        return hashIcon;
-    }
-
     private static HashMap<URL,Boolean> addIcon(){
         HashMap<URL, Boolean> hashIcon = new HashMap<>();
-        hashIcon.put(MapIcon.iconURLs.get("restaurantIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("pubIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("cafeIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("toiletIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("7elevenIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("hotelIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("atmIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("parkingIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("metroIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("busIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("stogIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("attractionsIcon"),false);
-        hashIcon.put(MapIcon.iconURLs.get("hospitalIcon"),false);
+        hashIcon.put(MapIcon.iconURLs.get("restaurantIcon"), false);
+        hashIcon.put(MapIcon.iconURLs.get("pubIcon"), false);
+        hashIcon.put(MapIcon.iconURLs.get("cafeIcon"), false);
+        hashIcon.put(MapIcon.iconURLs.get("toiletIcon"), false);
+        hashIcon.put(MapIcon.iconURLs.get("7elevenIcon"), false);
+        hashIcon.put(MapIcon.iconURLs.get("hotelIcon"), false);
+        hashIcon.put(MapIcon.iconURLs.get("atmIcon"), false);
+        hashIcon.put(MapIcon.iconURLs.get("parkingIcon"), false);
+        hashIcon.put(MapIcon.iconURLs.get("metroIcon"), false);
+        hashIcon.put(MapIcon.iconURLs.get("busIcon"), false);
+        hashIcon.put(MapIcon.iconURLs.get("stogIcon"), false);
+        hashIcon.put(MapIcon.iconURLs.get("attractionsIcon"), false);
+        hashIcon.put(MapIcon.iconURLs.get("hospitalIcon"), false);
         return hashIcon;
     }
 
@@ -242,5 +233,7 @@ public class MapIcon implements Serializable, MapData {
         result = 31 * result + (type != null ? type.hashCode() : 0);
         return result;
     }
+
+
 }
 

@@ -19,7 +19,7 @@ public class IconPanel extends JScrollPane {
 
 
     /**
-     * Creates the iconPanel and calls the addIcons() and showIconPanel() method
+     * Creates the iconPanel
      */
     public IconPanel() {
         super();
@@ -92,27 +92,24 @@ public class IconPanel extends JScrollPane {
             public void actionPerformed(ActionEvent e) {
                 JCheckBox check1 = (JCheckBox) e.getSource();
                 boolean selected = check1.getModel().isSelected();
-                //IconController.setUpdateView(false);
                 for(int i = 0; i < checkBoxes.size();i++){
                     JCheckBox c = checkBoxes.get(i);
                     c.setSelected(selected);
                 }
-                //IconController.setUpdateView(true);
-                //v.update(null,null);
-
             }
         });
         panel.add(label);
         panel.add(check);
     }
 
-    //for all IconControllers adjust the view
+    /**
+     * For all IconControllers adjust the view
+     */
+
     public void addObserverToIcons(View v) {
         for (IconController con : controllers) {
             con.setView(v);
         }
-        //this.v = v;
-
     }
 
     public void showIconPanel() {

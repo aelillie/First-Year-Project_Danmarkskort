@@ -1,7 +1,7 @@
 package Model;
 
 /**
- * Created by Anders on 17-03-2015.
+ * This class contains Enum keyvalues
  */
 public enum ValueName {
     AEROWAY, //##New key##

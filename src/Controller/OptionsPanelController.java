@@ -11,9 +11,6 @@ import java.io.InputStream;
 import java.net.URL;
 import Model.Model;
 
-/**
- * Created by Kevin on 18-03-2015.
- */
 public class OptionsPanelController implements ActionListener {
     private View view;
     private Model model;

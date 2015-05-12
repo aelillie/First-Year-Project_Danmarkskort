@@ -668,7 +668,7 @@ public class View extends JFrame implements Observer {
     }
 
     /*
-    checks if the user zooms out
+       * Checks if the user zooms out
      */
     private void checkForZoomOut(){
         if(checkOut == 1){

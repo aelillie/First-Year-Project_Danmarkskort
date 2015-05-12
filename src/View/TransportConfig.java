@@ -3,7 +3,7 @@ package View;
 import Model.ValueName;
 
 /**
- * View configuration for transport
+ * View configuration for transportMap
  */
 public class TransportConfig {
     private DrawAttribute[] transportView;

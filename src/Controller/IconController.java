@@ -16,11 +16,9 @@ public class IconController extends Observable implements ComponentListener, Ite
 
     private URL number;
     private View v;
-    //  private static boolean updateView = true;
 
     /**
-     * Tells MapIcon which icons should be drawn.
-     *
+     * Tells MapIcon which icons should be drawn
      * @param number
      */
     public IconController(URL number) {
@@ -50,13 +48,11 @@ public class IconController extends Observable implements ComponentListener, Ite
 
     /**
      * When clicked, set the icon state to the opposite and update view
-     *
      * @param e ItemEvent
      */
 
     public void itemStateChanged(ItemEvent e) {
         MapIcon.setIconState(this.number, !MapIcon.getIconState(this.number));
-        //if(IconController.updateView)
         v.update(null, null);
     }
 
