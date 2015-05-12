@@ -235,7 +235,7 @@ public class OSMHandler extends DefaultHandler {
                 else if (keyValue_map.containsKey("emergency"))
                     naturalTree.insert(new Emergency(way, fetchOSMLayer(), keyValue_map.get("emergency")));
                 else if (keyValue_map.containsKey("aeroway"))
-                    naturalTree.insert(new Aeroway(way, fetchOSMLayer(), keyValue_map.get("aeroway")));
+                    buildingTree.insert(new Aeroway(way, fetchOSMLayer(), keyValue_map.get("aeroway")));
                 else if (keyValue_map.containsKey("amenity")) {
                     buildingTree.insert(new Amenity(way, fetchOSMLayer(), keyValue_map.get("amenity"), keyValue_map.containsKey("building")));
                     if (keyValue_map.get("amenity").equals("parking")) {
@@ -411,12 +411,12 @@ public class OSMHandler extends DefaultHandler {
                 graph.initialize(vertices.V());
                 graph.addEdges(streetEdges());
                 insertCoastLines();
-                //System.out.print(coastlines.size());
+
                 wayId_longMap.clear(); //sets key and value arrays to point to null
                 node_longMap.clear();
                 keyValue_map.clear();
                 vertices.clearMap();
-                //System.out.print(coastLinesTree.query2D(bbox, false).size());
+
                 coastlines.clear();
                 break;
 

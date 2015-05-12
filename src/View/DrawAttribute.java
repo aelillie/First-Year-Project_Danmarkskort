@@ -104,6 +104,7 @@ public class DrawAttribute {
     public static Color lightgreen = new Color(34,139,34);
     public static Color lightergreen = new Color(35, 160, 35);
     public static Color darkgreen = new Color(0, 100, 0);
+    public static Color darkergreen = new Color(0, 47, 0);
     public static Color fadegreen = new Color(204, 255, 205);
     public static Color lightyellow = new Color(240,230,140);
     public static Color darkblue = new Color(0, 0, 139);

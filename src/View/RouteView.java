@@ -31,7 +31,7 @@ public class RouteView extends JPanel{
     public RouteView(View view, Model model){
 
         setVisible(false);
-        setBounds(20, 79, 342, 180);
+        setBounds(25, 79, 342, 180);
         setOpaque(true);
         setBackground(Color.WHITE);
         this.view = view;

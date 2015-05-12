@@ -126,6 +126,10 @@ public class PathTree {
         return MapCalculator.haversineDist(vertices.getVertex(i), end);
     }
 
+    private double hdrive(int i){
+        return (MapCalculator.haversineDist(vertices.getVertex(i), end)/120)*60;
+    }
+
     private void relaxTime(Edge e, int v) {
         int w;
         if(v == e.either()) {
@@ -135,8 +139,8 @@ public class PathTree {
         if (valueTo[w] > valueTo[v] + e.driveTime()) {
             valueTo[w] = valueTo[v] + e.driveTime();
             edgeTo[w] = e;
-            if (pq.contains(w)) pq.decreaseKey(w, valueTo[w]);
-            else                pq.insert(w, valueTo[w]);
+            if (pq.contains(w)) pq.decreaseKey(w, valueTo[w] + hdrive(w));
+            else                pq.insert(w, valueTo[w] + hdrive(w));
         }
     }
 
