@@ -16,7 +16,7 @@ public class Waterway extends MapFeature {
     @Override
     public void setPreDefLayerValues() {
         super.setPreDefLayerValues();
-        layer_value = 9;
+        layer_value = 19;
     }
 
     @Override

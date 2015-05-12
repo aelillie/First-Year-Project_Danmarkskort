@@ -19,7 +19,6 @@ import java.util.Map;
 public class MapPointer {
 
     private URL imgPath;
-    private List<Path2D> streetLocation;
     private Point2D addressLocation;
     private Path2D boundaryLocation;
     private BufferedImage img;
@@ -38,13 +37,6 @@ public class MapPointer {
     }
 
 
-    public MapPointer(List<Path2D> streetLocation, String type){
-        this.streetLocation = streetLocation;
-        imgPath = pointerIconURLs.get(type);
-        pointerLocation = getMiddlePoint(streetLocation);
-        this.type = type;
-    }
-
     public MapPointer(Point2D addressLocation, String type){
         this.addressLocation = addressLocation;
         imgPath = pointerIconURLs.get(type);
@@ -58,35 +50,10 @@ public class MapPointer {
         this.type = type;
     }
 
-    private static Point2D getMiddlePoint(List<Path2D> street){
-        int pathCount = 0;
-        double xCoordinateMean = 0;
-        double yCoordinateMean = 0;
-        for(Path2D path: street){
-            Rectangle2D rect = path.getBounds2D();
-            xCoordinateMean += rect.getX();
-            yCoordinateMean += rect.getY();
-            pathCount++;
-        }
-
-        xCoordinateMean = xCoordinateMean/pathCount;
-        yCoordinateMean = yCoordinateMean/pathCount;
-        return new Point2D.Double(xCoordinateMean,yCoordinateMean);
-    }
-
     public void draw(Graphics2D g, AffineTransform transform){
-        if(streetLocation != null) drawStreetLocation(g);
-        else drawPointer(g,transform);
+        drawPointer(g,transform);
     }
 
-
-    private void drawStreetLocation(Graphics2D g){
-        for(Path2D street : streetLocation) {
-            g.setStroke(new BasicStroke(0.000035f)); //TODO: Varying stroke and color according to drawattribute
-            g.setColor(DrawAttribute.cl_red);
-            g.draw(street);
-        }
-    }
 
     private void drawPointer(Graphics2D g, AffineTransform transform){
         try{

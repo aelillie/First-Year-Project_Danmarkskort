@@ -98,7 +98,7 @@ public class OSMHandlerTest {
             if (barrier.getValue().equals("hedge"))
                 break;
         }
-        for (MapData mapData : buildingList) {
+        for (MapData mapData : naturalList) {
             leisure = (MapFeature) mapData;
             if (leisure.getValue().equals("garden"))
                 break;
@@ -140,7 +140,7 @@ public class OSMHandlerTest {
         buildingList.forEach(mapdata -> {
             Assert.assertNotNull(mapdata);
         });
-        Assert.assertEquals(5, buildingList.size());
+        Assert.assertEquals(4, buildingList.size());
 
     }
 
@@ -148,7 +148,7 @@ public class OSMHandlerTest {
     @Test
     public void addingNaturalsTest(){
         Assert.assertTrue(!naturalList.isEmpty());
-        Assert.assertEquals(2, naturalList.size());
+        Assert.assertEquals(3, naturalList.size());
         naturalList.forEach(natural ->{
                     Assert.assertNotNull(natural);
                 }
