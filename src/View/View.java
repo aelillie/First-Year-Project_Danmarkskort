@@ -165,32 +165,6 @@ public class View extends JFrame implements Observer {
         searchArea = new JTextField();
         searchArea.setForeground(Color.GRAY);
         searchArea.setText(promptText);
-        //Create a FocusListener for the textField
-        searchArea.addFocusListener(new FocusListener() {
-            @Override
-            /**
-             * If selected remove prompt text
-             */
-            public void focusGained(FocusEvent e) {
-                if (searchArea.getText().equals(promptText)) {
-                    searchArea.setForeground(Color.BLACK);
-                    searchArea.setText("");
-                }
-            }
-
-            @Override
-            /**
-             * if unselected and search field is empty sets up promptText.
-             */
-            public void focusLost(FocusEvent e) {
-                if (searchArea.getText().isEmpty()) {
-                    searchArea.setForeground(Color.GRAY);
-                    searchArea.setText(promptText);
-                    resultPane.setVisible(false);
-                }
-            }
-
-        });
 
         //Make the components for the frame.
         makeComponents();
@@ -222,6 +196,9 @@ public class View extends JFrame implements Observer {
 
     }
 
+    /**
+     * Creates top search area and calls to create all the front GUI buttons.
+     */
     private void makeComponents() {
         Font font = new Font("Open Sans", Font.PLAIN, 14);
 
@@ -288,7 +265,7 @@ public class View extends JFrame implements Observer {
     }
 
     /**
-     * Changes the configuration of how the view should draw objects.
+     * Changes the configuration of how the view should draw objects - standard, colorblind or transport.
      */
     public void changeToStandard(){
         drawAttributeManager.toggleStandardView();

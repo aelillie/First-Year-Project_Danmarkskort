@@ -13,6 +13,7 @@ public class SearchController extends MouseAdapter implements ActionListener {
     Model model;
     View view;
     private int selectedNr = -1;
+    private String promptText = "Enter Address";
 
     public SearchController(Model m, View v) {
         model = m;
@@ -23,6 +24,33 @@ public class SearchController extends MouseAdapter implements ActionListener {
     private void setHandlers(){
         view.getSearchArea().addActionListener(this);
         view.getSearchArea().addKeyListener(new SearchAreaKeyHandler());
+        JTextField searchArea = view.getSearchArea();
+        searchArea.addFocusListener(new FocusListener() {
+            @Override
+            /**
+             * If selected remove prompt text
+             */
+            public void focusGained(FocusEvent e) {
+                if (searchArea.getText().equals(promptText)) {
+                    searchArea.setForeground(Color.BLACK);
+                    searchArea.setText("");
+                }
+            }
+
+            @Override
+            /**
+             * if unselected and search field is empty sets up promptText.
+             */
+            public void focusLost(FocusEvent e) {
+                if (searchArea.getText().isEmpty()) {
+                    searchArea.setForeground(Color.GRAY);
+                    searchArea.setText(promptText);
+                    view.getResultPane().setVisible(false);
+                }
+            }
+
+        });
+
         view.getSearchButton().addActionListener(this);
         setInputChangeHandler();
     }
