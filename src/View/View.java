@@ -1140,7 +1140,7 @@ public class View extends JFrame implements Observer {
 
 
             //Draw the icons
-            if (zoomLevel > 13) {
+            if (zoomLevel > 14) {
                 for (MapIcon mapIcon : mapIcons) {
                     if(mapIcon.isVisible()) {
                         mapIcon.draw(g, transform);
@@ -1214,14 +1214,14 @@ public class View extends JFrame implements Observer {
             
 
 
-            if(zoomLevel > 13)
+            if(zoomLevel > 14)
                 mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds);
             
 
             if (!drawAttributeManager.isTransport())
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigForests(windowBounds, sorted));
             else {
-                if (zoomLevel > 7)
+                if (zoomLevel > 3)
                     mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigForests(windowBounds, sorted));
             }
             mapFAreas.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleBikLakes(windowBounds, sorted));

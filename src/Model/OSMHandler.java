@@ -201,11 +201,8 @@ public class OSMHandler extends DefaultHandler {
                 }
                 else if (keyValue_map.containsKey("waterway"))
                     naturalTree.insert(new Waterway(way, fetchOSMLayer(), keyValue_map.get("waterway"), isArea));
-                else if (keyValue_map.containsKey("leisure")) {
-                    if (keyValue_map.get("leisure").equals("park"))
-                        naturalTree.insert(new Leisure(way, fetchOSMLayer(), "park"));
-                    else buildingTree.insert(new Leisure(way, fetchOSMLayer(), keyValue_map.get("leisure")));
-                }
+                else if (keyValue_map.containsKey("leisure"))
+                    naturalTree.insert(new Leisure(way, fetchOSMLayer(), keyValue_map.get("leisure")));
                 else if (keyValue_map.containsKey("landuse")) {
                     if (keyValue_map.get("landuse").equals("forest") && (MapCalculator.exceedsPathLength(wayCoords, 12))) {
                         bigForestTree.insert(new Landuse(way, fetchOSMLayer(), "forest", true));
@@ -279,11 +276,6 @@ public class OSMHandler extends DefaultHandler {
                         Address addr = Address.newStreet(name);
                         addStreetToMap(way, addr);
                     }
-                    if (keyValue_map.containsKey("boundary")) {
-                        Address addr = Address.newStreet(name);
-                        addr.setBoundaryLocation(way);
-                        addressList.add(addr);
-                    }
                 }
                 wayId_longMap.put(wayId, way);
                 break;
@@ -315,22 +307,6 @@ public class OSMHandler extends DefaultHandler {
                                 naturalTree.insert(new Leisure(path, fetchOSMLayer(), "park"));
                             else buildingTree.insert(new Leisure(path, fetchOSMLayer(), keyValue_map.get("leisure")));
                         }
-                        /*else if (keyValue_map.containsKey("natural") && keyValue_map.get("natural").equals("water")) {
-                            naturalTree.insert(new Natural(path, fetchOSMLayer(), "water"));
-                        }*/
-                        //TODO: Natural = water
-
-                    }
-                    if (typeValue.equals("boundary")) {
-                        Path2D path = PathCreater.createMultipolygon(memberReferences, wayId_longMap);
-                        if (path == null) return;
-                        String name = keyValue_map.get("name");
-                        if (name == null) return;
-                        name.toLowerCase().trim();
-                        Address addr = Address.newTown(name);
-                        //boundaryMap.put(addr, path);
-                        addr.setBoundaryLocation(path);
-                        addressList.add(addr);
                     }
                 }
 

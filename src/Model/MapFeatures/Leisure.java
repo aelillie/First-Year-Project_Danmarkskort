@@ -20,6 +20,7 @@ public class Leisure extends MapFeature {
         super.setPreDefLayerValues();
         if (value.equals("pitch")) layer_value = 32;
         else if (value.equals("playground")) layer_value = 31;
+        else if (value.equals("common")) layer_value = 5;
 
     }
 
