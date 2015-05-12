@@ -10,9 +10,6 @@ import javax.swing.border.MatteBorder;
 import java.awt.*;
 import java.util.HashMap;
 
-/**
- * Created by Nicoline on 30-03-2015.
- */
 public class MapTypePanel extends JPanel {
 
     private JButton standardButton = new JButton();

@@ -4,9 +4,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.util.Map;
 
-/**
- * Created by Kevin on 16-03-2015.
- */
 class MapTypeBoxRenderer extends DefaultListCellRenderer {
     private Map<Icon, String> map;
 

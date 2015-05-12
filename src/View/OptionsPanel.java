@@ -9,9 +9,7 @@ import javax.swing.border.EmptyBorder;
 import javax.swing.border.MatteBorder;
 import java.awt.*;
 
-/**
- * Created by Nicoline on 30-03-2015.
- */
+
 public class OptionsPanel extends JPanel {
 
     private JButton saveButton;

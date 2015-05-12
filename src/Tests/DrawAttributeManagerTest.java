@@ -17,9 +17,8 @@ import java.util.ArrayList;
 import java.util.Random;
 
 import static org.junit.Assert.assertEquals;
-
 /**
- * Created by i5-4670K on 09-04-2015.
+ * Test class for the DrawAttributeManager class
  */
 public class DrawAttributeManagerTest {
     private ArrayList<MapFeature> mapFeatures;

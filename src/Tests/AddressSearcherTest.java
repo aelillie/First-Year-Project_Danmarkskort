@@ -14,9 +14,6 @@ import java.util.List;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-/**
- * Created by Nicoline on 09-04-2015.
- */
 public class AddressSearcherTest {
     private List<Address> testList;
     private List<Address> otherTestlist;

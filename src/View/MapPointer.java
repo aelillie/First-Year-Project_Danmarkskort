@@ -13,9 +13,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Nicoline on 19-04-2015.
- */
 public class MapPointer {
 
     private URL imgPath;

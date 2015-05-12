@@ -5,9 +5,6 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Path2D;
 import java.awt.geom.Rectangle2D;
 
-/**
- * Created by Kevin on 26-03-2015.
- */
 public class CanvasBounds {
 
     private Rectangle2D bounds;

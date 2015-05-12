@@ -8,9 +8,7 @@ import java.text.DecimalFormat;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Nicoline on 29-03-2015.
- */
+
 public class Scalebar {
 
     private static Map<Integer,Double> zoomLevelDistances;

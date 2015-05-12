@@ -11,9 +11,8 @@ import java.util.ArrayList;
 
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
-
 /**
- * Created by Kevin on 08-04-2015.
+ * Test class for the FindNearest class
  */
 public class FindNearestTest {
     ArrayList<MapData> mapFeatures;

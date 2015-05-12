@@ -9,9 +9,7 @@ import java.awt.*;
 import java.util.HashMap;
 import java.util.Map;
 
-/**
- * Created by Kevin on 16-03-2015.
- */
+
 public class RouteView extends JPanel{
 
     private JTextField startAddressField, endAddressField;

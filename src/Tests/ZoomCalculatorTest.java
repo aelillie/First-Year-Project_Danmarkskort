@@ -6,7 +6,7 @@ import org.junit.Test;
 import static org.junit.Assert.assertEquals;
 
 /**
- * Created by Kevin on 09-04-2015.
+ * Test class for the ZoomCalculator class
  */
 public class ZoomCalculatorTest {
 

@@ -14,9 +14,6 @@ import Model.MapCalculator;
 import java.io.IOException;
 import java.io.InputStream;
 
-/**
- * Created by Kevin on 29-04-2015.
- */
 public class PathTest {
     private static final double DELTA = 1e-15;
     private Model m = Model.getModel();

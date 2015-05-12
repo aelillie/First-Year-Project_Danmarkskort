@@ -5,9 +5,6 @@ import org.junit.Test;
 
 import static org.junit.Assert.assertEquals;
 
-/**
- * Created by woozy_000 on 25-03-2015.
- */
 public class AddressTest{
     @Test
     public void testDash(){

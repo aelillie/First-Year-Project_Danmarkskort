@@ -11,9 +11,8 @@ import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 
-
 /**
- * Created by i5-4670K on 12-04-2015.
+ * Test class for the Scalecar class
  */
 public class ScaleBarTest {
     private Point2D lineStart;

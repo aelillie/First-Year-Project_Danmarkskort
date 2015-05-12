@@ -7,9 +7,6 @@ import java.awt.*;
 import java.net.URL;
 import java.util.HashMap;
 
-/**
- * Created by Kevin on 17-03-2015.
- */
 public class MapMenu extends JComboBox<Icon> {
 
     private HashMap<Icon, String> mapNameMap = new HashMap<>();

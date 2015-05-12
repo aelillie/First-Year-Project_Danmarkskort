@@ -1,8 +1,5 @@
 package View;
 
-/**
- * Created by Kevin on 18-03-2015.
- */
 public class ZoomCalculator {
 
     /**
