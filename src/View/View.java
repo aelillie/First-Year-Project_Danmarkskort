@@ -56,7 +56,6 @@ public class View extends JFrame implements Observer {
     private final JFileChooser fileChooser = new JFileChooser("data"); //sets the initial directory to data
 
 
-
     /**
      * Creates the window of our application.
      *
@@ -165,32 +164,6 @@ public class View extends JFrame implements Observer {
         searchArea = new JTextField();
         searchArea.setForeground(Color.GRAY);
         searchArea.setText(promptText);
-        //Create a FocusListener for the textField
-        searchArea.addFocusListener(new FocusListener() {
-            @Override
-            /**
-             * If selected remove prompt text
-             */
-            public void focusGained(FocusEvent e) {
-                if (searchArea.getText().equals(promptText)) {
-                    searchArea.setForeground(Color.BLACK);
-                    searchArea.setText("");
-                }
-            }
-
-            @Override
-            /**
-             * if unselected and search field is empty sets up promptText.
-             */
-            public void focusLost(FocusEvent e) {
-                if (searchArea.getText().isEmpty()) {
-                    searchArea.setForeground(Color.GRAY);
-                    searchArea.setText(promptText);
-                    resultPane.setVisible(false);
-                }
-            }
-
-        });
 
         //Make the components for the frame.
         makeComponents();
@@ -222,6 +195,9 @@ public class View extends JFrame implements Observer {
 
     }
 
+    /**
+     * Creates top search area and calls to create all the front GUI buttons.
+     */
     private void makeComponents() {
         Font font = new Font("Open Sans", Font.PLAIN, 14);
 
@@ -288,7 +264,7 @@ public class View extends JFrame implements Observer {
     }
 
     /**
-     * Changes the configuration of how the view should draw objects.
+     * Changes the configuration of how the view should draw objects - standard, colorblind or transport.
      */
     public void changeToStandard(){
         drawAttributeManager.toggleStandardView();
@@ -471,6 +447,9 @@ public class View extends JFrame implements Observer {
     }
 
 
+    /**
+     * The button next to the main address search field is created
+     */
     private void makeSearchButton() {
         searchButton = new JButton();
         searchButton.setBorder(new CompoundBorder(
@@ -484,6 +463,9 @@ public class View extends JFrame implements Observer {
     }
 
 
+    /**
+     * Makes sure to set all other dropdown panels to invisible once routepanel is set to visible
+     */
     public void showRoutePanel() {
         routePanel.showRoutePanel();
         if(!routePanel.isVisible()) closeDirectionList();
@@ -498,6 +480,9 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
+    /**
+     * Makes sure to set all other dropdown panels to invisible once maptypepanel is set to visible
+     */
     public void showMapTypePanel(){
         mapTypePanel.showMapTypePanel();
         if(mapTypePanel.isVisible() && optionsPanel.isVisible()){
@@ -508,17 +493,24 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
+    /**
+     * Closes the route direction description list.
+     */
     public void closeDirectionList(){
         closeDirectionList.setVisible(false);
         directionPane.setVisible(false);
         travelTimeLabel.setVisible(false);
     }
 
+
     public void showIconPanel(){
         iconPanel.showIconPanel();
         canvas.repaint();
     }
 
+    /**
+     * Makes sure to set all other dropdown panels to invisible once optionspanel is set to visible
+     */
     public void showOptionsPanel(){
         optionsPanel.showOptionsPanel();
         if(!optionsPanel.isVisible() && iconPanel.isVisible()) iconPanel.setVisible(false);
@@ -527,10 +519,12 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
+    //Centers the screen on the search result which has been chosen
     public void searchResultChosen(double lon, double lat){
         centerOnLatLon(new Point2D.Double(lon, lat));
     }
 
+    //Zooms on the search result which has been chosen
     public void zoomOnAddress(){
         adjustZoomLvl(16000);
         adjustZoomFactor();
