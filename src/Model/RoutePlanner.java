@@ -62,7 +62,6 @@ public class RoutePlanner {
 
         }
 
-
         return processRouteplanStrings(streetNames,streetEdges);
     }
 

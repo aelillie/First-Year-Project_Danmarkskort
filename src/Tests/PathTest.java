@@ -1,16 +1,16 @@
 package Tests;
 
+import Model.MapCalculator;
 import Model.Model;
 import Model.Path.Edge;
 import Model.Path.Graph;
 import Model.Path.PathTree;
 import Model.Path.Vertices;
+import Model.ValueName;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 import sun.tools.jar.Main;
-import Model.MapCalculator;
-import Model.ValueName;
 
 import java.io.IOException;
 import java.io.InputStream;
@@ -160,5 +160,35 @@ public class PathTest {
         //Other route : 202 -> 201 -> -> 200 -> 339 -> 338
 
         //Fastest route : 202 -> 256 -> 257 -> 258 -> 269 -> 176 -> 339 -> 338
+    }
+
+    @Test
+    public void shortestPath(){
+        PathTree shortest = new PathTree(m.getGraph(), 244, 241);
+        shortest.useCarRoute();
+        shortest.useShortestPath();
+        shortest.initiate();
+        Vertices v = m.getVertices();
+        Assert.assertTrue(shortest.hasPathTo(241));
+
+        //Manually compute the length of the two paths
+
+        //1. option
+        double d244to239 = MapCalculator.haversineDist(v.getVertex(244), v.getVertex(239));
+        double d239to240 = MapCalculator.haversineDist(v.getVertex(239), v.getVertex(240));
+        double d240to241 = MapCalculator.haversineDist(v.getVertex(240), v.getVertex(241));
+        Double option1 = d244to239 + d239to240 + d240to241;
+        //2. option
+        double d241to760 = MapCalculator.haversineDist(v.getVertex(241), v.getVertex(760));
+        double d760to761 = MapCalculator.haversineDist(v.getVertex(760), v.getVertex(761));
+        double d761to244 = MapCalculator.haversineDist(v.getVertex(761), v.getVertex(244));
+        Double option2 = d241to760 + d760to761 + d761to244;
+
+        double shortestLength = Math.min(option1, option2);
+
+        Assert.assertEquals(shortestLength, shortest.distTo(241), 1e-15);
+        Assert.assertEquals(d244to239, shortest.distTo(239), 1e-15);
+        Assert.assertEquals(d761to244 + d760to761 , shortest.distTo(760), 1e-15);
+
     }
 }
