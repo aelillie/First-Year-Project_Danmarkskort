@@ -3,7 +3,7 @@ Group G: Danmarkskort
 1. Open the program by doubleclicking the *.jar file (If it doesn't work you can try running the program from the cmdprompt)
 2. Once the loading screen is done, the program should initially display a map of Denmark
 3. Explore the map by dragging the mouse around, or use the arrowkeys
-4. To zoom in/out you can use mousescroll or the '+' / '-' keys
+4. To zoom in/out you can use mousescroll or the '+'  '-' keys
 5. In the right hand side of the programscreen you can see some function buttons. They are as follows from top to buttom:
  
     - Option button (Here you can load files, save files as .bin, and toggle/untoggle icons on the map)
