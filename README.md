@@ -4,7 +4,7 @@ Group G: Danmarkskort
 1. Open the program by doubleclicking the Danmarkskort.jar file
 2. If this doesn't work, you can try to run it through cmdprompt:
    - Open cmdprompt
-   - Navigate to the folder containing the jar-file. Could look like this`:` C:\Users\Johndoe\Desktop\Mystuff\Danmarkskort
+   - Navigate to the folder containing the jar-file. Could look like this: `C:\Users\Johndoe\Desktop\Mystuff\Danmarkskort`
    - Here write:
      :\Users\Johndoe\DesktopMystuff\Danmarkskort>**java -jar *filename*.jar** 
 
