@@ -1,18 +1,13 @@
 package Tests;
 
+import Model.*;
 import Model.MapFeatures.Building;
 import Model.MapFeatures.Highway;
-import Model.MapData;
-import Model.MapFeature;
-import Model.MapIcon;
-import Model.OSMNode;
-import Model.PathCreater;
 import Model.QuadTree.QuadTree;
 import org.junit.Before;
 import org.junit.Test;
 
 import java.awt.geom.Path2D;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.util.ArrayList;
 import java.util.Collection;
@@ -133,4 +128,18 @@ public class QuadTreeTest {
         Collection<MapData> data = quadTree.query2D(new Rectangle2D.Float(0,0,500,500), false);
     }
 
+    @Test
+    public void testRoadinMultipleBoxes(){
+        Rectangle2D testBox = new Rectangle2D.Float(0,0,500,500);
+        quadTree = new QuadTree(testBox,1000);
+        ArrayList<OSMNode> points = new ArrayList<>();
+        points.add(new OSMNode(1,1));
+        points.add(new OSMNode(1,400));
+        Path2D longway = PathCreater.createWay(points);
+        quadTree.insert(new Highway(longway,0,"road", false, "vej2", null));
+
+        Collection<MapData> data = quadTree.query2D(testBox, false);
+        assertEquals(2, data.size());
+
+    }
 }
