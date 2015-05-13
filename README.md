@@ -1,19 +1,21 @@
 Group G: Danmarkskort
 ============
-##How to open the program:
+###How to open the program:
 1. Open the program by doubleclicking the Danmarkskort.jar file
 2. If this doesn't work, you can try to run it through cmdprompt:
    - Open cmdprompt
-   - Navigate to the folder containing the jar-file. Could look like this: C:\Users\Johndoe\Desktop\Mystuff\Danmarkskort
-   - Here write:
-     :\Users\Johndoe\DesktopMystuff\Danmarkskort>**java -jar *filename*.jar** 
+   - Navigate to the folder containing the jar-file e.g. by writing  C:\Users\Johndoe\Desktop>**cd Mystuff\Danmarkskort**
+   - Here write C:\Users\Johndoe\DesktopMystuff\Danmarkskort>**java -jar *filename*.jar**
 
-##How to use the program:
+3. The program uses ~1.7gb to run. This amount of space must be available in order to run it
+4. If it fails to run, you can try type the following in cmdpromt, in an attempt to allocate the needed memory: C:\Users\Johndoe\DesktopMystuff\Danmarkskort>**java -jar -Xmx2g *filename*.jar**
+
+
+###How to use the program:
 2. Once the loading screen is done, the program should initially display a map of Denmark
 3. Explore the map by dragging the mouse around, or use the arrowkeys
 4. To zoom in/out you can use mousescroll or the '+' / '-' keys
 5. In the right hand side of the programscreen you can see some function buttons. They are as follows from top to buttom:
- 
    - Option button (Here you can load files, save files as .bin, and toggle/untoggle icons on the map)
    - Maptype button (Here you can chose between three different maptypes; Standard map, colorblind map and transport map)
    - '+' (zoom in)
