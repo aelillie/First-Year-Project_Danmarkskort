@@ -4,14 +4,13 @@ Group G: Danmarkskort
 1. Open the program by doubleclicking the Danmarkskort.jar file
 2. If this doesn't work, you can try to run it through cmdprompt:
    - Open cmdprompt
-   - Navigate to the folder containing the jar-file and write:
+   - Navigate to the folder containing the jarfile and write:
    
-                  C:\Users\Johndoe\DesktopMystuff\Danmarkskort>**java -jar *filename*.jar**
+      C:\Users\Johndoe\DesktopMystuff\Danmarkskort> **java -jar *filename*.jar**
 
 3. The program uses ~1.7gb to run. This amount of space must be available in order to run it
-4. If it fails to run, you can try type the following in cmdpromt, in an attempt to allocate the needed memory:  
-
-                  C:\Users\Johndoe\DesktopMystuff\Danmarkskort>**java -jar -Xmx2g *filename*.jar**
+4. If it fails to run, you can try type the following in cmdpromt, in an attempt to allocate the needed memory:
+      C:\Users\Johndoe\DesktopMystuff\Danmarkskort>**java -jar -Xmx2g *filename*.jar**
 
 
 ###How to use the program:
@@ -42,4 +41,4 @@ Group G: Danmarkskort
 
 12. If fastest path is chosen it will draw a dark-blue path between point A and B (if shortest, pink)  and open a direction info panel, that shows info about the route
 
-13. In the direction panel you can see distance to destination, time to destination, as well as directions for how to get from A to B
+13. In the direction panel you can see distance to destination, time to destination, as well as directions for how to get from A to B. In some cases (typically in small cities) it will display that the shortest path is faster than the fastest path. This is a bug. The fastest path is still 
