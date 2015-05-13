@@ -35,8 +35,7 @@ public class RouteFinder {
             if (p.isBikeRoute()) travelTime += e.bikeTime();
             else if (p.isWalkRoute()) travelTime += e.walkTime();
             else if (p.isCarRoute()) travelTime += e.driveTime();
-            if (e.hasTrafficSignal())
-                travelTime += 0.3;
+            travelTime += e.trafficSignal(); //returns 0.3 (18 sec) if present, 0 if not
         }
     }
 

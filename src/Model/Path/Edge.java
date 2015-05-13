@@ -134,8 +134,11 @@ public class Edge extends Line2D.Float implements Serializable {
      * Checks if a traffic signal is present
      * @return false if no traffic light, true if traffic light present
      */
-    public boolean hasTrafficSignal() {
-        return (vertices.getVertex(w).trafficSignal == ValueName.TRAFFICSIGNAL);
+    public double trafficSignal() {
+        double waitingTime = 0;
+        if (vertices.getVertex(w).trafficSignal == ValueName.TRAFFICSIGNAL)
+            waitingTime += 0.3;
+        return  waitingTime;
     }
 
     /**

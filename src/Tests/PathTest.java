@@ -130,19 +130,24 @@ public class PathTest {
 
         Assert.assertTrue(pathTree.hasPathTo(131));
         Assert.assertNotNull(pathTree.pathTo(131));
-        Assert.assertTrue(v.getVertex(path.get(2).w()).trafficSignal == ValueName.TRAFFICSIGNAL);
-        Assert.assertTrue(v.getVertex(path.get(3).w()).trafficSignal == ValueName.TRAFFICSIGNAL);
 
         //Expected travel time
-        double t1 = (d1/maxSpeed)*60 + 0.25; //TRAFFIC SIGNAL
-        double t2 = (d2/maxSpeed)*60 + 0.25; //TRAFFIC SIGNAL
+        double t1 = (d1/maxSpeed)*60;
+        double t2 = (d2/maxSpeed)*60;
         double t3 = (d3/maxSpeed)*60;
         double t4 = (d4/maxSpeed)*60;
+        double time = t1 + t2 + t3 + t4;
 
         Assert.assertEquals(t1, pathTree.timeTo(637), DELTA);
         Assert.assertEquals(t1 + t2, pathTree.timeTo(1509), DELTA);
         Assert.assertEquals(t1 + t2 + t3, pathTree.timeTo(1566), DELTA);
-        Assert.assertEquals(t1 + t2 + t3 + t4, pathTree.timeTo(131), DELTA);
+        Assert.assertEquals(time, pathTree.timeTo(131), DELTA);
+
+        //Travel time shown in GUI will take traffic signals into account
+        Assert.assertTrue(v.getVertex(path.get(2).w()).trafficSignal == ValueName.TRAFFICSIGNAL);
+        Assert.assertTrue(v.getVertex(path.get(3).w()).trafficSignal == ValueName.TRAFFICSIGNAL);
+        double actualTime = pathTree.timeTo(131) + path.get(2).trafficSignal() + path.get(3).trafficSignal();
+        Assert.assertEquals(time + 0.6, actualTime, DELTA);
     }
 
     @Test
