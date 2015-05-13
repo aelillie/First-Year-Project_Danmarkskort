@@ -6,10 +6,10 @@ Group G: Danmarkskort
    - Open cmdprompt
    - Navigate to the folder containing the jarfile and write:
    
-      C:\Users\Johndoe\DesktopMystuff\Danmarkskort> **java -jar *filename*.jar**
+      C:\Users\Johndoe\Desktop\Danmarkskort> **java -jar *filename*.jar**
 
 3. The program uses ~1.7gb to run. This amount of space must be available in order to run it. If it fails to run, you can try type the following in cmdpromt, in an attempt to allocate the needed memory:
-      C:\Users\Johndoe\DesktopMystuff\Danmarkskort> **java -jar -Xmx2g *filename*.jar**
+      C:\Users\Johndoe\Desktop\Danmarkskort> **java -jar -Xmx2g *filename*.jar**
 
 
 ###How to use the program:
