@@ -1,0 +1,45 @@
+Version 1.0: Summary
+
+The following points summarizes to what degree our program satisfies each of the required features.Overall, the program satisfies all the required features.
+The following is an elaborate list of how the program satisfies the features and what additional features the programs holds:
+
+===Loading and saving files===
+*The user can specify a data file to be used for the application using the load button in the option panel, in the top right corner. 
+*The load supports loading in both osm-, zipped osm- and binary files.
+*Once the user have loaded in a file, the program allows to save the file to binary format to use later for a faster load-in of the file. 
+*Upon the start of the program from the jar file, a binary file holding the data for entire Denmark is specified as the default.
+
+===Appearance and visualization===
+*We draw the roads using different colouring, where the most significant roads have gotten more significant colors such as yellow or red, and the less important ones are white.
+*The program draws additional cartographic elements such as buildings, parks and other special sort of areas. Furthermore, certain types of tags have been marked with an icon, such as parking, hospitals, bars and so on. Drawing extra cartographic elements makes it easier for the user to navigate using the map.
+*The user is allowed to change the visual appearance of the map. There are three different map types; standardmode, colorblindmode, and transportmode.  
+*The GUI layout resizes when the window size changes: This means that the GUI elements is be bound to the edges of the window, and their distance from the edges does not change when resizing. 
+*The programs provides a yardstick in form of a scalebar. 
+
+==Cursor, mouse, keys==
+*The program allows the user to manipulate the map by zooming in or zooming out as well as panning the map. Upon zooming with scrolling, the program zooms in/out according to the cursor, when using the static zoom buttons, the program zooms according to the center of the map, and you will have to pan afterwards to navigate further.
+*The name of the road closest to the mouse pointer is continuously shown at the bottom of the window. 
+*The program features a user interface, that allows mouse and keyboard interaction. 
+*Specifically, the user can use the mouse to zoom (using scroll and cursor positioning) and pan (using left mouse click and mouse movement).
+*Furthermore, you can use particular keys such as ‘+’ and ‘-’ to zoom, ‘a’ to toggle antialiasing as well as the arrow keys to pan.
+
+===Address search and route planning===
+*The user is a allowed to search for addresses typed as a single String, and gets the result(s) showed on the map. The user must search for a whole address, and can therefore not search for streets or boundary locations (such as Amager, Odense etc.)
+*The program allows the user to choose between different transport methods - car, biking and walking. 
+*For biking and walking the program estimate a constant speed and compute the shortest (and therefore the fastest) path. 
+*For travelling in car the program takes different speed limits on different roads into account. It is possible to both get the fastest and the shortest path.
+*The program gives a textual description of the route plan as output.
+
+===Performance and load-time===
+*The program makes use of a spatial data structure to enhance the performance when showing big data set, like Denmark. Using the user window we only show what is relevant for the user at their specific position.
+*Use of different zoom levels makes it possible to specify what is shown on different levels.
+*This makes it possible to show whole denmark on the screen with a reasonably respond time.
+*To greatly improve the load time the program standard loads from a binary file
+
+===Additional features===
+*The program provides some additional features. When searching for an address, a drop down menu appears with suggestions on addresses starting with the characters the user has typed in. The search is therefore autocompleted.
+*When the user chooses a specific address from the search results, the programs pans over to that given address and zooms accordingly.
+*The user is also able to choose start and end location for fastest  path between two addresses with a shortcut - Alt+Leftmouse for the start and Alt+Rightmouse for the end.
+*The user can remove them again, with Ctrl+Leftmouse and Ctrl+Rightmouse, respectively.
+*The user is in charge of which icons there should be drawn on the map. There is a list of additional icons under the Edit-button. 
+
