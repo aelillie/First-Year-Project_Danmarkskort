@@ -4,7 +4,7 @@ Group G: Danmarkskort
 1. Open the program by doubleclicking the Danmarkskort.jar file
 2. If this doesn't work, you can try to run it through cmdprompt:
    - Open cmdprompt
-   - Navigate to the folder containing the jar-file. Could look like this: C:\Users\Johndoe\Desktop\Mystuff\Danmarkskort
+   - Navigate to the folder containing the jar-file. Could look like this':' C:\Users\Johndoe\Desktop\Mystuff\Danmarkskort
    - Here write:
      :\Users\Johndoe\DesktopMystuff\Danmarkskort>**java -jar *filename*.jar** 
 
@@ -18,6 +18,7 @@ Group G: Danmarkskort
    - '+' (zoom in)
    - '-' (zoom out)
    - - Fullscreen button 
+
 6. In the top left side of the screen you can see a search bar, which you can use to search for addresses. The program will suggest addresses as you type. You can use the arrow keys or the mouse to navigate between the search suggestions, and subsequently hit enter to do a search. This will mark and pan to the selected location
 7. Beneath the searchbar is the Route Plan button. Click it to open the route plan
 8. Inside the Route Plan you can start by selecting your method of transportation; by car, bicycle or foot (default by car)
