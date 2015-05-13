@@ -52,7 +52,7 @@ public class BinaryHandler{
         out.reset();
         out.close();
 
-        System.out.print(filename + " saved");
+
 
     }
 
@@ -82,7 +82,7 @@ public class BinaryHandler{
         loadingScreen.updateLoadBar(65);
         model.getOSMReader().setVertices((Vertices) in.readObject());
 
-        long time = System.nanoTime();
+
         model.setBBox(rec);
         List<QuadTree> qT = (List<QuadTree>) in.readObject();
 
@@ -90,7 +90,7 @@ public class BinaryHandler{
         loadingScreen.updateLoadBar(80);
 
         model.setQuadTree(qT);
-        System.out.println("done in " + (System.nanoTime() - time) / 1000000);
+
 
         //List<Coastline> coasts = model.getCoastlines();
         //coasts.addAll((List<Coastline>) in.readObject());

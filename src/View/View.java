@@ -1168,7 +1168,7 @@ public class View extends JFrame implements Observer {
             Collection < MapData > bigRoads = model.getVisibleBigRoads(windowBounds, sorted);
             mapFStreets = (Collection<MapFeature>)(Collection<?>) bigRoads;
 
-            if (drawAttributeManager.isTransport() && zoomLevel > 6)
+            if (drawAttributeManager.isTransport() && zoomLevel > 9)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
             else if (zoomLevel > 4)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
