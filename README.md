@@ -1,14 +1,14 @@
 Group G: Danmarkskort
 ============
-##How to open the program:
+#How to open the program:
 1. Open the program by doubleclicking the Danmarkskort.jar file
 2. If this doesn't work, you can try to run it through cmdprompt:
    - Open cmdprompt
-   - Navigate to the folder containing the jar-file. Could look like this':' C:\Users\Johndoe\Desktop\Mystuff\Danmarkskort
+   - Navigate to the folder containing the jar-file. Could look like this`:` C:\Users\Johndoe\Desktop\Mystuff\Danmarkskort
    - Here write:
      :\Users\Johndoe\DesktopMystuff\Danmarkskort>**java -jar *filename*.jar** 
 
-##How to use the program:
+#How to use the program:
 2. Once the loading screen is done, the program should initially display a map of Denmark
 3. Explore the map by dragging the mouse around, or use the arrowkeys
 4. To zoom in/out you can use mousescroll or the '+' / '-' keys
