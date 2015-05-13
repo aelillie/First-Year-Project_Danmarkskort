@@ -46,16 +46,6 @@ public class MapPointer {
         this.type = type;
     }
 
-    /**
-     * Creates a new mappointer at the specified boundary location and of the specified type
-     * @param boundaryLocation The location at which it should be displayed
-     * @param type The type (the img string)
-     */
-    public MapPointer(Path2D boundaryLocation, String type){
-        this.boundaryLocation = boundaryLocation;
-        imgPath = pointerIconURLs.get(type);
-        this.type = type;
-    }
 
     /**
      * The method called in the view when drawing the map pointer.
