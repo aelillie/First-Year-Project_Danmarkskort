@@ -53,9 +53,7 @@ public class PathTest {
     }
 
     @Test
-    public void testFastestPath(){
-        Graph g = m.getGraph();
-
+    public void testPathDifferences(){
         //Create one pathTree for shortest route and for fastest
         PathTree shortestTree = new PathTree(g, start, end);
         shortestTree.useCarRoute();
@@ -73,20 +71,27 @@ public class PathTest {
 
 
         Iterable<Edge> edges = shortestTree.pathTo(end);
-        double time = 0;
+        double SPtime = 0;
         for(Edge e : edges)
-            time += e.driveTime();
+            SPtime += e.driveTime();
 
-        //Fastest path should find a faster path
-        Assert.assertTrue(fastestTree.timeTo(end) < time);
+        Iterable<Edge> edges1 = fastestTree.pathTo(end);
+        double FPdist = 0;
+        for (Edge e : edges1)
+                FPdist += e.distance();
 
         //The two paths should be different.
         Assert.assertNotEquals(fastestTree.pathTo(end), shortestTree.pathTo(end));
+
+        //Fastest path should find a faster path
+        Assert.assertTrue(fastestTree.timeTo(end) < SPtime);
+        //Shortest path should find a shorter path
+        Assert.assertTrue(shortestTree.distTo(end) < FPdist);
+
     }
 
     @Test
-    public void testTravelInfo() {
-        Graph g = Model.getModel().getGraph();
+    public void testDistance() {
         PathTree fastestTree = new PathTree(g, 595, 60);
         fastestTree.useCarRoute();
         fastestTree.useShortestPath();
@@ -109,8 +114,7 @@ public class PathTest {
     }
 
     @Test
-    public void testTrafficSignals(){
-        Graph g = Model.getModel().getGraph();
+    public void testTime(){
         PathTree pathTree = new PathTree(g, 1512, 131);
         pathTree.useFastestPath();
         pathTree.useCarRoute();
@@ -126,8 +130,8 @@ public class PathTest {
 
         Assert.assertTrue(pathTree.hasPathTo(131));
         Assert.assertNotNull(pathTree.pathTo(131));
-        Assert.assertTrue(v.getVertex(path.get(2).w()).trafficSignal == ValueName.TRAFFICLIGHT_HIGHWAY);
-        Assert.assertTrue(v.getVertex(path.get(3).w()).trafficSignal == ValueName.TRAFFICLIGHT_HIGHWAY);
+        Assert.assertTrue(v.getVertex(path.get(2).w()).trafficSignal == ValueName.TRAFFICSIGNAL);
+        Assert.assertTrue(v.getVertex(path.get(3).w()).trafficSignal == ValueName.TRAFFICSIGNAL);
 
         //Expected travel time
         double t1 = (d1/maxSpeed)*60 + 0.25; //TRAFFIC SIGNAL
@@ -139,5 +143,17 @@ public class PathTest {
         Assert.assertEquals(t1 + t2, pathTree.timeTo(1509), DELTA);
         Assert.assertEquals(t1 + t2 + t3, pathTree.timeTo(1566), DELTA);
         Assert.assertEquals(t1 + t2 + t3 + t4, pathTree.timeTo(131), DELTA);
+    }
+
+    @Test
+    public void testFastestPath() {
+        PathTree pathTree = new PathTree(g, 202, 338);
+        pathTree.useFastestPath();
+        pathTree.useCarRoute();
+        pathTree.initiate();
+
+        //Other route : 202 -> 201 -> -> 200 -> 339 -> 338
+
+        //Fastest route : 202 -> 256 -> 257 -> 258 -> 269 -> 176 -> 339 -> 338
     }
 }

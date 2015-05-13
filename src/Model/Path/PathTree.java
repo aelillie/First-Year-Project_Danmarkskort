@@ -72,7 +72,9 @@ public class PathTree {
             if(v == d) //found destination, stop relaxing edges
                 break;
             for (Edge e : G.adj(v)) {
-                if (!e.highway().isBikeAble()) continue;
+                if (!e.highway().isBikeAble()) {
+                    continue;
+                }
                 relaxDistance(e, v); //shortest path (also the fastest)
             }
 

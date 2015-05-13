@@ -218,9 +218,6 @@ public class QuadTree implements Serializable{
 
         if(rect != null)
             query2D(root, rect, values);
-        else{
-            System.out.println("View was null");
-        }
 
         return values;
     }

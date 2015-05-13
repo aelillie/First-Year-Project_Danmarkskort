@@ -820,7 +820,7 @@ public class View extends JFrame implements Observer {
         } else {
             if (seconds <= 0.25)
                 seconds = 0;
-            else if (seconds >= 0.75) { //DecimalFormat will take care of this
+            else if (seconds >= 0.75) {
                 seconds = 0;
                 minutes += 1;
             } else seconds = 0.5;
@@ -1161,7 +1161,7 @@ public class View extends JFrame implements Observer {
             //Get a rectangle of the part of the map shown on screen
             bounds.updateBounds(getVisibleRect());
             Rectangle2D windowBounds = bounds.getBounds();
-            sorted = zoomLevel >= 11;
+            sorted = zoomLevel >= 5;
 
             coastLines = (Collection<MapFeature>) (Collection<?>) model.getVisibleCoastLines(windowBounds);
 

@@ -35,6 +35,8 @@ public class RouteFinder {
             if (p.isBikeRoute()) travelTime += e.bikeTime();
             else if (p.isWalkRoute()) travelTime += e.walkTime();
             else if (p.isCarRoute()) travelTime += e.driveTime();
+            if (e.hasTrafficSignal())
+                travelTime += 0.3;
         }
     }
 
@@ -90,7 +92,6 @@ public class RouteFinder {
      * @param position Position of MousePointer
      */
     public static Highway findNearestHighway(Point2D position, Collection<MapData> node){
-
         MapFeature champion = null;
         Line2D championLine = null;
 
@@ -245,5 +246,13 @@ public class RouteFinder {
      */
     public double getTravelTime() {
         return travelTime;
+    }
+
+    public int getStartVertex() {
+        return startVertex;
+    }
+
+    public int getEndVertex() {
+        return endVertex;
     }
 }
