@@ -132,7 +132,8 @@ public class Edge extends Line2D.Float implements Serializable {
 
     /**
      * Checks if a traffic signal is present
-     * @return false if no traffic light, true if traffic light present
+     * Average waiting time of 18 sec (30 % of a minute) used
+     * @return 0 if no traffic light, 0.3 if traffic light present
      */
     public double trafficSignal() {
         double waitingTime = 0;
@@ -146,6 +147,7 @@ public class Edge extends Line2D.Float implements Serializable {
      * @return a string representation of the edge
      */
     public String toString() {
-        return String.format("%d(" + vertices.getVertex(v) + ")-%d(" + vertices.getVertex(w) + ") %.2f " + highway.getStreetName(), v, w, distance);
+        return String.format("%d(" + vertices.getVertex(v) + ")-%d(" + vertices.getVertex(w) +
+                ") %.2f " + highway.getStreetName() + " " + highway.getMaxspeed() , v, w, distance);
     }
 }

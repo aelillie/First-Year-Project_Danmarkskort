@@ -157,8 +157,39 @@ public class PathTest {
         pathTree.useCarRoute();
         pathTree.initiate();
 
-        //Other route : 202 -> 201 -> -> 200 -> 339 -> 338
+        Stack<Edge> path = (Stack<Edge>) pathTree.pathTo(338);
 
-        //Fastest route : 202 -> 256 -> 257 -> 258 -> 269 -> 176 -> 339 -> 338
+
+        //Route1 : 202 -> 201 -> 200 -> 338
+        double d1 = MapCalculator.haversineDist(v.getVertex(202), v.getVertex(201)); //Maxspeed: 50
+        double d2 = MapCalculator.haversineDist(v.getVertex(201), v.getVertex(200)); //Maxspeed: 50
+        double d3 = MapCalculator.haversineDist(v.getVertex(200), v.getVertex(338)); //Maxspeed: 60
+        double t1 = (d1/50)*60;
+        double t2 = (d2/50)*60;
+        double t3 = (d3/60)*60;
+        double time = t1 + t2 + t3;
+
+        //Route2 : 202 -> 256 -> 257 -> 258 -> 269 -> 176 -> 339 -> 338
+        double dd1 = MapCalculator.haversineDist(v.getVertex(202), v.getVertex(256));//Maxspeed: 50
+        double dd2 = MapCalculator.haversineDist(v.getVertex(256), v.getVertex(257));//Maxspeed: 50
+        double dd3 = MapCalculator.haversineDist(v.getVertex(257), v.getVertex(258));//Maxspeed: 50
+        double dd4 = MapCalculator.haversineDist(v.getVertex(258), v.getVertex(269));//Maxspeed: 50
+        double dd5 = MapCalculator.haversineDist(v.getVertex(269), v.getVertex(176));//Maxspeed: 50
+        double dd6 = MapCalculator.haversineDist(v.getVertex(176), v.getVertex(339));//Maxspeed: 50
+        double dd7 = MapCalculator.haversineDist(v.getVertex(339), v.getVertex(338));//Maxspeed: 50
+        double tt1 = (dd1/50)*60;
+        double tt2 = (dd2/50)*60;
+        double tt3 = (dd3/50)*60;
+        double tt4 = (dd4/50)*60;
+        double tt5 = (dd5/50)*60;
+        double tt6 = (dd6/50)*60;
+        double tt7 = (dd7/50)*60;
+        double time1 = tt1 + tt2 + tt3 + tt4 + tt5 + tt6 + tt7;
+
+        Assert.assertNotEquals(time, time1, DELTA);
+        double expMinTime = Math.min(time, time1);
+        double actualTime = pathTree.timeTo(338);
+
+        Assert.assertEquals(expMinTime, actualTime, DELTA);
     }
 }

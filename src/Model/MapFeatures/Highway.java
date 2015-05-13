@@ -65,6 +65,9 @@ public class Highway extends MapFeature {
             case "unclassified":
                 maxspeed = 80;
                 break;
+            case "residential":
+                maxspeed = 50;
+                break;
             case "living_street":
                 maxspeed = 15;
                 break;
