@@ -13,13 +13,11 @@ Group G: Danmarkskort
 3. Explore the map by dragging the mouse around, or use the arrowkeys
 4. To zoom in/out you can use mousescroll or the '+' / '-' keys
 5. In the right hand side of the programscreen you can see some function buttons. They are as follows from top to buttom:
- 
    - Option button (Here you can load files, save files as .bin, and toggle/untoggle icons on the map)
    - Maptype button (Here you can chose between three different maptypes; Standard map, colorblind map and transport map)
    - '+' (zoom in)
    - '-' (zoom out)
    - - Fullscreen button 
-
 6. In the top left side of the screen you can see a search bar, which you can use to search for addresses. The program will suggest addresses as you type. You can use the arrow keys or the mouse to navigate between the search suggestions, and subsequently hit enter to do a search. This will mark and pan to the selected location
 7. Beneath the searchbar is the Route Plan button. Click it to open the route plan
 8. Inside the Route Plan you can start by selecting your method of transportation; by car, bicycle or foot (default by car)
