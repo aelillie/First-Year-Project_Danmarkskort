@@ -56,7 +56,6 @@ public class View extends JFrame implements Observer {
     private final JFileChooser fileChooser = new JFileChooser("data"); //sets the initial directory to data
 
 
-
     /**
      * Creates the window of our application.
      *
@@ -165,32 +164,6 @@ public class View extends JFrame implements Observer {
         searchArea = new JTextField();
         searchArea.setForeground(Color.GRAY);
         searchArea.setText(promptText);
-        //Create a FocusListener for the textField
-        searchArea.addFocusListener(new FocusListener() {
-            @Override
-            /**
-             * If selected remove prompt text
-             */
-            public void focusGained(FocusEvent e) {
-                if (searchArea.getText().equals(promptText)) {
-                    searchArea.setForeground(Color.BLACK);
-                    searchArea.setText("");
-                }
-            }
-
-            @Override
-            /**
-             * if unselected and search field is empty sets up promptText.
-             */
-            public void focusLost(FocusEvent e) {
-                if (searchArea.getText().isEmpty()) {
-                    searchArea.setForeground(Color.GRAY);
-                    searchArea.setText(promptText);
-                    resultPane.setVisible(false);
-                }
-            }
-
-        });
 
         //Make the components for the frame.
         makeComponents();
@@ -222,6 +195,9 @@ public class View extends JFrame implements Observer {
 
     }
 
+    /**
+     * Creates top search area and calls to create all the front GUI buttons.
+     */
     private void makeComponents() {
         Font font = new Font("Open Sans", Font.PLAIN, 14);
 
@@ -288,7 +264,7 @@ public class View extends JFrame implements Observer {
     }
 
     /**
-     * Changes the configuration of how the view should draw objects.
+     * Changes the configuration of how the view should draw objects - standard, colorblind or transport.
      */
     public void changeToStandard(){
         drawAttributeManager.toggleStandardView();
@@ -471,6 +447,9 @@ public class View extends JFrame implements Observer {
     }
 
 
+    /**
+     * The button next to the main address search field is created
+     */
     private void makeSearchButton() {
         searchButton = new JButton();
         searchButton.setBorder(new CompoundBorder(
@@ -484,6 +463,9 @@ public class View extends JFrame implements Observer {
     }
 
 
+    /**
+     * Makes sure to set all other dropdown panels to invisible once routepanel is set to visible
+     */
     public void showRoutePanel() {
         routePanel.showRoutePanel();
         if(!routePanel.isVisible()) closeDirectionList();
@@ -498,6 +480,9 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
+    /**
+     * Makes sure to set all other dropdown panels to invisible once maptypepanel is set to visible
+     */
     public void showMapTypePanel(){
         mapTypePanel.showMapTypePanel();
         if(mapTypePanel.isVisible() && optionsPanel.isVisible()){
@@ -508,17 +493,24 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
+    /**
+     * Closes the route direction description list.
+     */
     public void closeDirectionList(){
         closeDirectionList.setVisible(false);
         directionPane.setVisible(false);
         travelTimeLabel.setVisible(false);
     }
 
+
     public void showIconPanel(){
         iconPanel.showIconPanel();
         canvas.repaint();
     }
 
+    /**
+     * Makes sure to set all other dropdown panels to invisible once optionspanel is set to visible
+     */
     public void showOptionsPanel(){
         optionsPanel.showOptionsPanel();
         if(!optionsPanel.isVisible() && iconPanel.isVisible()) iconPanel.setVisible(false);
@@ -527,10 +519,12 @@ public class View extends JFrame implements Observer {
         canvas.repaint();
     }
 
+    //Centers the screen on the search result which has been chosen
     public void searchResultChosen(double lon, double lat){
         centerOnLatLon(new Point2D.Double(lon, lat));
     }
 
+    //Zooms on the search result which has been chosen
     public void zoomOnAddress(){
         adjustZoomLvl(16000);
         adjustZoomFactor();
@@ -1041,6 +1035,87 @@ public class View extends JFrame implements Observer {
                 }
             }
 
+
+            //Draw the shortestPath if not null
+            if (shortestPath != null) {
+                int i = 5;
+                if (zoomLevel < 8) i = 9;
+                g.setColor(DrawAttribute.cl_pink);
+                g.setStroke(DrawAttribute.streetStrokes[i + zoomFactor]);
+                for (Edge e : shortestPath) {
+                    g.draw(e);
+                }
+            }
+            //Draw the fastest path if not null
+            if (fastestPath != null) {
+                int i = 5;
+                if (zoomLevel < 8) i = 9;
+                g.setColor(DrawAttribute.cl_blue4);
+                g.setStroke(DrawAttribute.streetStrokes[i + zoomFactor]);
+                for (Edge e : fastestPath) {
+                    g.draw(e);
+                }
+            }
+            g.setStroke(DrawAttribute.s05);
+
+            //extra functions
+            paintGraph();
+            paintQuadTreeGrid();
+            paintQuadTreeView();
+
+            g.setColor(Color.BLACK);
+            //Draw the icons
+            if (zoomLevel > 14) {
+                for (MapIcon mapIcon : mapIcons) {
+                    if(mapIcon.isVisible()) {
+                        mapIcon.draw(g, transform);
+                    }
+                }
+            }
+
+
+            new Scalebar(g, zoomLevel, View.this, transform);
+
+
+            //Draws chosen searchResult (either street or address) as well as start or endpoint address
+            for(Map.Entry<String, MapPointer> entry : addressPointerMap.entrySet()) {
+                MapPointer mp = entry.getValue();
+                mp.draw(g,transform);
+            }
+
+
+            //Transparent GUI elements
+            g.setTransform(new AffineTransform());
+            g.setColor(DrawAttribute.fadeblack);
+            RoundRectangle2D optionsButtonArea = new RoundRectangle2D.Double(getContentPane().getWidth()-50,(int)(getContentPane().getHeight()-getContentPane().getHeight()*0.98),60,40,15,15);
+            RoundRectangle2D zoomInOutArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2+10, 60, 80, 15, 15);
+            RoundRectangle2D fullscreenArea = new RoundRectangle2D.Double(getContentPane().getWidth()-30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2+110,60,38,15,15);
+            RoundRectangle2D mapTypeButtonArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2 - 33, 39, 37,15,15);
+            g.fill(optionsButtonArea);
+            g.fill(zoomInOutArea);
+            g.fill(fullscreenArea);
+            g.fill(mapTypeButtonArea);
+            updateStreetName();
+        }
+
+        private void paintQuadTreeView() {
+            g.setColor(Color.BLACK);
+            if(bounds.testmode()) {
+                Rectangle2D windowBounds = bounds.getBounds();
+                g.draw(windowBounds);
+            }
+        }
+
+        private void paintQuadTreeGrid() {
+            if(showGrid) {
+                List<QuadTree> trees = model.getQuadTrees();
+                g.setColor(Color.green);
+                for (Rectangle2D rec : trees.get(0).getNodeRects())
+                    g.draw(rec);
+            }
+        }
+
+        private void paintGraph() {
             //Draws the graph of vertices and edges (if enabled)
             if(graph) {
                 for (MapFeature street : mapFStreets) {
@@ -1073,75 +1148,6 @@ public class View extends JFrame implements Observer {
 
                 }
             }
-
-            //Draw the shortestPath if not null
-            if (shortestPath != null) {
-                int i = 5;
-                if (zoomLevel < 8) i = 9;
-                g.setColor(DrawAttribute.cl_pink);
-                g.setStroke(DrawAttribute.streetStrokes[i + zoomFactor]);
-                for (Edge e : shortestPath) {
-                    g.draw(e);
-                }
-            }
-            //Draw the fastest path if not null
-            if (fastestPath != null) {
-                int i = 5;
-                if (zoomLevel < 8) i = 9;
-                g.setColor(DrawAttribute.cl_blue4);
-                g.setStroke(DrawAttribute.streetStrokes[i + zoomFactor]);
-                for (Edge e : fastestPath) {
-                    g.draw(e);
-                }
-            }
-
-            g.setStroke(DrawAttribute.s05);
-
-
-            if(showGrid) {
-                List<QuadTree> trees = model.getQuadTrees();
-                g.setColor(Color.green);
-                for (Rectangle2D rec : trees.get(0).getNodeRects())
-                    g.draw(rec);
-            }
-
-
-            //Draw the icons
-            if (zoomLevel > 14) {
-                for (MapIcon mapIcon : mapIcons) {
-                    if(mapIcon.isVisible()) {
-                        mapIcon.draw(g, transform);
-                    }
-                }
-            }
-            g.setColor(Color.BLACK);
-            if(bounds.testmode()) {
-                Rectangle2D windowBounds = bounds.getBounds();
-                g.draw(windowBounds);
-            }
-
-            new Scalebar(g, zoomLevel, View.this, transform);
-
-
-            //Draws chosen searchResult (either street or address) as well as start or endpoint address
-            for(Map.Entry<String, MapPointer> entry : addressPointerMap.entrySet()) {
-                MapPointer mp = entry.getValue();
-                mp.draw(g,transform);
-            }
-
-
-            //Transparent GUI elements
-            g.setTransform(new AffineTransform());
-            g.setColor(DrawAttribute.fadeblack);
-            RoundRectangle2D optionsButtonArea = new RoundRectangle2D.Double(getContentPane().getWidth()-50,(int)(getContentPane().getHeight()-getContentPane().getHeight()*0.98),60,40,15,15);
-            RoundRectangle2D zoomInOutArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2+10, 60, 80, 15, 15);
-            RoundRectangle2D fullscreenArea = new RoundRectangle2D.Double(getContentPane().getWidth()-30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2+110,60,38,15,15);
-            RoundRectangle2D mapTypeButtonArea = new RoundRectangle2D.Double(getContentPane().getWidth() - 30, getContentPane().getHeight() - getContentPane().getHeight() / 3 * 2 - 33, 39, 37,15,15);
-            g.fill(optionsButtonArea);
-            g.fill(zoomInOutArea);
-            g.fill(fullscreenArea);
-            g.fill(mapTypeButtonArea);
-            updateStreetName();
         }
 
         /*
@@ -1162,13 +1168,19 @@ public class View extends JFrame implements Observer {
             Collection < MapData > bigRoads = model.getVisibleBigRoads(windowBounds, sorted);
             mapFStreets = (Collection<MapFeature>)(Collection<?>) bigRoads;
 
-            if (zoomLevel > 4)
+            if (drawAttributeManager.isTransport() && zoomLevel > 6)
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
+            else if (zoomLevel > 4)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleLanduse(windowBounds, sorted));
 
-            if (zoomLevel > 7)
+            if (drawAttributeManager.isTransport() && zoomLevel > 9)
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>)model.getVisibleNatural(windowBounds, sorted));
+            else if (zoomLevel > 7)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>)model.getVisibleNatural(windowBounds, sorted));
 
-            if(zoomLevel > 7) 
+            if (drawAttributeManager.isTransport())
+                mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleStreets(windowBounds, sorted));
+            else if(zoomLevel > 7)
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleStreets(windowBounds, sorted));
 
             if (drawAttributeManager.isTransport())
@@ -1177,16 +1189,13 @@ public class View extends JFrame implements Observer {
                 mapFStreets.addAll((Collection<MapFeature>) (Collection<?>) model.getVisibleRailways(windowBounds, sorted));
             }
 
-
-
-            if(zoomLevel > 10)
+            if (drawAttributeManager.isTransport() && zoomLevel > 14)
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBuildings(windowBounds, sorted));
-            
-
+            else if(zoomLevel > 10)
+                mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBuildings(windowBounds, sorted));
 
             if(zoomLevel > 14)
                 mapIcons = (Collection<MapIcon>) (Collection<?>) model.getVisibleIcons(windowBounds);
-            
 
             if (!drawAttributeManager.isTransport())
                 mapFAreas.addAll((Collection<MapFeature>)(Collection<?>) model.getVisibleBigForests(windowBounds, sorted));

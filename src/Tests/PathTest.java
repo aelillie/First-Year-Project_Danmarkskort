@@ -10,14 +10,16 @@ import org.junit.Before;
 import org.junit.Test;
 import sun.tools.jar.Main;
 import Model.MapCalculator;
+import Model.ValueName;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.util.Stack;
 
 public class PathTest {
     private static final double DELTA = 1e-15;
     private Model m = Model.getModel();
-    private Vertices v = m.getVertices();
+    private Vertices v;
     private Graph g;
     private int start = 933, end = 595;
 
@@ -26,25 +28,28 @@ public class PathTest {
         //Test map with known vertices for test use.
         try {
             InputStream inputStream = Main.class.getResourceAsStream("/data/PathTest.osm");
-            m.loadFile("map.osm", inputStream);
+            m.loadFile("data/PathTest.osm", inputStream);
         } catch (IOException e) {
             e.printStackTrace();
         }
+        v = m.getVertices();
         g = m.getGraph();
     }
 
 
     @Test
     public void findPath(){
-        PathTree pS = new PathTree(g,start, end);
-        pS.useShortestPath();
-        pS.initiate();
+        PathTree shortestTree = new PathTree(g,start, end);
+        shortestTree.useShortestPath();
+        shortestTree.initiate();
+        Assert.assertEquals(true, shortestTree.hasPathTo(end));
+        Assert.assertNotNull(shortestTree.pathTo(end));
 
-        Assert.assertEquals(true, pS.hasPathTo(end));
-
-        Assert.assertNotNull(pS.pathTo(end));
-
-
+        PathTree fastestTree = new PathTree(g,start, end);
+        fastestTree.useFastestPath();
+        fastestTree.initiate();
+        Assert.assertEquals(true, fastestTree.hasPathTo(end));
+        Assert.assertNotNull(fastestTree.pathTo(end));
     }
 
     @Test
@@ -104,10 +109,35 @@ public class PathTest {
     }
 
     @Test
-    public void testRelaxTime(){
+    public void testTrafficSignals(){
+        Graph g = Model.getModel().getGraph();
+        PathTree pathTree = new PathTree(g, 1512, 131);
+        pathTree.useFastestPath();
+        pathTree.useCarRoute();
+        pathTree.initiate();
+        Stack<Edge> path = (Stack<Edge>) pathTree.pathTo(131);
 
+        //Expected distances
+        double d1 = MapCalculator.haversineDist(v.getVertex(1512), v.getVertex(637));
+        double d2 = MapCalculator.haversineDist(v.getVertex(637), v.getVertex(1509));
+        double d3 = MapCalculator.haversineDist(v.getVertex(1509), v.getVertex(1566));
+        double d4 = MapCalculator.haversineDist(v.getVertex(1566), v.getVertex(131));
+        int maxSpeed = 60; //Roskildevej
+
+        Assert.assertTrue(pathTree.hasPathTo(131));
+        Assert.assertNotNull(pathTree.pathTo(131));
+        Assert.assertTrue(v.getVertex(path.get(2).w()).trafficSignal == ValueName.TRAFFICLIGHT_HIGHWAY);
+        Assert.assertTrue(v.getVertex(path.get(3).w()).trafficSignal == ValueName.TRAFFICLIGHT_HIGHWAY);
+
+        //Expected travel time
+        double t1 = (d1/maxSpeed)*60 + 0.25; //TRAFFIC SIGNAL
+        double t2 = (d2/maxSpeed)*60 + 0.25; //TRAFFIC SIGNAL
+        double t3 = (d3/maxSpeed)*60;
+        double t4 = (d4/maxSpeed)*60;
+
+        Assert.assertEquals(t1, pathTree.timeTo(637), DELTA);
+        Assert.assertEquals(t1 + t2, pathTree.timeTo(1509), DELTA);
+        Assert.assertEquals(t1 + t2 + t3, pathTree.timeTo(1566), DELTA);
+        Assert.assertEquals(t1 + t2 + t3 + t4, pathTree.timeTo(131), DELTA);
     }
-
-
-
 }
