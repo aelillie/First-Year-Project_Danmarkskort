@@ -159,7 +159,7 @@ public class PathTest {
 
         Stack<Edge> path = (Stack<Edge>) pathTree.pathTo(338);
 
-
+        //Two most obvious paths from the test map
         //Route1 : 202 -> 201 -> 200 -> 338
         double d1 = MapCalculator.haversineDist(v.getVertex(202), v.getVertex(201)); //Maxspeed: 50
         double d2 = MapCalculator.haversineDist(v.getVertex(201), v.getVertex(200)); //Maxspeed: 50
@@ -186,9 +186,9 @@ public class PathTest {
         double tt7 = (dd7/50)*60;
         double time1 = tt1 + tt2 + tt3 + tt4 + tt5 + tt6 + tt7;
 
-        Assert.assertNotEquals(time, time1, DELTA);
-        double expMinTime = Math.min(time, time1);
-        double actualTime = pathTree.timeTo(338);
+        Assert.assertNotEquals(time, time1, DELTA); //Make sure they are not the same
+        double expMinTime = Math.min(time, time1); //find the actual minimum time for the two routes
+        double actualTime = pathTree.timeTo(338); //actual time for the route
 
         Assert.assertEquals(expMinTime, actualTime, DELTA);
     }
