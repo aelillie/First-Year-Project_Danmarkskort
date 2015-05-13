@@ -1223,7 +1223,10 @@ public class View extends JFrame implements Observer {
                 g.setColor(Color.black);
                 g.drawString(nearestNeighbor.getStreetName(), (int) (getRootPane().getContentPane().getWidth() * 0.01 + 1),
                         getRootPane().getContentPane().getHeight() - 10);
+
             }
+
+
 
         }
     }
