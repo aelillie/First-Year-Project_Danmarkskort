@@ -4,9 +4,12 @@ Group G: Danmarkskort
 1. Open the program by doubleclicking the Danmarkskort.jar file
 2. If this doesn't work, you can try to run it through cmdprompt:
    - Open cmdprompt
-   - Navigate to the folder containing the jar-file e.g.  C:\Users\Johndoe\Desktop**cd Mystuff\Danmarkskort**
-   - Here write :\Users\Johndoe\DesktopMystuff\Danmarkskort>**java -jar *filename*.jar**
-3. If this fails it could mean that you run out of heap space memory, this can be solved by allowing your computer to allocate more memory by writing the following 
+   - Navigate to the folder containing the jar-file e.g. by writing  C:\Users\Johndoe\Desktop>**cd Mystuff\Danmarkskort**
+   - Here write C:\Users\Johndoe\DesktopMystuff\Danmarkskort>**java -jar *filename*.jar**
+
+3. The program uses ~1.7gb to run. This amount of space must be available in order to run it
+4. If it fails to run, you can try type the following in cmdpromt, in an attempt to allocate the needed memory: C:\Users\Johndoe\DesktopMystuff\Danmarkskort>**java -jar -Xmx2g *filename*.jar**
+
 
 #How to use the program:
 2. Once the loading screen is done, the program should initially display a map of Denmark
