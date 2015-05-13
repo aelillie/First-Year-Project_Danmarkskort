@@ -60,21 +60,13 @@ public class SearchResultMouseHandler extends MouseAdapter{
      */
     public static void goToAddressLocation(Address selectedAddr, Model m, View v, String iconType){
         Point2D addressLocation = selectedAddr.getAddressLocation();
-        Path2D boundaryLocation = selectedAddr.getBoundaryLocation();
-
-        if(boundaryLocation == null){
+        {
             v.zoomOnAddress();
 
             v.addPointer(new MapPointer(addressLocation,iconType));
             v.searchResultChosen(addressLocation.getX(), addressLocation.getY());
 
-        } else if(addressLocation == null){
-            v.addPointer(new MapPointer(boundaryLocation, iconType));
-            v.searchResultChosen(boundaryLocation.getBounds().getCenterX(), boundaryLocation.getBounds().getCenterY());
-
         }
-
-
     }
 
     public static Point2D getPoint(Address result, Model m){

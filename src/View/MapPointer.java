@@ -41,11 +41,6 @@ public class MapPointer {
         this.type = type;
     }
 
-    public MapPointer(Path2D boundaryLocation, String type){
-        this.boundaryLocation = boundaryLocation;
-        imgPath = pointerIconURLs.get(type);
-        this.type = type;
-    }
 
     public void draw(Graphics2D g, AffineTransform transform){
         drawPointer(g,transform);
