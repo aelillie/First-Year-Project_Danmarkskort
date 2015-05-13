@@ -190,10 +190,8 @@ public class RoutePanelController implements ActionListener{
                 endPoint = null;
             if (startPoint != null && endPoint != null) {
                 if(routeTypeButtonDownMap.get(routeView.getFastestPathButton())) {
-                    System.out.println("Trying to find Fastest path...");
                     view.findFastestRoute(startPoint, endPoint);
                 } else if(routeTypeButtonDownMap.get(routeView.getShortestPathButton())){
-                    System.out.println("Trying to find Shortest path...");
                     view.findShortestRoute(startPoint, endPoint);
                 } else view.findFastestRoute(startPoint, endPoint);
             }
@@ -208,7 +206,6 @@ public class RoutePanelController implements ActionListener{
             Address[] results = addressSearch(2,startAddressField,startAddrScrollpane);
             if(results != null && results.length == 1) {
                 startAddrScrollpane.setVisible(false);
-                System.out.println("Point A found");
                 startPoint = SearchResultMouseHandler.getPoint(results[0], model);
             }else startPoint = null;
         }
@@ -216,7 +213,6 @@ public class RoutePanelController implements ActionListener{
             Address[] results = addressSearch(2, endAddressField, endAddrScrollpane);
             if (results != null && results.length == 1) {
                 endAddrScrollpane.setVisible(false);
-                System.out.println("Point B found");
                 endPoint = SearchResultMouseHandler.getPoint(results[0], model);
             } else endPoint = null;
         } else if (command == "clearStartField") { //The "X" button near the startfield
