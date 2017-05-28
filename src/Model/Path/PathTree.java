@@ -153,7 +153,7 @@ public class PathTree {
 
     //Finds the time travelling in bee line from i to d
     private double hdrive(int i){
-        return (MapCalculator.haversineDist(vertices.getVertex(i), end)/120)*60;
+        return (MapCalculator.haversineDist(vertices.getVertex(i), end)/130)*60;
     }
 
 

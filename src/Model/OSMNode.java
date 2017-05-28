@@ -10,6 +10,7 @@ public class OSMNode extends Point2D.Float implements Serializable {
     public static final long serialVersionUID = 1;
 
     public ValueName trafficSignal;
+    public int count;
 
     public OSMNode(float x, float y) {
         super(x, y);

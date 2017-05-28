@@ -38,15 +38,15 @@ public class QuadTree implements Serializable{
          * Divide the Node into four new and spread the values.
          */
         void subDivide(){
-            Double newWidth = width/2;
-            Double newHeight = height/2;
+            Double xMedian = width/2;
+            Double yMedian = height/2;
             MapData[] tmp = value;
             value = null;
             //Create all four cells for this cell when divided using nodes information
-            NW = new Node(x - newWidth , y -  newHeight, width, height);
-            NE = new Node(x + newWidth, y - newHeight, width, height);
-            SE = new Node(x + newWidth, y + newHeight, width, height);
-            SW = new Node(x - newWidth ,y + newHeight, width, height);
+            NW = new Node(x - xMedian , y -  yMedian, width, height);
+            NE = new Node(x + xMedian, y - yMedian, width, height);
+            SE = new Node(x + xMedian, y + yMedian, width, height);
+            SW = new Node(x - xMedian ,y + yMedian, width, height);
 
             //Insert all this cells data again.
             for(int i = 0; i < N; i++)
@@ -117,40 +117,40 @@ public class QuadTree implements Serializable{
     Used for slightly faster insertion when a node is subdivided
     Starts from the previous sub divided node
      */
-    private void insertAgain(MapData value, Node h) {
+    private void insertAgain(MapData value, Node node) {
 
         //First check what Type it is then use its coordinates to store it in the QuadTree
         if(value.getClassType() == MapIcon.class) {
             MapIcon mI = (MapIcon) value;
-            insert(h, mI.getPosition().getX(), mI.getPosition().getY(), value);
+            insert(node, mI.getPosition().getX(), mI.getPosition().getY(), value);
 
         }
         else {
             MapFeature mF = (MapFeature) value;
             Rectangle2D rec = mF.getWay().getBounds2D();
-            insertPath(h, rec.getX(), rec.getX() + rec.getWidth(), rec.getY(), rec.getY() + rec.getHeight(), mF);
+            insertPath(node, rec.getX(), rec.getX() + rec.getWidth(), rec.getY(), rec.getY() + rec.getHeight(), mF);
 
         }
     }
 
-    private void insert(Node h, Double x, Double y, MapData value) {
+    private void insert(Node node, Double pointX, Double pointY, MapData value) {
         //// if (eq(x, h.x) && eq(y, h.y)) h.value = value;  // duplicate
 
-        if ( less(x, h.x) &&  less(y, h.y)) {
-            if(h.NW == null) h.addvalue(value);
-            else insert(h.NW, x, y, value);
+        if ( less(pointX, node.x) &&  less(pointY, node.y)) {
+            if(node.NW == null) node.addvalue(value);
+            else insert(node.NW, pointX, pointY, value);
         }
-        else if ( less(x, h.x) && !less(y, h.y)) {
-            if(h.SW == null) h.addvalue(value);
-            else insert(h.SW, x, y, value);
+        else if ( less(pointX, node.x) && !less(pointY, node.y)) {
+            if(node.SW == null) node.addvalue(value);
+            else insert(node.SW, pointX, pointY, value);
         }
-        else if (!less(x, h.x) &&  less(y, h.y)) {
-            if(h.NE == null) h.addvalue(value);
-            else insert(h.NE, x, y, value);
+        else if (!less(pointX, node.x) &&  less(pointY, node.y)) {
+            if(node.NE == null) node.addvalue(value);
+            else insert(node.NE, pointX, pointY, value);
         }
-        else if (!less(x, h.x) && !less(y, h.y)) {
-            if(h.SE == null) h.addvalue(value);
-            else insert(h.SE, x, y, value);
+        else if (!less(pointX, node.x) && !less(pointY, node.y)) {
+            if(node.SE == null) node.addvalue(value);
+            else insert(node.SE, pointX, pointY, value);
         }
     }
 
@@ -224,7 +224,7 @@ public class QuadTree implements Serializable{
 
     private void query2D(Node h, Shape query, Collection<MapData> values) {
         if (h == null) return;
-        Rectangle2D rect = query.getBounds2D();
+        Rectangle2D rect = query.getBounds2D(); //range
         Double xmin = rect.getMinX();
         Double ymin = rect.getMinY();
         Double xmax = rect.getMaxX();

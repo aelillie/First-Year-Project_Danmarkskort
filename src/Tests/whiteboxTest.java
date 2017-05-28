@@ -252,17 +252,17 @@ public class whiteboxTest {
         Assert.assertEquals(expectedShortestVertices, actualShortestVertices);
 
         HashSet<Integer> actualFastestVertices = new HashSet<>();
-        for(Edge e : shortest.pathTo(841)){
-            actualShortestVertices.add(e.either());
-            actualShortestVertices.add(e.other(e.either()));
+        for(Edge e : fastest.pathTo(841)){
+            actualFastestVertices.add(e.either());
+            actualFastestVertices.add(e.other(e.either()));
         }
         HashSet<Integer> expectedFastestVertices = new HashSet<>();
-        expectedShortestVertices.add(1509);
-        expectedShortestVertices.add(1566);
-        expectedShortestVertices.add(131);
-        expectedShortestVertices.add(839);
-        expectedShortestVertices.add(840);
-        expectedShortestVertices.add(841);
+        expectedFastestVertices.add(1509);
+        expectedFastestVertices.add(1566);
+        expectedFastestVertices.add(131);
+        expectedFastestVertices.add(839);
+        expectedFastestVertices.add(840);
+        expectedFastestVertices.add(841);
 
         Assert.assertEquals(expectedFastestVertices, actualFastestVertices);
 
