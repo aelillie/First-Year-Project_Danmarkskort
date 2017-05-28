@@ -130,8 +130,11 @@ public class QuadTreeTest {
 
     @Test
     public void testRoadinMultipleBoxes(){
+
         Rectangle2D testBox = new Rectangle2D.Float(0,0,500,500);
         quadTree = new QuadTree(testBox,1000);
+
+        //Inserting a big road that should be put the top two cells
         ArrayList<OSMNode> points = new ArrayList<>();
         points.add(new OSMNode(1,1));
         points.add(new OSMNode(1,400));
